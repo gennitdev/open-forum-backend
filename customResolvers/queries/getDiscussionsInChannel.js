@@ -2,6 +2,23 @@ const {
   getTopDiscussionChannelsQuery,
   getHotDiscussionChannelsQuery,
 } = require("../cypher/cypherQueries");
+const luxon = require("luxon");
+
+
+const timeFrameOptions = {
+  day: {
+    start: luxon.DateTime.local().minus({ days: 1 }).toISO(),
+  },
+  week: {
+    start: luxon.DateTime.local().minus({ weeks: 1 }).toISO(),
+  },
+  month: {
+    start: luxon.DateTime.local().minus({ months: 1 }).toISO(),
+  },
+  year: {
+    start: luxon.DateTime.local().minus({ years: 1 }).toISO(),
+  },
+}
 
 const discussionChannelSelectionSet = `
   {
@@ -47,62 +64,66 @@ const discussionChannelSelectionSet = `
 
 const getResolver = ({ driver, DiscussionChannel }) => {
   return async (parent, args, context, info) => {
-    const { channelUniqueName, offset, limit, sort } = args;
+    const { channelUniqueName, offset, limit, sort, timeFrame } = args;
 
     const session = driver.session();
 
     try {
       let result = [];
 
-      if (sort === "new") {
-        // if sort is "new", get the DiscussionChannels sorted by createdAt.
-        result = await DiscussionChannel.find({
-          where: {
-            channelUniqueName,
-          },
-          selectionSet: discussionChannelSelectionSet,
-          options: {
-            offset,
-            limit,
-            sort: {
-              createdAt: "DESC",
+      switch (sort) {
+        case "new":
+          // if sort is "new", get the DiscussionChannels sorted by createdAt.
+          result = await DiscussionChannel.find({
+            where: {
+              channelUniqueName,
             },
-          },
-        });
-      } else if (sort === "top") {
-        // if sort is "top", get the DiscussionChannels sorted by weightedVotesCount.
-        // Treat a null weightedVotesCount as 0.
-        const discussionChannelsResult = await session.run(
-          getTopDiscussionChannelsQuery,
-          {
-            channelUniqueName,
-            offset: parseInt(offset, 10),
-            limit: parseInt(limit, 10),
-          }
-        );
+            selectionSet: discussionChannelSelectionSet,
+            options: {
+              offset,
+              limit,
+              sort: {
+                createdAt: "DESC",
+              },
+            },
+          });
+          break;
+        case "top":
+          // if sort is "top", get the DiscussionChannels sorted by weightedVotesCount.
+          // Treat a null weightedVotesCount as 0.
+          const topDiscussionChannelsResult = await session.run(
+            getTopDiscussionChannelsQuery,
+            {
+              channelUniqueName,
+              offset: parseInt(offset, 10),
+              limit: parseInt(limit, 10),
+              startOfTimeFrame: timeFrameOptions[timeFrame].start,
+            }
+          );
 
-        result = discussionChannelsResult.records.map((record) => {
-          return record.get("DiscussionChannel");
-        });
-      } else {
-        // By default, and if sort is "hot", get the DiscussionChannels sorted by hot,
-        // which takes into account both weightedVotesCount and createdAt.
-        const discussionChannelsResult = await session.run(
-          getHotDiscussionChannelsQuery,
-          {
-            channelUniqueName,
-            offset: parseInt(offset, 10),
-            limit: parseInt(limit, 10),
-          }
-        );
-        result = discussionChannelsResult.records.map((record) => {
-          return record.get("DiscussionChannel");
-        });
+          result = topDiscussionChannelsResult.records.map((record) => {
+            return record.get("DiscussionChannel");
+          });
+          break;
+        default:
+          // By default, and if sort is "hot", get the DiscussionChannels sorted by hot,
+          // which takes into account both weightedVotesCount and createdAt.
+          const hotDiscussionChannelsResult = await session.run(
+            getHotDiscussionChannelsQuery,
+            {
+              channelUniqueName,
+              offset: parseInt(offset, 10),
+              limit: parseInt(limit, 10),
+            }
+          );
+          result = hotDiscussionChannelsResult.records.map((record) => {
+            return record.get("DiscussionChannel");
+          });
 
-        console.log(
-          "hot discussion channels result is ",
-          discussionChannelsResult
-        );
+          console.log(
+            "hot discussion channels result is ",
+            discussionChannelsResult
+          );
       }
 
       return result;
