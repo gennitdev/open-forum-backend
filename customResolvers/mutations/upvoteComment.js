@@ -36,6 +36,12 @@ const upvoteCommentResolver = ({ Comment, User, driver }) => {
               }
           }
           weightedVotesCount
+          UpvotedByUsers {
+            username
+          }
+          UpvotedByUsersAggregate {
+            count
+          }
         }
       `;
 
@@ -107,9 +113,21 @@ const upvoteCommentResolver = ({ Comment, User, driver }) => {
 
       await tx.commit();
 
+      const existingUpvotedByUsers = comment.UpvotedByUsers || [];
+      const existingUpvotedByUsersCount = comment.UpvotedByUsersAggregate?.count || 0;
+
       return {
         id: commentId,
         weightedVotesCount: comment.weightedVotesCount + 1 + weightedVoteBonus,
+        UpvotedByUsers: [
+          ...existingUpvotedByUsers,
+          {
+            username,
+          },
+        ],
+        UpvotedByUsersAggregate: {
+          count: existingUpvotedByUsersCount + 1,
+        },
       };
     } catch (e) {
       if (tx) {

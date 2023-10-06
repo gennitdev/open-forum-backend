@@ -36,7 +36,6 @@ const typeDefs = gql`
     discussionId: ID! # used for uniqueness constraint
     channelUniqueName: String! # used for uniqueness constraint
     createdAt: DateTime! @timestamp(operations: [CREATE])
-    upvoteCount: Int
     weightedVotesCount: Float
     Discussion: Discussion
       @relationship(type: "POSTED_IN_CHANNEL", direction: OUT)
@@ -309,7 +308,6 @@ const typeDefs = gql`
       channelConnections: [String!]!
       channelDisconnections: [String]!
     ): Discussion
-    updateDiscussionChannelUpvoteCount(id: ID!): DiscussionChannel
     createEventWithChannelConnections(
       eventCreateInput: EventCreateInput
       channelConnections: [String]
@@ -332,7 +330,7 @@ const typeDefs = gql`
   }
 
   input SiteWideDiscussionSortOrder {
-    upvoteCount: String
+    weightedVotesCount: String
   }
 
   input DiscussionListOptions {

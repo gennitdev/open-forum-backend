@@ -38,6 +38,12 @@ const undoUpvoteCommentResolver = ({ Comment, User, driver }) => {
               }
           }
           weightedVotesCount
+          UpvotedByUsers {
+              username
+          }
+          UpvotedByUsersAggregate {
+              count
+          }
         }
       `;
 
@@ -106,9 +112,19 @@ const undoUpvoteCommentResolver = ({ Comment, User, driver }) => {
 
       await tx.commit();
 
+      const existingUpvotedByUsers = comment.UpvotedByUsers || [];
+      const existingUpvotedByUsersAggregate =
+        comment.UpvotedByUsersAggregate || { count: 0 };
+
       return {
         id: commentId,
         weightedVotesCount: comment.weightedVotesCount - 1 - weightedVoteBonus,
+        UpvotedByUsers: existingUpvotedByUsers.filter(
+          (user) => user.username !== username
+        ),
+        UpvotedByUsersAggregate: {
+          count: existingUpvotedByUsersAggregate.count - 1,
+        },
       };
     } catch (e) {
       if (tx) {

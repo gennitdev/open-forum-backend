@@ -36,6 +36,12 @@ const upvoteDiscussionChannelResolver = ({ DiscussionChannel, User, driver }) =>
             }
           }
           weightedVotesCount
+          UpvotedByUsers {
+            username
+          }
+          UpvotedByUsersAggregate {
+            count
+          }
         }
       `;
 
@@ -87,7 +93,7 @@ const upvoteDiscussionChannelResolver = ({ DiscussionChannel, User, driver }) =>
       const updateDiscussionChannelQuery = `
         MATCH (dc:DiscussionChannel { id: $discussionChannelId }), (u:User { username: $username })
         SET dc.weightedVotesCount = coalesce(dc.weightedVotesCount, 0) + 1 + $weightedVoteBonus
-        CREATE (u)-[:UPVOTED_DISCUSSION]->(dc)
+        CREATE (dc)-[:UPVOTED_DISCUSSION]->(u)
         RETURN dc
       `;
 
@@ -110,9 +116,21 @@ const upvoteDiscussionChannelResolver = ({ DiscussionChannel, User, driver }) =>
 
       await tx.commit();
 
+      const existingUpvotedByUsers = discussionChannel.UpvotedByUsers || [];
+      const existingUpvotedByUsersAggregate = discussionChannel.UpvotedByUsersAggregate || { count: 0 };
+
       return {
         id: discussionChannelId,
         weightedVotesCount: discussionChannel.weightedVotesCount + 1 + weightedVoteBonus,
+        UpvotedByUsers: [
+          ...existingUpvotedByUsers,
+          {
+            username,
+          },
+        ],
+        UpvotedByUsersAggregate: {
+          count: existingUpvotedByUsersAggregate.count + 1,
+        },
       };
     } catch (e) {
       if (tx) {

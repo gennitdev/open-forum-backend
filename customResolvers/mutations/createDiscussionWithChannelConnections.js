@@ -51,7 +51,6 @@ const getResolver = ({Discussion, driver}) => {
             createdAt
             channelUniqueName
             discussionId
-            upvoteCount
             UpvotedByUsers {
               username
             }

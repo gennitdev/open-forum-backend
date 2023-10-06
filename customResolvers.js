@@ -3,7 +3,6 @@ const typeDefs = require("./typeDefs");
 const GraphQLJSON = require('graphql-type-json');
 const createDiscussionWithChannelConnections = require("./customResolvers/mutations/createDiscussionWithChannelConnections");
 const updateDiscussionWithChannelConnections = require("./customResolvers/mutations/updateDiscussionWithChannelConnections");
-const updateDiscussionChannelUpvoteCount = require("./customResolvers/mutations/updateDiscussionChannelUpvoteCount");
 
 const createEventWithChannelConnections = require("./customResolvers/mutations/createEventWithChannelConnections");
 const updateEventWithChannelConnections = require("./customResolvers/mutations/updateEventWithChannelConnections");
@@ -51,10 +50,6 @@ module.exports = function (driver) {
           Discussion,
           driver,
         }),
-      updateDiscussionChannelUpvoteCount: updateDiscussionChannelUpvoteCount({
-        DiscussionChannel,
-        driver,
-      }),
       createEventWithChannelConnections: createEventWithChannelConnections({
         Event,
         driver,

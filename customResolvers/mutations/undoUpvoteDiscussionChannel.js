@@ -1,12 +1,20 @@
-const { discussionChannelIsUpvotedByUserQuery } = require("../cypher/cypherQueries");
+const {
+  discussionChannelIsUpvotedByUserQuery,
+} = require("../cypher/cypherQueries");
 const { getWeightedVoteBonus } = require("./utils");
 
-const undoUpvoteDiscussionChannelResolver = ({ DiscussionChannel, User, driver }) => {
+const undoUpvoteDiscussionChannelResolver = ({
+  DiscussionChannel,
+  User,
+  driver,
+}) => {
   return async (parent, args, context, resolveInfo) => {
     const { discussionChannelId, username } = args;
 
     if (!discussionChannelId || !username) {
-      throw new Error("All arguments (discussionChannelId, username) are required");
+      throw new Error(
+        "All arguments (discussionChannelId, username) are required"
+      );
     }
 
     const session = driver.session();
@@ -38,6 +46,12 @@ const undoUpvoteDiscussionChannelResolver = ({ DiscussionChannel, User, driver }
               }
           }
           weightedVotesCount
+          UpvotedByUsers {
+            username
+          }
+          UpvotedByUsersAggregate {
+            count
+          }
         }
       `;
 
@@ -55,7 +69,8 @@ const undoUpvoteDiscussionChannelResolver = ({ DiscussionChannel, User, driver }
       const discussionChannel = discussionChannelResult[0];
 
       const postAuthorUsername = discussionChannel.Discussion?.Author?.username;
-      const postAuthorKarma = discussionChannel.Discussion?.Author?.discussionKarma || 0;
+      const postAuthorKarma =
+        discussionChannel.Discussion?.Author?.discussionKarma || 0;
 
       // Fetch data of the user who is upvoting the discussionChannel
       // because we need it to calculate the weighted vote bonus.
@@ -84,10 +99,10 @@ const undoUpvoteDiscussionChannelResolver = ({ DiscussionChannel, User, driver }
 
       // Update weighted votes count on the discussionChannel and remove the relationship
       const undoUpvoteDiscussionChannelQuery = `
-       MATCH (dc:DiscussionChannel { id: $discussionChannelId })<-[r:UPVOTED_DISCUSSION]-(u:User { username: $username })
-       SET dc.weightedVotesCount = coalesce(dc.weightedVotesCount, 0) - 1 - $weightedVoteBonus
-       DELETE r
-       RETURN dc
+        MATCH (dc:DiscussionChannel { id: $discussionChannelId })-[r:UPVOTED_DISCUSSION]->(u:User { username: $username })
+        SET dc.weightedVotesCount = coalesce(dc.weightedVotesCount, 0) - 1 - $weightedVoteBonus
+        DELETE r
+        RETURN dc
      `;
 
       await tx.run(undoUpvoteDiscussionChannelQuery, {
@@ -106,9 +121,20 @@ const undoUpvoteDiscussionChannelResolver = ({ DiscussionChannel, User, driver }
 
       await tx.commit();
 
+      const existingUpvotedByUsers = discussionChannel.UpvotedByUsers || [];
+      const existingUpvotedByUsersCount =
+        discussionChannel.UpvotedByUsersAggregate?.count || 0;
+
       return {
         id: discussionChannelId,
-        weightedVotesCount: discussionChannel.weightedVotesCount - 1 - weightedVoteBonus,
+        weightedVotesCount:
+          discussionChannel.weightedVotesCount - 1 - weightedVoteBonus,
+        UpvotedByUsers: existingUpvotedByUsers.filter(
+          (user) => user.username !== username
+        ),
+        UpvotedByUsersAggregate: {
+          count: existingUpvotedByUsersCount - 1,
+        },
       };
     } catch (e) {
       if (tx) {
