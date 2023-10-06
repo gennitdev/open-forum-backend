@@ -1,14 +1,13 @@
-const { updateDiscussionChannelQuery } = require("./cypherQueries");
+const { updateDiscussionChannelQuery, severConnectionBetweenDiscussionAndChannelQuery } = require("./cypherQueries");
 
 const getResolver = ({ Discussion, driver }) => {
   return async (parent, args, context, info) => {
-    const { 
-        discussionWhere,
-        discussionUpdateInput, 
-        channelConnections, 
-        channelDisconnections
-     } =
-      args;
+    const {
+      discussionWhere,
+      discussionUpdateInput,
+      channelConnections,
+      channelDisconnections,
+    } = args;
 
     if (!channelConnections || channelConnections.length === 0) {
       throw new Error(
@@ -19,10 +18,8 @@ const getResolver = ({ Discussion, driver }) => {
     try {
       // Update the discussion
       await Discussion.update({
-        input: {
-            where: discussionWhere,
-            update: discussionUpdateInput
-        }
+        where: discussionWhere,
+        update: discussionUpdateInput,
       });
       const updatedDiscussionId = discussionWhere.id;
 
@@ -93,7 +90,6 @@ const getResolver = ({ Discussion, driver }) => {
         },
         selectionSet,
       });
-      console.log("discussion find ", result);
       session.close();
 
       return result[0];
