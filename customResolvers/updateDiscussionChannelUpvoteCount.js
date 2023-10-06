@@ -7,8 +7,9 @@ const getResolver = ({ DiscussionChannel, driver }) => {
       // Fetch the count of UpvotedByUsers related to the DiscussionChannel
       const result = await session.run(
         `
-        MATCH (d:DiscussionChannel { id: $id })<-[:UPVOTED_DISCUSSION]-()
+        MATCH (d:DiscussionChannel { id: $id })-[:UPVOTED_DISCUSSION]->()
         RETURN COUNT(*) as upvoteCount
+
       `,
         { id }
       );
@@ -30,6 +31,7 @@ const getResolver = ({ DiscussionChannel, driver }) => {
             id
             channelUniqueName
             discussionId
+            upvoteCount
             Channel {
                 uniqueName
             }
