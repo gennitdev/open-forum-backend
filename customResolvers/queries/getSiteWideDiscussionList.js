@@ -1,62 +1,53 @@
-const { getSiteWideDiscussionListQuery } = require("../cypher/cypherQueries");
+const { 
+  getNewSiteWideDiscussionsQuery,
+  getTopSiteWideDiscussionsQuery,
+  getHotSiteWideDiscussionsQuery,
+ } = require("../cypher/cypherQueries");
+const { timeFrameOptions } = require("./utils");
 
 const getResolver = ({ driver }) => {
   return async (parent, args, context, info) => {
-    const { searchInput, selectedChannels, selectedTags, options } = args;
-    const { offset, limit, resultsOrder } = options || {};
+    const { 
+      searchInput, 
+      selectedChannels, 
+      selectedTags, 
+      options,
+    } = args;
+    const { offset, limit, resultsOrder, sort,
+      timeFrame, } = options || {};
 
     const session = driver.session();
 
     try {
-      const result = await session.run(getSiteWideDiscussionListQuery, {
-        searchInput,
-        selectedChannels,
-        selectedTags,
-        offset,
-        limit,
-        resultsOrder,
-      });
 
-      const discussions = [];
-      let aggregateDiscussionCount = 0;
-
-      result.records.forEach((record) => {
-        aggregateDiscussionCount = record.get("aggregateDiscussionCount");
-
-        let author = null;
-        if (record.get("Author") && record.get("Author").username !== null) {
-          author = record.get("Author");
-        }
-
-        let discussionChannels = record.get("DiscussionChannels") || [];
-        discussionChannels = discussionChannels.map((dc) => {
-          if (dc.UpvotedByUsers) {
-            dc.UpvotedByUsers = dc.UpvotedByUsers.map((username) => {
-              return { username };
-            });
+      switch(sort) {
+        case "new":
+          let result = await session.run(getNewSiteWideDiscussionsQuery, {
+            searchInput,
+            selectedChannels,
+            selectedTags,
+            offset,
+            limit,
+            resultsOrder,
+          });
+          if (result.records.length === 0) {
+            return []
           }
-          return dc;
-        });
+          let aggregateDiscussionCount = result.records[0].get("aggregateDiscussionCount");
 
-        discussions.push({
-          score: record.get("score"),
-          discussion: {
-            id: record.get("id"),
-            title: record.get("title"),
-            body: record.get("body"),
-            Author: author,
-            DiscussionChannels: discussionChannels,
-            createdAt: record.get("createdAt"),
-            updatedAt: record.get("updatedAt"),
-            Tags: record.get("Tags").map((text) => ({ text })),
-          },
-        });
-      });
+          const discussions = result.records.map((record) => {
+            return record.get("discussion");
+          });
 
-      return {
-        aggregateDiscussionCount,
-        discussions,
-      };
+          return {
+            discussions,
+            aggregateDiscussionCount,
+          }
+        case "top":
+          // to do
+          break;
+        default:
+        }
     } catch (error) {
       console.error("Error getting discussions:", error);
       throw new Error(`Failed to fetch discussions. ${error.message}`);

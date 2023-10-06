@@ -324,24 +324,14 @@ const typeDefs = gql`
     undoUpvoteDiscussionChannel(discussionChannelId: ID!, username: String!): DiscussionChannel
   }
 
-  type DiscussionWithScore {
-    discussion: Discussion!
-    score: Int!
-  }
-
   input SiteWideDiscussionSortOrder {
     weightedVotesCount: String
   }
 
-  input DiscussionListOptions {
-    resultsOrder: SiteWideDiscussionSortOrder
-    offset: Int
-    limit: Int
-  }
-
-  type SiteWideDiscussionListFormat {
-    aggregateDiscussionCount: Int!
-    discussions: [DiscussionWithScore!]!
+  enum SortType {
+    hot
+    new
+    top
   }
 
   enum TimeFrame {
@@ -352,13 +342,24 @@ const typeDefs = gql`
     all
   }
 
+  input DiscussionListOptions {
+    offset: Int
+    limit: Int
+    sort: SortType
+    timeFrame: TimeFrame
+  }
+
+  type SiteWideDiscussionListFormat {
+    aggregateDiscussionCount: Int!
+    discussions: [Discussion!]!
+  }
+
   type Query {
     getDiscussionsInChannel(
       channelUniqueName: String!
-      offset: Int
-      limit: Int
-      sort: String
-      timeFrame: TimeFrame
+      searchInput: String
+      selectedTags: [String]
+      options: DiscussionListOptions
     ): [DiscussionChannel]
     getSiteWideDiscussionList(
       searchInput: String

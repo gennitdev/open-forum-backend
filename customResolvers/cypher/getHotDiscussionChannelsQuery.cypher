@@ -32,7 +32,6 @@ WITH dc.id AS id,
      ageInMonths,
      // Use ageInMonths to calculate the rank.
      10000 * log10(weightedVotesCount + 1) / ((ageInMonths + 2) ^ 1.8) AS rank
-
 RETURN {
     id: id,
     discussionId: discussionId,
@@ -49,12 +48,15 @@ RETURN {
         body: body,
         createdAt: discussionCreatedAt,
         updatedAt: updatedAt,
-        Author: {
-            username: author.username,
-            createdAt: author.createdAt,
-            discussionKarma: author.discussionKarma,
-            commentKarma: author.commentKarma
-        }
+        Author: CASE
+                  WHEN author IS NULL THEN null
+                  ELSE {
+                      username: author.username,
+                      createdAt: author.createdAt,
+                      discussionKarma: author.discussionKarma,
+                      commentKarma: author.commentKarma
+                  }
+                END
     },
     UpvotedByUsersCount: UpvotedByUsersCount,
     Channel: {
