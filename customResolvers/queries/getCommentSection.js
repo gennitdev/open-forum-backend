@@ -130,8 +130,8 @@ const getResolver = ({ driver, DiscussionChannel, Comment }) => {
                 WHERE c.isRootComment = true
                 RETURN c
                 ORDER BY coalesce(c.weightedVotesCount, 0) DESC
-                SKIP 0
-                LIMIT 25
+                SKIP toInteger($offset)
+                LIMIT toInteger($limit)
         `;
         
     
