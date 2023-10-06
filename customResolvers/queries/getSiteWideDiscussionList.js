@@ -70,7 +70,7 @@ const getResolver = ({ driver }) => {
             return {
               discussions: [],
               aggregateDiscussionCount: 0,
-            }
+            };
           }
           let aggregateDiscussionCount = topDiscussionsResult.records[0].get(
             "aggregateDiscussionCount"
@@ -103,7 +103,7 @@ const getResolver = ({ driver }) => {
             return {
               discussions: [],
               aggregateDiscussionCount: 0,
-            }
+            };
           }
 
           let aggregateHotDiscussionCount = hotDiscussionsResult.records[0].get(
@@ -111,11 +111,14 @@ const getResolver = ({ driver }) => {
           );
 
           const hotDiscussions = hotDiscussionsResult.records.map((record) => {
-            console.log('score is ',record.get("rank"))
+            console.log("score is ", record.get("rank"));
             return record.get("discussion");
           });
-          console.log('hot discussions are ',hotDiscussions)
-          console.log('aggregate hot discussion count is ',aggregateHotDiscussionCount)
+          console.log("hot discussions are ", hotDiscussions);
+          console.log(
+            "aggregate hot discussion count is ",
+            aggregateHotDiscussionCount
+          );
 
           return {
             discussions: hotDiscussions,
