@@ -2,14 +2,15 @@ const { getSiteWideDiscussionListQuery } = require("./cypherQueries");
 
 const getResolver = ({ Event, driver }) => {
   return async (parent, args, context, info) => {
-    const { discussionWhere, selectedChannels } = args;
+    const { searchInput, selectedChannels, selectedTags } = args;
 
     const session = driver.session();
 
     try {
       const result = await session.run(getSiteWideDiscussionListQuery, {
-        discussionWhere,
+        searchInput,
         selectedChannels,
+        selectedTags
       });
 
       const discussions = result.records.map((record) => {

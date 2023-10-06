@@ -37,14 +37,17 @@ DELETE r
 // 4. We sort the discussions by the number of upvotes, deduplicated by user.
 const getSiteWideDiscussionListQuery = `
 MATCH (dc:DiscussionChannel)-[:POSTED_IN_CHANNEL]->(d:Discussion)
-WHERE SIZE($selectedChannels) = 0 OR dc.channelUniqueName IN $selectedChannels
+WHERE (SIZE($selectedChannels) = 0 OR dc.channelUniqueName IN $selectedChannels)
+  AND ($searchInput = "" OR d.title CONTAINS $searchInput OR d.body CONTAINS $searchInput)
 OPTIONAL MATCH (dc)-[:UPVOTED_DISCUSSION]->(u:User)
 WITH dc, d, COLLECT(DISTINCT u.username) as userUsernames
 OPTIONAL MATCH (dc)-[:CONTAINS_COMMENT]->(c:Comment)
 WITH dc, d, userUsernames, COUNT(c) as commentCount
 OPTIONAL MATCH (d)-[:HAS_TAG]->(tag:Tag)
+WITH d, dc, userUsernames, commentCount, tag
+WHERE SIZE($selectedTags) = 0 OR tag.text IN $selectedTags
 OPTIONAL MATCH (d)<-[:POSTED_DISCUSSION]-(author:User)
-WITH d, author,
+WITH d, author, dc,
      COUNT(userUsernames) as score,
      COLLECT(DISTINCT {
        id: dc.id,

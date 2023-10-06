@@ -303,8 +303,9 @@ const typeDefs = gql`
 
   type Query {
     getSiteWideDiscussionList(
-      discussionWhere: DiscussionWhere!
+      searchInput: String,
       selectedChannels: [String]
+      selectedTags: [String]
     ): [DiscussionWithScore]
   }
 `;
