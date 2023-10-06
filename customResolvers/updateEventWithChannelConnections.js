@@ -62,6 +62,10 @@ const getResolver = ({ Event, driver }) => {
           id
           title
           description
+          startTime
+          startTimeDayOfWeek
+          startTimeHourOfDay
+          endTime
           Poster {
             username
           }
