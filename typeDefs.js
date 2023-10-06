@@ -284,6 +284,17 @@ const typeDefs = gql`
       emojiLabel: String!
       username: String!
     ): Comment
+    addEmojiToDiscussionChannel(
+      discussionChannelId: ID!
+      emojiLabel: String!
+      unicode: String!
+      username: String!
+    ): DiscussionChannel
+    removeEmojiFromDiscussionChannel(
+      discussionChannelId: ID!
+      emojiLabel: String!
+      username: String!
+    ): DiscussionChannel
     createDiscussionWithChannelConnections(
       discussionCreateInput: DiscussionCreateInput
       channelConnections: [String]

@@ -12,6 +12,8 @@ const getSiteWideDiscussionList = require("./customResolvers/queries/getSiteWide
 
 const addEmojiToComment = require("./customResolvers/mutations/addEmojiToComment");
 const removeEmojiFromComment = require("./customResolvers/mutations/removeEmojiFromComment");
+const addEmojiToDiscussionChannel = require("./customResolvers/mutations/addEmojiToDiscussionChannel");
+const removeEmojiFromDiscussionChannel = require("./customResolvers/mutations/removeEmojiFromDiscussionChannel");
 
 module.exports = function (driver) {
   const ogm = new OGM({
@@ -61,6 +63,14 @@ module.exports = function (driver) {
       }),
       removeEmojiFromComment: removeEmojiFromComment({
         Comment,
+        driver,
+      }),
+      addEmojiToDiscussionChannel: addEmojiToDiscussionChannel({
+        DiscussionChannel,
+        driver,
+      }),
+      removeEmojiFromDiscussionChannel: removeEmojiFromDiscussionChannel({
+        DiscussionChannel,
         driver,
       }),
     },
