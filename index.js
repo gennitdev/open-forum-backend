@@ -1,7 +1,7 @@
 const { Neo4jGraphQL } = require("@neo4j/graphql");
 const { ApolloServer, gql } = require("apollo-server");
 
-require('dotenv').config();
+require("dotenv").config();
 const neo4j = require("neo4j-driver");
 const password = process.env.NEO4J_PASSWORD;
 
@@ -11,25 +11,68 @@ const driver = neo4j.driver(
 );
 
 const typeDefs = gql`
+  type Channel {
+    description: String
+    name: String
+    uniqueName: String! @unique
+    createdAt: DateTime! @timestamp(operations: [CREATE])
+    locked: Boolean
+    deleted: Boolean
+    # Categories:                   [Category]                @relationship(type: "HAS_CATEGORY", direction: OUT)
+    Tags: [Tag!]! @relationship(type: "HAS_TAG", direction: OUT)
+    # WikiPages:                [WikiPage]             @relationship(type: "HAS_WIKI_PAGE", direction: OUT)
+    ModerationDashboard: ModerationDashboard
+      @relationship(type: "HAS_MODERATION_DASHBOARD", direction: OUT)
+    Rules: [Rule!]! @relationship(type: "HAS_RULE", direction: OUT)
+    SuspendedUsers: [User!]!
+      @relationship(type: "SUSPENDED_FROM_CHANNEL", direction: IN)
+    Admins: [User!]! @relationship(type: "ADMIN_OF_CHANNEL", direction: IN)
+    Moderators: [ModerationProfile!]!
+      @relationship(type: "MODERATOR_OF_CHANNEL", direction: IN)
+    RelatedChannels: [Channel!]!
+      @relationship(type: "RELATED_CHANNEL", direction: OUT)
+    EventChannels: [EventChannel!]!
+      @relationship(type: "POSTED_IN_CHANNEL", direction: IN)
+    DiscussionChannels: [DiscussionChannel!]!
+      @relationship(type: "POSTED_IN_CHANNEL", direction: IN)
+    Comments: [Comment!]! @relationship(type: "HAS_COMMENT", direction: OUT) # used for aggregated comment counts
+  }
+
+  type DiscussionChannel {
+    id: ID! @id
+    locked: Boolean
+    Discussion: Discussion
+      @relationship(type: "POSTED_IN_CHANNEL", direction: OUT)
+    Channel: Channel @relationship(type: "POSTED_IN_CHANNEL", direction: IN)
+    UpvotedByUsers: [User!]!
+      @relationship(type: "UPVOTED_DISCUSSION", direction: OUT)
+    DownvotedByModerators: [ModerationProfile!]!
+      @relationship(type: "DOWNVOTED_DISCUSSION", direction: OUT)
+    Comments: [Comment!]!
+      @relationship(type: "CONTAINS_COMMENT", direction: OUT)
+    Emoji: [Emoji!]! @relationship(type: "HAS_EMOJI", direction: OUT)
+  }
+
+  type EventChannel {
+    id: ID! @id
+    locked: Boolean
+    Event: Event @relationship(type: "POSTED_IN_CHANNEL", direction: OUT)
+    Channel: Channel @relationship(type: "POSTED_IN_CHANNEL", direction: IN)
+    Comments: [Comment!]!
+      @relationship(type: "CONTAINS_COMMENT", direction: OUT)
+  }
+
   type Event {
     id: ID! @id
     title: String!
     description: String
     startTime: DateTime!
-    startTimeYear: String!
-    startTimeMonth: String!
-    startTimeDayOfMonth: String!
-    startTimeDayOfWeek: String!
-    startTimeHourOfDay: Int!
+    startTimeDayOfWeek: String # only used for filtering events by day of week
+    startTimeHourOfDay: Int # only used for filtering events by hour of day
     endTime: DateTime!
-    Channels: [Channel!]!
-      @relationship(type: "POSTED_IN_CHANNEL", direction: OUT)
-    CommentSections: [CommentSection!]!
-      @relationship(type: "HAS_COMMENTS_IN", direction: OUT)
     locationName: String
     address: String
     virtualEventUrl: String
-    Poster: User @relationship(type: "POSTED_BY", direction: OUT)
     updatedAt: DateTime @timestamp(operations: [UPDATE])
     createdAt: DateTime! @timestamp(operations: [CREATE])
     placeId: String
@@ -39,36 +82,57 @@ const typeDefs = gql`
     location: Point
     canceled: Boolean!
     deleted: Boolean
+    Poster: User @relationship(type: "POSTED_BY", direction: OUT)
     Tags: [Tag!]! @relationship(type: "HAS_TAG", direction: OUT)
     # PastVersions:          [EventVersion]    @relationship(type: "HAS_VERSION", direction: OUT)
+    EventChannels: [Channel!]!
+      @relationship(type: "POSTED_IN_CHANNEL", direction: OUT)
   }
 
-  type Channel {
-    description: String
-    name: String
-    uniqueName: String! @unique
-    Admins: [User!]! @relationship(type: "ADMIN_OF_CHANNEL", direction: IN)
-    Moderators: [ModerationProfile!]!
-      @relationship(type: "MODERATOR_OF_CHANNEL", direction: IN)
-    Discussions: [Discussion!]!
-      @relationship(type: "POSTED_IN_CHANNEL", direction: IN)
-    RelatedChannels: [Channel!]!
-      @relationship(type: "RELATED_CHANNEL", direction: OUT)
-    Events: [Event!]! @relationship(type: "POSTED_IN_CHANNEL", direction: IN)
+  type Discussion {
+    id: ID! @id
+    Author: User @relationship(type: "POSTED_DISCUSSION", direction: IN)
+    body: String
+    title: String!
     createdAt: DateTime! @timestamp(operations: [CREATE])
-    # Flairs:                   [Flair]                @relationship(type: "HAS_FLAIR", direction: OUT)
-    Tags: [Tag!]! @relationship(type: "HAS_TAG", direction: OUT)
-    # WikiPages:                [WikiPage]             @relationship(type: "HAS_WIKI_PAGE", direction: OUT)
-    ModerationDashboard: ModerationDashboard
-      @relationship(type: "HAS_MODERATION_DASHBOARD", direction: OUT)
-    Rules: [Rule!]! @relationship(type: "HAS_RULE", direction: OUT)
-    locked: Boolean
+    updatedAt: DateTime @timestamp(operations: [UPDATE])
     deleted: Boolean
-    SuspendedUsers: [User!]!
-      @relationship(type: "SUSPENDED_FROM_CHANNEL", direction: IN)
-    Comments: [Comment!]! @relationship(type: "HAS_COMMENT", direction: OUT)
-    CommentSections: [CommentSection!]!
-      @relationship(type: "HAS_COMMENT_SECTION", direction: OUT)
+    # Flairs:                  [Flair]                 @relationship(type: "HAS_FLAIR", direction: OUT)
+    Tags: [Tag!]! @relationship(type: "HAS_TAG", direction: OUT)
+    # PastVersions:            [DiscussionVersion]     @relationship(type: "HAS_VERSION", direction: OUT)
+    DiscussionChannels: [DiscussionChannel!]!
+      @relationship(type: "POSTED_IN_CHANNEL", direction: IN)
+  }
+
+  type Comment {
+    id: ID! @id
+    CommentAuthor: CommentAuthor
+      @relationship(type: "AUTHORED_COMMENT", direction: IN)
+    DiscussionChannel: DiscussionChannel
+      @relationship(type: "CONTAINS_COMMENT", direction: IN)
+    Channel: Channel @relationship(type: "HAS_COMMENT", direction: IN)
+    ParentComment: Comment @relationship(type: "IS_REPLY_TO", direction: OUT)
+    text: String
+    isRootComment: Boolean!
+    ChildComments: [Comment!]! @relationship(type: "IS_REPLY_TO", direction: IN)
+    deleted: Boolean
+    updatedAt: DateTime @timestamp(operations: [UPDATE])
+    createdAt: DateTime! @timestamp(operations: [CREATE])
+    # Emoji:                   [Emoji]                 @relationship(type: "HAS_EMOJI", direction: OUT)
+    Tags: [Tag!]! @relationship(type: "HAS_TAG", direction: OUT)
+    UpvotedByUsers: [User!]!
+      @relationship(type: "UPVOTED_COMMENT", direction: IN)
+    DownvotedByModerators: [ModerationProfile!]!
+      @relationship(type: "DOWNVOTED_COMMENT", direction: IN)
+    # PastVersions:            [CommentVersion]        @relationship(type: "HAS_VERSION", direction: OUT)
+    Emoji: [Emoji!]! @relationship(type: "HAS_EMOJI", direction: OUT)
+  }
+
+  type Emoji {
+    id: ID! @id
+    name: String! @unique
+    PostedByUser: User @relationship(type: "POSTED_EMOJI", direction: IN)
+    createdAt: DateTime! @timestamp(operations: [CREATE])
   }
 
   type Rule {
@@ -80,12 +144,12 @@ const typeDefs = gql`
 
   type Email {
     address: String! @unique
-    User: User @relationship(type: "USER", direction: IN)
+    User: User @relationship(type: "HAS_EMAIL", direction: OUT)
   }
 
   type User {
     username: String! @unique
-    Email: Email @relationship(type: "EMAIL", direction: OUT)
+    Email: Email @relationship(type: "HAS_EMAIL", direction: IN)
     name: String
     pronouns: String
     location: String
@@ -115,10 +179,8 @@ const typeDefs = gql`
       @relationship(type: "RECENTLY_VISITED_CHANNEL", direction: OUT)
     UpvotedComments: [Comment!]!
       @relationship(type: "UPVOTED_COMMENT", direction: OUT)
-    UpvotedDiscussions: [Discussion!]!
-      @relationship(type: "UPVOTED_DISCUSSION", direction: OUT)
-    UpvotedCommentSections: [CommentSection!]!
-      @relationship(type: "UPVOTED_COMMENT_SECTION", direction: OUT)
+    UpvotedDiscussionChannels: [DiscussionChannel!]!
+      @relationship(type: "UPVOTED_DISCUSSION_IN_CHANNEL", direction: OUT)
     ModerationProfile: ModerationProfile
       @relationship(type: "MODERATION_PROFILE", direction: OUT)
     DefaultEmojiSkintone: String
@@ -139,9 +201,7 @@ const typeDefs = gql`
     User: User @relationship(type: "MODERATION_PROFILE", direction: IN)
     DownvotedComments: [Comment!]!
       @relationship(type: "DOWNVOTED_COMMENT", direction: OUT)
-    DownvotedDiscussions: [Discussion!]!
-      @relationship(type: "DOWNVOTED_DISCUSSION", direction: OUT)
-    DownvotedCommentSections: [CommentSection!]!
+    DownvotedDiscussionChannels: [DiscussionChannel!]!
       @relationship(type: "DOWNVOTED_COMMENT_SECTION", direction: OUT)
     AuthoredReports: [Report!]!
       @relationship(type: "AUTHORED_REPORT", direction: OUT)
@@ -196,69 +256,7 @@ const typeDefs = gql`
     updatedAt: DateTime! @timestamp(operations: [UPDATE])
   }
 
-  type Discussion {
-    id: ID! @id
-    Author: User @relationship(type: "POSTED_DISCUSSION", direction: IN)
-    body: String
-    Channels: [Channel!]!
-      @relationship(type: "POSTED_IN_CHANNEL", direction: OUT)
-    title: String!
-    createdAt: DateTime! @timestamp(operations: [CREATE])
-    updatedAt: DateTime @timestamp(operations: [UPDATE])
-    # Flairs:                  [Flair]                 @relationship(type: "HAS_FLAIR", direction: OUT)
-    Tags: [Tag!]! @relationship(type: "HAS_TAG", direction: OUT)
-    UpvotedByUsers: [User!]!
-      @relationship(type: "UPVOTED_DISCUSSION", direction: IN)
-    DownvotedByModerators: [ModerationProfile!]!
-      @relationship(type: "DOWNVOTED_DISCUSSION", direction: IN)
-    # PastVersions:            [DiscussionVersion]     @relationship(type: "HAS_VERSION", direction: OUT)
-    CommentSections: [CommentSection!]!
-      @relationship(type: "HAS_COMMENTS_IN", direction: OUT)
-    deleted: Boolean
-  }
-
-  union OriginalPost = Discussion | Event
-
-  type CommentSection {
-    # Must have a Channel and either a Discussion or an Event.
-    # Channel is technically optional because channels can be deleted.
-    id: ID! @id
-    Comments: [Comment!]!
-      @relationship(type: "CONTAINS_COMMENT", direction: OUT)
-    OriginalPost: OriginalPost
-      @relationship(type: "HAS_COMMENTS_IN", direction: IN)
-    Channel: Channel @relationship(type: "HAS_COMMENT_SECTION", direction: IN)
-    UpvotedByUsers: [User!]!
-      @relationship(type: "UPVOTED_COMMENT_SECTION", direction: IN)
-    DownvotedByModerators: [ModerationProfile!]!
-      @relationship(type: "DOWNVOTED_COMMENT_SECTION", direction: IN)
-  }
-
   union CommentAuthor = User #| ModerationProfile
-
-  type Comment {
-    id: ID! @id
-    CommentAuthor: CommentAuthor
-      @relationship(type: "AUTHORED_COMMENT", direction: IN)
-    CommentSection: CommentSection
-      @relationship(type: "CONTAINS_COMMENT", direction: IN)
-    Channel: Channel @relationship(type: "HAS_COMMENT", direction: IN)
-    ParentComment: Comment @relationship(type: "IS_REPLY_TO", direction: OUT)
-    text: String
-    isRootComment: Boolean!
-    ChildComments: [Comment!]! @relationship(type: "IS_REPLY_TO", direction: IN)
-    deleted: Boolean
-    updatedAt: DateTime @timestamp(operations: [UPDATE])
-    createdAt: DateTime! @timestamp(operations: [CREATE])
-    # Emoji:                   [Emoji]                 @relationship(type: "HAS_EMOJI", direction: OUT)
-    Tags: [Tag!]! @relationship(type: "HAS_TAG", direction: OUT)
-    UpvotedByUsers: [User!]!
-      @relationship(type: "UPVOTED_COMMENT", direction: IN)
-    DownvotedByModerators: [ModerationProfile!]!
-      @relationship(type: "DOWNVOTED_COMMENT", direction: IN)
-    # PastVersions:            [CommentVersion]        @relationship(type: "HAS_VERSION", direction: OUT)
-  }
-
   type Feed {
     id: ID! @id
     title: String
@@ -268,6 +266,7 @@ const typeDefs = gql`
     Tags: [Tag!]! @relationship(type: "HAS_TAG", direction: OUT)
     deleted: Boolean
   }
+
   type Tag {
     text: String! @unique
     Channels: [Channel!]! @relationship(type: "HAS_TAG", direction: IN)
@@ -279,24 +278,29 @@ const typeDefs = gql`
   }
 `;
 
+const neoSchema = new Neo4jGraphQL({
+  typeDefs,
+  driver,
+  config: { enableRegex: true },
+});
 
-const neoSchema = new Neo4jGraphQL({ typeDefs, driver, config: { enableRegex: true } });
-
-neoSchema.assertIndexesAndConstraints({ options: { create: true } })
+neoSchema
+  .assertIndexesAndConstraints({ options: { create: true } })
   .then(() => {
     const server = new ApolloServer({
       schema: neoSchema.schema,
-      context: params => () => {
+      context: (params) => () => {
         console.log(`Query: ${params.req.body.query}`);
-        console.log(`Variables: ${JSON.stringify(params.req.body.variables, null, 2)}`);
-      }
+        console.log(
+          `Variables: ${JSON.stringify(params.req.body.variables, null, 2)}`
+        );
+      },
     });
 
     server.listen().then(({ url }) => {
       console.log(`🚀 Server ready at ${url}`);
     });
   })
-  .catch(e => {
+  .catch((e) => {
     throw new Error(e);
-  })
-
+  });
