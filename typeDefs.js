@@ -37,7 +37,7 @@ const typeDefs = gql`
     channelUniqueName: String! # used for uniqueness constraint
     createdAt: DateTime! @timestamp(operations: [CREATE])
     upvoteCount: Int
-    weightedVotesCount: Int
+    weightedVotesCount: Float
     Discussion: Discussion
       @relationship(type: "POSTED_IN_CHANNEL", direction: OUT)
     Channel: Channel @relationship(type: "POSTED_IN_CHANNEL", direction: OUT)
@@ -322,6 +322,8 @@ const typeDefs = gql`
     ): Event
     upvoteComment(commentId: ID!, username: String!): Comment
     undoUpvoteComment(commentId: ID!, username: String!): Comment
+    upvoteDiscussionChannel(discussionChannelId: ID!, username: String!): DiscussionChannel
+    undoUpvoteDiscussionChannel(discussionChannelId: ID!, username: String!): DiscussionChannel
   }
 
   type DiscussionWithScore {

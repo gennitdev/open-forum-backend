@@ -8,6 +8,7 @@ const updateEventChannelQuery = fs.readFileSync(path.resolve(__dirname, './updat
 const severConnectionBetweenDiscussionAndChannelQuery = fs.readFileSync(path.resolve(__dirname, './severConnectionBetweenDiscussionAndChannelQuery.cypher'), 'utf8');
 const getSiteWideDiscussionListQuery =  fs.readFileSync(path.resolve(__dirname, './getSiteWideDiscussionListQuery.cypher'), 'utf8');
 const commentIsUpvotedByUserQuery = fs.readFileSync(path.resolve(__dirname, './commentIsUpvotedByUserQuery.cypher'), 'utf8');
+const discussionChannelIsUpvotedByUserQuery = fs.readFileSync(path.resolve(__dirname, './discussionChannelIsUpvotedByUserQuery.cypher'), 'utf8');
 
 module.exports = {
   createDiscussionChannelQuery,
@@ -17,4 +18,5 @@ module.exports = {
   severConnectionBetweenDiscussionAndChannelQuery,
   getSiteWideDiscussionListQuery,
   commentIsUpvotedByUserQuery,
+  discussionChannelIsUpvotedByUserQuery
 };

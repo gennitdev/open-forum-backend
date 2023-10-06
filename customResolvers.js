@@ -17,6 +17,8 @@ const removeEmojiFromDiscussionChannel = require("./customResolvers/mutations/re
 
 const upvoteComment = require("./customResolvers/mutations/upvoteComment");
 const undoUpvoteComment = require("./customResolvers/mutations/undoUpvoteComment");
+const upvoteDiscussionChannel = require("./customResolvers/mutations/upvoteDiscussionChannel");
+const undoUpvoteDiscussionChannel = require("./customResolvers/mutations/undoUpvoteDiscussionChannel");
 
 module.exports = function (driver) {
   const ogm = new OGM({
@@ -80,6 +82,16 @@ module.exports = function (driver) {
       }),
       undoUpvoteComment: undoUpvoteComment({
         Comment,
+        User,
+        driver,
+      }),
+      upvoteDiscussionChannel: upvoteDiscussionChannel({
+        DiscussionChannel,
+        User,
+        driver,
+      }),
+      undoUpvoteDiscussionChannel: undoUpvoteDiscussionChannel({
+        DiscussionChannel,
         User,
         driver,
       }),

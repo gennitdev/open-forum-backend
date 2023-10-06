@@ -64,7 +64,6 @@ const upvoteCommentResolver = ({ Comment, User, driver }) => {
       const userSelectionSet = `
       {
           username
-          username
           commentKarma
       }
      `;
