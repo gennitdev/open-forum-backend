@@ -14,27 +14,28 @@ MATCH (dc:DiscussionChannel)-[:POSTED_IN_CHANNEL]->(d:Discussion)
 WHERE (SIZE($selectedChannels) = 0 OR dc.channelUniqueName IN $selectedChannels)
   AND ($searchInput = "" OR d.title CONTAINS $searchInput OR d.body CONTAINS $searchInput)
 OPTIONAL MATCH (dc)-[:UPVOTED_DISCUSSION]->(u:User)
-WITH dc, d, COLLECT(DISTINCT u.username) as userUsernames
+WITH d, dc, COLLECT(DISTINCT u.username) as upvoteUsernames
 OPTIONAL MATCH (dc)-[:CONTAINS_COMMENT]->(c:Comment)
-WITH dc, d, userUsernames, COUNT(c) as commentCount
+WITH d, dc, upvoteUsernames, COUNT(c) as commentCount
+WITH d, {
+  id: dc.id,
+  createdAt: dc.createdAt,
+  channelUniqueName: dc.channelUniqueName,
+  discussionId: dc.discussionId,
+  upvoteCount: SIZE(upvoteUsernames),
+  CommentsAggregate: { count: commentCount },
+  UpvotedByUsers: [] // Placeholder for now
+} as DiscussionChannel
+WITH d, COLLECT(DiscussionChannel) as DiscussionChannels
 OPTIONAL MATCH (d)-[:HAS_TAG]->(tag:Tag)
-WITH d, dc, userUsernames, commentCount, tag
+WITH d, DiscussionChannels, tag
 WHERE SIZE($selectedTags) = 0 OR tag.text IN $selectedTags
 OPTIONAL MATCH (d)<-[:POSTED_DISCUSSION]-(author:User)
-WITH d, author, dc,
-     COUNT(userUsernames) as score,
-     COLLECT(DISTINCT {
-       id: dc.id,
-       createdAt: dc.createdAt,
-       channelUniqueName: dc.channelUniqueName,
-       discussionId: dc.discussionId,
-       upvoteCount: dc.upvoteCount,
-       UpvotedByUsers: userUsernames,
-       Channel: { uniqueName: dc.channelUniqueName },
-       Discussion: { id: dc.discussionId },
-       CommentsAggregate: { count: commentCount }  // Include comment count
-     }) as DiscussionChannels,
+WITH d, author, DiscussionChannels,
      COLLECT(DISTINCT tag.text) as Tags
+WITH d, author, Tags,
+     REDUCE(score = 0, dc IN DiscussionChannels | score + dc.upvoteCount) as score,
+     DiscussionChannels
 RETURN d.id as id, d.title as title, d.body as body, d.createdAt as createdAt, d.updatedAt as updatedAt,
        {username: author.username} as Author,
        DiscussionChannels,
