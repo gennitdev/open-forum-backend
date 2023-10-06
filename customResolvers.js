@@ -1,6 +1,6 @@
 const { OGM } = require("@neo4j/graphql-ogm");
 const typeDefs = require("./typeDefs");
-const GraphQLJSON = require('graphql-type-json');
+const GraphQLJSON = require("graphql-type-json");
 const createDiscussionWithChannelConnections = require("./customResolvers/mutations/createDiscussionWithChannelConnections");
 const updateDiscussionWithChannelConnections = require("./customResolvers/mutations/updateDiscussionWithChannelConnections");
 
@@ -31,14 +31,14 @@ module.exports = function (driver) {
   const DiscussionChannel = ogm.model("DiscussionChannel");
   const Event = ogm.model("Event");
   const Comment = ogm.model("Comment");
-  const User = ogm.model("User")
+  const User = ogm.model("User");
 
   const resolvers = {
     JSON: GraphQLJSON,
     CommentAuthor: {
       __resolveType(obj, context, info) {
-        if(obj.username) {
-          return 'User';
+        if (obj.username) {
+          return "User";
         }
       },
     },
@@ -88,7 +88,7 @@ module.exports = function (driver) {
       removeEmojiFromDiscussionChannel: removeEmojiFromDiscussionChannel({
         DiscussionChannel,
       }),
-      upvoteComment:  upvoteComment({
+      upvoteComment: upvoteComment({
         Comment,
         User,
         driver,
