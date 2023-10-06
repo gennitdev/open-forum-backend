@@ -77,8 +77,38 @@ const getResolver = ({ driver }) => {
             discussions,
             aggregateDiscussionCount,
           };
-          break;
         default:
+          // By default, and if sort is "hot", get the DiscussionChannels sorted by hot,
+          // which takes into account both weightedVotesCount and createdAt.
+          const hotDiscussionsResult = await session.run(
+            getTopSiteWideDiscussionsQuery,
+            {
+              searchInput,
+              selectedChannels,
+              selectedTags,
+              offset,
+              limit,
+              resultsOrder,
+            }
+          );
+
+          if (hotDiscussionsResult.records.length === 0) {
+            return [];
+          }
+
+          let aggregateHotDiscussionCount = hotDiscussionsResult.records[0].get(
+            "aggregateDiscussionCount"
+          );
+
+          const hotDiscussions = hotDiscussionsResult.records.map((record) => {
+            console.log('score is ',record.get("score"))
+            return record.get("discussion");
+          });
+
+          return {
+            discussions: hotDiscussions,
+            aggregateDiscussionCount: aggregateHotDiscussionCount,
+          };
       }
     } catch (error) {
       console.error("Error getting discussions:", error);

@@ -64,6 +64,6 @@ RETURN {
     }
 } AS DiscussionChannel
     
-ORDER BY rank DESC
+ORDER BY rank DESC, createdAt DESC
 SKIP toInteger($offset)
 LIMIT toInteger($limit)

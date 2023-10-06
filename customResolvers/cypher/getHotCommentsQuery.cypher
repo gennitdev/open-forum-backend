@@ -47,6 +47,7 @@ RETURN {
         count: SIZE(ChildComments)
     }
 } AS comment
-ORDER BY rank DESC
+
+ORDER BY rank DESC, c.createdAt DESC
 SKIP toInteger($offset)
 LIMIT toInteger($limit)
