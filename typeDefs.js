@@ -118,7 +118,7 @@ const typeDefs = gql`
     updatedAt: DateTime @timestamp(operations: [UPDATE])
     createdAt: DateTime! @timestamp(operations: [CREATE])
     Tags: [Tag!]! @relationship(type: "HAS_TAG", direction: OUT)
-    weightedVotesCount: Int
+    weightedVotesCount: Float
     UpvotedByUsers: [User!]!
       @relationship(type: "UPVOTED_COMMENT", direction: IN)
     DownvotedByModerators: [ModerationProfile!]!
@@ -321,6 +321,7 @@ const typeDefs = gql`
       channelDisconnections: [String]!
     ): Event
     upvoteComment(commentId: ID!, username: String!): Comment
+    undoUpvoteComment(commentId: ID!, username: String!): Comment
   }
 
   type DiscussionWithScore {

@@ -1,7 +1,7 @@
 const { commentIsUpvotedByUserQuery } = require("../cypher/cypherQueries");
 const { getWeightedVoteBonus } = require("./utils");
 
-const upvoteCommentResolver = ({ Comment, User, driver }) => {
+const undoUpvoteCommentResolver = ({ Comment, User, driver }) => {
   return async (parent, args, context, resolveInfo) => {
     const { commentId, username } = args;
 
@@ -21,8 +21,10 @@ const upvoteCommentResolver = ({ Comment, User, driver }) => {
       const singleRecord = result.records[0];
       const upvotedByUser = singleRecord.get("result").upvotedByUser;
 
-      if (upvotedByUser) {
-        throw new Error("You have already upvoted this comment");
+      if (!upvotedByUser) {
+        throw new Error(
+          "Can't undo upvote because you haven't upvoted this comment yet"
+        );
       }
       // Fetch comment
       const commentSelectionSet = `
@@ -55,44 +57,40 @@ const upvoteCommentResolver = ({ Comment, User, driver }) => {
       const postAuthorUsername = comment.CommentAuthor?.username;
       const postAuthorKarma = comment.CommentAuthor?.commentKarma || 0;
 
-      if (postAuthorUsername === username) {
-        throw new Error("You cannot upvote your own comment");
-      }
-
       // Fetch data of the user who is upvoting the comment
       // because we need it to calculate the weighted vote bonus.
       const userSelectionSet = `
       {
           username
-          username
           commentKarma
       }
      `;
-      const upvoterUserResult = await User.find({
+      const voterUserResult = await User.find({
         where: {
           username,
         },
         selectionSet: userSelectionSet,
       });
 
-      if (upvoterUserResult.length === 0) {
-        throw new Error("User not found");
+      if (voterUserResult.length === 0) {
+        throw new Error(
+          "User data not found for the user who is undoing the upvote"
+        );
       }
 
-      const upvoterUser = upvoterUserResult[0];
+      const voterUser = voterUserResult[0];
 
-      const weightedVoteBonus = getWeightedVoteBonus(upvoterUser);
+      let weightedVoteBonus = getWeightedVoteBonus(voterUser);
 
-      // Update weighted votes count on the comment
-      // and create a relationship between the user and the comment.
-      const updateCommentQuery = `
-        MATCH (c:Comment { id: $commentId }), (u:User { username: $username })
-        SET c.weightedVotesCount = coalesce(c.weightedVotesCount, 0) + 1 + $weightedVoteBonus
-        CREATE (u)-[:UPVOTED_COMMENT]->(c)
-        RETURN c
-      `;
+      // Update weighted votes count on the comment and remove the relationship
+      const undoUpvoteCommentQuery = `
+       MATCH (c:Comment { id: $commentId })<-[r:UPVOTED_COMMENT]-(u:User { username: $username })
+       SET c.weightedVotesCount = coalesce(c.weightedVotesCount, 0) - 1 - $weightedVoteBonus
+       DELETE r
+       RETURN c
+     `;
 
-      await tx.run(updateCommentQuery, {
+      await tx.run(undoUpvoteCommentQuery, {
         commentId,
         username,
         weightedVoteBonus,
@@ -102,7 +100,7 @@ const upvoteCommentResolver = ({ Comment, User, driver }) => {
       if (postAuthorUsername) {
         await User.update({
           where: { username: postAuthorUsername },
-          update: { commentKarma: postAuthorKarma + 1 },
+          update: { commentKarma: postAuthorKarma - 1 },
         });
       }
 
@@ -110,7 +108,7 @@ const upvoteCommentResolver = ({ Comment, User, driver }) => {
 
       return {
         id: commentId,
-        weightedVotesCount: comment.weightedVotesCount + 1 + weightedVoteBonus,
+        weightedVotesCount: comment.weightedVotesCount - 1 - weightedVoteBonus,
       };
     } catch (e) {
       if (tx) {
@@ -133,4 +131,4 @@ const upvoteCommentResolver = ({ Comment, User, driver }) => {
   };
 };
 
-module.exports = upvoteCommentResolver;
+module.exports = undoUpvoteCommentResolver;
