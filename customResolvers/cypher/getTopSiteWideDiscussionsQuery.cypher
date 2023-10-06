@@ -1,12 +1,18 @@
+WITH COALESCE(null, 0) AS aggregateDiscussionCount
+
 // Calculate the aggregate discussion count first
 MATCH (dcAgg:DiscussionChannel)-[:POSTED_IN_CHANNEL]->(dAgg:Discussion)
 WHERE (SIZE($selectedChannels) = 0 OR dcAgg.channelUniqueName IN $selectedChannels)
+// Use the variable $startOfTimeFrame to filter results by time frame
+// If $startOfTimeFrame is not provided, do not filter by time
+AND datetime(dAgg.createdAt).epochMillis > datetime($startOfTimeFrame).epochMillis
 AND ($searchInput = "" OR dAgg.title CONTAINS $searchInput OR dAgg.body CONTAINS $searchInput)
 WITH COUNT(DISTINCT dAgg) AS aggregateDiscussionCount
 
 // Fetch the unique discussions based on the criteria
 MATCH (dc:DiscussionChannel)-[:POSTED_IN_CHANNEL]->(d:Discussion)
 WHERE (SIZE($selectedChannels) = 0 OR dc.channelUniqueName IN $selectedChannels)
+AND datetime(d.createdAt).epochMillis > datetime($startOfTimeFrame).epochMillis
 AND ($searchInput = "" OR d.title CONTAINS $searchInput OR d.body CONTAINS $searchInput)
 
 // Aggregate related data to the discussion
@@ -48,7 +54,8 @@ RETURN
           END,
   UpvotedByUsers: upvoteUsernames,
   CommentsAggregate: { count: commentCount },
-  Tags: tagsText
+  Tags: tagsText,
+  aggregateDiscussionCount: aggregateDiscussionCount
 } AS discussion, aggregateDiscussionCount, score 
 ORDER BY score DESC, discussion.createdAt DESC
 SKIP toInteger($offset)

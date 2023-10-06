@@ -27,7 +27,10 @@ const getResolver = ({ driver }) => {
             }
           );
           if (newDiscussionResult.records.length === 0) {
-            return [];
+            return {
+              discussions: [],
+              aggregateDiscussionCount: 0,
+            };
           }
           let aggregateNewDiscussionCount = newDiscussionResult.records[0].get(
             "aggregateDiscussionCount"
@@ -39,7 +42,7 @@ const getResolver = ({ driver }) => {
 
           return {
             discussions: newDiscussions,
-            aggregateDiscussionCount: aggregateNewDiscussionCount,
+            aggregateDiscussionCount: aggregateNewDiscussionCount || 0,
           };
         case "top":
           // if sort is "top", get the Discussions sorted by the sum of the
@@ -59,11 +62,15 @@ const getResolver = ({ driver }) => {
               offset,
               limit,
               resultsOrder,
+              startOfTimeFrame: selectedTimeFrame,
             }
           );
 
           if (topDiscussionsResult.records.length === 0) {
-            return [];
+            return {
+              discussions: [],
+              aggregateDiscussionCount: 0,
+            }
           }
           let aggregateDiscussionCount = topDiscussionsResult.records[0].get(
             "aggregateDiscussionCount"
@@ -75,7 +82,7 @@ const getResolver = ({ driver }) => {
 
           return {
             discussions,
-            aggregateDiscussionCount,
+            aggregateDiscussionCount: aggregateDiscussionCount || 0,
           };
         default:
           // By default, and if sort is "hot", get the DiscussionChannels sorted by hot,
@@ -93,7 +100,10 @@ const getResolver = ({ driver }) => {
           );
 
           if (hotDiscussionsResult.records.length === 0) {
-            return [];
+            return {
+              discussions: [],
+              aggregateDiscussionCount: 0,
+            }
           }
 
           let aggregateHotDiscussionCount = hotDiscussionsResult.records[0].get(
@@ -104,10 +114,12 @@ const getResolver = ({ driver }) => {
             console.log('score is ',record.get("score"))
             return record.get("discussion");
           });
+          console.log('hot discussions are ',hotDiscussions)
+          console.log('aggregate hot discussion count is ',aggregateHotDiscussionCount)
 
           return {
             discussions: hotDiscussions,
-            aggregateDiscussionCount: aggregateHotDiscussionCount,
+            aggregateDiscussionCount: aggregateHotDiscussionCount || 0,
           };
       }
     } catch (error) {
