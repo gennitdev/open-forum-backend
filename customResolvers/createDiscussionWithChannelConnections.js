@@ -1,11 +1,4 @@
-const createDiscussionChannelQuery = `
-MATCH (d:Discussion {id: $discussionId}), (c:Channel {uniqueName: $channelUniqueName})
-MERGE (dc:DiscussionChannel {discussionId: $discussionId, channelUniqueName: $channelUniqueName})
-ON CREATE SET dc.id = apoc.create.uuid()
-MERGE (dc)-[:POSTED_IN_CHANNEL]->(d) 
-MERGE (dc)-[:POSTED_IN_CHANNEL]->(c)
-RETURN dc, d, c
-`;
+const { createDiscussionChannelQuery } = require("./cypherQueries")
 
 const getResolver = ({Discussion, driver}) => {
   return async (parent, args, context, info) => {
@@ -98,7 +91,6 @@ const getResolver = ({Discussion, driver}) => {
         },
         selectionSet,
       });
-      console.log("discussion find ", result);
       session.close();
 
       return result[0];

@@ -274,6 +274,12 @@ const typeDefs = gql`
       discussionCreateInput: DiscussionCreateInput
       channelConnections: [String]
     ): Discussion
+    updateDiscussionWithChannelConnections(
+      discussionWhere: DiscussionWhere!
+      discussionUpdateInput: DiscussionUpdateInput!
+      channelConnections: [String!]!
+      channelDisconnections: [String]!
+    ): Discussion
   }
 `;
 

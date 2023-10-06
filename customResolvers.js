@@ -1,6 +1,7 @@
 const { OGM } = require("@neo4j/graphql-ogm");
 const typeDefs = require("./typeDefs");
 const createDiscussionWithChannelConnections = require("./customResolvers/createDiscussionWithChannelConnections");
+const updateDiscussionWithChannelConnections = require("./customResolvers/updateDiscussionWithChannelConnections");
 
 module.exports = function (driver) {
   const ogm = new OGM({
@@ -16,6 +17,10 @@ module.exports = function (driver) {
         Discussion,
         driver
       }),
+      updateDiscussionWithChannelConnections: updateDiscussionWithChannelConnections({
+        Discussion,
+        driver
+      })
     },
   };
   return {
