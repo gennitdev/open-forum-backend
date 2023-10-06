@@ -16,8 +16,9 @@ WITH d, aggregateDiscussionCount
 
 // First, match the tags and gather them for each discussion
 OPTIONAL MATCH (d)-[:HAS_TAG]->(tag:Tag)
-WITH d, aggregateDiscussionCount, COLLECT(tag.text) AS tagsText, COLLECT(tag) AS tags
-WHERE SIZE($selectedTags) = 0 OR ANY(t IN tagsText WHERE t IN $selectedTags)
+WITH d, aggregateDiscussionCount, 
+     [x IN COLLECT(tag.text) WHERE x IS NOT NULL] AS tagsText, 
+     [y IN COLLECT(tag) WHERE y.text IS NOT NULL] AS tags
 
 OPTIONAL MATCH (d)<-[:POSTED_DISCUSSION]-(author:User)
 OPTIONAL MATCH (d)<-[:POSTED_IN_CHANNEL]-(dc:DiscussionChannel)
@@ -28,6 +29,7 @@ OPTIONAL MATCH (dc)-[:CONTAINS_COMMENT]->(c:Comment)
 WITH d, 
     author, 
     tags,
+    tagsText,
     COLLECT(DISTINCT u.username) AS upvoteUsernames, 
     COUNT(DISTINCT c) AS commentCount, 
     SUM(COALESCE(dc.weightedVotesCount, 0)) AS score, 
@@ -39,6 +41,7 @@ WITH d,
 WITH d,
     author,
     tags,
+    tagsText,
     upvoteUsernames,
     commentCount,
     score,
@@ -65,10 +68,7 @@ RETURN
           END,
   UpvotedByUsers: upvoteUsernames,
   CommentsAggregate: { count: commentCount },
-  Tags: CASE 
-           WHEN ANY(tag IN tags WHERE tag.text IS NULL) THEN null
-           ELSE tags
-        END,
+  Tags: [t IN tagsText | {text: t}],
   aggregateDiscussionCount: aggregateDiscussionCount
 } AS discussion, aggregateDiscussionCount, rank 
 ORDER BY rank DESC, discussion.createdAt DESC
