@@ -35,7 +35,7 @@ const typeDefs = gql`
     channelUniqueName: String! # used for uniqueness constraint
     Discussion: Discussion
       @relationship(type: "POSTED_IN_CHANNEL", direction: OUT)
-    Channel: Channel @relationship(type: "POSTED_IN_CHANNEL", direction: IN)
+    Channel: Channel @relationship(type: "POSTED_IN_CHANNEL", direction: OUT)
     UpvotedByUsers: [User!]!
       @relationship(type: "UPVOTED_DISCUSSION", direction: OUT)
     DownvotedByModerators: [ModerationProfile!]!
@@ -43,6 +43,21 @@ const typeDefs = gql`
     Comments: [Comment!]!
       @relationship(type: "CONTAINS_COMMENT", direction: OUT)
     Emoji: [Emoji!]! @relationship(type: "HAS_EMOJI", direction: OUT)
+  }
+
+  type Discussion {
+    id: ID! @id
+    Author: User @relationship(type: "POSTED_DISCUSSION", direction: IN)
+    body: String
+    title: String!
+    createdAt: DateTime! @timestamp(operations: [CREATE])
+    updatedAt: DateTime @timestamp(operations: [UPDATE])
+    deleted: Boolean
+    # Flairs:                  [Flair]                 @relationship(type: "HAS_FLAIR", direction: OUT)
+    Tags: [Tag!]! @relationship(type: "HAS_TAG", direction: OUT)
+    # PastVersions:            [DiscussionVersion]     @relationship(type: "HAS_VERSION", direction: OUT)
+    DiscussionChannels: [DiscussionChannel!]!
+      @relationship(type: "POSTED_IN_CHANNEL", direction: IN)
   }
 
   type EventChannel {
@@ -79,21 +94,6 @@ const typeDefs = gql`
     # PastVersions:          [EventVersion]    @relationship(type: "HAS_VERSION", direction: OUT)
     EventChannels: [Channel!]!
       @relationship(type: "POSTED_IN_CHANNEL", direction: OUT)
-  }
-
-  type Discussion {
-    id: ID! @id
-    Author: User @relationship(type: "POSTED_DISCUSSION", direction: IN)
-    body: String
-    title: String!
-    createdAt: DateTime! @timestamp(operations: [CREATE])
-    updatedAt: DateTime @timestamp(operations: [UPDATE])
-    deleted: Boolean
-    # Flairs:                  [Flair]                 @relationship(type: "HAS_FLAIR", direction: OUT)
-    Tags: [Tag!]! @relationship(type: "HAS_TAG", direction: OUT)
-    # PastVersions:            [DiscussionVersion]     @relationship(type: "HAS_VERSION", direction: OUT)
-    DiscussionChannels: [DiscussionChannel!]!
-      @relationship(type: "POSTED_IN_CHANNEL", direction: IN)
   }
 
   type Comment {
@@ -270,7 +270,7 @@ const typeDefs = gql`
   }
 
   type Mutation {
-    createDiscussionTestMutation(
+    createDiscussionWithChannelConnections(
       discussionCreateInput: DiscussionCreateInput
       channelConnections: [String]
     ): Discussion
