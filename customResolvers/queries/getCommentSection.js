@@ -1,5 +1,6 @@
 const {
   getTopCommentsQuery,
+  getHotCommentsQuery
 } = require("../cypher/cypherQueries");
 
 const getResolver = ({ driver, DiscussionChannel, Comment }) => {
@@ -174,7 +175,18 @@ const getResolver = ({ driver, DiscussionChannel, Comment }) => {
      console.log('top comments result is ', commentsResult)
         
     } else {
-        // Will implement "hot" sort later
+        // if sort is "hot", get the comments sorted by hotness.
+        commentsResult = await session.run(getHotCommentsQuery, {
+            discussionChannelId,
+            offset: parseInt(offset, 10),
+            limit: parseInt(limit, 10),
+        })
+        commentsResult = commentsResult.records.map((record) => {
+            return record.get("comment")
+        })
+
+
+        console.log('hot comments result is ', commentsResult)
       }
 
       return {
