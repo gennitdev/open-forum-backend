@@ -48,6 +48,7 @@ const getResolver = ({Discussion, driver}) => {
           }
           DiscussionChannels {
             id
+            createdAt
             channelUniqueName
             discussionId
             upvoteCount
@@ -74,7 +75,6 @@ const getResolver = ({Discussion, driver}) => {
         input: [discussionCreateInput],
         selectionSet: `{ discussions ${selectionSet} }`
       });
-      console.log("Create Discussion Response:", response);
       const newDiscussion = response.discussions[0];
 
       const newDiscussionId = newDiscussion.id;

@@ -282,6 +282,9 @@ const typeDefs = gql`
       channelConnections: [String!]!
       channelDisconnections: [String]!
     ): Discussion
+    updateDiscussionChannelUpvoteCount(
+      id: ID!
+    ): DiscussionChannel
   }
 `;
 

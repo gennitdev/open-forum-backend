@@ -2,6 +2,7 @@ const { OGM } = require("@neo4j/graphql-ogm");
 const typeDefs = require("./typeDefs");
 const createDiscussionWithChannelConnections = require("./customResolvers/createDiscussionWithChannelConnections");
 const updateDiscussionWithChannelConnections = require("./customResolvers/updateDiscussionWithChannelConnections");
+const updateDiscussionChannelUpvoteCount = require("./customResolvers/updateDiscussionChannelUpvoteCount");
 
 module.exports = function (driver) {
   const ogm = new OGM({
@@ -10,17 +11,24 @@ module.exports = function (driver) {
   });
 
   const Discussion = ogm.model("Discussion");
+  const DiscussionChannel = ogm.model("DiscussionChannel");
 
   const resolvers = {
     Mutation: {
-      createDiscussionWithChannelConnections: createDiscussionWithChannelConnections({
-        Discussion,
-        driver
+      createDiscussionWithChannelConnections:
+        createDiscussionWithChannelConnections({
+          Discussion,
+          driver,
+        }),
+      updateDiscussionWithChannelConnections:
+        updateDiscussionWithChannelConnections({
+          Discussion,
+          driver,
+        }),
+      updateDiscussionChannelUpvoteCount: updateDiscussionChannelUpvoteCount({
+        DiscussionChannel,
+        driver,
       }),
-      updateDiscussionWithChannelConnections: updateDiscussionWithChannelConnections({
-        Discussion,
-        driver
-      })
     },
   };
   return {
