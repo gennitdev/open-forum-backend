@@ -10,8 +10,6 @@ WITH COUNT(DISTINCT dAgg) AS aggregateDiscussionCount
 MATCH (dc:DiscussionChannel)-[:POSTED_IN_CHANNEL]->(d:Discussion)
 WHERE (SIZE($selectedChannels) = 0 OR dc.channelUniqueName IN $selectedChannels)
 AND ($searchInput = "" OR d.title CONTAINS $searchInput OR d.body CONTAINS $searchInput)
-
-
 WITH d, aggregateDiscussionCount
 
 // First, match the tags and gather them for each discussion
@@ -26,26 +24,15 @@ OPTIONAL MATCH (dc)-[:UPVOTED_DISCUSSION]->(u:User)
 OPTIONAL MATCH (dc)-[:CONTAINS_COMMENT]->(c:Comment)
 
 // Group by discussions and aggregate
-WITH d, 
-    author, 
-    tags,
-    tagsText,
-    COLLECT(DISTINCT u.username) AS upvoteUsernames, 
-    COUNT(DISTINCT c) AS commentCount, 
-    SUM(COALESCE(dc.weightedVotesCount, 0)) AS score, 
-    // Compute the age in months from the createdAt timestamp.
-    duration.between(dc.createdAt, datetime()).months + 
-    duration.between(dc.createdAt, datetime()).days / 30.0 AS ageInMonths,
-    aggregateDiscussionCount
+WITH d, author, tags, tagsText, aggregateDiscussionCount,
+     COLLECT(DISTINCT u.username) AS upvoteUsernames, 
+     COUNT(DISTINCT c) AS commentCount, 
+     SUM(COALESCE(dc.weightedVotesCount, 0)) AS score,
+     // Using MAX to handle ageInMonths for the grouping 
+     MAX(duration.between(dc.createdAt, datetime()).months + 
+     duration.between(dc.createdAt, datetime()).days / 30.0) AS ageInMonths
 
-WITH d,
-    author,
-    tags,
-    tagsText,
-    upvoteUsernames,
-    commentCount,
-    score,
-    aggregateDiscussionCount,
+WITH d, author, tags, tagsText, upvoteUsernames, commentCount, score, aggregateDiscussionCount,
     // Use ageInMonths to calculate the rank.
     10000 * log10(score + 1) / ((ageInMonths + 2) ^ 1.8) AS rank
 
