@@ -6,8 +6,8 @@ const neo4j = require("neo4j-driver");
 const password = process.env.NEO4J_PASSWORD;
 
 const driver = neo4j.driver(
-    "bolt://localhost:7687",
-    neo4j.auth.basic("neo4j", password)
+  "bolt://localhost:7687",
+  neo4j.auth.basic("neo4j", password)
 );
 
 const typeDefs = gql`
@@ -166,16 +166,16 @@ const typeDefs = gql`
   }
 `;
 
-const neoSchema = new Neo4jGraphQL({ typeDefs, driver });
+const neoSchema = new Neo4jGraphQL({ typeDefs, driver, config: { enableRegex: true } });
 
-neoSchema.assertIndexesAndConstraints({ options: { create: true }})
+neoSchema.assertIndexesAndConstraints({ options: { create: true } })
   .then(() => {
     const server = new ApolloServer({
-        schema: neoSchema.schema,
+      schema: neoSchema.schema,
     });
-    
+
     server.listen().then(({ url }) => {
-        console.log(`🚀 Server ready at ${url}`);
+      console.log(`🚀 Server ready at ${url}`);
     });
   })
   .catch(e => {
