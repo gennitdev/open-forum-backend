@@ -1,6 +1,8 @@
 const { gql } = require("apollo-server");
 
 const typeDefs = gql`
+  scalar JSON
+
   type Channel {
     description: String
     name: String
@@ -44,7 +46,7 @@ const typeDefs = gql`
       @relationship(type: "DOWNVOTED_DISCUSSION", direction: OUT)
     Comments: [Comment!]!
       @relationship(type: "CONTAINS_COMMENT", direction: OUT)
-    Emoji: [Emoji!]! @relationship(type: "HAS_EMOJI", direction: OUT)
+    emoji: JSON
   }
 
   type Discussion {
@@ -120,7 +122,7 @@ const typeDefs = gql`
     DownvotedByModerators: [ModerationProfile!]!
       @relationship(type: "DOWNVOTED_COMMENT", direction: IN)
     # PastVersions:            [CommentVersion]        @relationship(type: "HAS_VERSION", direction: OUT)
-    Emoji: [Emoji!]! @relationship(type: "HAS_EMOJI", direction: OUT)
+    emoji: JSON
   }
 
   type Emoji {

@@ -1,5 +1,6 @@
 const { OGM } = require("@neo4j/graphql-ogm");
 const typeDefs = require("./typeDefs");
+const GraphQLJSON = require('graphql-type-json');
 const createDiscussionWithChannelConnections = require("./customResolvers/createDiscussionWithChannelConnections");
 const updateDiscussionWithChannelConnections = require("./customResolvers/updateDiscussionWithChannelConnections");
 const updateDiscussionChannelUpvoteCount = require("./customResolvers/updateDiscussionChannelUpvoteCount");
@@ -20,6 +21,7 @@ module.exports = function (driver) {
   const Event = ogm.model("Event");
 
   const resolvers = {
+    JSON: GraphQLJSON,
     Query: {
       getSiteWideDiscussionList: getSiteWideDiscussionList({
         Discussion,
