@@ -36,9 +36,13 @@ WITH d, author, DiscussionChannels,
 WITH d, author, Tags,
      REDUCE(score = 0, dc IN DiscussionChannels | score + dc.upvoteCount) as score,
      DiscussionChannels
-RETURN d.id as id, d.title as title, d.body as body, d.createdAt as createdAt, d.updatedAt as updatedAt,
-       {username: author.username} as Author,
-       DiscussionChannels,
-       Tags,
-       score
+WITH collect({d: d, author: author, DiscussionChannels: DiscussionChannels, Tags: Tags, score: score}) as discussionsData, count(d) as aggregateDiscussionCount
+UNWIND discussionsData as discussionData
+RETURN discussionData.d.id as id, discussionData.d.title as title, discussionData.d.body as body, discussionData.d.createdAt as createdAt, discussionData.d.updatedAt as updatedAt,
+       {username: discussionData.author.username} as Author,
+       discussionData.DiscussionChannels as DiscussionChannels,
+       discussionData.Tags as Tags,
+       discussionData.score as score,
+       aggregateDiscussionCount
 ORDER BY score DESC
+

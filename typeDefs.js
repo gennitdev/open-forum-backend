@@ -301,12 +301,28 @@ const typeDefs = gql`
     score: Int!
   }
 
+  input SiteWideDiscussionSortOrder {
+    upvoteCount: String
+  }
+
+  input DiscussionListOptions {
+    resultsOrder: SiteWideDiscussionSortOrder
+    offset: Int
+    limit: Int
+  }
+
+  type SiteWideDiscussionListFormat {
+    aggregateDiscussionCount: Int!
+    discussions: [DiscussionWithScore!]!
+  }
+
   type Query {
     getSiteWideDiscussionList(
-      searchInput: String,
+      searchInput: String
       selectedChannels: [String]
       selectedTags: [String]
-    ): [DiscussionWithScore]
+      options: DiscussionListOptions
+    ): SiteWideDiscussionListFormat
   }
 `;
 
