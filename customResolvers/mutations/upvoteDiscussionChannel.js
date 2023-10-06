@@ -61,10 +61,6 @@ const upvoteDiscussionChannelResolver = ({ DiscussionChannel, User, driver }) =>
       const postAuthorUsername = discussionChannel.Discussion?.Author?.username;
       const postAuthorKarma = discussionChannel.Discussion?.Author?.discussionKarma || 0;
 
-      if (postAuthorUsername === username) {
-        throw new Error("You cannot upvote your own discussion");
-      }
-
       // Fetch data of the user who is upvoting the discussionChannel
       // because we need it to calculate the weighted vote bonus.
       const userSelectionSet = `
