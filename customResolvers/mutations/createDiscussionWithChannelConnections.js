@@ -1,4 +1,4 @@
-const { createDiscussionChannelQuery } = require("./cypherQueries")
+const { createDiscussionChannelQuery } = require("../cypher/cypherQueries");
 
 const getResolver = ({Discussion, driver}) => {
   return async (parent, args, context, info) => {

@@ -1,4 +1,4 @@
-const { createEventChannelQuery } = require("./cypherQueries")
+const { createEventChannelQuery } = require("../cypher/cypherQueries");
 
 const getResolver = ({Event, driver}) => {
   return async (parent, args, context, info) => {

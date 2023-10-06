@@ -1,6 +1,6 @@
-const { getSiteWideDiscussionListQuery } = require("./cypherQueries");
+const { getSiteWideDiscussionListQuery } = require("../cypher/cypherQueries");
 
-const getResolver = ({ Event, driver }) => {
+const getResolver = ({ driver }) => {
   return async (parent, args, context, info) => {
     const { searchInput, selectedChannels, selectedTags, options } = args;
     const { offset, limit, resultsOrder } = options || {};

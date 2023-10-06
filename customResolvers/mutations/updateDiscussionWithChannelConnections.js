@@ -1,27 +1,27 @@
-const { updateEventChannelQuery, severConnectionBetweenEventAndChannelQuery } = require("./cypherQueries");
+const { updateDiscussionChannelQuery, severConnectionBetweenDiscussionAndChannelQuery } = require("../cypher/cypherQueries");
 
-const getResolver = ({ Event, driver }) => {
+const getResolver = ({ Discussion, driver }) => {
   return async (parent, args, context, info) => {
     const {
-      eventWhere,
-      eventUpdateInput,
+      discussionWhere,
+      discussionUpdateInput,
       channelConnections,
       channelDisconnections,
     } = args;
 
     if (!channelConnections || channelConnections.length === 0) {
       throw new Error(
-        "At least one channel must be selected. To remove an event from all channels, use the deleteEvent mutation."
+        "At least one channel must be selected. To remove a discussion from all channels, use the deleteDiscussion mutation."
       );
     }
 
     try {
-      // Update the event
-      await Event.update({
-        where: eventWhere,
-        update: eventUpdateInput,
+      // Update the discussion
+      await Discussion.update({
+        where: discussionWhere,
+        update: discussionUpdateInput,
       });
-      const updatedEventId = eventWhere.id;
+      const updatedDiscussionId = discussionWhere.id;
 
       const session = driver.session();
 
@@ -29,14 +29,14 @@ const getResolver = ({ Event, driver }) => {
       for (let i = 0; i < channelConnections.length; i++) {
         const channelUniqueName = channelConnections[i];
 
-        // For each channel connection, create a EventChannel node
+        // For each channel connection, create a DiscussionChannel node
         // if one does not already exist.
 
-        // Join the EventChannel to the Event and Channel nodes.
+        // Join the DiscussionChannel to the Discussion and Channel nodes.
         // If there was an existing one, join that. If we just created one,
         // join that.
-        await session.run(updateEventChannelQuery, {
-          eventId: updatedEventId,
+        await session.run(updateDiscussionChannelQuery, {
+          discussionId: updatedDiscussionId,
           channelUniqueName: channelUniqueName,
         });
       }
@@ -45,44 +45,35 @@ const getResolver = ({ Event, driver }) => {
       for (let i = 0; i < channelDisconnections.length; i++) {
         const channelUniqueName = channelDisconnections[i];
         // For each channel disconnection, sever the connection between
-        // the Event and the EventChannel node.
-        // We intentionally do not delete the EventChannel node
+        // the Discussion and the DiscussionChannel node.
+        // We intentionally do not delete the DiscussionChannel node
         // because it contains comments that are authored by other users
-        // than the event poster, and the event poster should
+        // than the discussion author, and the discussion author should
         // not have permission to delete those comments.
-        await session.run(severConnectionBetweenEventAndChannelQuery, {
-          eventId: updatedEventId,
+        await session.run(severConnectionBetweenDiscussionAndChannelQuery, {
+          discussionId: updatedDiscussionId,
           channelUniqueName: channelUniqueName,
         });
       }
-      // Refetch the newly created event with the channel connections
+
+      // Refetch the newly created discussion with the channel connections
       // and disconnections so that we can return it.
       const selectionSet = `
         {
           id
           title
-          description
-          startTime
-          startTimeDayOfWeek
-          startTimeHourOfDay
-          endTime
-          locationName
-          address
-          virtualEventUrl
-          startTimeDayOfWeek
-          canceled
-          cost
-          Poster {
+          body
+          Author {
             username
           }
-          EventChannels {
+          DiscussionChannels {
             id
             channelUniqueName
-            eventId
+            discussionId
             Channel {
               uniqueName
             }
-            Event {
+            Discussion {
               id
             }
           }
@@ -94,9 +85,9 @@ const getResolver = ({ Event, driver }) => {
         }
       `;
 
-      const result = await Event.find({
+      const result = await Discussion.find({
         where: {
-          id: updatedEventId,
+          id: updatedDiscussionId,
         },
         selectionSet,
       });
@@ -104,8 +95,8 @@ const getResolver = ({ Event, driver }) => {
 
       return result[0];
     } catch (error) {
-      console.error("Error updating event:", error);
-      throw new Error(`Failed to update event. ${error.message}`);
+      console.error("Error updating discussion:", error);
+      throw new Error(`Failed to update discussion. ${error.message}`);
     }
   };
 };

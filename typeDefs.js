@@ -10,7 +10,7 @@ const typeDefs = gql`
     createdAt: DateTime! @timestamp(operations: [CREATE])
     locked: Boolean
     deleted: Boolean
-    # Categories:                   [Category]                @relationship(type: "HAS_CATEGORY", direction: OUT)
+    # Flair: [String!]
     Tags: [Tag!]! @relationship(type: "HAS_TAG", direction: OUT)
     # WikiPages:                [WikiPage]             @relationship(type: "HAS_WIKI_PAGE", direction: OUT)
     ModerationDashboard: ModerationDashboard
@@ -259,7 +259,6 @@ const typeDefs = gql`
     title: String
     description: String
     Owner: User @relationship(type: "CREATED_FEED", direction: IN)
-    # Sources:               [Source]
     Tags: [Tag!]! @relationship(type: "HAS_TAG", direction: OUT)
     deleted: Boolean
   }
@@ -270,11 +269,21 @@ const typeDefs = gql`
     Discussions: [Discussion!]! @relationship(type: "HAS_TAG", direction: IN)
     Events: [Event!]! @relationship(type: "HAS_TAG", direction: IN)
     Comments: [Comment!]! @relationship(type: "HAS_TAG", direction: IN)
-    # WikiPages:             [WikiPage]              @relationship(type: "HAS_TAG", direction: IN)
     Feeds: [Feed!]! @relationship(type: "HAS_TAG", direction: IN)
   }
 
   type Mutation {
+    addEmojiToComment(
+      commentId: ID!
+      emojiLabel: String!
+      unicode: String!
+      username: String!
+    ): Comment
+    removeEmojiFromComment(
+      commentId: ID!
+      emojiLabel: String!
+      username: String!
+    ): Comment
     createDiscussionWithChannelConnections(
       discussionCreateInput: DiscussionCreateInput
       channelConnections: [String]
