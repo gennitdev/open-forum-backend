@@ -344,12 +344,21 @@ const typeDefs = gql`
     discussions: [DiscussionWithScore!]!
   }
 
+  enum TimeFrame {
+    day
+    week
+    month
+    year
+    all
+  }
+
   type Query {
     getDiscussionsInChannel(
       channelUniqueName: String!
       offset: Int
       limit: Int
       sort: String
+      timeFrame: TimeFrame
     ): [DiscussionChannel]
     getSiteWideDiscussionList(
       searchInput: String

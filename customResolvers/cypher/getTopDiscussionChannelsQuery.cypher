@@ -1,5 +1,9 @@
 MATCH (dc:DiscussionChannel { channelUniqueName: $channelUniqueName })
 
+// Use the variable $startOfTimeFrame to filter results by time frame
+// If $startOfTimeFrame is not provided, do not filter by time
+WHERE datetime(dc.createdAt).epochMillis > datetime($startOfTimeFrame).epochMillis
+
 OPTIONAL MATCH (dc)-[:POSTED_IN_CHANNEL]->(d:Discussion)
 OPTIONAL MATCH (d)<-[:POSTED_DISCUSSION]-(author:User)
 OPTIONAL MATCH (dc)-[:UPVOTED_DISCUSSION]->(upvoter:User)

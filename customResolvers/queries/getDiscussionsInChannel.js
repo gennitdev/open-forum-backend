@@ -6,17 +6,19 @@ const luxon = require("luxon");
 
 
 const timeFrameOptions = {
+  // Conversion to UTC is required for the time comparison
+  // to be in a consistent timezone.
   day: {
-    start: luxon.DateTime.local().minus({ days: 1 }).toISO(),
+    start: luxon.DateTime.local().minus({ days: 1 }).toUTC().toISO(),
   },
   week: {
-    start: luxon.DateTime.local().minus({ weeks: 1 }).toISO(),
+    start: luxon.DateTime.local().minus({ weeks: 1 }).toUTC().toISO(),
   },
   month: {
-    start: luxon.DateTime.local().minus({ months: 1 }).toISO(),
+    start: luxon.DateTime.local().minus({ months: 1 }).toUTC().toISO(),
   },
   year: {
-    start: luxon.DateTime.local().minus({ years: 1 }).toISO(),
+    start: luxon.DateTime.local().minus({ years: 1 }).toUTC().toISO(),
   },
 }
 
@@ -91,13 +93,25 @@ const getResolver = ({ driver, DiscussionChannel }) => {
         case "top":
           // if sort is "top", get the DiscussionChannels sorted by weightedVotesCount.
           // Treat a null weightedVotesCount as 0.
+
+          let selectedTimeFrame = null;
+
+          if (timeFrameOptions[timeFrame]) {
+            selectedTimeFrame = timeFrameOptions[timeFrame].start;
+          }
+          console.log('variables in session ',{
+            channelUniqueName,
+            offset: parseInt(offset, 10),
+            limit: parseInt(limit, 10),
+            startOfTimeFrame: selectedTimeFrame,
+          })
           const topDiscussionChannelsResult = await session.run(
             getTopDiscussionChannelsQuery,
             {
               channelUniqueName,
               offset: parseInt(offset, 10),
               limit: parseInt(limit, 10),
-              startOfTimeFrame: timeFrameOptions[timeFrame].start,
+              startOfTimeFrame: selectedTimeFrame,
             }
           );
 
