@@ -34,7 +34,12 @@ WITH d, author, Tags,
 WITH collect({d: d, author: author, DiscussionChannels: DiscussionChannels, Tags: Tags, score: score}) as discussionsData, count(d) as aggregateDiscussionCount
 UNWIND discussionsData as discussionData
 RETURN discussionData.d.id as id, discussionData.d.title as title, discussionData.d.body as body, discussionData.d.createdAt as createdAt, discussionData.d.updatedAt as updatedAt,
-       {username: discussionData.author.username} as Author,
+       {
+        username: discussionData.author.username,
+        createdAt: discussionData.author.createdAt,
+        commentKarma: discussionData.author.commentKarma,
+        discussionKarma: discussionData.author.discussionKarma
+      } as Author,
        discussionData.DiscussionChannels as DiscussionChannels,
        discussionData.Tags as Tags,
        discussionData.score as score,
