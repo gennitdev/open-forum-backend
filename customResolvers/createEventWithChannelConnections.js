@@ -5,6 +5,7 @@ const getResolver = ({Event, driver}) => {
     const { eventCreateInput, channelConnections } = args;
 
     if (!channelConnections || channelConnections.length === 0) {
+      console.error("At least one channel must be selected");
       throw new Error("At least one channel must be selected");
     }
 
@@ -35,6 +36,7 @@ const getResolver = ({Event, driver}) => {
           }
         }
       `;
+      console.log('created gql selectionSet', selectionSet)
 
     try {
       const response = await Event.create({

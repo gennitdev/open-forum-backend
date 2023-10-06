@@ -7,6 +7,8 @@ const updateDiscussionChannelUpvoteCount = require("./customResolvers/updateDisc
 const createEventWithChannelConnections = require("./customResolvers/createEventWithChannelConnections");
 const updateEventWithChannelConnections = require("./customResolvers/updateEventWithChannelConnections");
 
+const getSiteWideDiscussionList = require("./customResolvers/getSiteWideDiscussionList");
+
 module.exports = function (driver) {
   const ogm = new OGM({
     typeDefs,
@@ -15,8 +17,15 @@ module.exports = function (driver) {
 
   const Discussion = ogm.model("Discussion");
   const DiscussionChannel = ogm.model("DiscussionChannel");
+  const Event = ogm.model("Event");
 
   const resolvers = {
+    Query: {
+      getSiteWideDiscussionList: getSiteWideDiscussionList({
+        Discussion,
+        driver,
+      }),
+    },
     Mutation: {
       createDiscussionWithChannelConnections:
         createDiscussionWithChannelConnections({

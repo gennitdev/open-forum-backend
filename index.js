@@ -30,6 +30,14 @@ CREATE CONSTRAINT discussion_channel_unique IF NOT EXISTS FOR (dc:DiscussionChan
 REQUIRE (dc.discussionId, dc.channelUniqueName) IS NODE KEY
 `;
 
+// The EventChannel represents the relationship between an Event and a Channel.
+// Because the same Event should not be submitted to the same Channel twice,
+// we need to create a uniqueness constraint on the EventChannel relationship.
+const constraintQuery2 = `
+CREATE CONSTRAINT event_channel_unique IF NOT EXISTS FOR (ec:EventChannel)
+REQUIRE (ec.eventId, ec.channelUniqueName) IS NODE KEY
+`;
+
 async function initializeServer() {
   try {
     const schema = await neoSchema.getSchema();

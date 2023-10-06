@@ -47,18 +47,6 @@ const typeDefs = gql`
     Emoji: [Emoji!]! @relationship(type: "HAS_EMOJI", direction: OUT)
   }
 
-  type EventChannel {
-    id: ID! @id
-    locked: Boolean
-    eventId: ID! # used for uniqueness constraint
-    channelUniqueName: String! # used for uniqueness constraint
-    createdAt: DateTime! @timestamp(operations: [CREATE])
-    Event: Event @relationship(type: "POSTED_IN_CHANNEL", direction: OUT)
-    Channel: Channel @relationship(type: "POSTED_IN_CHANNEL", direction: OUT)
-    Comments: [Comment!]!
-      @relationship(type: "CONTAINS_COMMENT", direction: OUT)
-  }
-
   type Discussion {
     id: ID! @id
     Author: User @relationship(type: "POSTED_DISCUSSION", direction: IN)
@@ -71,6 +59,18 @@ const typeDefs = gql`
     # PastVersions:            [DiscussionVersion]     @relationship(type: "HAS_VERSION", direction: OUT)
     DiscussionChannels: [DiscussionChannel!]!
       @relationship(type: "POSTED_IN_CHANNEL", direction: IN)
+  }
+
+  type EventChannel {
+    id: ID! @id
+    locked: Boolean
+    eventId: ID! # used for uniqueness constraint
+    channelUniqueName: String! # used for uniqueness constraint
+    createdAt: DateTime! @timestamp(operations: [CREATE])
+    Event: Event @relationship(type: "POSTED_IN_CHANNEL", direction: OUT)
+    Channel: Channel @relationship(type: "POSTED_IN_CHANNEL", direction: OUT)
+    Comments: [Comment!]!
+      @relationship(type: "CONTAINS_COMMENT", direction: OUT)
   }
 
   type Event {
@@ -96,7 +96,7 @@ const typeDefs = gql`
     Poster: User @relationship(type: "POSTED_BY", direction: IN)
     Tags: [Tag!]! @relationship(type: "HAS_TAG", direction: OUT)
     # PastVersions:          [EventVersion]    @relationship(type: "HAS_VERSION", direction: OUT)
-    EventChannels: [Channel!]!
+    EventChannels: [EventChannel!]!
       @relationship(type: "POSTED_IN_CHANNEL", direction: IN)
   }
 
@@ -294,6 +294,10 @@ const typeDefs = gql`
       channelConnections: [String!]!
       channelDisconnections: [String]!
     ): Event
+  }
+
+  type Query {
+    getSiteWideDiscussionList: [Discussion]
   }
 `;
 

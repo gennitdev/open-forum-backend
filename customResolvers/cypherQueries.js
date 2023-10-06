@@ -39,6 +39,16 @@ MERGE (dc)-[:POSTED_IN_CHANNEL]->(d)
 RETURN dc, d, c
 `;
 
+const updateEventChannelQuery = `
+MATCH (e:Event {id: $eventId}), (c:Channel {uniqueName: $channelUniqueName})
+MERGE (ec:EventChannel {eventId: $eventId, channelUniqueName: $channelUniqueName})
+ON CREATE SET ec.id = apoc.create.uuid(), ec.createdAt = datetime()
+MERGE (ec)-[:POSTED_IN_CHANNEL]->(c)
+WITH e, ec, c
+MERGE (ec)-[:POSTED_IN_CHANNEL]->(e)
+RETURN ec, e, c
+`;
+
 // Deletes the connection between the discussion and the channel.
 const severConnectionBetweenDiscussionAndChannelQuery = `
 MATCH (d:Discussion {id: $discussionId})<-[r:POSTED_IN_CHANNEL]-(dc:DiscussionChannel {discussionId: $discussionId, channelUniqueName: $channelUniqueName})
@@ -48,5 +58,7 @@ DELETE r
 module.exports = {
   createDiscussionChannelQuery,
   updateDiscussionChannelQuery,
+  createEventChannelQuery,
+  updateEventChannelQuery,
   severConnectionBetweenDiscussionAndChannelQuery,
 };
