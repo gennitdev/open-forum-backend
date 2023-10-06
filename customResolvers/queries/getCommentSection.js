@@ -102,7 +102,7 @@ const getResolver = ({ driver, DiscussionChannel, Comment }) => {
         `;
       let commentsResult = [];
 
-      if (sort === "new") {
+      if (sort === "NEW") {
         // if sort is "new", get the comments sorted by createdAt.
         commentsResult = await Comment.find({
           where: {
@@ -121,28 +121,32 @@ const getResolver = ({ driver, DiscussionChannel, Comment }) => {
           },
         });
         console.log('new comments result is ', commentsResult)
-      } else if (sort === "top") {
+      } else if (sort === "TOP") {
+
+        console.log('args are ', args)
         // if sort is "top", get the comments sorted by weightedVotesCount.
-        // todo: use a custom cypher query so that weightedVotesCount is
-        // zero by default.
-        commentsResult = await Comment.find({
-          where: {
-            isRootComment: true,
-            DiscussionChannel: {
-              id: discussionChannelId,
-            },
-          },
-          selectionSet: commentSelectionSet,
-          options: {
-            offset,
-            limit,
-            sort: {
-              weightedVotesCount: "DESC",
-            },
-          },
-        });
-        console.log('top comments result is ', commentsResult)
-      } else {
+        const cypherQuery = `
+                MATCH (dc:DiscussionChannel { id: $discussionChannelId })-[:CONTAINS_COMMENT]->(c:Comment)
+                WHERE c.isRootComment = true
+                RETURN c
+                ORDER BY coalesce(c.weightedVotesCount, 0) DESC
+                SKIP 0
+                LIMIT 25
+        `;
+        
+    
+        commentsResult = await session.run(cypherQuery, {
+            discussionChannelId,
+            offset: parseInt(offset, 10),
+            limit: parseInt(limit, 10),
+        })
+
+        commentsResult = commentsResult.records.map(record => {
+                return record.get('c').properties;
+            });
+     console.log('top comments result is ', commentsResult)
+        
+    } else {
         // Will implement "hot" sort later
       }
 
