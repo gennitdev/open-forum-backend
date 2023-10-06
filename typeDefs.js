@@ -351,6 +351,13 @@ const typeDefs = gql`
       selectedTags: [String]
       options: DiscussionListOptions
     ): SiteWideDiscussionListFormat
+    getCommentSection(
+      channelUniqueName: String!
+      discussionId: ID!
+      offset: Int
+      limit: Int
+      sort: String
+    ): DiscussionChannel
   }
 `;
 
