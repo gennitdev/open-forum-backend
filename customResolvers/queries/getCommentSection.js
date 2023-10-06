@@ -177,11 +177,10 @@ const getResolver = ({ driver, DiscussionChannel, Comment }) => {
           offset: parseInt(offset, 10),
           limit: parseInt(limit, 10),
         });
+        
         commentsResult = commentsResult.records.map((record) => {
           return record.get("comment");
         });
-
-        console.log("hot comments result is ", commentsResult);
       }
 
       return {
