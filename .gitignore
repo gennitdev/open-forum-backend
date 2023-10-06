@@ -1,3 +1,13 @@
 node_modules
 .env
+.ssl
 schema.js
+data
+conf
+import
+logs
+neo4j
+docker-compose-local.yml
+docker-compose-remote.yml
+plugins
+ssl
