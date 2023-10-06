@@ -14,7 +14,7 @@ const getResolver = ({ Event, driver }) => {
         selectedTags,
         offset,
         limit,
-        resultsOrder
+        resultsOrder,
       });
 
       const discussions = [];
@@ -55,7 +55,7 @@ const getResolver = ({ Event, driver }) => {
 
       return {
         aggregateDiscussionCount,
-        discussions
+        discussions,
       };
     } catch (error) {
       console.error("Error getting discussions:", error);

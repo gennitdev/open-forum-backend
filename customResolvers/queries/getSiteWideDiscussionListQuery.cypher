@@ -45,4 +45,5 @@ RETURN discussionData.d.id as id, discussionData.d.title as title, discussionDat
        discussionData.score as score,
        aggregateDiscussionCount
 ORDER BY score DESC
-
+SKIP toInteger($offset)
+LIMIT toInteger($limit)

@@ -36,7 +36,6 @@ const getResolver = ({Event, driver}) => {
           }
         }
       `;
-      console.log('created gql selectionSet', selectionSet)
 
     try {
       const response = await Event.create({
