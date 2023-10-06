@@ -18,6 +18,12 @@ const getResolver = ({Event, driver}) => {
           startTimeDayOfWeek
           startTimeHourOfDay
           endTime
+          locationName
+          address
+          virtualEventUrl
+          startTimeDayOfWeek
+          canceled
+          cost
           Poster {
             username
           }
