@@ -81,12 +81,6 @@ const getResolver = ({ driver, DiscussionChannel }) => {
           if (timeFrameOptions[timeFrame]) {
             selectedTimeFrame = timeFrameOptions[timeFrame].start;
           }
-          console.log('variables in session ',{
-            channelUniqueName,
-            offset: parseInt(offset, 10),
-            limit: parseInt(limit, 10),
-            startOfTimeFrame: selectedTimeFrame,
-          })
           const topDiscussionChannelsResult = await session.run(
             getTopDiscussionChannelsQuery,
             {
