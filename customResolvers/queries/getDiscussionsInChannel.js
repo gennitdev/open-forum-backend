@@ -109,11 +109,6 @@ const getResolver = ({ driver, DiscussionChannel }) => {
           result = hotDiscussionChannelsResult.records.map((record) => {
             return record.get("DiscussionChannel");
           });
-
-          console.log(
-            "hot discussion channels result is ",
-            discussionChannelsResult
-          );
       }
 
       return result;

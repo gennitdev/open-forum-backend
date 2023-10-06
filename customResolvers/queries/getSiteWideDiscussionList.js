@@ -88,7 +88,7 @@ const getResolver = ({ driver }) => {
           // By default, and if sort is "hot", get the DiscussionChannels sorted by hot,
           // which takes into account both weightedVotesCount and createdAt.
           const hotDiscussionsResult = await session.run(
-            getTopSiteWideDiscussionsQuery,
+            getHotSiteWideDiscussionsQuery,
             {
               searchInput,
               selectedChannels,
@@ -111,7 +111,7 @@ const getResolver = ({ driver }) => {
           );
 
           const hotDiscussions = hotDiscussionsResult.records.map((record) => {
-            console.log('score is ',record.get("score"))
+            console.log('score is ',record.get("rank"))
             return record.get("discussion");
           });
           console.log('hot discussions are ',hotDiscussions)
