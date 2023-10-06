@@ -17,7 +17,7 @@ WITH c, author, parent,
      duration.between(c.createdAt, datetime()).days / 30.0 AS ageInMonths
 
 WITH c, author, parent, UpvotedByUsers, DownvotedByModerators, parentIds, [comment IN NonFilteredChildComments WHERE comment IS NOT NULL] AS ChildComments, ageInMonths,
-     // Now, use ageInMonths to calculate the rank.
+     // Use ageInMonths to calculate the rank.
      10000 * log10(coalesce(c.weightedVotesCount, 0) + 1) / ((ageInMonths + 2) ^ 1.8) AS rank
 
 RETURN {

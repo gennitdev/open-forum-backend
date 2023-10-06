@@ -41,6 +41,6 @@ RETURN {
         count: SIZE(ChildComments)
     }
 } AS comment
-ORDER BY coalesce(c.weightedVotesCount, 0) DESC
+ORDER BY coalesce(c.weightedVotesCount, 0) DESC, c.createdAt DESC
 SKIP toInteger($offset)
 LIMIT toInteger($limit)

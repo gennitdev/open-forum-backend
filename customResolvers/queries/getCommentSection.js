@@ -39,7 +39,7 @@ const discussionChannelSelectionSet = `
         count
     }
 }
-`
+`;
 
 const commentSelectionSet = `
             {
@@ -126,7 +126,7 @@ const getResolver = ({ driver, DiscussionChannel, Comment }) => {
         },
         // get everything about the DiscussionChannel
         // except the comments
-        selectionSet: discussionChannelSelectionSet
+        selectionSet: discussionChannelSelectionSet,
       });
 
       if (result.length === 0) {
@@ -156,7 +156,6 @@ const getResolver = ({ driver, DiscussionChannel, Comment }) => {
             },
           },
         });
-
       } else if (sort === "top") {
         // if sort is "top", get the comments sorted by weightedVotesCount.
         // Treat a null weightedVotesCount as 0.
@@ -177,7 +176,7 @@ const getResolver = ({ driver, DiscussionChannel, Comment }) => {
           offset: parseInt(offset, 10),
           limit: parseInt(limit, 10),
         });
-        
+
         commentsResult = commentsResult.records.map((record) => {
           return record.get("comment");
         });

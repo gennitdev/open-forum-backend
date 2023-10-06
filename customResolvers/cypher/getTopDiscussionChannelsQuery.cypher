@@ -56,6 +56,6 @@ RETURN {
     }
 } AS DiscussionChannel
     
-ORDER BY weightedVotesCount DESC
+ORDER BY weightedVotesCount DESC, discussionCreatedAt DESC
 SKIP toInteger($offset)
 LIMIT toInteger($limit)
