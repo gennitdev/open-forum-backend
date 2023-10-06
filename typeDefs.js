@@ -37,6 +37,7 @@ const typeDefs = gql`
     channelUniqueName: String! # used for uniqueness constraint
     createdAt: DateTime! @timestamp(operations: [CREATE])
     upvoteCount: Int
+    weightedVotesCount: Int
     Discussion: Discussion
       @relationship(type: "POSTED_IN_CHANNEL", direction: OUT)
     Channel: Channel @relationship(type: "POSTED_IN_CHANNEL", direction: OUT)
@@ -117,6 +118,7 @@ const typeDefs = gql`
     updatedAt: DateTime @timestamp(operations: [UPDATE])
     createdAt: DateTime! @timestamp(operations: [CREATE])
     Tags: [Tag!]! @relationship(type: "HAS_TAG", direction: OUT)
+    weightedVotesCount: Int
     UpvotedByUsers: [User!]!
       @relationship(type: "UPVOTED_COMMENT", direction: IN)
     DownvotedByModerators: [ModerationProfile!]!
@@ -152,6 +154,8 @@ const typeDefs = gql`
     location: String
     bio: String
     isAdmin: Boolean
+    commentKarma: Int
+    discussionKarma: Int
     Comments: [Comment!]!
       @relationship(type: "AUTHORED_COMMENT", direction: OUT)
     AdminOfChannels: [Channel!]!
@@ -316,6 +320,7 @@ const typeDefs = gql`
       channelConnections: [String!]!
       channelDisconnections: [String]!
     ): Event
+    upvoteComment(commentId: ID!, username: String!): Comment
   }
 
   type DiscussionWithScore {

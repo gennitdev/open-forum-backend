@@ -1,6 +1,6 @@
 const { removeEmoji } = require("./updateEmoji");
 
-const getRemoveEmojiResolver = ({ DiscussionChannel, driver }) => {
+const getRemoveEmojiResolver = ({ DiscussionChannel }) => {
   return async (parent, args, context, resolveInfo) => {
     const { discussionChannelId, emojiLabel, username } = args;
 

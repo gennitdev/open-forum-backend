@@ -15,6 +15,8 @@ const removeEmojiFromComment = require("./customResolvers/mutations/removeEmojiF
 const addEmojiToDiscussionChannel = require("./customResolvers/mutations/addEmojiToDiscussionChannel");
 const removeEmojiFromDiscussionChannel = require("./customResolvers/mutations/removeEmojiFromDiscussionChannel");
 
+const upvoteComment = require("./customResolvers/mutations/upvoteComment");
+
 module.exports = function (driver) {
   const ogm = new OGM({
     typeDefs,
@@ -25,6 +27,7 @@ module.exports = function (driver) {
   const DiscussionChannel = ogm.model("DiscussionChannel");
   const Event = ogm.model("Event");
   const Comment = ogm.model("Comment");
+  const User = ogm.model("User")
 
   const resolvers = {
     JSON: GraphQLJSON,
@@ -59,18 +62,19 @@ module.exports = function (driver) {
       }),
       addEmojiToComment: addEmojiToComment({
         Comment,
-        driver,
       }),
       removeEmojiFromComment: removeEmojiFromComment({
         Comment,
-        driver,
       }),
       addEmojiToDiscussionChannel: addEmojiToDiscussionChannel({
         DiscussionChannel,
-        driver,
       }),
       removeEmojiFromDiscussionChannel: removeEmojiFromDiscussionChannel({
         DiscussionChannel,
+      }),
+      upvoteComment:  upvoteComment({
+        Comment,
+        User,
         driver,
       }),
     },

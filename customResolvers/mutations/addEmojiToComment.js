@@ -1,6 +1,6 @@
 const { updateEmoji } = require("./updateEmoji");
 
-const getResolver = ({ Comment, driver }) => {
+const getResolver = ({ Comment }) => {
   return async (parent, args, context, resolveInfo) => {
     const { commentId, emojiLabel, unicode, username } = args;
 
