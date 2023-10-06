@@ -345,6 +345,12 @@ const typeDefs = gql`
   }
 
   type Query {
+    getDiscussionsInChannel(
+      channelUniqueName: String!
+      offset: Int
+      limit: Int
+      sort: String
+    ): [DiscussionChannel]
     getSiteWideDiscussionList(
       searchInput: String
       selectedChannels: [String]

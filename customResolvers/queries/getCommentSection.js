@@ -1,76 +1,47 @@
 const {
   getTopCommentsQuery,
-  getHotCommentsQuery
+  getHotCommentsQuery,
 } = require("../cypher/cypherQueries");
 
-const getResolver = ({ driver, DiscussionChannel, Comment }) => {
-  return async (parent, args, context, info) => {
-    const { channelUniqueName, discussionId, offset, limit, sort } = args;
+const discussionChannelSelectionSet = `
+{
+    id
+    weightedVotesCount
+    discussionId
+    channelUniqueName
+    emoji
+    Channel {
+        uniqueName
+    }
+    Discussion {
+        id
+        title
+        Author {
+            username
+            commentKarma
+            createdAt
+            discussionKarma
+        }
+    }
+    CommentsAggregate {
+        count
+    }
+    UpvotedByUsers {
+        username
+    }
+    UpvotedByUsersAggregate {
+        count
+    }
+    DownvotedByModerators {
+        displayName
+    }
+    DownvotedByModeratorsAggregate {
+        count
+    }
+}
+`
 
-    const session = driver.session();
-
-    try {
-      const result = await DiscussionChannel.find({
-        where: {
-          discussionId,
-          channelUniqueName,
-        },
-        // get everything about the DiscussionChannel
-        // except the comments
-        selectionSet: `
-                {
-                    id
-                    weightedVotesCount
-                    discussionId
-                    channelUniqueName
-                    emoji
-                    Channel {
-                        uniqueName
-                    }
-                    Discussion {
-                        id
-                        title
-                        Author {
-                            username
-                            commentKarma
-                            createdAt
-                            discussionKarma
-                        }
-                    }
-                    CommentsAggregate {
-                        count
-                    }
-                    UpvotedByUsers {
-                        username
-                    }
-                    UpvotedByUsersAggregate {
-                        count
-                    }
-                    DownvotedByModerators {
-                        displayName
-                    }
-                    DownvotedByModeratorsAggregate {
-                        count
-                    }
-                }
-            `,
-      });
-
-      console.log('discussion channel result is ', result)
-
-      if (result.length === 0) {
-        throw new Error("DiscussionChannel not found");
-      }
-
-      const discussionChannel = result[0];
-      const discussionChannelId = discussionChannel.id;
-
-      
-      let commentsResult = [];
-
-      if (sort === "new") {
-        // if sort is "new", get the comments sorted by createdAt.
-        const commentSelectionSet = `
+const commentSelectionSet = `
             {
                 id
                 text
@@ -140,6 +111,35 @@ const getResolver = ({ driver, DiscussionChannel, Comment }) => {
                 }
             }
         `;
+
+const getResolver = ({ driver, DiscussionChannel, Comment }) => {
+  return async (parent, args, context, info) => {
+    const { channelUniqueName, discussionId, offset, limit, sort } = args;
+
+    const session = driver.session();
+
+    try {
+      const result = await DiscussionChannel.find({
+        where: {
+          discussionId,
+          channelUniqueName,
+        },
+        // get everything about the DiscussionChannel
+        // except the comments
+        selectionSet: discussionChannelSelectionSet
+      });
+
+      if (result.length === 0) {
+        throw new Error("DiscussionChannel not found");
+      }
+
+      const discussionChannel = result[0];
+      const discussionChannelId = discussionChannel.id;
+
+      let commentsResult = [];
+
+      if (sort === "new") {
+        // if sort is "new", get the comments sorted by createdAt.
         commentsResult = await Comment.find({
           where: {
             isRootComment: true,
@@ -156,37 +156,32 @@ const getResolver = ({ driver, DiscussionChannel, Comment }) => {
             },
           },
         });
-        console.log('new comments result is ', commentsResult)
+
       } else if (sort === "top") {
-
-        console.log('args are ', args)
         // if sort is "top", get the comments sorted by weightedVotesCount.
-        // Treat a null weightedVotesCount as 0.    
+        // Treat a null weightedVotesCount as 0.
         commentsResult = await session.run(getTopCommentsQuery, {
-            discussionChannelId,
-            offset: parseInt(offset, 10),
-            limit: parseInt(limit, 10),
-        })
+          discussionChannelId,
+          offset: parseInt(offset, 10),
+          limit: parseInt(limit, 10),
+        });
 
         commentsResult = commentsResult.records.map((record) => {
-            return record.get("comment")
-        })
-
-     console.log('top comments result is ', commentsResult)
-        
-    } else {
-        // if sort is "hot", get the comments sorted by hotness.
+          return record.get("comment");
+        });
+      } else {
+        // if sort is "hot", get the comments sorted by hotness,
+        // which takes into account both weightedVotesCount and createdAt.
         commentsResult = await session.run(getHotCommentsQuery, {
-            discussionChannelId,
-            offset: parseInt(offset, 10),
-            limit: parseInt(limit, 10),
-        })
+          discussionChannelId,
+          offset: parseInt(offset, 10),
+          limit: parseInt(limit, 10),
+        });
         commentsResult = commentsResult.records.map((record) => {
-            return record.get("comment")
-        })
+          return record.get("comment");
+        });
 
-
-        console.log('hot comments result is ', commentsResult)
+        console.log("hot comments result is ", commentsResult);
       }
 
       return {
