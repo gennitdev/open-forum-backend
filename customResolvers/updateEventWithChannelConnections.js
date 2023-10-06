@@ -55,14 +55,13 @@ const getResolver = ({ Event, driver }) => {
           channelUniqueName: channelUniqueName,
         });
       }
-
       // Refetch the newly created event with the channel connections
       // and disconnections so that we can return it.
       const selectionSet = `
         {
           id
           title
-          discussion
+          description
           Poster {
             username
           }
