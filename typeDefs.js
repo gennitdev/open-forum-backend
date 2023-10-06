@@ -47,6 +47,18 @@ const typeDefs = gql`
     Emoji: [Emoji!]! @relationship(type: "HAS_EMOJI", direction: OUT)
   }
 
+  type EventChannel {
+    id: ID! @id
+    locked: Boolean
+    eventId: ID! # used for uniqueness constraint
+    channelUniqueName: String! # used for uniqueness constraint
+    createdAt: DateTime! @timestamp(operations: [CREATE])
+    Event: Event @relationship(type: "POSTED_IN_CHANNEL", direction: OUT)
+    Channel: Channel @relationship(type: "POSTED_IN_CHANNEL", direction: OUT)
+    Comments: [Comment!]!
+      @relationship(type: "CONTAINS_COMMENT", direction: OUT)
+  }
+
   type Discussion {
     id: ID! @id
     Author: User @relationship(type: "POSTED_DISCUSSION", direction: IN)
@@ -55,20 +67,10 @@ const typeDefs = gql`
     createdAt: DateTime! @timestamp(operations: [CREATE])
     updatedAt: DateTime @timestamp(operations: [UPDATE])
     deleted: Boolean
-    # Flairs:                  [Flair]                 @relationship(type: "HAS_FLAIR", direction: OUT)
     Tags: [Tag!]! @relationship(type: "HAS_TAG", direction: OUT)
     # PastVersions:            [DiscussionVersion]     @relationship(type: "HAS_VERSION", direction: OUT)
     DiscussionChannels: [DiscussionChannel!]!
       @relationship(type: "POSTED_IN_CHANNEL", direction: IN)
-  }
-
-  type EventChannel {
-    id: ID! @id
-    locked: Boolean
-    Event: Event @relationship(type: "POSTED_IN_CHANNEL", direction: OUT)
-    Channel: Channel @relationship(type: "POSTED_IN_CHANNEL", direction: IN)
-    Comments: [Comment!]!
-      @relationship(type: "CONTAINS_COMMENT", direction: OUT)
   }
 
   type Event {
@@ -91,11 +93,11 @@ const typeDefs = gql`
     location: Point
     canceled: Boolean!
     deleted: Boolean
-    Poster: User @relationship(type: "POSTED_BY", direction: OUT)
+    Poster: User @relationship(type: "POSTED_BY", direction: IN)
     Tags: [Tag!]! @relationship(type: "HAS_TAG", direction: OUT)
     # PastVersions:          [EventVersion]    @relationship(type: "HAS_VERSION", direction: OUT)
     EventChannels: [Channel!]!
-      @relationship(type: "POSTED_IN_CHANNEL", direction: OUT)
+      @relationship(type: "POSTED_IN_CHANNEL", direction: IN)
   }
 
   type Comment {
@@ -112,7 +114,6 @@ const typeDefs = gql`
     deleted: Boolean
     updatedAt: DateTime @timestamp(operations: [UPDATE])
     createdAt: DateTime! @timestamp(operations: [CREATE])
-    # Emoji:                   [Emoji]                 @relationship(type: "HAS_EMOJI", direction: OUT)
     Tags: [Tag!]! @relationship(type: "HAS_TAG", direction: OUT)
     UpvotedByUsers: [User!]!
       @relationship(type: "UPVOTED_COMMENT", direction: IN)
@@ -282,9 +283,17 @@ const typeDefs = gql`
       channelConnections: [String!]!
       channelDisconnections: [String]!
     ): Discussion
-    updateDiscussionChannelUpvoteCount(
-      id: ID!
-    ): DiscussionChannel
+    updateDiscussionChannelUpvoteCount(id: ID!): DiscussionChannel
+    createEventWithChannelConnections(
+      eventCreateInput: EventCreateInput
+      channelConnections: [String]
+    ): Event
+    updateEventWithChannelConnections(
+      eventWhere: EventWhere!
+      eventUpdateInput: EventUpdateInput!
+      channelConnections: [String!]!
+      channelDisconnections: [String]!
+    ): Event
   }
 `;
 

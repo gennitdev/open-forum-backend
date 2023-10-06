@@ -9,7 +9,6 @@ const getResolver = ({ DiscussionChannel, driver }) => {
         `
         MATCH (d:DiscussionChannel { id: $id })-[:UPVOTED_DISCUSSION]->()
         RETURN COUNT(*) as upvoteCount
-
       `,
         { id }
       );

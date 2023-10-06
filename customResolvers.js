@@ -4,6 +4,9 @@ const createDiscussionWithChannelConnections = require("./customResolvers/create
 const updateDiscussionWithChannelConnections = require("./customResolvers/updateDiscussionWithChannelConnections");
 const updateDiscussionChannelUpvoteCount = require("./customResolvers/updateDiscussionChannelUpvoteCount");
 
+const createEventWithChannelConnections = require("./customResolvers/createEventWithChannelConnections");
+const updateEventWithChannelConnections = require("./customResolvers/updateEventWithChannelConnections");
+
 module.exports = function (driver) {
   const ogm = new OGM({
     typeDefs,
@@ -27,6 +30,14 @@ module.exports = function (driver) {
         }),
       updateDiscussionChannelUpvoteCount: updateDiscussionChannelUpvoteCount({
         DiscussionChannel,
+        driver,
+      }),
+      createEventWithChannelConnections: createEventWithChannelConnections({
+        Event,
+        driver,
+      }),
+      updateEventWithChannelConnections: updateEventWithChannelConnections({
+        Event,
         driver,
       }),
     },

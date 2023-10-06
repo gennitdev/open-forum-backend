@@ -45,7 +45,7 @@ async function initializeServer() {
           const queryString = `Query: ${req.body.query}`;
           if (!queryString.includes("IntrospectionQuery")) {
             console.log(queryString);
-            `Variables: ${JSON.stringify(req.body.variables, null, 2)}`;
+            console.log(`Variables: ${JSON.stringify(req.body.variables, null, 2)}`);
           }
           return {
             driver,

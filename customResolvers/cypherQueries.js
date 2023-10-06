@@ -10,6 +10,15 @@ MERGE (dc)-[:UPVOTED_DISCUSSION]->(u)
 RETURN dc, d, c, u
 `;
 
+const createEventChannelQuery = `
+MATCH (e:Event {id: $eventId}), (c:Channel {uniqueName: $channelUniqueName})
+MERGE (ec:EventChannel {eventId: $eventId, channelUniqueName: $channelUniqueName})
+ON CREATE SET ec.id = apoc.create.uuid(), ec.createdAt = datetime()
+MERGE (ec)-[:POSTED_IN_CHANNEL]->(e)
+MERGE (ec)-[:POSTED_IN_CHANNEL]->(c)
+RETURN ec, e, c
+`;
+
 // creates DiscussionChannel nodes to link the updated discussion with channels.
 
 // - If a DiscussionChannel for the combination of discussionId and channelUniqueName
