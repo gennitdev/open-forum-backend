@@ -1,5 +1,5 @@
 const {
-  getDiscussionChannelWithCommentsQuery,
+  getTopCommentsQuery,
 } = require("../cypher/cypherQueries");
 
 const getResolver = ({ driver, DiscussionChannel, Comment }) => {
@@ -64,7 +64,12 @@ const getResolver = ({ driver, DiscussionChannel, Comment }) => {
       const discussionChannel = result[0];
       const discussionChannelId = discussionChannel.id;
 
-      const commentSelectionSet = `
+      
+      let commentsResult = [];
+
+      if (sort === "new") {
+        // if sort is "new", get the comments sorted by createdAt.
+        const commentSelectionSet = `
             {
                 id
                 text
@@ -98,12 +103,42 @@ const getResolver = ({ driver, DiscussionChannel, Comment }) => {
                 DownvotedByModeratorsAggregate {
                     count
                 }
+                ChildComments {
+                    id
+                    text
+                    emoji
+                    weightedVotesCount
+                    CommentAuthor {
+                        ... on User {
+                            username
+                            commentKarma
+                            createdAt
+                            discussionKarma
+                        }
+                    }
+                    createdAt
+                    updatedAt
+                    ChildCommentsAggregate {
+                        count
+                    }
+                    ParentComment {
+                        id
+                    }
+                    UpvotedByUsers {
+                        username
+                    }
+                    UpvotedByUsersAggregate {
+                        count
+                    }
+                    DownvotedByModerators {
+                        displayName
+                    }
+                    DownvotedByModeratorsAggregate {
+                        count
+                    }
+                }
             }
         `;
-      let commentsResult = [];
-
-      if (sort === "NEW") {
-        // if sort is "new", get the comments sorted by createdAt.
         commentsResult = await Comment.find({
           where: {
             isRootComment: true,
@@ -121,29 +156,21 @@ const getResolver = ({ driver, DiscussionChannel, Comment }) => {
           },
         });
         console.log('new comments result is ', commentsResult)
-      } else if (sort === "TOP") {
+      } else if (sort === "top") {
 
         console.log('args are ', args)
         // if sort is "top", get the comments sorted by weightedVotesCount.
-        const cypherQuery = `
-                MATCH (dc:DiscussionChannel { id: $discussionChannelId })-[:CONTAINS_COMMENT]->(c:Comment)
-                WHERE c.isRootComment = true
-                RETURN c
-                ORDER BY coalesce(c.weightedVotesCount, 0) DESC
-                SKIP toInteger($offset)
-                LIMIT toInteger($limit)
-        `;
-        
-    
-        commentsResult = await session.run(cypherQuery, {
+        // Treat a null weightedVotesCount as 0.    
+        commentsResult = await session.run(getTopCommentsQuery, {
             discussionChannelId,
             offset: parseInt(offset, 10),
             limit: parseInt(limit, 10),
         })
 
-        commentsResult = commentsResult.records.map(record => {
-                return record.get('c').properties;
-            });
+        commentsResult = commentsResult.records.map((record) => {
+            return record.get("comment")
+        })
+
      console.log('top comments result is ', commentsResult)
         
     } else {

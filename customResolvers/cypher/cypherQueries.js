@@ -9,6 +9,7 @@ const severConnectionBetweenDiscussionAndChannelQuery = fs.readFileSync(path.res
 const getSiteWideDiscussionListQuery =  fs.readFileSync(path.resolve(__dirname, './getSiteWideDiscussionListQuery.cypher'), 'utf8');
 const commentIsUpvotedByUserQuery = fs.readFileSync(path.resolve(__dirname, './commentIsUpvotedByUserQuery.cypher'), 'utf8');
 const discussionChannelIsUpvotedByUserQuery = fs.readFileSync(path.resolve(__dirname, './discussionChannelIsUpvotedByUserQuery.cypher'), 'utf8');
+const getTopCommentsQuery = fs.readFileSync(path.resolve(__dirname, './getTopCommentsQuery.cypher'), 'utf8');
 
 module.exports = {
   createDiscussionChannelQuery,
@@ -18,5 +19,6 @@ module.exports = {
   severConnectionBetweenDiscussionAndChannelQuery,
   getSiteWideDiscussionListQuery,
   commentIsUpvotedByUserQuery,
-  discussionChannelIsUpvotedByUserQuery
+  discussionChannelIsUpvotedByUserQuery,
+  getTopCommentsQuery,
 };

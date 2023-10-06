@@ -34,6 +34,13 @@ module.exports = function (driver) {
 
   const resolvers = {
     JSON: GraphQLJSON,
+    CommentAuthor: {
+      __resolveType(obj, context, info) {
+        if(obj.username) {
+          return 'User';
+        }
+      },
+    },
     Query: {
       getSiteWideDiscussionList: getSiteWideDiscussionList({
         Discussion,
