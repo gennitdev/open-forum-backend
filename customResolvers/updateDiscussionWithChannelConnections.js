@@ -67,6 +67,7 @@ const getResolver = ({ Discussion, driver }) => {
             username
           }
           DiscussionChannels {
+            id
             channelUniqueName
             discussionId
             Channel {
