@@ -38,28 +38,7 @@ const getResolver = ({Discussion, driver}) => {
       throw new Error("At least one channel must be selected");
     }
 
-    try {
-      const { discussions } = await Discussion.create({
-        input: [discussionCreateInput],
-      });
-      const newDiscussion = discussions[0];
-
-      const newDiscussionId = newDiscussion.id;
-
-      const session = driver.session();
-
-      for (let i = 0; i < channelConnections.length; i++) {
-        const channelUniqueName = channelConnections[i];
-
-        await session.run(createDiscussionChannelQuery, {
-          discussionId: newDiscussionId,
-          channelUniqueName: channelUniqueName,
-        });
-      }
-
-      // Refetch the newly created discussion with the channel connections
-      // so that we can return it.
-      const selectionSet = `
+    const selectionSet = `
         {
           id
           title
@@ -68,8 +47,13 @@ const getResolver = ({Discussion, driver}) => {
             username
           }
           DiscussionChannels {
+            id
             channelUniqueName
             discussionId
+            upvoteCount
+            UpvotedByUsers {
+              username
+            }
             Channel {
               uniqueName
             }
@@ -85,6 +69,30 @@ const getResolver = ({Discussion, driver}) => {
         }
       `;
 
+    try {
+      const response = await Discussion.create({
+        input: [discussionCreateInput],
+        selectionSet: `{ discussions ${selectionSet} }`
+      });
+      console.log("Create Discussion Response:", response);
+      const newDiscussion = response.discussions[0];
+
+      const newDiscussionId = newDiscussion.id;
+
+      const session = driver.session();
+
+      for (let i = 0; i < channelConnections.length; i++) {
+        const channelUniqueName = channelConnections[i];
+
+        await session.run(createDiscussionChannelQuery, {
+          discussionId: newDiscussionId,
+          channelUniqueName: channelUniqueName,
+          upvotedBy: newDiscussion.Author.username,
+        });
+      }
+
+      // Refetch the newly created discussion with the channel connections
+      // so that we can return it.
       const result = await Discussion.find({
         where: {
           id: newDiscussionId,

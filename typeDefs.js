@@ -34,6 +34,7 @@ const typeDefs = gql`
     discussionId: ID! # used for uniqueness constraint
     channelUniqueName: String! # used for uniqueness constraint
     createdAt: DateTime! @timestamp(operations: [CREATE])
+    upvoteCount: Int
     Discussion: Discussion
       @relationship(type: "POSTED_IN_CHANNEL", direction: OUT)
     Channel: Channel @relationship(type: "POSTED_IN_CHANNEL", direction: OUT)
