@@ -1,78 +1,55 @@
-const { createEventChannelQuery } = require("./cypherQueries")
+const { getSiteWideDiscussionListQuery } = require("./cypherQueries");
 
-const getResolver = ({Event, driver}) => {
+const getResolver = ({ Event, driver }) => {
   return async (parent, args, context, info) => {
-    // const { eventCreateInput, channelConnections } = args;
-    // console.log("eventCreateInput", eventCreateInput);
-    // console.log("channelConnections", channelConnections);
+    const { discussionWhere, selectedChannels } = args;
 
-    // if (!channelConnections || channelConnections.length === 0) {
-    //   throw new Error("At least one channel must be selected");
-    // }
+    const session = driver.session();
 
-    // const selectionSet = `
-    //     {
-    //       id
-    //       title
-    //       description
-    //       Poster {
-    //         username
-    //       }
-    //       EventChannels {
-    //         id
-    //         createdAt
-    //         channelUniqueName
-    //         eventId
-    //         Channel {
-    //           uniqueName
-    //         }
-    //         Event {
-    //           id
-    //         }
-    //       }
-    //       createdAt
-    //       updatedAt
-    //       Tags {
-    //         text
-    //       }
-    //     }
-    //   `;
+    try {
+      const result = await session.run(getSiteWideDiscussionListQuery, {
+        discussionWhere,
+        selectedChannels,
+      });
 
-    // try {
-    //   const response = await Event.create({
-    //     input: [eventCreateInput],
-    //     selectionSet: `{ events ${selectionSet} }`
-    //   });
-    //   const newEvent = response.events[0];
+      const discussions = result.records.map((record) => {
+        let author = null;
+        if (record.get("Author") && record.get("Author").username !== null) {
+          author = record.get("Author");
+        }
 
-    //   const newEventId = newEvent.id;
+        let discussionChannels  = record.get("DiscussionChannels") || []
+        discussionChannels = discussionChannels.map((dc) => {
+          if (dc.UpvotedByUsers) {
+            dc.UpvotedByUsers = dc.UpvotedByUsers.map((username) => {
+              return { username };
+            })
+          }
+          return dc;
+        });
 
-    //   const session = driver.session();
+        return {
+          score: record.get("score"),
+          discussion: {
+            id: record.get("id"),
+            title: record.get("title"),
+            body: record.get("body"),
+            Author: author,
+            DiscussionChannels: discussionChannels,
+            createdAt: record.get("createdAt"),
+            updatedAt: record.get("updatedAt"),
+            Tags: record.get("Tags").map((text) => ({ text })),
+          },
+        };
+      });
 
-    //   for (let i = 0; i < channelConnections.length; i++) {
-    //     const channelUniqueName = channelConnections[i];
-
-    //     await session.run(createEventChannelQuery, {
-    //       eventId: newEventId,
-    //       channelUniqueName: channelUniqueName,
-    //     });
-    //   }
-
-    //   // Refetch the newly created event with the channel connections
-    //   // so that we can return it.
-    //   const result = await Event.find({
-    //     where: {
-    //       id: newEventId,
-    //     },
-    //     selectionSet,
-    //   });
-    //   session.close();
-
-    //   return result[0];
-    // } catch (error) {
-    //   console.error("Error creating event:", error);
-    //   throw new Error(`Failed to create event. ${error.message}`);
-    // }
+      return discussions;
+    } catch (error) {
+      console.error("Error getting discussions:", error);
+      throw new Error(`Failed to fetch discussions. ${error.message}`);
+    } finally {
+      session.close();
+    }
   };
 };
 module.exports = getResolver;

@@ -296,8 +296,16 @@ const typeDefs = gql`
     ): Event
   }
 
+  type DiscussionWithScore {
+    discussion: Discussion!
+    score: Int!
+  }
+
   type Query {
-    getSiteWideDiscussionList: [Discussion]
+    getSiteWideDiscussionList(
+      discussionWhere: DiscussionWhere!
+      selectedChannels: [String]
+    ): [DiscussionWithScore]
   }
 `;
 
