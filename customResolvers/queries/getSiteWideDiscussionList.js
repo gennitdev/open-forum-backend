@@ -111,8 +111,6 @@ const getResolver = ({ driver }) => {
           );
 
           const hotDiscussions = hotDiscussionsResult.records.map((record) => {
-            console.log("score is ", record.get("rank"));
-            console.log("tags are ", record.get("discussion").Tags);
             return record.get("discussion");
           });
 

@@ -29,8 +29,12 @@ WITH d, author, tags, tagsText, aggregateDiscussionCount,
      COUNT(DISTINCT c) AS commentCount, 
      SUM(COALESCE(dc.weightedVotesCount, 0)) AS score,
      // Using MAX to handle ageInMonths for the grouping 
-     MAX(duration.between(dc.createdAt, datetime()).months + 
-     duration.between(dc.createdAt, datetime()).days / 30.0) AS ageInMonths
+     duration.between(dc.createdAt, datetime()).months + 
+     duration.between(dc.createdAt, datetime()).days / 30.0 AS ageInMonths
+
+WITH d, author, tags, tagsText, upvoteUsernames, commentCount, aggregateDiscussionCount,
+      CASE WHEN score < 0 THEN 0 ELSE score END AS score,
+      CASE WHEN ageInMonths IS NULL THEN 0 ELSE ageInMonths END AS ageInMonths
 
 WITH d, author, tags, tagsText, upvoteUsernames, commentCount, score, aggregateDiscussionCount,
     // Use ageInMonths to calculate the rank.
