@@ -360,8 +360,8 @@ const typeDefs = gql`
   }
 
   type CommentSectionFormat {
-    DiscussionChannel: DiscussionChannel!
-    Comments: [Comment!]!
+    aggregateChildCommentCount: Int!
+    ChildComments: [Comment!]!
   }
 
   type Query {
@@ -383,6 +383,12 @@ const typeDefs = gql`
       offset: Int
       limit: Int
       sort: String
+    ): CommentSectionFormat
+    getCommentReplies(
+      commentId: ID!
+      offset: Int
+      limit: Int
+      sort: SortType
     ): CommentSectionFormat
   }
 `;

@@ -11,6 +11,7 @@ const discussionChannelIsUpvotedByUserQuery = fs.readFileSync(path.resolve(__dir
 const getCommentsQuery = fs.readFileSync(path.resolve(__dirname, './getCommentsQuery.cypher'), 'utf8');
 const getDiscussionChannelsQuery = fs.readFileSync(path.resolve(__dirname, './getDiscussionChannelsQuery.cypher'), 'utf8');
 const getSiteWideDiscussionsQuery = fs.readFileSync(path.resolve(__dirname, './getSiteWideDiscussionsQuery.cypher'), 'utf8');
+const getCommentRepliesQuery = fs.readFileSync(path.resolve(__dirname, './getCommentRepliesQuery.cypher'), 'utf8');
 
 module.exports = {
   createDiscussionChannelQuery,
@@ -23,4 +24,5 @@ module.exports = {
   getCommentsQuery,
   getDiscussionChannelsQuery,
   getSiteWideDiscussionsQuery,
+  getCommentRepliesQuery,
 };

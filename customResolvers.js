@@ -9,6 +9,7 @@ const updateEventWithChannelConnections = require("./customResolvers/mutations/u
 
 const getSiteWideDiscussionList = require("./customResolvers/queries/getSiteWideDiscussionList");
 const getCommentSection = require("./customResolvers/queries/getCommentSection");
+const getCommentReplies = require("./customResolvers/queries/getCommentReplies");
 const getDiscussionsInChannel = require("./customResolvers/queries/getDiscussionsInChannel");
 
 const addEmojiToComment = require("./customResolvers/mutations/addEmojiToComment");
@@ -47,14 +48,18 @@ module.exports = function (driver) {
         Discussion,
         driver,
       }),
+      getDiscussionsInChannel: getDiscussionsInChannel({
+        driver,
+        DiscussionChannel
+      }),
       getCommentSection: getCommentSection({
         driver,
         DiscussionChannel,
         Comment,
       }),
-      getDiscussionsInChannel: getDiscussionsInChannel({
+      getCommentReplies: getCommentReplies({
         driver,
-        DiscussionChannel
+        Comment,
       }),
     },
     Mutation: {
