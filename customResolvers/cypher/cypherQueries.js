@@ -8,13 +8,9 @@ const updateEventChannelQuery = fs.readFileSync(path.resolve(__dirname, './updat
 const severConnectionBetweenDiscussionAndChannelQuery = fs.readFileSync(path.resolve(__dirname, './severConnectionBetweenDiscussionAndChannelQuery.cypher'), 'utf8');
 const commentIsUpvotedByUserQuery = fs.readFileSync(path.resolve(__dirname, './commentIsUpvotedByUserQuery.cypher'), 'utf8');
 const discussionChannelIsUpvotedByUserQuery = fs.readFileSync(path.resolve(__dirname, './discussionChannelIsUpvotedByUserQuery.cypher'), 'utf8');
-const getTopCommentsQuery = fs.readFileSync(path.resolve(__dirname, './getTopCommentsQuery.cypher'), 'utf8');
-const getHotCommentsQuery = fs.readFileSync(path.resolve(__dirname, './getHotCommentsQuery.cypher'), 'utf8');
-const getTopDiscussionChannelsQuery = fs.readFileSync(path.resolve(__dirname, './getTopDiscussionChannelsQuery.cypher'), 'utf8');
-const getHotDiscussionChannelsQuery = fs.readFileSync(path.resolve(__dirname, './getHotDiscussionChannelsQuery.cypher'), 'utf8');
-const getTopSiteWideDiscussionsQuery = fs.readFileSync(path.resolve(__dirname, './getTopSiteWideDiscussionsQuery.cypher'), 'utf8');
-const getHotSiteWideDiscussionsQuery = fs.readFileSync(path.resolve(__dirname, './getHotSiteWideDiscussionsQuery.cypher'), 'utf8');
-const getNewSiteWideDiscussionsQuery = fs.readFileSync(path.resolve(__dirname, './getNewSiteWideDiscussionsQuery.cypher'), 'utf8');
+const getCommentsQuery = fs.readFileSync(path.resolve(__dirname, './getCommentsQuery.cypher'), 'utf8');
+const getDiscussionChannelsQuery = fs.readFileSync(path.resolve(__dirname, './getDiscussionChannelsQuery.cypher'), 'utf8');
+const getSiteWideDiscussionsQuery = fs.readFileSync(path.resolve(__dirname, './getSiteWideDiscussionsQuery.cypher'), 'utf8');
 
 module.exports = {
   createDiscussionChannelQuery,
@@ -24,11 +20,7 @@ module.exports = {
   severConnectionBetweenDiscussionAndChannelQuery,
   commentIsUpvotedByUserQuery,
   discussionChannelIsUpvotedByUserQuery,
-  getTopCommentsQuery,
-  getHotCommentsQuery,
-  getTopDiscussionChannelsQuery,
-  getHotDiscussionChannelsQuery,
-  getTopSiteWideDiscussionsQuery,
-  getHotSiteWideDiscussionsQuery,
-  getNewSiteWideDiscussionsQuery
+  getCommentsQuery,
+  getDiscussionChannelsQuery,
+  getSiteWideDiscussionsQuery,
 };

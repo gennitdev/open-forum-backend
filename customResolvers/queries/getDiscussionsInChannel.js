@@ -1,6 +1,5 @@
 const {
-  getTopDiscussionChannelsQuery,
-  getHotDiscussionChannelsQuery,
+  getDiscussionChannelsQuery,
 } = require("../cypher/cypherQueries");
 const { timeFrameOptions } = require("./utils");
 
@@ -119,7 +118,7 @@ const getResolver = ({ driver, DiscussionChannel }) => {
             selectedTimeFrame = timeFrameOptions[timeFrame].start;
           }
           const topDiscussionChannelsResult = await session.run(
-            getTopDiscussionChannelsQuery,
+            getDiscussionChannelsQuery,
             {
               searchInput,
               selectedTags: selectedTags || [],
@@ -127,6 +126,7 @@ const getResolver = ({ driver, DiscussionChannel }) => {
               offset: parseInt(offset, 10),
               limit: parseInt(limit, 10),
               startOfTimeFrame: selectedTimeFrame,
+              sortOption: "top",
             }
           );
 
@@ -138,13 +138,14 @@ const getResolver = ({ driver, DiscussionChannel }) => {
           // By default, and if sort is "hot", get the DiscussionChannels sorted by hot,
           // which takes into account both weightedVotesCount and createdAt.
           const hotDiscussionChannelsResult = await session.run(
-            getHotDiscussionChannelsQuery,
+            getDiscussionChannelsQuery,
             {
               searchInput,
               selectedTags: selectedTags || [],
               channelUniqueName,
               offset: parseInt(offset, 10),
               limit: parseInt(limit, 10),
+              sortOption: "hot",
             }
           );
           result = hotDiscussionChannelsResult.records.map((record) => {

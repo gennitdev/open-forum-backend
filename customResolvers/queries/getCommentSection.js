@@ -1,6 +1,5 @@
 const {
-  getTopCommentsQuery,
-  getHotCommentsQuery,
+  getCommentsQuery,
 } = require("../cypher/cypherQueries");
 
 const discussionChannelSelectionSet = `
@@ -159,10 +158,11 @@ const getResolver = ({ driver, DiscussionChannel, Comment }) => {
       } else if (sort === "top") {
         // if sort is "top", get the comments sorted by weightedVotesCount.
         // Treat a null weightedVotesCount as 0.
-        commentsResult = await session.run(getTopCommentsQuery, {
+        commentsResult = await session.run(getCommentsQuery, {
           discussionChannelId,
           offset: parseInt(offset, 10),
           limit: parseInt(limit, 10),
+          sortOption: "top"
         });
 
         commentsResult = commentsResult.records.map((record) => {
@@ -171,10 +171,11 @@ const getResolver = ({ driver, DiscussionChannel, Comment }) => {
       } else {
         // if sort is "hot", get the comments sorted by hotness,
         // which takes into account both weightedVotesCount and createdAt.
-        commentsResult = await session.run(getHotCommentsQuery, {
+        commentsResult = await session.run(getCommentsQuery, {
           discussionChannelId,
           offset: parseInt(offset, 10),
           limit: parseInt(limit, 10),
+          sortOption: "hot"
         });
 
         commentsResult = commentsResult.records.map((record) => {

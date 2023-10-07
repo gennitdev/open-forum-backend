@@ -1,7 +1,5 @@
 const {
-  getNewSiteWideDiscussionsQuery,
-  getTopSiteWideDiscussionsQuery,
-  getHotSiteWideDiscussionsQuery,
+  getSiteWideDiscussionsQuery,
 } = require("../cypher/cypherQueries");
 const { timeFrameOptions } = require("./utils");
 
@@ -16,7 +14,7 @@ const getResolver = ({ driver }) => {
       switch (sort) {
         case "new":
           let newDiscussionResult = await session.run(
-            getNewSiteWideDiscussionsQuery,
+            getSiteWideDiscussionsQuery,
             {
               searchInput,
               selectedChannels,
@@ -24,6 +22,8 @@ const getResolver = ({ driver }) => {
               offset,
               limit,
               resultsOrder,
+              startOfTimeFrame: null,
+              sortOption: "new",
             }
           );
           if (newDiscussionResult.records.length === 0) {
@@ -54,7 +54,7 @@ const getResolver = ({ driver }) => {
             selectedTimeFrame = timeFrameOptions[timeFrame].start;
           }
           const topDiscussionsResult = await session.run(
-            getTopSiteWideDiscussionsQuery,
+            getSiteWideDiscussionsQuery,
             {
               searchInput,
               selectedChannels,
@@ -63,6 +63,7 @@ const getResolver = ({ driver }) => {
               limit,
               resultsOrder,
               startOfTimeFrame: selectedTimeFrame,
+              sortOption: "top",
             }
           );
 
@@ -88,7 +89,7 @@ const getResolver = ({ driver }) => {
           // By default, and if sort is "hot", get the DiscussionChannels sorted by hot,
           // which takes into account both weightedVotesCount and createdAt.
           const hotDiscussionsResult = await session.run(
-            getHotSiteWideDiscussionsQuery,
+            getSiteWideDiscussionsQuery,
             {
               searchInput,
               selectedChannels,
@@ -96,6 +97,7 @@ const getResolver = ({ driver }) => {
               offset,
               limit,
               resultsOrder,
+              sortOption: "hot"
             }
           );
 
