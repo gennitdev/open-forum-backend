@@ -48,7 +48,8 @@ const discussionChannelSelectionSet = `
 
 const getResolver = ({ driver, DiscussionChannel }) => {
   return async (parent, args, context, info) => {
-    const { channelUniqueName, offset, limit, sort, timeFrame } = args;
+    const { channelUniqueName, options, selectedTags, searchInput } = args;
+    const {offset, limit, sort, timeFrame} = options || {};
 
     const session = driver.session();
 
@@ -84,6 +85,8 @@ const getResolver = ({ driver, DiscussionChannel }) => {
           const topDiscussionChannelsResult = await session.run(
             getTopDiscussionChannelsQuery,
             {
+              searchInput,
+              selectedTags: selectedTags || [],
               channelUniqueName,
               offset: parseInt(offset, 10),
               limit: parseInt(limit, 10),
@@ -101,6 +104,8 @@ const getResolver = ({ driver, DiscussionChannel }) => {
           const hotDiscussionChannelsResult = await session.run(
             getHotDiscussionChannelsQuery,
             {
+              searchInput,
+              selectedTags: selectedTags || [],
               channelUniqueName,
               offset: parseInt(offset, 10),
               limit: parseInt(limit, 10),

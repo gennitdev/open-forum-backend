@@ -1,13 +1,20 @@
 MATCH (dc:DiscussionChannel { channelUniqueName: $channelUniqueName })
 
+// We want the Discussion to match the search input
+MATCH (dc)-[:POSTED_IN_CHANNEL]->(d:Discussion)
+WHERE ($searchInput = "" OR d.title CONTAINS $searchInput OR d.body CONTAINS $searchInput)
+AND (SIZE($selectedTags) = 0 OR EXISTS { MATCH (d)-[:HAS_TAG]->(tag:Tag) WHERE tag.text IN $selectedTags })
+
 OPTIONAL MATCH (dc)-[:POSTED_IN_CHANNEL]->(d:Discussion)
 OPTIONAL MATCH (d)<-[:POSTED_DISCUSSION]-(author:User)
 OPTIONAL MATCH (dc)-[:UPVOTED_DISCUSSION]->(upvoter:User)
 OPTIONAL MATCH (dc)-[:CONTAINS_COMMENT]->(c:Comment)
+OPTIONAL MATCH (d)-[:HAS_TAG]->(tag:Tag)
 
-WITH dc, d, author,
+WITH dc, d, author, tag,
      COLLECT(c) AS comments,
      COLLECT(DISTINCT upvoter) AS UpvotedByUsers,
+     COLLECT(DISTINCT tag.text) AS tagsText,
      coalesce(dc.weightedVotesCount, 0.0) AS weightedVotesCount,
      // Compute the age in months from the createdAt timestamp.
      duration.between(dc.createdAt, datetime()).months + 
@@ -31,7 +38,9 @@ WITH dc.id AS id,
      author,
      ageInMonths,
      // Use ageInMonths to calculate the rank.
-     10000 * log10(weightedVotesCount + 1) / ((ageInMonths + 2) ^ 1.8) AS rank
+     10000 * log10(weightedVotesCount + 1) / ((ageInMonths + 2) ^ 1.8) AS rank,
+     [x IN COLLECT(tag.text) WHERE x IS NOT NULL] AS tagsText
+
 RETURN {
     id: id,
     discussionId: discussionId,
@@ -56,7 +65,8 @@ RETURN {
                       discussionKarma: author.discussionKarma,
                       commentKarma: author.commentKarma
                   }
-                END
+                END,
+        Tags: [t IN tagsText | {text: t}]
     },
     UpvotedByUsersCount: UpvotedByUsersCount,
     Channel: {

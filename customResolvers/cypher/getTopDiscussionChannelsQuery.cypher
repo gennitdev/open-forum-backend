@@ -1,17 +1,28 @@
 MATCH (dc:DiscussionChannel { channelUniqueName: $channelUniqueName })
 
 // Use the variable $startOfTimeFrame to filter results by time frame
-// If $startOfTimeFrame is not provided, do not filter by time
-WHERE datetime(dc.createdAt).epochMillis > datetime($startOfTimeFrame).epochMillis
+WHERE ($startOfTimeFrame IS NULL OR datetime(dc.createdAt).epochMillis > datetime($startOfTimeFrame).epochMillis)
 
-OPTIONAL MATCH (dc)-[:POSTED_IN_CHANNEL]->(d:Discussion)
+// We want the Discussion to match the search input
+MATCH (dc)-[:POSTED_IN_CHANNEL]->(d:Discussion)
+WHERE ($searchInput = "" OR d.title CONTAINS $searchInput OR d.body CONTAINS $searchInput)
+AND (SIZE($selectedTags) = 0 OR EXISTS { MATCH (d)-[:HAS_TAG]->(tag:Tag) WHERE tag.text IN $selectedTags })
+
+
+// Remaining optional matches
 OPTIONAL MATCH (d)<-[:POSTED_DISCUSSION]-(author:User)
 OPTIONAL MATCH (dc)-[:UPVOTED_DISCUSSION]->(upvoter:User)
 OPTIONAL MATCH (dc)-[:CONTAINS_COMMENT]->(c:Comment)
+OPTIONAL MATCH (d)-[:HAS_TAG]->(tag:Tag)
 
-WITH dc, d, author,
+
+WITH dc, d, author, tag,
      COLLECT(c) AS comments,
+     COLLECT(DISTINCT tag.text) AS tagsText,
      COLLECT(DISTINCT upvoter) AS UpvotedByUsers,
+     // The ONLY reason we are using a custom cypher query instead of
+     // an auto-generated resolver is because we need to treat a null
+     // weightedVotesCount as 0.0.
      coalesce(dc.weightedVotesCount, 0.0) AS weightedVotesCount
 
 WITH dc.id AS id, 
@@ -29,6 +40,7 @@ WITH dc.id AS id,
      d.createdAt AS discussionCreatedAt,
      d.updatedAt AS updatedAt,
      dc.channelUniqueName AS uniqueName,
+     [x IN COLLECT(tag.text) WHERE x IS NOT NULL] AS tagsText, 
      author
 
 RETURN {
@@ -52,7 +64,8 @@ RETURN {
             createdAt: author.createdAt,
             discussionKarma: author.discussionKarma,
             commentKarma: author.commentKarma
-        }
+        },
+        Tags: [t IN tagsText | {text: t}]
     },
     UpvotedByUsersCount: UpvotedByUsersCount,
     Channel: {
