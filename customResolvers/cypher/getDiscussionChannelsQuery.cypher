@@ -1,30 +1,34 @@
+// Calculate the aggregate discussion count first with tag handling
+MATCH (dcAgg:DiscussionChannel { channelUniqueName: $channelUniqueName })
+WHERE ($startOfTimeFrame IS NULL OR datetime(dcAgg.createdAt).epochMillis > datetime($startOfTimeFrame).epochMillis)
+AND ($searchInput = "" OR EXISTS { MATCH (dcAgg)-[:POSTED_IN_CHANNEL]->(dAgg:Discussion) WHERE dAgg.title CONTAINS $searchInput OR dAgg.body CONTAINS $searchInput })
+AND (SIZE($selectedTags) = 0 OR EXISTS { MATCH (dAgg)-[:HAS_TAG]->(tagAgg:Tag) WHERE tagAgg.text IN $selectedTags })
+WITH COUNT(DISTINCT dAgg) AS aggregateDiscussionCount, dcAgg
+
+// Proceed with fetching the discussions and other details
 MATCH (dc:DiscussionChannel { channelUniqueName: $channelUniqueName })
-
-// Use the variable $startOfTimeFrame to filter results by time frame
-WHERE ($startOfTimeFrame IS NULL OR datetime(dc.createdAt).epochMillis > datetime($startOfTimeFrame).epochMillis)
-AND ($searchInput = "" OR EXISTS { MATCH (dc)-[:POSTED_IN_CHANNEL]->(d:Discussion) WHERE d.title CONTAINS $searchInput OR d.body CONTAINS $searchInput })
-AND (SIZE($selectedTags) = 0 OR EXISTS { MATCH (d)-[:HAS_TAG]->(tag:Tag) WHERE tag.text IN $selectedTags })
-
+WHERE ID(dc) = ID(dcAgg)
+OPTIONAL MATCH (dc)-[:POSTED_IN_CHANNEL]->(d:Discussion)
 OPTIONAL MATCH (d)<-[:POSTED_DISCUSSION]-(author:User)
 OPTIONAL MATCH (dc)-[:UPVOTED_DISCUSSION]->(upvoter:User)
 OPTIONAL MATCH (dc)-[:CONTAINS_COMMENT]->(c:Comment)
 OPTIONAL MATCH (d)-[:HAS_TAG]->(tag:Tag)
 
-WITH dc, d, author, tag,
-     COLLECT(c) AS comments,
-     COLLECT(DISTINCT tag.text) AS tagsText,
-     COLLECT(DISTINCT upvoter) AS UpvotedByUsers,
-     coalesce(dc.weightedVotesCount, 0.0) AS weightedVotesCount,
-     // Compute the age in months from the createdAt timestamp.
+WITH dc, d, author, COLLECT(c) AS comments, 
+     COLLECT(DISTINCT tag.text) AS tagsText, 
+     COLLECT(DISTINCT upvoter) AS UpvotedByUsers, 
+     COALESCE(dc.weightedVotesCount, 0.0) AS weightedVotesCount, 
      duration.between(dc.createdAt, datetime()).months + 
-     duration.between(dc.createdAt, datetime()).days / 30.0 AS ageInMonths,
-     10000 * log10(weightedVotesCount + 1) / ((ageInMonths + 2) ^ 1.8) AS hotRank
+     duration.between(dc.createdAt, datetime()).days / 30.0 AS ageInMonths, 
+     10000 * log10(weightedVotesCount + 1) / ((ageInMonths + 2) ^ 1.8) AS hotRank, 
+     aggregateDiscussionCount
 
-WITH dc, d, author, tagsText, UpvotedByUsers, weightedVotesCount, comments, hotRank,
+WITH dc, d, author, tagsText, UpvotedByUsers, weightedVotesCount, comments, hotRank, 
      CASE 
         WHEN $ordering = "hot" THEN hotRank 
         ELSE weightedVotesCount 
-     END AS finalOrder
+     END AS finalOrder, 
+     aggregateDiscussionCount
 
 RETURN {
     id: dc.id,
@@ -58,7 +62,8 @@ RETURN {
     },
     Channel: {
         uniqueName: dc.channelUniqueName
-    }
+    },
+    aggregateDiscussionCount: aggregateDiscussionCount // Aggregate count added to the result
 } AS DiscussionChannel
 
 ORDER BY 

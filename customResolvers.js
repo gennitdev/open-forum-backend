@@ -54,7 +54,7 @@ module.exports = function (driver) {
       }),
       getDiscussionsInChannel: getDiscussionsInChannel({
         driver,
-        DiscussionChannel,
+        DiscussionChannel
       }),
     },
     Mutation: {

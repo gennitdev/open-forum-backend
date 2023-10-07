@@ -1,6 +1,4 @@
-const {
-  getDiscussionChannelsQuery,
-} = require("../cypher/cypherQueries");
+const { getDiscussionChannelsQuery } = require("../cypher/cypherQueries");
 const { timeFrameOptions } = require("./utils");
 
 const discussionChannelSelectionSet = `
@@ -51,7 +49,7 @@ const discussionChannelSelectionSet = `
 const getResolver = ({ driver, DiscussionChannel }) => {
   return async (parent, args, context, info) => {
     const { channelUniqueName, options, selectedTags, searchInput } = args;
-    const {offset, limit, sort, timeFrame} = options || {};
+    const { offset, limit, sort, timeFrame } = options || {};
 
     const session = driver.session();
 
@@ -60,12 +58,11 @@ const getResolver = ({ driver, DiscussionChannel }) => {
 
       switch (sort) {
         case "new":
-
           const filters = [
             {
               channelUniqueName,
-            }
-          ]
+            },
+          ];
 
           if (searchInput) {
             filters.push({
@@ -73,15 +70,15 @@ const getResolver = ({ driver, DiscussionChannel }) => {
                 {
                   Discussion: {
                     body_CONTAINS: searchInput,
-                  }
+                  },
                 },
                 {
                   Discussion: {
                     title_CONTAINS: searchInput,
-                  }
-                }
+                  },
+                },
               ],
-            })
+            });
           }
 
           if (selectedTags && selectedTags.length > 0) {
@@ -107,7 +104,28 @@ const getResolver = ({ driver, DiscussionChannel }) => {
               },
             },
           });
-          break;
+
+          const aggregate = await DiscussionChannel.aggregate({
+            where: {
+              AND: filters,
+            },
+            aggregate: {
+              count: true,
+            },
+          });
+
+          if (result.length === 0) {
+            return {
+              discussionChannels: [],
+              aggregateDiscussionChannelsCount: 0,
+            };
+          }
+
+          return {
+            discussionChannels: result,
+            aggregateDiscussionChannelsCount: aggregate?.count || 0,
+          };
+
         case "top":
           // if sort is "top", get the DiscussionChannels sorted by weightedVotesCount.
           // Treat a null weightedVotesCount as 0.
@@ -130,10 +148,28 @@ const getResolver = ({ driver, DiscussionChannel }) => {
             }
           );
 
-          result = topDiscussionChannelsResult.records.map((record) => {
-            return record.get("DiscussionChannel");
-          });
-          break;
+          if (topDiscussionChannelsResult.records.length === 0) {
+            return {
+              discussionChannels: [],
+              aggregateDiscussionChannelCount: 0,
+            };
+          }
+          let aggregateTopDiscussionChannelCount =
+            topDiscussionChannelsResult.records[0].get(
+              "aggregateDiscussionChannelsCount"
+            );
+
+          const topDiscussionChannels = topDiscussionChannelsResult.records.map(
+            (record) => {
+              return record.get("DiscussionChannel");
+            }
+          );
+
+          return {
+            discussionChannels: topDiscussionChannels,
+            aggregateDiscussionChannelsCount:
+              aggregateTopDiscussionChannelCount || 0,
+          };
         default:
           // By default, and if sort is "hot", get the DiscussionChannels sorted by hot,
           // which takes into account both weightedVotesCount and createdAt.
@@ -148,12 +184,31 @@ const getResolver = ({ driver, DiscussionChannel }) => {
               sortOption: "hot",
             }
           );
-          result = hotDiscussionChannelsResult.records.map((record) => {
-            return record.get("DiscussionChannel");
-          });
-      }
 
-      return result;
+          if (hotDiscussionChannelsResult.records.length === 0) {
+            return {
+              discussionChannels: [],
+              aggregateDiscussionChannelsCount: 0,
+            };
+          }
+
+          let aggregateHotDiscussionChannelsCount =
+            hotDiscussionChannelsResult.records[0].get(
+              "aggregateDiscussionChannelsCount"
+            );
+
+          const hotDiscussionChannels = hotDiscussionChannelsResult.records.map(
+            (record) => {
+              return record.get("DiscussionChannel");
+            }
+          );
+
+          return {
+            discussionChannels: hotDiscussionChannels,
+            aggregateDiscussionChannelsCount:
+              aggregateHotDiscussionChannelsCount || 0,
+          };
+      }
     } catch (error) {
       console.error("Error getting discussionChannels:", error);
       throw new Error(

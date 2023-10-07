@@ -48,7 +48,7 @@ const getResolver = ({ driver }) => {
           // if sort is "top", get the Discussions sorted by the sum of the
           // weightedVotesCounts of the related DiscussionChannels.
           // Treat a null weightedVotesCount as 0.
-          let selectedTimeFrame = null;
+          let selectedTimeFrame = timeFrameOptions.year.start;
 
           if (timeFrameOptions[timeFrame]) {
             selectedTimeFrame = timeFrameOptions[timeFrame].start;
@@ -97,6 +97,7 @@ const getResolver = ({ driver }) => {
               offset,
               limit,
               resultsOrder,
+              startOfTimeFrame: null,
               sortOption: "hot"
             }
           );

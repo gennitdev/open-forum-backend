@@ -354,13 +354,18 @@ const typeDefs = gql`
     discussions: [Discussion!]!
   }
 
+  type DiscussionChannelListFormat {
+    aggregateDiscussionChannelsCount: Int!
+    discussionChannels: [DiscussionChannel!]!
+  }
+
   type Query {
     getDiscussionsInChannel(
       channelUniqueName: String!
       searchInput: String
       selectedTags: [String]
       options: DiscussionListOptions
-    ): [DiscussionChannel]
+    ): DiscussionChannelListFormat
     getSiteWideDiscussionList(
       searchInput: String
       selectedChannels: [String]
