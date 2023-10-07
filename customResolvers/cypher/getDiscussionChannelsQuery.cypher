@@ -1,34 +1,38 @@
-// Calculate the aggregate discussion count first with tag handling
-MATCH (dcAgg:DiscussionChannel { channelUniqueName: $channelUniqueName })
-WHERE ($startOfTimeFrame IS NULL OR datetime(dcAgg.createdAt).epochMillis > datetime($startOfTimeFrame).epochMillis)
-AND ($searchInput = "" OR EXISTS { MATCH (dcAgg)-[:POSTED_IN_CHANNEL]->(dAgg:Discussion) WHERE dAgg.title CONTAINS $searchInput OR dAgg.body CONTAINS $searchInput })
-AND (SIZE($selectedTags) = 0 OR EXISTS { MATCH (dAgg)-[:HAS_TAG]->(tagAgg:Tag) WHERE tagAgg.text IN $selectedTags })
-WITH COUNT(DISTINCT dAgg) AS aggregateDiscussionCount, dcAgg
-
-// Proceed with fetching the discussions and other details
 MATCH (dc:DiscussionChannel { channelUniqueName: $channelUniqueName })
-WHERE ID(dc) = ID(dcAgg)
-OPTIONAL MATCH (dc)-[:POSTED_IN_CHANNEL]->(d:Discussion)
+WHERE 
+    ($searchInput = "" OR EXISTS { MATCH (dc)-[:POSTED_IN_CHANNEL]->(d:Discussion) WHERE d.title CONTAINS $searchInput OR d.body CONTAINS $searchInput })
+    AND (CASE WHEN $sortOption = "top" THEN datetime(dc.createdAt).epochMillis > datetime($startOfTimeFrame).epochMillis ELSE TRUE END)
+    AND (
+        SIZE($selectedTags) = 0 OR 
+        EXISTS { MATCH (dc)-[:POSTED_IN_CHANNEL]->(d)-[:HAS_TAG]->(tag:Tag) WHERE tag.text IN $selectedTags }
+    )
+    
+WITH COLLECT(dc) AS filteredDiscussionChannels
+
+// Calculate aggregate count for these channels
+WITH SIZE(filteredDiscussionChannels) AS aggregateDiscussionChannelCount, filteredDiscussionChannels
+
+
+// Fetch the discussions and other details for these channels
+UNWIND filteredDiscussionChannels AS dc
+MATCH (dc)-[:POSTED_IN_CHANNEL]->(d:Discussion)
+OPTIONAL MATCH (d)-[:HAS_TAG]->(tag:Tag)
 OPTIONAL MATCH (d)<-[:POSTED_DISCUSSION]-(author:User)
 OPTIONAL MATCH (dc)-[:UPVOTED_DISCUSSION]->(upvoter:User)
 OPTIONAL MATCH (dc)-[:CONTAINS_COMMENT]->(c:Comment)
-OPTIONAL MATCH (d)-[:HAS_TAG]->(tag:Tag)
+
 
 WITH dc, d, author, COLLECT(c) AS comments, 
      COLLECT(DISTINCT tag.text) AS tagsText, 
      COLLECT(DISTINCT upvoter) AS UpvotedByUsers, 
-     COALESCE(dc.weightedVotesCount, 0.0) AS weightedVotesCount, 
+     COALESCE(dc.weightedVotesCount, 0.0) AS weightedVotesCount,
      duration.between(dc.createdAt, datetime()).months + 
-     duration.between(dc.createdAt, datetime()).days / 30.0 AS ageInMonths, 
-     10000 * log10(weightedVotesCount + 1) / ((ageInMonths + 2) ^ 1.8) AS hotRank, 
-     aggregateDiscussionCount
+     duration.between(dc.createdAt, datetime()).days / 30.0 AS ageInMonths,
+     aggregateDiscussionChannelCount
 
-WITH dc, d, author, tagsText, UpvotedByUsers, weightedVotesCount, comments, hotRank, 
-     CASE 
-        WHEN $ordering = "hot" THEN hotRank 
-        ELSE weightedVotesCount 
-     END AS finalOrder, 
-     aggregateDiscussionCount
+WITH dc, d, author, tagsText, UpvotedByUsers, weightedVotesCount, comments,
+     10000 * log10(weightedVotesCount + 1) / ((ageInMonths + 2) ^ 1.8) AS hotRank, 
+     aggregateDiscussionChannelCount
 
 RETURN {
     id: dc.id,
@@ -62,12 +66,13 @@ RETURN {
     },
     Channel: {
         uniqueName: dc.channelUniqueName
-    },
-    aggregateDiscussionCount: aggregateDiscussionCount // Aggregate count added to the result
-} AS DiscussionChannel
+    }
+} AS DiscussionChannel, aggregateDiscussionChannelCount
 
 ORDER BY 
-    finalOrder DESC, 
-    dc.createdAt DESC
+    CASE WHEN $sortOption = "new" THEN DiscussionChannel.createdAt END DESC,
+    CASE WHEN $sortOption = "top" THEN weightedVotesCount END DESC,
+    CASE WHEN $sortOption = "hot" THEN hotRank END DESC,
+    DiscussionChannel.createdAt DESC
 SKIP toInteger($offset)
 LIMIT toInteger($limit)

@@ -156,7 +156,7 @@ const getResolver = ({ driver, DiscussionChannel }) => {
           }
           let aggregateTopDiscussionChannelCount =
             topDiscussionChannelsResult.records[0].get(
-              "aggregateDiscussionChannelsCount"
+              "aggregateDiscussionChannelCount"
             );
 
           const topDiscussionChannels = topDiscussionChannelsResult.records.map(
@@ -181,6 +181,7 @@ const getResolver = ({ driver, DiscussionChannel }) => {
               channelUniqueName,
               offset: parseInt(offset, 10),
               limit: parseInt(limit, 10),
+              startOfTimeFrame: null,
               sortOption: "hot",
             }
           );
@@ -194,7 +195,7 @@ const getResolver = ({ driver, DiscussionChannel }) => {
 
           let aggregateHotDiscussionChannelsCount =
             hotDiscussionChannelsResult.records[0].get(
-              "aggregateDiscussionChannelsCount"
+              "aggregateDiscussionChannelCount"
             );
 
           const hotDiscussionChannels = hotDiscussionChannelsResult.records.map(
