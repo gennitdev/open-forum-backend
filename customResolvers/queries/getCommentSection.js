@@ -5,6 +5,7 @@ const {
 const discussionChannelSelectionSet = `
 {
     id
+    createdAt
     weightedVotesCount
     discussionId
     channelUniqueName
@@ -155,6 +156,7 @@ const getResolver = ({ driver, DiscussionChannel, Comment }) => {
             },
           },
         });
+        
       } else if (sort === "top") {
         // if sort is "top", get the comments sorted by weightedVotesCount.
         // Treat a null weightedVotesCount as 0.
@@ -184,7 +186,7 @@ const getResolver = ({ driver, DiscussionChannel, Comment }) => {
       }
 
       return {
-        ...discussionChannel,
+        DiscussionChannel: discussionChannel,
         Comments: commentsResult,
       };
     } catch (error) {

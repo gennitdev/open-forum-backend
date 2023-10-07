@@ -15,19 +15,20 @@ WITH c, author, parent,
      // Compute the age in months from the createdAt timestamp.
      duration.between(c.createdAt, datetime()).months + 
      duration.between(c.createdAt, datetime()).days / 30.0 AS ageInMonths,
-     10000 * log10(coalesce(c.weightedVotesCount, 0) + 1) / ((ageInMonths + 2) ^ 1.8) AS hotRank
+     coalesce(c.weightedVotesCount, 0) AS weightedVotesCount
 
-WITH c, author, parent, UpvotedByUsers, DownvotedByModerators, parentIds, [comment IN NonFilteredChildComments WHERE comment IS NOT NULL] AS ChildComments, 
-     CASE 
-        WHEN $sortOption = "hot" THEN hotRank 
-        ELSE coalesce(c.weightedVotesCount, 0)
-     END AS finalOrder
+WITH c, author, parent, UpvotedByUsers, DownvotedByModerators, parentIds, weightedVotesCount,
+    [comment IN NonFilteredChildComments WHERE comment IS NOT NULL] AS ChildComments, 
+    CASE WHEN ageInMonths IS NULL THEN 0 ELSE ageInMonths END AS ageInMonths
+
+WITH c, author, parent, UpvotedByUsers, DownvotedByModerators, parentIds, ChildComments, ageInMonths, weightedVotesCount,
+    10000 * log10(weightedVotesCount + 1) / ((ageInMonths + 2) ^ 1.8) AS hotRank
 
 RETURN {
     id: c.id,
     text: c.text,
     emoji: c.emoji,
-    weightedVotesCount: coalesce(c.weightedVotesCount, 0),
+    weightedVotesCount: c.weightedVotesCount,
     createdAt: c.createdAt,
     updatedAt: c.updatedAt,
     CommentAuthor: {
@@ -49,7 +50,11 @@ RETURN {
     ChildCommentsAggregate: {
         count: SIZE(ChildComments)
     }
-} AS comment
-ORDER BY finalOrder DESC, c.createdAt DESC
+} AS comment, weightedVotesCount, hotRank
+
+ORDER BY 
+    CASE WHEN $sortOption = "top" THEN weightedVotesCount END DESC,
+    CASE WHEN $sortOption = "hot" THEN hotRank END DESC,
+    c.createdAt DESC
 SKIP toInteger($offset)
 LIMIT toInteger($limit)

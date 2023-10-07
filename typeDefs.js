@@ -359,6 +359,11 @@ const typeDefs = gql`
     discussionChannels: [DiscussionChannel!]!
   }
 
+  type CommentSectionFormat {
+    DiscussionChannel: DiscussionChannel!
+    Comments: [Comment!]!
+  }
+
   type Query {
     getDiscussionsInChannel(
       channelUniqueName: String!
@@ -378,7 +383,7 @@ const typeDefs = gql`
       offset: Int
       limit: Int
       sort: String
-    ): DiscussionChannel
+    ): CommentSectionFormat
   }
 `;
 
