@@ -27,6 +27,9 @@ const discussionChannelSelectionSet = `
               createdAt
               discussionKarma
           }
+          Tags {
+            text
+          }
       }
       CommentsAggregate {
           count
@@ -58,10 +61,43 @@ const getResolver = ({ driver, DiscussionChannel }) => {
 
       switch (sort) {
         case "new":
+
+          const filters = [
+            {
+              channelUniqueName,
+            }
+          ]
+
+          if (searchInput) {
+            filters.push({
+              OR: [
+                {
+                  Discussion: {
+                    body_CONTAINS: searchInput,
+                  }
+                },
+                {
+                  Discussion: {
+                    title_CONTAINS: searchInput,
+                  }
+                }
+              ],
+            })
+          }
+
+          if (selectedTags && selectedTags.length > 0) {
+            filters.push({
+              Discussion: {
+                Tags: {
+                  text_IN: selectedTags,
+                },
+              },
+            });
+          }
           // if sort is "new", get the DiscussionChannels sorted by createdAt.
           result = await DiscussionChannel.find({
             where: {
-              channelUniqueName,
+              AND: filters,
             },
             selectionSet: discussionChannelSelectionSet,
             options: {
