@@ -1,6 +1,8 @@
 // Calculate the aggregate discussion count first with tag handling
-MATCH (dcAgg:DiscussionChannel)-[:POSTED_IN_CHANNEL]->(dAgg:Discussion)
-WHERE (SIZE($selectedChannels) = 0 OR dcAgg.channelUniqueName IN $selectedChannels)
+
+MATCH (dAgg:Discussion)
+WHERE EXISTS((dAgg)<-[:POSTED_IN_CHANNEL]-(:DiscussionChannel))
+AND (SIZE($selectedChannels) = 0 OR dcAgg.channelUniqueName IN $selectedChannels)
 AND ($searchInput = "" OR dAgg.title CONTAINS $searchInput OR dAgg.body CONTAINS $searchInput)
 AND (CASE WHEN $sortOption = "top" THEN datetime(dAgg.createdAt).epochMillis > datetime($startOfTimeFrame).epochMillis ELSE TRUE END)
 OPTIONAL MATCH (dAgg)-[:HAS_TAG]->(tagAgg:Tag)
@@ -8,16 +10,16 @@ WITH dAgg, COLLECT(DISTINCT tagAgg.text) AS aggregateTagsText
 WHERE SIZE($selectedTags) = 0 OR ANY(t IN aggregateTagsText WHERE t IN $selectedTags)
 WITH COUNT(DISTINCT dAgg) AS aggregateDiscussionCount
 
-
 // Fetch the unique discussions based on the criteria
-MATCH (dc:DiscussionChannel)-[:POSTED_IN_CHANNEL]->(d:Discussion)
-WHERE (SIZE($selectedChannels) = 0 OR dc.channelUniqueName IN $selectedChannels)
+MATCH (d:Discussion)
+WHERE EXISTS((d)<-[:POSTED_IN_CHANNEL]-(dc:DiscussionChannel))
+AND (SIZE($selectedChannels) = 0 OR dc.channelUniqueName IN $selectedChannels)
 AND ($searchInput = "" OR d.title CONTAINS $searchInput OR d.body CONTAINS $searchInput)
 AND (CASE WHEN $sortOption = "top" THEN datetime(d.createdAt).epochMillis > datetime($startOfTimeFrame).epochMillis ELSE TRUE END)
 
 // Handle tags
 OPTIONAL MATCH (d)-[:HAS_TAG]->(tag:Tag)
-WITH d, aggregateDiscussionCount, 
+WITH d, dc, aggregateDiscussionCount, 
      COLLECT(DISTINCT tag.text) AS tagsText, 
      COLLECT(DISTINCT tag) AS tags
 WHERE SIZE($selectedTags) = 0 OR ANY(t IN tagsText WHERE t IN $selectedTags)
@@ -28,6 +30,7 @@ OPTIONAL MATCH (dc)-[:CONTAINS_COMMENT]->(c:Comment)
 
 // Group by discussions and aggregate
 WITH DISTINCT d, 
+    dc,
     author, 
     tagsText, 
     COLLECT(DISTINCT u.username) AS upvoteUsernames, 
@@ -37,7 +40,8 @@ WITH DISTINCT d,
     duration.between(d.createdAt, datetime()).days / 30.0 AS ageInMonths, 
     aggregateDiscussionCount
 
-WITH d, 
+WITH d,
+    dc,
     author, 
     tagsText, 
     upvoteUsernames, 
@@ -64,11 +68,20 @@ RETURN
                 commentKarma: author.discussionKarma
             }
           END,
-  UpvotedByUsers: upvoteUsernames,
-  CommentsAggregate: { count: commentCount },
-  Tags: [t IN tagsText | {text: t}],
-  aggregateDiscussionCount: aggregateDiscussionCount
-} AS discussion, aggregateDiscussionCount, score, rank 
+  
+  aggregateDiscussionCount: aggregateDiscussionCount,
+  DiscussionChannels: [dc IN COLLECT(DISTINCT dc) | {
+    id: dc.id, 
+    createdAt: dc.createdAt,
+    channelUniqueName: dc.channelUniqueName,
+    discussionId: dc.discussionId,
+    weightedVotesCount: dc.weightedVotesCount,
+    UpvotedByUsers: upvoteUsernames,
+    CommentsAggregate: { count: commentCount }
+  }],
+  Tags: [t IN tagsText | {text: t}]
+} AS discussion, aggregateDiscussionCount, score, rank
+
 ORDER BY 
     CASE WHEN $sortOption = "new" THEN discussion.createdAt END DESC,
     CASE WHEN $sortOption = "top" THEN score END DESC,
