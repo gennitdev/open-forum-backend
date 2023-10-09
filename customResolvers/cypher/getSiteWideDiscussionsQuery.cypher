@@ -42,27 +42,33 @@ WHERE (SIZE($selectedChannels) = 0 OR dc.channelUniqueName IN $selectedChannels)
 // Filter by text
 AND ($searchInput = "" OR d.title CONTAINS $searchInput OR d.body CONTAINS $searchInput)
 
-// Group by discussion and discussion channel, and aggregate the comment count and upvoting users
-WITH d, dc, c, aggregateDiscussionCount,
-     COUNT(DISTINCT c) AS commentsCount,
-     COLLECT(DISTINCT upvoter) AS upvotedByUsers, 
+// First, fetch upvoted users per discussion channel
+WITH d, dc, aggregateDiscussionCount
+OPTIONAL MATCH (dc)-[:UPVOTED_DISCUSSION]->(upvoter:User)
+WITH d, dc, COLLECT(DISTINCT upvoter) AS upvotedByUsers, aggregateDiscussionCount
+
+// Next, fetch comments per discussion channel
+OPTIONAL MATCH (dc)-[:CONTAINS_COMMENT]->(c:Comment)
+WITH d, dc, upvotedByUsers, COUNT(DISTINCT c) AS commentsCount, aggregateDiscussionCount
+
+// Compute score for each discussion channel
+WITH d, dc, upvotedByUsers, commentsCount, aggregateDiscussionCount,
      SUM(COALESCE(dc.weightedVotesCount, 0)) AS score
 
 // Now, group by discussion and collect the discussion channels with their aggregates
-WITH d,
+WITH d, aggregateDiscussionCount, score,
      COLLECT({
          id: dc.id,
          createdAt: dc.createdAt,
          channelUniqueName: dc.channelUniqueName,
          discussionId: dc.discussionId,
-         // UpvotedByUsers should be empty if there are no upvoting users
-        UpvotedByUsers: [up in upvotedByUsers | { username: up.username }],
+         UpvotedByUsers: [up in upvotedByUsers | { username: up.username }],
          CommentsAggregate: {
              count: commentsCount
          }
-     }) AS discussionChannels,
-    aggregateDiscussionCount,
-    score
+     }) AS discussionChannels
+
+WITH d, discussionChannels, aggregateDiscussionCount, score
 
 // Handle tags
 OPTIONAL MATCH (d)-[:HAS_TAG]->(tag:Tag)
