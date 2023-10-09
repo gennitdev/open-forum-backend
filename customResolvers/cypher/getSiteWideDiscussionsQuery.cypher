@@ -3,15 +3,15 @@ MATCH (dAgg:Discussion)
 WHERE EXISTS((dAgg)<-[:POSTED_IN_CHANNEL]-(:DiscussionChannel))
 AND (CASE WHEN $sortOption = "top" THEN datetime(dAgg.createdAt).epochMillis > datetime($startOfTimeFrame).epochMillis ELSE TRUE END)
 
+// Filter by text
+AND ($searchInput = "" OR dAgg.title CONTAINS $searchInput OR dAgg.body CONTAINS $searchInput)
+
 // create the dc variable so that we can get the comments and 
 // user upvoters for the dc
 WITH dAgg
 OPTIONAL MATCH (dAgg)<-[:POSTED_IN_CHANNEL]-(dcAgg:DiscussionChannel)
 // Filter by channel
 WHERE (SIZE($selectedChannels) = 0 OR dcAgg.channelUniqueName IN $selectedChannels)
-
-// Filter by text
-AND ($searchInput = "" OR dAgg.title CONTAINS $searchInput OR dAgg.body CONTAINS $searchInput)
 
 OPTIONAL MATCH (dAgg)-[:HAS_TAG]->(tagAgg:Tag)
 WITH dAgg, COLLECT(DISTINCT tagAgg.text) AS aggregateTagsText
@@ -29,6 +29,9 @@ MATCH (d:Discussion)
 WHERE EXISTS((d)<-[:POSTED_IN_CHANNEL]-(:DiscussionChannel))
 AND (CASE WHEN $sortOption = "top" THEN datetime(d.createdAt).epochMillis > datetime($startOfTimeFrame).epochMillis ELSE TRUE END)
 
+// Filter by text
+AND ($searchInput = "" OR d.title CONTAINS $searchInput OR d.body CONTAINS $searchInput)
+
 // create the dc variable so that we can get the comments and
 // user upvoters for the dc
 WITH d, aggregateDiscussionCount
@@ -39,8 +42,7 @@ OPTIONAL MATCH (dc)-[:CONTAINS_COMMENT]->(c:Comment)
 // Filter by channel
 WHERE (SIZE($selectedChannels) = 0 OR dc.channelUniqueName IN $selectedChannels)
 
-// Filter by text
-AND ($searchInput = "" OR d.title CONTAINS $searchInput OR d.body CONTAINS $searchInput)
+
 
 // First, fetch upvoted users per discussion channel
 WITH d, dc, aggregateDiscussionCount
