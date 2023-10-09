@@ -33,9 +33,8 @@ AND (CASE WHEN $sortOption = "top" THEN datetime(d.createdAt).epochMillis > date
 // user upvoters for the dc
 WITH d, aggregateDiscussionCount
 OPTIONAL MATCH (d)<-[:POSTED_IN_CHANNEL]-(dc:DiscussionChannel)
-OPTIONAL MATCH (dc:DiscussionChannel {discussionId: d.id})-[:UPVOTED_DISCUSSION]->(u:User)
+OPTIONAL MATCH (dc:DiscussionChannel {discussionId: d.id})-[:UPVOTED_DISCUSSION]->(upvoter:User)
 OPTIONAL MATCH (dc)-[:CONTAINS_COMMENT]->(c:Comment)
-OPTIONAL MATCH (dc)-[:UPVOTED_DISCUSSION]->(u:User)
 
 // Filter by channel
 WHERE (SIZE($selectedChannels) = 0 OR dc.channelUniqueName IN $selectedChannels)
@@ -44,9 +43,9 @@ WHERE (SIZE($selectedChannels) = 0 OR dc.channelUniqueName IN $selectedChannels)
 AND ($searchInput = "" OR d.title CONTAINS $searchInput OR d.body CONTAINS $searchInput)
 
 // Group by discussion and discussion channel, and aggregate the comment count and upvoting users
-WITH d, dc, u, c, aggregateDiscussionCount,
+WITH d, dc, c, aggregateDiscussionCount,
      COUNT(DISTINCT c) AS commentsCount,
-     COLLECT(DISTINCT u.username) AS upvotingUsersNames,
+     COLLECT(DISTINCT upvoter) AS upvotedByUsers, 
      SUM(COALESCE(dc.weightedVotesCount, 0)) AS score
 
 // Now, group by discussion and collect the discussion channels with their aggregates
@@ -56,7 +55,8 @@ WITH d,
          createdAt: dc.createdAt,
          channelUniqueName: dc.channelUniqueName,
          discussionId: dc.discussionId,
-         UpvotedByUsers: upvotingUsersNames,
+         // UpvotedByUsers should be empty if there are no upvoting users
+        UpvotedByUsers: [up in upvotedByUsers | { username: up.username }],
          CommentsAggregate: {
              count: commentsCount
          }
