@@ -53,7 +53,6 @@ const getResolver = ({ driver }) => {
           if (timeFrameOptions[timeFrame]) {
             selectedTimeFrame = timeFrameOptions[timeFrame].start;
           }
-          console.log('selected time frame', selectedTimeFrame)
           const topDiscussionsResult = await session.run(
             getSiteWideDiscussionsQuery,
             {

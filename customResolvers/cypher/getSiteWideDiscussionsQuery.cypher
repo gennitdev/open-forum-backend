@@ -2,49 +2,38 @@
 MATCH (dAgg:Discussion)
 WHERE EXISTS((dAgg)<-[:POSTED_IN_CHANNEL]-(:DiscussionChannel))
 AND (CASE WHEN $sortOption = "top" THEN datetime(dAgg.createdAt).epochMillis > datetime($startOfTimeFrame).epochMillis ELSE TRUE END)
-
-// Filter by text
 AND ($searchInput = "" OR dAgg.title CONTAINS $searchInput OR dAgg.body CONTAINS $searchInput)
 
-// create the dc variable so that we can get the comments and 
-// user upvoters for the dc
+// This filter will ensure that we only match channels that are relevant, before the OPTIONAL MATCH
 WITH dAgg
-OPTIONAL MATCH (dAgg)<-[:POSTED_IN_CHANNEL]-(dcAgg:DiscussionChannel)
-// Filter by channel
-WHERE (SIZE($selectedChannels) = 0 OR dcAgg.channelUniqueName IN $selectedChannels)
+MATCH (dAgg)<-[:POSTED_IN_CHANNEL]-(dcAgg:DiscussionChannel)
+WHERE SIZE($selectedChannels) = 0 OR dcAgg.channelUniqueName IN $selectedChannels
 
 OPTIONAL MATCH (dAgg)-[:HAS_TAG]->(tagAgg:Tag)
 WITH dAgg, COLLECT(DISTINCT tagAgg.text) AS aggregateTagsText
-// Filter by tag
 WHERE SIZE($selectedTags) = 0 OR ANY(t IN aggregateTagsText WHERE t IN $selectedTags)
+
 WITH COUNT(DISTINCT dAgg) AS aggregateDiscussionCount
 
 ////////////////////////////////////////////////////////////////
 
 // Do the same filtering logic as above, but this time, instead of just getting
 // the total count, we collect all the data we need for the result.
-
 // Fetch the unique discussions based on the criteria
 MATCH (d:Discussion)
 WHERE EXISTS((d)<-[:POSTED_IN_CHANNEL]-(:DiscussionChannel))
 AND (CASE WHEN $sortOption = "top" THEN datetime(d.createdAt).epochMillis > datetime($startOfTimeFrame).epochMillis ELSE TRUE END)
-
-// Filter by text
 AND ($searchInput = "" OR d.title CONTAINS $searchInput OR d.body CONTAINS $searchInput)
 
-// create the dc variable so that we can get the comments and
-// user upvoters for the dc
+// Filter by channel first to reduce the size of the subsequent OPTIONAL MATCH
 WITH d, aggregateDiscussionCount
-OPTIONAL MATCH (d)<-[:POSTED_IN_CHANNEL]-(dc:DiscussionChannel)
+MATCH (d)<-[:POSTED_IN_CHANNEL]-(dc:DiscussionChannel)
+WHERE SIZE($selectedChannels) = 0 OR dc.channelUniqueName IN $selectedChannels
+
+// Then, create the dc variable to get the comments and user upvoters for the dc
 OPTIONAL MATCH (dc:DiscussionChannel {discussionId: d.id})-[:UPVOTED_DISCUSSION]->(upvoter:User)
 OPTIONAL MATCH (dc)-[:CONTAINS_COMMENT]->(c:Comment)
 
-// Filter by channel
-WHERE (SIZE($selectedChannels) = 0 OR dc.channelUniqueName IN $selectedChannels)
-
-
-
-// First, fetch upvoted users per discussion channel
 WITH d, dc, aggregateDiscussionCount
 OPTIONAL MATCH (dc)-[:UPVOTED_DISCUSSION]->(upvoter:User)
 WITH d, dc, COLLECT(DISTINCT upvoter) AS upvotedByUsers, aggregateDiscussionCount
@@ -69,6 +58,7 @@ WITH d, aggregateDiscussionCount, score,
              count: commentsCount
          }
      }) AS discussionChannels
+
 
 WITH d, discussionChannels, aggregateDiscussionCount, score
 
