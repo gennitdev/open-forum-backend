@@ -1,87 +1,108 @@
 // Calculate the aggregate discussion count first with tag handling
 MATCH (dAgg:Discussion)
 WHERE EXISTS((dAgg)<-[:POSTED_IN_CHANNEL]-(:DiscussionChannel))
+AND (CASE WHEN $sortOption = "top" THEN datetime(dAgg.createdAt).epochMillis > datetime($startOfTimeFrame).epochMillis ELSE TRUE END)
 
 // create the dc variable so that we can get the comments and 
 // user upvoters for the dc
 WITH dAgg
 OPTIONAL MATCH (dAgg)<-[:POSTED_IN_CHANNEL]-(dcAgg:DiscussionChannel)
-
+// Filter by channel
 WHERE (SIZE($selectedChannels) = 0 OR dcAgg.channelUniqueName IN $selectedChannels)
+
+// Filter by text
 AND ($searchInput = "" OR dAgg.title CONTAINS $searchInput OR dAgg.body CONTAINS $searchInput)
-AND (CASE WHEN $sortOption = "top" THEN datetime(dAgg.createdAt).epochMillis > datetime($startOfTimeFrame).epochMillis ELSE TRUE END)
+
 OPTIONAL MATCH (dAgg)-[:HAS_TAG]->(tagAgg:Tag)
 WITH dAgg, COLLECT(DISTINCT tagAgg.text) AS aggregateTagsText
+// Filter by tag
 WHERE SIZE($selectedTags) = 0 OR ANY(t IN aggregateTagsText WHERE t IN $selectedTags)
 WITH COUNT(DISTINCT dAgg) AS aggregateDiscussionCount
+
+////////////////////////////////////////////////////////////////
+
+// Do the same filtering logic as above, but this time, instead of just getting
+// the total count, we collect all the data we need for the result.
 
 // Fetch the unique discussions based on the criteria
 MATCH (d:Discussion)
 WHERE EXISTS((d)<-[:POSTED_IN_CHANNEL]-(:DiscussionChannel))
+AND (CASE WHEN $sortOption = "top" THEN datetime(d.createdAt).epochMillis > datetime($startOfTimeFrame).epochMillis ELSE TRUE END)
 
 // create the dc variable so that we can get the comments and
 // user upvoters for the dc
 WITH d, aggregateDiscussionCount
 OPTIONAL MATCH (d)<-[:POSTED_IN_CHANNEL]-(dc:DiscussionChannel)
-
-WHERE (SIZE($selectedChannels) = 0 OR dc.channelUniqueName IN $selectedChannels)
-AND ($searchInput = "" OR d.title CONTAINS $searchInput OR d.body CONTAINS $searchInput)
-AND (CASE WHEN $sortOption = "top" THEN datetime(d.createdAt).epochMillis > datetime($startOfTimeFrame).epochMillis ELSE TRUE END)
-
-// Handle tags
-OPTIONAL MATCH (d)-[:HAS_TAG]->(tag:Tag)
-WITH d, dc, aggregateDiscussionCount, 
-     COLLECT(DISTINCT tag.text) AS tagsText, 
-     COLLECT(DISTINCT tag) AS tags,
-     COLLECT(DISTINCT dc) AS discussionChannels
-WHERE SIZE($selectedTags) = 0 OR ANY(t IN tagsText WHERE t IN $selectedTags)
-
-// Handle author, upvotes, comments, score, age
-WITH d, dc, aggregateDiscussionCount, tagsText, tags
-
-OPTIONAL MATCH (d)<-[:POSTED_DISCUSSION]-(author:User)
 OPTIONAL MATCH (dc:DiscussionChannel {discussionId: d.id})-[:UPVOTED_DISCUSSION]->(u:User)
 OPTIONAL MATCH (dc)-[:CONTAINS_COMMENT]->(c:Comment)
 OPTIONAL MATCH (dc)-[:UPVOTED_DISCUSSION]->(u:User)
 
-WITH DISTINCT d as d, dc, aggregateDiscussionCount, tagsText, tags, author, u, c,
-    COLLECT(DISTINCT dc) AS discussionChannels,
-    COLLECT(DISTINCT u) AS upvotingUsers,
-    COLLECT(DISTINCT c) AS channelComments
+// Filter by channel
+WHERE (SIZE($selectedChannels) = 0 OR dc.channelUniqueName IN $selectedChannels)
 
-WITH d, dc, aggregateDiscussionCount, tagsText, tags, author, 
-     upvotingUsers,
-     COUNT(DISTINCT channelComments) AS commentCount,
-     discussionChannels
+// Filter by text
+AND ($searchInput = "" OR d.title CONTAINS $searchInput OR d.body CONTAINS $searchInput)
 
-// Group by discussions and aggregate
-WITH d, dc,
-    author, 
-    tagsText, 
-    SUM(COALESCE(dc.weightedVotesCount, 0)) AS score,
-    duration.between(d.createdAt, datetime()).months + 
-    duration.between(d.createdAt, datetime()).days / 30.0 AS ageInMonths,
-    aggregateDiscussionCount,
-    [discussionChannel in discussionChannels | {
-        id: discussionChannel.id,
-        createdAt: discussionChannel.createdAt,
-        channelUniqueName: discussionChannel.channelUniqueName,
-        discussionId: discussionChannel.discussionId,
-        weightedVotesCount: discussionChannel.weightedVotesCount,
-        UpvotedByUsers: [u IN upvotingUsers | {username: u.username}],
-        CommentsAggregate: {
-            count: commentCount
-        }
-    }] AS discussionChannels
+// Group by discussion and discussion channel, and aggregate the comment count and upvoting users
+WITH d, dc, u, c, aggregateDiscussionCount,
+     COUNT(DISTINCT c) AS commentsCount,
+     COLLECT(DISTINCT u.username) AS upvotingUsersNames,
+     SUM(COALESCE(dc.weightedVotesCount, 0)) AS score
 
+// Now, group by discussion and collect the discussion channels with their aggregates
 WITH d,
-    dc,
-    author, 
+     COLLECT({
+         id: dc.id,
+         createdAt: dc.createdAt,
+         channelUniqueName: dc.channelUniqueName,
+         discussionId: dc.discussionId,
+         UpvotedByUsers: upvotingUsersNames,
+         CommentsAggregate: {
+             count: commentsCount
+         }
+     }) AS discussionChannels,
+    aggregateDiscussionCount,
+    score
+
+// Handle tags
+OPTIONAL MATCH (d)-[:HAS_TAG]->(tag:Tag)
+
+WITH d, aggregateDiscussionCount,
+    COLLECT(DISTINCT tag.text) AS tagsText,
+    discussionChannels,
+    score
+
+// Filter by tag
+WHERE SIZE($selectedTags) = 0 OR ANY(t IN tagsText WHERE t IN $selectedTags)
+
+OPTIONAL MATCH (d)<-[:POSTED_DISCUSSION]-(author:User)
+
+// Calculate the discussion's age in months
+WITH d, 
+  aggregateDiscussionCount, 
+  tagsText, 
+  author, 
+  discussionChannels, 
+  score,
+  duration.between(d.createdAt, datetime()).months + 
+    duration.between(d.createdAt, datetime()).days / 30.0 AS ageInMonths
+
+// Give a default value for the age in months if it's null
+WITH d, 
+  aggregateDiscussionCount, 
+  tagsText, 
+  author, 
+  discussionChannels, 
+  score,
+  CASE WHEN ageInMonths IS NULL THEN 0 ELSE ageInMonths END AS ageInMonths
+
+// Calculate the rank based on the age in months and the score
+WITH d,
+    aggregateDiscussionCount,
     tagsText,
+    author, 
     discussionChannels,
     CASE WHEN score < 0 THEN 0 ELSE score END AS score, 
-    CASE WHEN ageInMonths IS NULL THEN 0 ELSE ageInMonths END AS ageInMonths, 
-    aggregateDiscussionCount,
     CASE WHEN $sortOption = "hot" THEN 10000 * log10(score + 1) / ((ageInMonths + 2) ^ 1.8) ELSE NULL END AS rank
 
 RETURN
