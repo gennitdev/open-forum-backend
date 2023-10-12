@@ -54,15 +54,34 @@ const getResolver = ({ driver, DiscussionChannel }) => {
     const session = driver.session();
 
     try {
+      const filters = [
+        {
+          channelUniqueName,
+        },
+      ];
+      const aggregateDiscussionChannelsCountResult = await DiscussionChannel.aggregate({
+        where: {
+          AND: filters,
+        },
+        aggregate: {
+          count: true,
+        },
+      });
+
+      const aggregateCount = aggregateDiscussionChannelsCountResult?.count || 0;
+
+      if (aggregateCount === 0) {
+        return {
+          discussionChannels: [],
+          aggregateDiscussionChannelsCount: 0,
+        };
+      }
+
       let result = [];
 
       switch (sort) {
         case "new":
-          const filters = [
-            {
-              channelUniqueName,
-            },
-          ];
+        
 
           if (searchInput) {
             filters.push({
@@ -105,36 +124,20 @@ const getResolver = ({ driver, DiscussionChannel }) => {
             },
           });
 
-          const aggregate = await DiscussionChannel.aggregate({
-            where: {
-              AND: filters,
-            },
-            aggregate: {
-              count: true,
-            },
-          });
-
-          if (result.length === 0) {
-            return {
-              discussionChannels: [],
-              aggregateDiscussionChannelsCount: 0,
-            };
-          }
-
           return {
             discussionChannels: result,
-            aggregateDiscussionChannelsCount: aggregate?.count || 0,
+            aggregateDiscussionChannelsCount: aggregateCount
           };
 
         case "top":
           // if sort is "top", get the DiscussionChannels sorted by weightedVotesCount.
           // Treat a null weightedVotesCount as 0.
-
           let selectedTimeFrame = null;
 
           if (timeFrameOptions[timeFrame]) {
             selectedTimeFrame = timeFrameOptions[timeFrame].start;
           }
+
           const topDiscussionChannelsResult = await session.run(
             getDiscussionChannelsQuery,
             {
@@ -148,17 +151,6 @@ const getResolver = ({ driver, DiscussionChannel }) => {
             }
           );
 
-          if (topDiscussionChannelsResult.records.length === 0) {
-            return {
-              discussionChannels: [],
-              aggregateDiscussionChannelCount: 0,
-            };
-          }
-          let aggregateTopDiscussionChannelCount =
-            topDiscussionChannelsResult.records[0].get(
-              "aggregateDiscussionChannelCount"
-            );
-
           const topDiscussionChannels = topDiscussionChannelsResult.records.map(
             (record) => {
               return record.get("DiscussionChannel");
@@ -167,8 +159,7 @@ const getResolver = ({ driver, DiscussionChannel }) => {
 
           return {
             discussionChannels: topDiscussionChannels,
-            aggregateDiscussionChannelsCount:
-              aggregateTopDiscussionChannelCount || 0,
+            aggregateDiscussionChannelsCount: aggregateCount
           };
         default:
           // By default, and if sort is "hot", get the DiscussionChannels sorted by hot,
@@ -186,18 +177,6 @@ const getResolver = ({ driver, DiscussionChannel }) => {
             }
           );
 
-          if (hotDiscussionChannelsResult.records.length === 0) {
-            return {
-              discussionChannels: [],
-              aggregateDiscussionChannelsCount: 0,
-            };
-          }
-
-          let aggregateHotDiscussionChannelsCount =
-            hotDiscussionChannelsResult.records[0].get(
-              "aggregateDiscussionChannelCount"
-            );
-
           const hotDiscussionChannels = hotDiscussionChannelsResult.records.map(
             (record) => {
               return record.get("DiscussionChannel");
@@ -206,8 +185,7 @@ const getResolver = ({ driver, DiscussionChannel }) => {
 
           return {
             discussionChannels: hotDiscussionChannels,
-            aggregateDiscussionChannelsCount:
-              aggregateHotDiscussionChannelsCount || 0,
+            aggregateDiscussionChannelsCount: aggregateCount
           };
       }
     } catch (error) {

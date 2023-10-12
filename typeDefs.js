@@ -341,7 +341,7 @@ const typeDefs = gql`
     year
     all
   }
-
+  
   input DiscussionListOptions {
     offset: Int
     limit: Int
