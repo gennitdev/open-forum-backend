@@ -5,8 +5,13 @@ OPTIONAL MATCH (child)<-[:AUTHORED_COMMENT]-(author:User)
 OPTIONAL MATCH (child)<-[:UPVOTED_COMMENT]-(upvoter:User)
 OPTIONAL MATCH (child)<-[:DOWNVOTED_COMMENT]-(downvoter:ModerationProfile)
 
+// We also need to get the aggregate count of replies to the reply (grandchild comments).
+// We do this by matching the grandchild comments and then aggregating them.
+OPTIONAL MATCH (child)<-[:IS_REPLY_TO]-(grandchild:Comment)
+WITH child, author, upvoter, downvoter, COLLECT(DISTINCT grandchild) AS GrandchildComments
+
 // Calculations for the sorting formulae
-WITH child, author, 
+WITH child, author, GrandchildComments,
      COLLECT(DISTINCT upvoter) AS UpvotedByUsers,
      COLLECT(DISTINCT downvoter) AS DownvotedByModerators,
      duration.between(child.createdAt, datetime()).months + 
@@ -14,6 +19,7 @@ WITH child, author,
      coalesce(child.weightedVotesCount, 0) AS weightedVotesCount
 
 WITH child, author, UpvotedByUsers, DownvotedByModerators, ageInMonths, weightedVotesCount,
+     GrandchildComments,
      10000 * log10(weightedVotesCount + 1) / ((ageInMonths + 2) ^ 1.8) AS hotRank
 
 
@@ -38,6 +44,9 @@ RETURN {
     DownvotedByModerators: [mod IN DownvotedByModerators | mod{.*, createdAt: toString(mod.createdAt)}],
     DownvotedByModeratorsAggregate: {
         count: SIZE(DownvotedByModerators)
+    },
+    ChildCommentsAggregate: {
+        count: SIZE(GrandchildComments)
     }
 } AS ChildComments, weightedVotesCount, hotRank
 
