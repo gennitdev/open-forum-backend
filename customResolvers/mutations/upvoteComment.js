@@ -61,10 +61,6 @@ const upvoteCommentResolver = ({ Comment, User, driver }) => {
       const postAuthorUsername = comment.CommentAuthor?.username;
       const postAuthorKarma = comment.CommentAuthor?.commentKarma || 0;
 
-      if (postAuthorUsername === username) {
-        throw new Error("You cannot upvote your own comment");
-      }
-
       // Fetch data of the user who is upvoting the comment
       // because we need it to calculate the weighted vote bonus.
       const userSelectionSet = `
