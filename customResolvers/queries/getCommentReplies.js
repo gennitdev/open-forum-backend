@@ -118,20 +118,20 @@ const getResolver = ({ driver, Comment }) => {
         });
 
         commentsResult = hotCommentsResult.records.map((record) => {
-            return record.get("ChildComments");
-          });
-          aggregateCount = await Comment.aggregate({
-            where: {
-              ParentComment: {
-                id: commentId,
-              },
+          return record.get("ChildComments");
+        });
+        aggregateCount = await Comment.aggregate({
+          where: {
+            ParentComment: {
+              id: commentId,
             },
-            aggregate: {
-              count: true,
-            },
-          }).then((result) => {
-            return result.count;
-          });
+          },
+          aggregate: {
+            count: true,
+          },
+        }).then((result) => {
+          return result.count;
+        });
       }
 
       return {

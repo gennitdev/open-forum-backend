@@ -16,7 +16,7 @@ WITH child, author, GrandchildComments,
      COLLECT(DISTINCT downvoter) AS DownvotedByModerators,
      duration.between(child.createdAt, datetime()).months + 
      duration.between(child.createdAt, datetime()).days / 30.0 AS ageInMonths,
-     coalesce(child.weightedVotesCount, 0) AS weightedVotesCount
+     CASE WHEN coalesce(child.weightedVotesCount, 0) < 0 THEN 0 ELSE coalesce(child.weightedVotesCount, 0) END AS weightedVotesCount
 
 WITH child, author, UpvotedByUsers, DownvotedByModerators, ageInMonths, weightedVotesCount,
      GrandchildComments,

@@ -44,7 +44,7 @@ WITH d, dc, upvotedByUsers, COUNT(DISTINCT c) AS commentsCount, aggregateDiscuss
 
 // Compute score for each discussion channel
 WITH d, dc, upvotedByUsers, commentsCount, aggregateDiscussionCount,
-     SUM(COALESCE(dc.weightedVotesCount, 0)) AS score
+     CASE WHEN coalesce(dc.weightedVotesCount, 0) < 0 THEN 0 ELSE coalesce(dc.weightedVotesCount, 0) END AS score
 
 // Now, group by discussion and collect the discussion channels with their aggregates
 WITH d, aggregateDiscussionCount, score,

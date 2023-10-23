@@ -22,7 +22,7 @@ OPTIONAL MATCH (dc)-[:CONTAINS_COMMENT]->(c:Comment)
 WITH dc, d, author, COLLECT(c) AS comments, 
      COLLECT(DISTINCT tag.text) AS tagsText, 
      COLLECT(DISTINCT upvoter) AS UpvotedByUsers, 
-     COALESCE(dc.weightedVotesCount, 0.0) AS weightedVotesCount,
+     CASE WHEN coalesce(dc.weightedVotesCount, 0.0) < 0 THEN 0 ELSE coalesce(dc.weightedVotesCount, 0.0) END AS weightedVotesCount,
      duration.between(dc.createdAt, datetime()).months + 
      duration.between(dc.createdAt, datetime()).days / 30.0 AS ageInMonths
 

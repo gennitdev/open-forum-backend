@@ -15,7 +15,7 @@ WITH c, author, parent,
      // Compute the age in months from the createdAt timestamp.
      duration.between(c.createdAt, datetime()).months + 
      duration.between(c.createdAt, datetime()).days / 30.0 AS ageInMonths,
-     coalesce(c.weightedVotesCount, 0) AS weightedVotesCount
+     CASE WHEN coalesce(c.weightedVotesCount, 0) < 0 THEN 0 ELSE coalesce(c.weightedVotesCount, 0) END AS weightedVotesCount
 
 WITH c, author, parent, UpvotedByUsers, DownvotedByModerators, parentIds, weightedVotesCount,
     [comment IN NonFilteredChildComments WHERE comment IS NOT NULL] AS ChildComments, 
