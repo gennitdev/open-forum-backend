@@ -15,11 +15,20 @@ const driver = neo4j.driver(
 
 const { ogm, resolvers } = require("./customResolvers")(driver);
 
+const features = {
+  filters: {
+      String: {
+          MATCHES: true,
+      }
+  }
+};
+
 // We're passing customResolvers to the Neo4jGraphQL constructor
 const neoSchema = new Neo4jGraphQL({
   typeDefs,
   driver,
   resolvers,
+  features
 });
 
 // The DiscussionChannel represents the relationship between a Discussion and a Channel.

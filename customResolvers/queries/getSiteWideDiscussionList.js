@@ -1,9 +1,7 @@
-const {
-  getSiteWideDiscussionsQuery,
-} = require("../cypher/cypherQueries");
+const { getSiteWideDiscussionsQuery } = require("../cypher/cypherQueries");
 const { timeFrameOptions } = require("./utils");
 
-const getResolver = ({ driver }) => {
+const getResolver = ({ driver, Discussion }) => {
   return async (parent, args, context, info) => {
     const { searchInput, selectedChannels, selectedTags, options } = args;
     const { offset, limit, resultsOrder, sort, timeFrame } = options || {};
@@ -11,6 +9,55 @@ const getResolver = ({ driver }) => {
     const session = driver.session();
 
     try {
+      const filters = [];
+
+      if (searchInput) {
+        filters.push({
+          OR: [
+            {
+              title_CONTAINS: searchInput,
+            },
+            {
+              body_CONTAINS: searchInput,
+            },
+          ],
+        });
+      }
+
+      if (selectedTags?.length > 0) {
+        filters.push({
+          Tags: {
+            text_IN: selectedTags,
+          },
+        });
+      }
+
+      if (selectedChannels?.length > 0) {
+        filters.push({
+          DiscussionChannels_SOME: {
+            channelUniqueName_IN: selectedChannels,
+          },
+        });
+      }
+
+      // We use the OGM for counting the results, but for sorting them
+      // we use our own fancy custom cypher query because the order is complicated.
+      const aggregateDiscussionCountResult = await Discussion.aggregate({
+        where: {
+          AND: filters,
+        },
+        aggregate: {
+          count: true,
+        },
+      });
+      const count = aggregateDiscussionCountResult?.count || 0;
+
+      if (count === 0) {
+        return {
+          discussions: [],
+          aggregateDiscussionCount: 0,
+        };
+      }
       switch (sort) {
         case "new":
           let newDiscussionResult = await session.run(
@@ -26,15 +73,6 @@ const getResolver = ({ driver }) => {
               sortOption: "new",
             }
           );
-          if (newDiscussionResult.records.length === 0) {
-            return {
-              discussions: [],
-              aggregateDiscussionCount: 0,
-            };
-          }
-          let aggregateNewDiscussionCount = newDiscussionResult.records[0].get(
-            "aggregateDiscussionCount"
-          );
 
           const newDiscussions = newDiscussionResult.records.map((record) => {
             return record.get("discussion");
@@ -42,7 +80,7 @@ const getResolver = ({ driver }) => {
 
           return {
             discussions: newDiscussions,
-            aggregateDiscussionCount: aggregateNewDiscussionCount || 0,
+            aggregateDiscussionCount: count,
           };
         case "top":
           // if sort is "top", get the Discussions sorted by the sum of the
@@ -67,23 +105,13 @@ const getResolver = ({ driver }) => {
             }
           );
 
-          if (topDiscussionsResult.records.length === 0) {
-            return {
-              discussions: [],
-              aggregateDiscussionCount: 0,
-            };
-          }
-          let aggregateDiscussionCount = topDiscussionsResult.records[0].get(
-            "aggregateDiscussionCount"
-          );
-
           const discussions = topDiscussionsResult.records.map((record) => {
             return record.get("discussion");
           });
 
           return {
             discussions,
-            aggregateDiscussionCount: aggregateDiscussionCount || 0,
+            aggregateDiscussionCount: count,
           };
         default:
           // By default, and if sort is "hot", get the DiscussionChannels sorted by hot,
@@ -98,29 +126,17 @@ const getResolver = ({ driver }) => {
               limit,
               resultsOrder,
               startOfTimeFrame: null,
-              sortOption: "hot"
+              sortOption: "hot",
             }
-          );
-
-          if (hotDiscussionsResult.records.length === 0) {
-            return {
-              discussions: [],
-              aggregateDiscussionCount: 0,
-            };
-          }
-
-          let aggregateHotDiscussionCount = hotDiscussionsResult.records[0].get(
-            "aggregateDiscussionCount"
           );
 
           const hotDiscussions = hotDiscussionsResult.records.map((record) => {
             return record.get("discussion");
           });
 
-
           return {
             discussions: hotDiscussions,
-            aggregateDiscussionCount: aggregateHotDiscussionCount || 0,
+            aggregateDiscussionCount: count,
           };
       }
     } catch (error) {

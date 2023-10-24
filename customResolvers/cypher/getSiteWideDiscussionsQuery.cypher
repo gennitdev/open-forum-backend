@@ -1,71 +1,43 @@
-// Calculate the aggregate discussion count first with tag handling
-MATCH (dAgg:Discussion)
-WHERE EXISTS((dAgg)<-[:POSTED_IN_CHANNEL]-(:DiscussionChannel))
-AND (CASE WHEN $sortOption = "top" THEN datetime(dAgg.createdAt).epochMillis > datetime($startOfTimeFrame).epochMillis ELSE TRUE END)
-AND ($searchInput = "" OR dAgg.title CONTAINS $searchInput OR dAgg.body CONTAINS $searchInput)
-
-// This filter will ensure that we only match channels that are relevant, before the OPTIONAL MATCH
-WITH dAgg
-MATCH (dAgg)<-[:POSTED_IN_CHANNEL]-(dcAgg:DiscussionChannel)
-WHERE SIZE($selectedChannels) = 0 OR dcAgg.channelUniqueName IN $selectedChannels
-
-OPTIONAL MATCH (dAgg)-[:HAS_TAG]->(tagAgg:Tag)
-WITH dAgg, COLLECT(DISTINCT tagAgg.text) AS aggregateTagsText
-WHERE SIZE($selectedTags) = 0 OR ANY(t IN aggregateTagsText WHERE t IN $selectedTags)
-
-WITH COUNT(DISTINCT dAgg) AS aggregateDiscussionCount
-
-////////////////////////////////////////////////////////////////
-
-// Do the same filtering logic as above, but this time, instead of just getting
-// the total count, we collect all the data we need for the result.
-// Fetch the unique discussions based on the criteria
 MATCH (d:Discussion)
 WHERE EXISTS((d)<-[:POSTED_IN_CHANNEL]-(:DiscussionChannel))
 AND (CASE WHEN $sortOption = "top" THEN datetime(d.createdAt).epochMillis > datetime($startOfTimeFrame).epochMillis ELSE TRUE END)
 AND ($searchInput = "" OR d.title CONTAINS $searchInput OR d.body CONTAINS $searchInput)
 
-// Filter by channel first to reduce the size of the subsequent OPTIONAL MATCH
-WITH d, aggregateDiscussionCount
-MATCH (d)<-[:POSTED_IN_CHANNEL]-(dc:DiscussionChannel)
+// Collect all discussion channels associated with a discussion
+WITH d
+MATCH (dc:DiscussionChannel)-[:POSTED_IN_CHANNEL]->(d)
 WHERE SIZE($selectedChannels) = 0 OR dc.channelUniqueName IN $selectedChannels
+WITH d, COLLECT(dc) AS discussionChannels
 
-// Then, create the dc variable to get the comments and user upvoters for the dc
-OPTIONAL MATCH (dc:DiscussionChannel {discussionId: d.id})-[:UPVOTED_DISCUSSION]->(upvoter:User)
-OPTIONAL MATCH (dc)-[:CONTAINS_COMMENT]->(c:Comment)
-
-WITH d, dc, aggregateDiscussionCount
+// Unwind the discussion channels to work with them individually for fetching related data
+UNWIND discussionChannels AS dc
 OPTIONAL MATCH (dc)-[:UPVOTED_DISCUSSION]->(upvoter:User)
-WITH d, dc, COLLECT(DISTINCT upvoter) AS upvotedByUsers, aggregateDiscussionCount
-
-// Next, fetch comments per discussion channel
 OPTIONAL MATCH (dc)-[:CONTAINS_COMMENT]->(c:Comment)
-WITH d, dc, upvotedByUsers, COUNT(DISTINCT c) AS commentsCount, aggregateDiscussionCount
+WITH d, dc, COLLECT(DISTINCT upvoter) AS upvotedByUsers, COUNT(DISTINCT c) AS commentsCount
+WITH d, COLLECT({dc: dc, upvotedByUsers: upvotedByUsers, commentsCount: commentsCount}) AS channelData
 
-// Compute score for each discussion channel
-WITH d, dc, upvotedByUsers, commentsCount, aggregateDiscussionCount,
-     CASE WHEN coalesce(dc.weightedVotesCount, 0) < 0 THEN 0 ELSE coalesce(dc.weightedVotesCount, 0) END AS score
+// Now, you can proceed with calculating the score and other aggregations at the discussion level
+WITH d, channelData, 
+     REDUCE(s = 0, channel IN channelData | s + CASE WHEN coalesce(channel.dc.weightedVotesCount, 0) < 0 THEN 0 ELSE coalesce(channel.dc.weightedVotesCount, 0) END) AS score
+WITH d, score,
+     [channel IN channelData |
+      {
+        id: channel.dc.id,
+        createdAt: channel.dc.createdAt,
+        channelUniqueName: channel.dc.channelUniqueName,
+        discussionId: channel.dc.discussionId,
+        UpvotedByUsers: [up in channel.upvotedByUsers | { username: up.username }],
+        CommentsAggregate: {
+            count: channel.commentsCount
+        }
+      }] AS discussionChannels
 
-// Now, group by discussion and collect the discussion channels with their aggregates
-WITH d, aggregateDiscussionCount, score,
-     COLLECT({
-         id: dc.id,
-         createdAt: dc.createdAt,
-         channelUniqueName: dc.channelUniqueName,
-         discussionId: dc.discussionId,
-         UpvotedByUsers: [up in upvotedByUsers | { username: up.username }],
-         CommentsAggregate: {
-             count: commentsCount
-         }
-     }) AS discussionChannels
-
-
-WITH d, discussionChannels, aggregateDiscussionCount, score
+WITH d, discussionChannels, score
 
 // Handle tags
 OPTIONAL MATCH (d)-[:HAS_TAG]->(tag:Tag)
 
-WITH d, aggregateDiscussionCount,
+WITH d,
     COLLECT(DISTINCT tag.text) AS tagsText,
     discussionChannels,
     score
@@ -75,9 +47,9 @@ WHERE SIZE($selectedTags) = 0 OR ANY(t IN tagsText WHERE t IN $selectedTags)
 
 OPTIONAL MATCH (d)<-[:POSTED_DISCUSSION]-(author:User)
 
+
 // Calculate the discussion's age in months
 WITH d, 
-  aggregateDiscussionCount, 
   tagsText, 
   author, 
   discussionChannels, 
@@ -87,7 +59,6 @@ WITH d,
 
 // Give a default value for the age in months if it's null
 WITH d, 
-  aggregateDiscussionCount, 
   tagsText, 
   author, 
   discussionChannels, 
@@ -96,7 +67,6 @@ WITH d,
 
 // Calculate the rank based on the age in months and the score
 WITH d,
-    aggregateDiscussionCount,
     tagsText,
     author, 
     discussionChannels,
@@ -119,10 +89,9 @@ RETURN
                     commentKarma: author.discussionKarma
                 }
               END,
-    aggregateDiscussionCount: aggregateDiscussionCount,
     DiscussionChannels: discussionChannels,
     Tags: [t IN tagsText | {text: t}]
-} AS discussion, aggregateDiscussionCount, score, rank
+} AS discussion, score, rank
 
 ORDER BY 
     CASE WHEN $sortOption = "new" THEN discussion.createdAt END DESC,
