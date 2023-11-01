@@ -161,7 +161,7 @@ const typeDefs = gql`
       @relationship(type: "ADMIN_OF_CHANNEL", direction: OUT)
     Discussions: [Discussion!]!
       @relationship(type: "POSTED_DISCUSSION", direction: OUT)
-    Events: [Event!]! @relationship(type: "POSTED_BY", direction: IN)
+    Events: [Event!]! @relationship(type: "POSTED_BY", direction: OUT)
     # SentMessages:            [Message!]           @relationship(type: "SENT_MESSAGE", direction: OUT)
     # ReceivedMessages:        [Message!]           @relationship(type: "RECEIVED_MESSAGE", direction: OUT)
     Feeds: [Feed!]! @relationship(type: "HAS_FEED_IN_LIBRARY", direction: OUT)
