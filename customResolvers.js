@@ -41,6 +41,10 @@ module.exports = function (driver) {
         if (obj.username) {
           return "User";
         }
+        if (obj.displayName) {
+          return "ModerationProfile"
+        }
+        return "User";
       },
     },
     Query: {
