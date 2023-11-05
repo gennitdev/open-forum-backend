@@ -22,6 +22,8 @@ const undoUpvoteComment = require("./customResolvers/mutations/undoUpvoteComment
 const upvoteDiscussionChannel = require("./customResolvers/mutations/upvoteDiscussionChannel");
 const undoUpvoteDiscussionChannel = require("./customResolvers/mutations/undoUpvoteDiscussionChannel");
 
+const getSubredditResolver = require("./customResolvers/queries/getSubreddit");
+
 module.exports = function (driver) {
   const ogm = new OGM({
     typeDefs,
@@ -65,6 +67,7 @@ module.exports = function (driver) {
         driver,
         Comment,
       }),
+      getSubreddit: getSubredditResolver(),
     },
     Mutation: {
       createDiscussionWithChannelConnections:

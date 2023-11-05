@@ -369,6 +369,19 @@ const typeDefs = gql`
     aggregateChildCommentCount: Int!
   }
 
+  type RedditSubmission {
+    subreddit: String!
+    title: String!
+    createdUTC: Int!
+    author: String!
+    commentCount: Int!
+    text: String!
+    mediaMetadata: JSON
+    permalink: String!
+    thumbnail: String!
+    upvoteCount: Int!
+  }
+
   type Query {
     getDiscussionsInChannel(
       channelUniqueName: String!
@@ -395,6 +408,7 @@ const typeDefs = gql`
       limit: Int
       sort: SortType
     ): CommentRepliesFormat
+    getSubreddit(subredditName: String!, options: JSON): [RedditSubmission]
   }
 `;
 
