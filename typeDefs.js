@@ -380,6 +380,20 @@ const typeDefs = gql`
     permalink: String!
     thumbnail: String!
     upvoteCount: Int!
+    url: String
+    preview: JSON
+  }
+
+  type SubredditSidebar {
+    title: String!
+    displayName: String!
+    shortDescription: String # 500 characters max
+    longDescription: String # 5120 characters max
+    allowGalleries: Boolean
+    communityIcon: String
+    showMediaPreview: Boolean
+    bannerImg: String
+    allowImages: Boolean
   }
 
   type Query {
@@ -409,6 +423,7 @@ const typeDefs = gql`
       sort: SortType
     ): CommentRepliesFormat
     getSubreddit(subredditName: String!, options: JSON): [RedditSubmission]
+    getSubredditSidebar(subredditName: String!, options: JSON): SubredditSidebar
   }
 `;
 

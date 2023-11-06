@@ -28,19 +28,22 @@ const getSubredditResolver = () => {
     //     upvoteCount: Int!
     //   }
     const posts = await subreddit.getHot({ time: 'month' });
+    console.log(posts[0]);
 
     const result = posts.map(post => {
       return {
         subreddit: post.subreddit.display_name,
         title: post.title,
         createdUTC: post.created_utc,
-        author: post.author_fullname,
+        author: post.author?.name || '[deleted]',
         commentCount: post.num_comments,
         text: post.selftext,
         mediaMetadata: post.media_metadata,
         permalink: post.permalink,
         thumbnail: post.thumbnail,
-        upvoteCount: post.ups
+        upvoteCount: post.ups,
+        url: post.url,
+        preview: post.preview
       }
     });
 
