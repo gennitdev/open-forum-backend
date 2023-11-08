@@ -275,6 +275,10 @@ const typeDefs = gql`
     Feeds: [Feed!]! @relationship(type: "HAS_TAG", direction: IN)
   }
 
+  type SignedURL {
+    url: String
+  }
+
   type Mutation {
     addEmojiToComment(
       commentId: ID!
@@ -322,6 +326,7 @@ const typeDefs = gql`
     undoUpvoteComment(commentId: ID!, username: String!): Comment
     upvoteDiscussionChannel(discussionChannelId: ID!, username: String!): DiscussionChannel
     undoUpvoteDiscussionChannel(discussionChannelId: ID!, username: String!): DiscussionChannel
+    createSignedStorageURL(filename: String!, contentType: String!): SignedURL
   }
 
   input SiteWideDiscussionSortOrder {

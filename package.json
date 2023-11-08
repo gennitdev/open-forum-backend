@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@google-cloud/storage": "^7.5.0",
     "@graphql-tools/delegate": "10.0.0",
     "@neo4j/graphql": "^4.0.0-beta.0",
     "@neo4j/graphql-ogm": "^3.24.1",

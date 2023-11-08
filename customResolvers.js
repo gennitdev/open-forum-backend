@@ -24,6 +24,7 @@ const undoUpvoteDiscussionChannel = require("./customResolvers/mutations/undoUpv
 
 const getSubredditResolver = require("./customResolvers/queries/getSubreddit");
 const getSubredditSidebar = require("./customResolvers/queries/getSubredditSidebar");
+const createSignedStorageURL = require("./customResolvers/mutations/createSignedStorageURL");
 
 module.exports = function (driver) {
   const ogm = new OGM({
@@ -122,6 +123,7 @@ module.exports = function (driver) {
         User,
         driver,
       }),
+      createSignedStorageURL: createSignedStorageURL()
     },
   };
   return {

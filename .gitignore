@@ -11,3 +11,4 @@ docker-compose-local.yml
 docker-compose-remote.yml
 plugins
 ssl
+config
