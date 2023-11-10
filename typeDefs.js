@@ -75,6 +75,11 @@ const typeDefs = gql`
       @relationship(type: "CONTAINS_COMMENT", direction: OUT)
   }
 
+  type RecurringEvent {
+    id: ID! @id
+    Events: [Event!]! @relationship(type: "HAS_RECURRING_EVENT", direction: OUT)
+  }
+
   type Event {
     id: ID! @id
     title: String!
@@ -95,6 +100,10 @@ const typeDefs = gql`
     location: Point
     canceled: Boolean!
     deleted: Boolean
+    isHostedByOP: Boolean
+    isAllDay: Boolean
+    RecurringEvent: RecurringEvent
+      @relationship(type: "HAS_RECURRING_EVENT", direction: OUT)
     Poster: User @relationship(type: "POSTED_BY", direction: IN)
     Tags: [Tag!]! @relationship(type: "HAS_TAG", direction: OUT)
     # PastVersions:          [EventVersion]    @relationship(type: "HAS_VERSION", direction: OUT)
