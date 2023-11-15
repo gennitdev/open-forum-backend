@@ -75,8 +75,35 @@ const typeDefs = gql`
       @relationship(type: "CONTAINS_COMMENT", direction: OUT)
   }
 
+  enum RepeatUnit {
+    DAY
+    WEEK
+    MONTH
+    YEAR
+  }
+
+  enum RepeatType {
+    NEVER
+    ON
+    AFTER
+  }
+
+  type RepeatEvery {
+    count: Int
+    unit: RepeatUnit
+  }
+
+  type RepeatEnds {
+    type: String
+    count: Int
+    unit: RepeatUnit
+    until: DateTime
+  }
+
   type RecurringEvent {
     id: ID! @id
+    repeatEvery: RepeatEvery
+    repeatEnds: RepeatEnds
     Events: [Event!]! @relationship(type: "HAS_RECURRING_EVENT", direction: OUT)
   }
 

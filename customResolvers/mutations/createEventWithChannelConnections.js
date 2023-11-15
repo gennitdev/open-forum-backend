@@ -24,6 +24,8 @@ const getResolver = ({Event, driver}) => {
           startTimeDayOfWeek
           canceled
           cost
+          isAllDay
+          isHostedByOP
           Poster {
             username
           }
