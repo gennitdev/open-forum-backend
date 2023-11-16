@@ -33,6 +33,7 @@ RETURN {
     updatedAt: child.updatedAt,
     CommentAuthor: {
         username: author.username,
+        displayName: author.displayName,
         discussionKarma: author.discussionKarma,
         commentKarma: author.commentKarma,
         createdAt: author.createdAt

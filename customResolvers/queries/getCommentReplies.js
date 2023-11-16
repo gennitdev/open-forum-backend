@@ -13,6 +13,7 @@ const commentSelectionSet = `
         CommentAuthor {
             ... on User {
                 username
+                displayName
                 commentKarma
                 createdAt
                 discussionKarma

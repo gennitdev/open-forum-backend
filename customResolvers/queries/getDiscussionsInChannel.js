@@ -11,6 +11,7 @@ const discussionChannelSelectionSet = `
       createdAt
       Channel {
           uniqueName
+          displayName
       }
       Discussion {
           id
@@ -20,6 +21,7 @@ const discussionChannelSelectionSet = `
           updatedAt
           Author {
               username
+              displayName
               commentKarma
               createdAt
               discussionKarma

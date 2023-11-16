@@ -5,7 +5,7 @@ const typeDefs = gql`
 
   type Channel {
     description: String
-    name: String
+    displayName: String
     uniqueName: String! @unique
     createdAt: DateTime! @timestamp(operations: [CREATE])
     locked: Boolean
@@ -170,8 +170,6 @@ const typeDefs = gql`
   }
 
   type Rule {
-    id: ID! @id
-    orderInList: Int
     summary: String
     description: String
   }
@@ -184,13 +182,14 @@ const typeDefs = gql`
   type User {
     username: String! @unique
     Email: Email @relationship(type: "HAS_EMAIL", direction: IN)
-    name: String
+    displayName: String
     pronouns: String
     location: String
     bio: String
     isAdmin: Boolean
     commentKarma: Int
     discussionKarma: Int
+    profilePicURL: String
     Comments: [Comment!]!
       @relationship(type: "AUTHORED_COMMENT", direction: OUT)
     AdminOfChannels: [Channel!]!

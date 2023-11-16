@@ -84,6 +84,7 @@ RETURN
                 WHEN author IS NULL THEN null
                 ELSE {
                     username: author.username,
+                    displayName: author.displayName,
                     createdAt: author.createdAt,
                     discussionKarma: author.commentKarma,
                     commentKarma: author.discussionKarma
