@@ -14,6 +14,7 @@ const commentSelectionSet = `
             ... on User {
                 username
                 displayName
+                profilePicURL
                 commentKarma
                 createdAt
                 discussionKarma

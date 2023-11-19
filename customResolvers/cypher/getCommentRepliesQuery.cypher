@@ -34,6 +34,7 @@ RETURN {
     CommentAuthor: {
         username: author.username,
         displayName: author.displayName,
+        profilePicURL: author.profilePicURL,
         discussionKarma: author.discussionKarma,
         commentKarma: author.commentKarma,
         createdAt: author.createdAt

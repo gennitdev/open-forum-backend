@@ -22,6 +22,7 @@ const discussionChannelSelectionSet = `
           Author {
               username
               displayName
+              profilePicURL
               commentKarma
               createdAt
               discussionKarma

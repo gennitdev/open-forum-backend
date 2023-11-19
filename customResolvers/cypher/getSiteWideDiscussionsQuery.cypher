@@ -85,6 +85,7 @@ RETURN
                 ELSE {
                     username: author.username,
                     displayName: author.displayName,
+                    profilePicURL: author.profilePicURL,
                     createdAt: author.createdAt,
                     discussionKarma: author.commentKarma,
                     commentKarma: author.discussionKarma

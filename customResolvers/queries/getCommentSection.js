@@ -19,6 +19,7 @@ const discussionChannelSelectionSet = `
         Author {
             username
             displayName
+            profilePicURL
             commentKarma
             createdAt
             discussionKarma
@@ -52,6 +53,7 @@ const commentSelectionSet = `
                     ... on User {
                         username
                         displayName
+                        profilePicURL
                         commentKarma
                         createdAt
                         discussionKarma
@@ -86,6 +88,7 @@ const commentSelectionSet = `
                         ... on User {
                             username
                             displayName
+                            profilePicURL
                             commentKarma
                             createdAt
                             discussionKarma

@@ -10,7 +10,8 @@ const typeDefs = gql`
     createdAt: DateTime! @timestamp(operations: [CREATE])
     locked: Boolean
     deleted: Boolean
-    # Flair: [String!]
+    channelIconURL: String
+    channelBannerURL: String
     Tags: [Tag!]! @relationship(type: "HAS_TAG", direction: OUT)
     # WikiPages:                [WikiPage]             @relationship(type: "HAS_WIKI_PAGE", direction: OUT)
     ModerationDashboard: ModerationDashboard
@@ -186,7 +187,6 @@ const typeDefs = gql`
     pronouns: String
     location: String
     bio: String
-    isAdmin: Boolean
     commentKarma: Int
     discussionKarma: Int
     profilePicURL: String
