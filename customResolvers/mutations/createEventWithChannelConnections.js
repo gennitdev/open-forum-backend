@@ -26,6 +26,7 @@ const getResolver = ({Event, driver}) => {
           cost
           isAllDay
           isHostedByOP
+          coverImageURL
           Poster {
             username
           }

@@ -130,6 +130,7 @@ const typeDefs = gql`
     deleted: Boolean
     isHostedByOP: Boolean
     isAllDay: Boolean
+    coverImageURL: String
     RecurringEvent: RecurringEvent
       @relationship(type: "HAS_RECURRING_EVENT", direction: OUT)
     Poster: User @relationship(type: "POSTED_BY", direction: IN)
