@@ -131,6 +131,9 @@ const typeDefs = gql`
     isHostedByOP: Boolean
     isAllDay: Boolean
     coverImageURL: String
+    locked: Boolean
+    Comments: [Comment!]!
+      @relationship(type: "HAS_COMMENT", direction: OUT)
     RecurringEvent: RecurringEvent
       @relationship(type: "HAS_RECURRING_EVENT", direction: OUT)
     Poster: User @relationship(type: "POSTED_BY", direction: IN)
@@ -146,6 +149,7 @@ const typeDefs = gql`
       @relationship(type: "AUTHORED_COMMENT", direction: IN)
     DiscussionChannel: DiscussionChannel
       @relationship(type: "CONTAINS_COMMENT", direction: IN)
+    Event: Event @relationship(type: "HAS_COMMENT", direction: IN)
     Channel: Channel @relationship(type: "HAS_COMMENT", direction: IN)
     ParentComment: Comment @relationship(type: "IS_REPLY_TO", direction: OUT)
     text: String
@@ -401,8 +405,13 @@ const typeDefs = gql`
   }
 
   type CommentSectionFormat {
-    Comments: [Comment!]!
     DiscussionChannel: DiscussionChannel!
+    Comments: [Comment!]!
+  }
+
+  type EventCommentsFormat {
+    Event: Event!
+    Comments: [Comment!]!
   }
 
   type CommentRepliesFormat {
@@ -457,6 +466,12 @@ const typeDefs = gql`
       limit: Int
       sort: String
     ): CommentSectionFormat
+    getEventComments(
+      eventId: ID!
+      offset: Int
+      limit: Int
+      sort: SortType
+    ): EventCommentsFormat
     getCommentReplies(
       commentId: ID!
       offset: Int

@@ -12,6 +12,7 @@ const getCommentsQuery = fs.readFileSync(path.resolve(__dirname, './getCommentsQ
 const getDiscussionChannelsQuery = fs.readFileSync(path.resolve(__dirname, './getDiscussionChannelsQuery.cypher'), 'utf8');
 const getSiteWideDiscussionsQuery = fs.readFileSync(path.resolve(__dirname, './getSiteWideDiscussionsQuery.cypher'), 'utf8');
 const getCommentRepliesQuery = fs.readFileSync(path.resolve(__dirname, './getCommentRepliesQuery.cypher'), 'utf8');
+const getEventCommentsQuery = fs.readFileSync(path.resolve(__dirname, './getEventCommentsQuery.cypher'), 'utf8');
 
 module.exports = {
   createDiscussionChannelQuery,
@@ -25,4 +26,5 @@ module.exports = {
   getDiscussionChannelsQuery,
   getSiteWideDiscussionsQuery,
   getCommentRepliesQuery,
+  getEventCommentsQuery,
 };

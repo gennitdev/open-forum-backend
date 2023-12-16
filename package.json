@@ -12,15 +12,15 @@
   "dependencies": {
     "@google-cloud/storage": "^7.5.0",
     "@graphql-tools/delegate": "10.0.0",
-    "@neo4j/graphql": "^4.0.0-beta.0",
-    "@neo4j/graphql-ogm": "^3.24.1",
-    "apollo-server": "^3.6.2",
+    "@neo4j/graphql": "^4.4.4",
+    "@neo4j/graphql-ogm": "^4.4.4",
+    "apollo-server": "^3.13.0",
     "dotenv": "^16.0.0",
-    "graphql": "^16.7.1",
+    "graphql": "^16.8.1",
     "graphql-type-json": "^0.3.2",
-    "luxon": "^3.4.3",
+    "luxon": "^3.4.4",
     "mathjs": "^11.11.0",
-    "neo4j-driver": "^5.10.0",
+    "neo4j-driver": "^5.15.0",
     "snoowrap": "^1.23.0"
   }
 }
