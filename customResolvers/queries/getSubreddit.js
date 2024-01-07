@@ -28,7 +28,6 @@ const getSubredditResolver = () => {
     //     upvoteCount: Int!
     //   }
     const posts = await subreddit.getHot({ time: 'month' });
-    console.log(posts[0]);
 
     const result = posts.map(post => {
       return {

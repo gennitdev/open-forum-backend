@@ -104,7 +104,6 @@ const commentSelectionSet = `
 const getResolver = ({ driver, Event, Comment }) => {
   return async (parent, args, context, info) => {
     const { eventId, offset, limit, sort } = args;
-    console.log('args', args)
 
     const session = driver.session();
 

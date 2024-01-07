@@ -47,7 +47,7 @@ module.exports = function (driver) {
           return "User";
         }
         if (obj.displayName) {
-          return "ModerationProfile"
+          return "ModerationProfile";
         }
         return "User";
       },
@@ -59,7 +59,7 @@ module.exports = function (driver) {
       }),
       getDiscussionsInChannel: getDiscussionsInChannel({
         driver,
-        DiscussionChannel
+        DiscussionChannel,
       }),
       getCommentSection: getCommentSection({
         driver,
@@ -129,7 +129,7 @@ module.exports = function (driver) {
         User,
         driver,
       }),
-      createSignedStorageURL: createSignedStorageURL()
+      createSignedStorageURL: createSignedStorageURL(),
     },
   };
   return {

@@ -1,8 +1,9 @@
 const { Neo4jGraphQL } = require("@neo4j/graphql");
-const { ApolloServer, gql } = require("apollo-server");
+const { ApolloServer } = require("apollo-server");
+const { applyMiddleware } = require("graphql-middleware");
 const typeDefs = require("./typeDefs");
-const { printSchema } = require("graphql");
-const fs = require('fs');
+
+const permissions = require("./rules");
 
 require("dotenv").config();
 const neo4j = require("neo4j-driver");
@@ -17,10 +18,10 @@ const { ogm, resolvers } = require("./customResolvers")(driver);
 
 const features = {
   filters: {
-      String: {
-          MATCHES: true,
-      }
-  }
+    String: {
+      MATCHES: true,
+    },
+  },
 };
 
 // We're passing customResolvers to the Neo4jGraphQL constructor
@@ -28,7 +29,7 @@ const neoSchema = new Neo4jGraphQL({
   typeDefs,
   driver,
   resolvers,
-  features
+  features,
 });
 
 // The DiscussionChannel represents the relationship between a Discussion and a Channel.
@@ -49,27 +50,29 @@ REQUIRE (ec.eventId, ec.channelUniqueName) IS NODE KEY
 
 async function initializeServer() {
   try {
-    const schema = await neoSchema.getSchema();
+    let schema = await neoSchema.getSchema();
+    schema = applyMiddleware(schema, permissions);
     await ogm.init();
     await driver.session().run(constraintQuery);
     await neoSchema.assertIndexesAndConstraints({ options: { create: true } });
 
     const server = new ApolloServer({
       schema,
-      context:
-        ({ req }) =>
-        () => {
-          const queryString = `Query: ${req.body.query}`;
-          if (!queryString.includes("IntrospectionQuery")) {
-            console.log(queryString);
-            console.log(`Variables: ${JSON.stringify(req.body.variables, null, 2)}`);
-          }
-          return {
-            driver,
-            req,
-            ogm,
-          };
-        },
+      context: async ({ req }) => {
+        const queryString = `Query: ${req.body.query}`;
+        if (!queryString.includes("IntrospectionQuery")) {
+          console.log(queryString);
+          console.log(
+            `Variables: ${JSON.stringify(req.body.variables, null, 2)}`
+          );
+        }
+
+        return {
+          driver,
+          req,
+          ogm,
+        };
+      },
     });
 
     server.listen().then(({ url }) => {

@@ -233,6 +233,10 @@ const typeDefs = gql`
       @relationship(type: "SUSPENDED_FROM_CHANNEL", direction: OUT)
     suspendedFromServer: Boolean
     deleted: Boolean
+    ChannelRoles: [ChannelRole!]!
+      @relationship(type: "HAS_CHANNEL_ROLE", direction: OUT)
+    ServerRoles: [ServerRole!]!
+      @relationship(type: "HAS_SERVER_ROLE", direction: OUT)
   }
 
   type ModerationProfile {
@@ -250,6 +254,9 @@ const typeDefs = gql`
       @relationship(type: "AUTHORED_COMMENT", direction: OUT)
     IssueComments: [IssueComment!]!
       @relationship(type: "AUTHORED_ISSUE_COMMENT", direction: OUT)
+    ModChannelRoles: [ModChannelRole!]!
+      @relationship(type: "HAS_MOD_ROLE", direction: OUT)
+    ModServerRoles: [ModServerRole!]! @relationship(type: "HAS_MOD_ROLE", direction: OUT)
   }
 
   union IssueAuthor = User | ModerationProfile
@@ -444,6 +451,61 @@ const typeDefs = gql`
     showMediaPreview: Boolean
     bannerImg: String
     allowImages: Boolean
+  }
+
+  type ServerRole {
+    name: String @unique
+    description: String
+    canCreateChannel: Boolean
+    canCreateDiscussion: Boolean
+    canCreateEvent: Boolean
+    canCreateComment: Boolean
+    canUpvoteDiscussion: Boolean
+    canUpvoteComment: Boolean
+    canUploadFile: Boolean
+    canGiveFeedback: Boolean
+  }
+
+  type ChannelRole {
+    name: String @unique
+    description: String
+    canCreateDiscussion: Boolean
+    canCreateEvent: Boolean
+    canCreateComment: Boolean
+    canUpvoteDiscussion: Boolean
+    canUpvoteComment: Boolean
+    canUploadFile: Boolean
+    canGiveFeedback: Boolean
+  }
+
+  type ModChannelRole {
+    name: String @unique
+    description: String
+    canHideComment: Boolean
+    canHideEvent: Boolean
+    canHideDiscussion: Boolean
+    canDownvoteDiscussion: Boolean
+    canDownvoteComment: Boolean
+    canGiveFeedback: Boolean
+    canOpenSupportTickets: Boolean
+    canCloseSupportTickets: Boolean
+    canResolveSupportTickets: Boolean
+    canReport: Boolean
+  }
+
+  type ModServerRole {
+    name: String @unique
+    description: String
+    canLockChannel: Boolean
+  }
+
+  type ServerConfig {
+    serverName: String
+    serverDescription: String
+    serverIconURL: String
+    defaultChannelRole: ChannelRole
+    defaultServerRole: ServerRole
+    defaultModRole: ModServerRole
   }
 
   type Query {
