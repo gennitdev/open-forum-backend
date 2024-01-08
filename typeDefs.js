@@ -506,9 +506,9 @@ const typeDefs = gql`
     serverName: String
     serverDescription: String
     serverIconURL: String
-    defaultChannelRole: ChannelRole
-    defaultServerRole: ServerRole
-    defaultModRole: ModServerRole
+    defaultChannelRole: ChannelRole @relationship(type: "HAS_DEFAULT_CHANNEL_ROLE", direction: OUT)
+    defaultServerRole: ServerRole! @relationship(type: "HAS_DEFAULT_SERVER_ROLE", direction: OUT)
+    defaultModRole: ModServerRole @relationship(type: "HAS_DEFAULT_MOD_ROLE", direction: OUT)
   }
 
   type Query {
