@@ -3,7 +3,7 @@ const { ApolloServer } = require("apollo-server");
 const { applyMiddleware } = require("graphql-middleware");
 const typeDefs = require("./typeDefs");
 
-const permissions = require("./rules");
+const permissions = require("./permissions");
 
 require("dotenv").config();
 const neo4j = require("neo4j-driver");

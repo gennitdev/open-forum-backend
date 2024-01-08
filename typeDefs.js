@@ -476,6 +476,7 @@ const typeDefs = gql`
     canUpvoteComment: Boolean
     canUploadFile: Boolean
     canGiveFeedback: Boolean
+    canUpdateChannel: Boolean
   }
 
   type ModChannelRole {
@@ -496,7 +497,9 @@ const typeDefs = gql`
   type ModServerRole {
     name: String @unique
     description: String
+    canOpenSupportTickets: Boolean
     canLockChannel: Boolean
+    canCloseSupportTickets: Boolean
   }
 
   type ServerConfig {
