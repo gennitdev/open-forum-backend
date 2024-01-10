@@ -27,7 +27,7 @@ const getSubredditResolver = require("./customResolvers/queries/getSubreddit");
 const getSubredditSidebar = require("./customResolvers/queries/getSubredditSidebar");
 const createSignedStorageURL = require("./customResolvers/mutations/createSignedStorageURL");
 
-module.exports = function (driver) {
+module.exports = function (driver: any) {
   const ogm = new OGM({
     typeDefs,
     driver,
@@ -42,7 +42,7 @@ module.exports = function (driver) {
   const resolvers = {
     JSON: GraphQLJSON,
     CommentAuthor: {
-      __resolveType(obj, context, info) {
+      __resolveType(obj: any, context: any, info: any) {
         if (obj.username) {
           return "User";
         }

@@ -1,6 +1,6 @@
+"use strict";
 const { gql } = require("apollo-server");
-
-const typeDefs = gql`
+const typeDefinitions = gql `
   scalar JSON
 
   type Channel {
@@ -547,5 +547,4 @@ const typeDefs = gql`
     getSubredditSidebar(subredditName: String!, options: JSON): SubredditSidebar
   }
 `;
-
-module.exports = typeDefs;
+module.exports = typeDefinitions;

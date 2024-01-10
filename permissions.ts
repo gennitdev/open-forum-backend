@@ -1,5 +1,5 @@
 const { shield, allow, deny, and, or, not } = require("graphql-shield");
-const rules = require("./rules.ts");
+const rules = require("./rules");
 const { ApolloError } = require("apollo-server");
 
 const permissionList = shield({

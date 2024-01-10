@@ -12,7 +12,7 @@ const { Neo4jGraphQL } = require("@neo4j/graphql");
 const { ApolloServer } = require("apollo-server");
 const { applyMiddleware } = require("graphql-middleware");
 const typeDefs = require("./typeDefs");
-const permissions = require("./permissions.ts");
+const permissions = require("./permissions");
 require("dotenv").config();
 const neo4j = require("neo4j-driver");
 const password = process.env.NEO4J_PASSWORD;
@@ -56,7 +56,8 @@ function initializeServer() {
             yield neoSchema.assertIndexesAndConstraints({ options: { create: true } });
             const server = new ApolloServer({
                 schema,
-                context: ({ req }) => __awaiter(this, void 0, void 0, function* () {
+                context: (input) => __awaiter(this, void 0, void 0, function* () {
+                    const { req } = input;
                     const queryString = `Query: ${req.body.query}`;
                     if (!queryString.includes("IntrospectionQuery")) {
                         console.log(queryString);
@@ -69,7 +70,8 @@ function initializeServer() {
                     };
                 }),
             });
-            server.listen().then(({ url }) => {
+            server.listen().then((input) => {
+                const { url } = input;
                 console.log(`🚀  Server ready at ${url}`);
             });
         }

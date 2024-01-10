@@ -3,7 +3,7 @@ const { ApolloServer } = require("apollo-server");
 const { applyMiddleware } = require("graphql-middleware");
 const typeDefs = require("./typeDefs");
 
-const permissions = require("./permissions.ts");
+const permissions = require("./permissions");
 
 require("dotenv").config();
 const neo4j = require("neo4j-driver");
@@ -58,7 +58,8 @@ async function initializeServer() {
 
     const server = new ApolloServer({
       schema,
-      context: async ({ req }) => {
+      context: async (input: any) => {
+        const { req } = input;
         const queryString = `Query: ${req.body.query}`;
         if (!queryString.includes("IntrospectionQuery")) {
           console.log(queryString);
@@ -75,7 +76,8 @@ async function initializeServer() {
       },
     });
 
-    server.listen().then(({ url }) => {
+    server.listen().then((input: any) => {
+      const { url } = input;
       console.log(`🚀  Server ready at ${url}`);
     });
   } catch (e) {

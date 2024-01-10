@@ -6,7 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "codegen": "graphql-codegen --config codegen.ts",
-    "tsc": "tsc"
+    "tsc": "tsc",
+    "build": "tsc",
+    "start": "node ./ts_emitted/index.js"
   },
   "keywords": [],
   "author": "",
@@ -31,9 +33,9 @@
   },
   "devDependencies": {
     "@graphql-codegen/cli": "5.0.0",
-    "@types/node": "^20.10.7",
-    "typescript": "^5.3.3",
     "@graphql-codegen/typescript": "4.0.1",
-    "@graphql-codegen/typescript-resolvers": "4.0.1"
+    "@graphql-codegen/typescript-resolvers": "4.0.1",
+    "@types/node": "^20.10.7",
+    "typescript": "^5.3.3"
   }
 }

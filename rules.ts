@@ -1,5 +1,4 @@
 const { User, ServerRole } = require("./src/generated/graphql");
-
 const jwt = require("jsonwebtoken");
 const { rule } = require("graphql-shield");
 
@@ -28,7 +27,7 @@ const getUserFromEmail = async (email: string, EmailModel: any) => {
   }
 };
 
-const setUserDataOnContext = async (context: any, checkPermission: boolean) => {
+const setUserDataOnContext = async (context: any, getPermissionInfo: boolean) => {
   const { ogm, req } = context;
   const token = req?.headers?.authorization || "";
   if (!token) {
@@ -51,7 +50,7 @@ const setUserDataOnContext = async (context: any, checkPermission: boolean) => {
 
   // Set the user data on the context so we can use it in other rules.
   let userData;
-  if (!checkPermission) {
+  if (!getPermissionInfo) {
     userData = await User.find({
       where: { username },
     });
@@ -85,9 +84,9 @@ const setUserDataOnContext = async (context: any, checkPermission: boolean) => {
 };
 
 const isAuthenticatedAndVerified = rule({ cache: "contextual" })(
-  async (parent, args, context: any, info) => {
+  async (parent: any, args: any, context: any, info: any) => {
     // Set user data on context
-    context.user = await setUserDataOnContext(context);
+    context.user = await setUserDataOnContext(context, false);
     if (!context.user?.username) {
       return new Error(ERROR_MESSAGES.channel.notAuthenticated);
     }
@@ -102,13 +101,13 @@ const isAuthenticatedAndVerified = rule({ cache: "contextual" })(
 );
 
 const isChannelOwner = rule({ cache: "contextual" })(
-  async (parent, args, ctx: any, info) => {
+  async (parent: any, args: any, ctx: any, info: any) => {
     let username = ctx.user.username;
     const { channelId, Channel } = args;
 
     // Get the list of channel owners by using the OGM on the
     // Channel object.
-    const channelOwners: User[] = []; // to do.
+    const channelOwners: string[] =  []; // to do.
 
     // Check if the user is in the list of channel owners.
     if (!channelOwners.includes(username)) {
@@ -121,9 +120,13 @@ const isChannelOwner = rule({ cache: "contextual" })(
 );
 
 const hasServerPermission = async (permission: string, context: any) => {
+  console.log('has server permission check is running. checking for permission named ', permission)
+
   // 1. Check for server roles on the user object.
   context.user = await setUserDataOnContext(context, true);
+  console.log('set user data on context. user data is ', context.user)
   const usersServerRoles = context.user?.data?.ServerRoles || [];
+  console.log('users server roles are ', usersServerRoles)
 
   // 2. If there is at least one server role on the user
   //    object, loop over them. All of them must explicitly
@@ -145,11 +148,17 @@ const hasServerPermission = async (permission: string, context: any) => {
   // 3. If there are no server roles on the user object,
   //    get the default server role. This is located on the
   //    ServerConfig object.
+
   else {
+    console.log("Getting the default server role.")
     const ServerConfig = context.ogm.model("ServerConfig");
     const serverConfig = await ServerConfig.find({
       where: { name: process.env.SERVER_CONFIG_NAME },
-    });
+    }, `{ DefaultServerRole { 
+      canCreateChannels 
+    } 
+  }`
+    );
     console.log(
       "Checking the default server role",
       serverConfig[0]?.DefaultServerRole
@@ -167,8 +176,11 @@ const hasServerPermission = async (permission: string, context: any) => {
 
   // 3. Check if the permission is allowed by the default
   //    server role.
-  const serverRoleToCheck = usersServerRoles[0] as ServerRole;
+  const serverRoleToCheck = usersServerRoles[0];
+  console.log("Checking if the default server role can create channels.", serverRoleToCheck.canCreateChannel);
   if (permission === "createChannel") {
+  
+
     return serverRoleToCheck.canCreateChannel;
   }
   console.log("The action is not allowed by the default server role.");
@@ -176,7 +188,9 @@ const hasServerPermission = async (permission: string, context: any) => {
 };
 
 const canCreateChannel = rule({ cache: "contextual" })(
-  async (parent, args, ctx: any, info) => {
+  async (parent: any, args: any, ctx: any, info: any) => {
+    console.log(' can create channel rule is running ')
+
     const hasPermissionToCreateChannels = hasServerPermission(
       "createChannel",
       ctx
@@ -186,13 +200,14 @@ const canCreateChannel = rule({ cache: "contextual" })(
       console.log("The user does not have permission to create channels.");
       return hasPermissionToCreateChannels;
     }
+
     console.log("passed rule: can create channel");
     return true;
   }
 );
 
 const hasChannelPermission = rule({ cache: "contextual" })(
-  async (parent, args, ctx, info) => {
+  async (parent: any, args: any, ctx: any, info: any) => {
     // example of channel permission is CreateEvents.
     const { permission, Channel } = args;
     const { username } = ctx.user;
@@ -226,7 +241,7 @@ const hasChannelPermission = rule({ cache: "contextual" })(
 );
 
 const isAdmin = rule({ cache: "contextual" })(
-  async (parent, args, ctx, info) => {
+  async (parent: any, args: any, ctx: any, info: any) => {
     const { isAdmin } = ctx.user;
     console.log("passed rule: is admin");
     return isAdmin;
