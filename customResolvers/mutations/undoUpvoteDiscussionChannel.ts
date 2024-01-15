@@ -1,14 +1,24 @@
-const {
+import { User } from "../../src/generated/graphql";
+import {
   discussionChannelIsUpvotedByUserQuery,
-} = require("../cypher/cypherQueries");
-const { getWeightedVoteBonus } = require("./utils");
+} from "../cypher/cypherQueries";
+import { getWeightedVoteBonus } from "./utils";
 
-const undoUpvoteDiscussionChannelResolver = ({
-  DiscussionChannel,
-  User,
-  driver,
-}) => {
-  return async (parent, args, context, resolveInfo) => {
+type Input = {
+  DiscussionChannel: any;
+  User: any;
+  driver: any;
+};
+
+type Args = {
+  discussionChannelId: string;
+  username: string;
+};
+
+const undoUpvoteDiscussionChannelResolver = (input: Input) => {
+  const { DiscussionChannel, User, driver } = input;
+
+  return async (parent: any, args: Args, context: any, resolveInfo: any) => {
     const { discussionChannelId, username } = args;
 
     if (!discussionChannelId || !username) {
@@ -130,7 +140,7 @@ const undoUpvoteDiscussionChannelResolver = ({
         weightedVotesCount:
           discussionChannel.weightedVotesCount - 1 - weightedVoteBonus,
         UpvotedByUsers: existingUpvotedByUsers.filter(
-          (user) => user.username !== username
+          (user: User) => user.username !== username
         ),
         UpvotedByUsersAggregate: {
           count: existingUpvotedByUsersCount - 1,
@@ -157,4 +167,4 @@ const undoUpvoteDiscussionChannelResolver = ({
   };
 };
 
-module.exports = undoUpvoteDiscussionChannelResolver;
+export default undoUpvoteDiscussionChannelResolver;

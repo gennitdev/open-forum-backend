@@ -1,5 +1,17 @@
-const updateEmoji = (emojiJSON, { emojiLabel, unicode, username }) => {
-  let emoji = {};
+type UpdateEmojiInput = { 
+  emojiLabel: string;
+  unicode: string; 
+  username: string ;
+}
+
+type RemoveEmojiInput = {
+  emojiLabel: string;
+  username: string;
+}
+
+export const updateEmoji = (emojiJSON: string, input: UpdateEmojiInput) => {
+  const { emojiLabel, unicode, username } = input;
+  let emoji: Record<string, any> = {};
 
   // Parse the existing emoji JSON
   if (emojiJSON) {
@@ -21,8 +33,9 @@ const updateEmoji = (emojiJSON, { emojiLabel, unicode, username }) => {
   return JSON.stringify(emoji);
 };
 
-const removeEmoji = (emojiJSON, { emojiLabel, username }) => {
-  let emoji = {};
+export const removeEmoji = (emojiJSON: string, input: RemoveEmojiInput) => {
+  const { emojiLabel, username } = input;
+  let emoji: Record<string, any> = {};
 
   if (emojiJSON) {
     emoji = JSON.parse(emojiJSON);
@@ -49,4 +62,3 @@ const removeEmoji = (emojiJSON, { emojiLabel, username }) => {
   return JSON.stringify(emoji);
 };
 
-module.exports = { updateEmoji, removeEmoji };

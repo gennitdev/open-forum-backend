@@ -1,8 +1,19 @@
-const { discussionChannelIsUpvotedByUserQuery } = require("../cypher/cypherQueries");
-const { getWeightedVoteBonus } = require("./utils");
+import { discussionChannelIsUpvotedByUserQuery } from "../cypher/cypherQueries";
+import { getWeightedVoteBonus } from "./utils";
 
-const upvoteDiscussionChannelResolver = ({ DiscussionChannel, User, driver }) => {
-  return async (parent, args, context, resolveInfo) => {
+type Input = {
+  DiscussionChannel: any;
+  User: any;
+  driver: any;
+};
+
+type Args = {
+  discussionChannelId: string;
+  username: string;
+};
+
+const upvoteDiscussionChannelResolver = () => {
+  return async (parent: any, args: Args, context: any, resolveInfo: any) => {
     const { discussionChannelId, username } = args;
 
     if (!discussionChannelId || !username) {
@@ -149,4 +160,4 @@ const upvoteDiscussionChannelResolver = ({ DiscussionChannel, User, driver }) =>
   };
 };
 
-module.exports = upvoteDiscussionChannelResolver;
+export default upvoteDiscussionChannelResolver;

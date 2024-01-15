@@ -1,7 +1,18 @@
-const { removeEmoji } = require("./updateEmoji");
+import { removeEmoji } from "./updateEmoji";
 
-const getRemoveEmojiResolver = ({ DiscussionChannel }) => {
-  return async (parent, args, context, resolveInfo) => {
+type Input = {
+  DiscussionChannel: any;
+};
+
+type Args = {
+  discussionChannelId: string;
+  emojiLabel: string;
+  username: string;
+};
+
+const getRemoveEmojiResolver = (input: Input) => {
+  const { DiscussionChannel } = input;
+  return async (parent: any, args: Args, context: any, resolveInfo: any) => {
     const { discussionChannelId, emojiLabel, username } = args;
 
     if (!discussionChannelId || !emojiLabel || !username) {
@@ -45,4 +56,5 @@ const getRemoveEmojiResolver = ({ DiscussionChannel }) => {
     }
   };
 };
-module.exports = getRemoveEmojiResolver;
+
+export default getRemoveEmojiResolver;

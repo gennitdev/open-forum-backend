@@ -1,7 +1,18 @@
-const { removeEmoji } = require("./updateEmoji");
+import { removeEmoji } from "./updateEmoji";
 
-const getRemoveEmojiResolver = ({ Comment }) => {
-  return async (parent, args, context, resolveInfo) => {
+type Input = {
+  Comment: any;
+};
+
+type Args = {
+  commentId: string;
+  emojiLabel: string;
+  username: string;
+};
+
+const getRemoveEmojiResolver = (input: Input) => {
+  const { Comment } = input;
+  return async (parent: any, args: Args, context: any, resolveInfo: any) => {
     const { commentId, emojiLabel, username } = args;
 
     if (!commentId || !emojiLabel || !username) {
@@ -45,4 +56,5 @@ const getRemoveEmojiResolver = ({ Comment }) => {
     }
   };
 };
-module.exports = getRemoveEmojiResolver;
+
+export default getRemoveEmojiResolver;

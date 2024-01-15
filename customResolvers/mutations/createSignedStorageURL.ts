@@ -1,13 +1,22 @@
-const { Storage } = require("@google-cloud/storage");
+import { Storage, GetSignedUrlConfig } from "@google-cloud/storage";
+
+type Args = {
+  filename: string;
+  contentType: string;
+};
 
 const createSignedStorageURL = () => {
-  return async (_, args) => {
+  return async (parent: any, args: Args) => {
     const { filename, contentType } = args;
 
     const storage = new Storage();
     const bucketName = process.env.GCS_BUCKET_NAME;
 
-    const options = {
+    if (!bucketName) {
+      throw new Error("GCS_BUCKET_NAME environment variable not set");
+    }
+
+    const options: GetSignedUrlConfig = {
       version: 'v4',
       action: 'write',
       expires: Date.now() + 15 * 60 * 1000, // 15 minutes
@@ -35,4 +44,4 @@ const createSignedStorageURL = () => {
   };
 };
 
-module.exports = createSignedStorageURL;
+export default createSignedStorageURL;

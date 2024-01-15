@@ -1,7 +1,7 @@
 const { Neo4jGraphQL } = require("@neo4j/graphql");
 const { ApolloServer } = require("apollo-server");
 const { applyMiddleware } = require("graphql-middleware");
-const typeDefs = require("./typeDefs");
+const typesDefinitions = require("./typeDefs");
 
 const permissions = require("./permissions");
 
@@ -26,7 +26,7 @@ const features = {
 
 // We're passing customResolvers to the Neo4jGraphQL constructor
 const neoSchema = new Neo4jGraphQL({
-  typeDefs,
+  typeDefs: typesDefinitions,
   driver,
   resolvers,
   features,

@@ -1,7 +1,7 @@
 const { DateTime } = require("luxon");
 const math = require("mathjs");
 
-const getAccountAgeInMonths = (createdAt) => {
+export const getAccountAgeInMonths = (createdAt) => {
   const now = DateTime.now();
   const accountCreated = DateTime.fromJSDate(new Date(createdAt)); // Assuming createdAt is a JavaScript Date object
   const diff = now.diff(accountCreated, ["months"]).months;
@@ -12,7 +12,7 @@ const getAccountAgeInMonths = (createdAt) => {
   return accountAgeInMonths;
 };
 
-const getWeightedVoteBonus = (user) => {
+export const getWeightedVoteBonus = (user) => {
   let weightedVoteBonus = 0;
   let accountAgeInMonths = getAccountAgeInMonths(user.createdAt);
   let commentKarma = 1;
@@ -32,8 +32,3 @@ const getWeightedVoteBonus = (user) => {
 
   return weightedVoteBonus;
 };
-
-module.exports = {
-    getAccountAgeInMonths,
-    getWeightedVoteBonus
-  };

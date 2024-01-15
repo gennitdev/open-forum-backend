@@ -1,8 +1,19 @@
-const { commentIsUpvotedByUserQuery } = require("../cypher/cypherQueries");
-const { getWeightedVoteBonus } = require("./utils");
+import { commentIsUpvotedByUserQuery } from "../cypher/cypherQueries";
+import { getWeightedVoteBonus } from "./utils";
 
-const undoUpvoteCommentResolver = ({ Comment, User, driver }) => {
-  return async (parent, args, context, resolveInfo) => {
+type Input = {
+  Comment: any;
+  User: any;
+  driver: any;
+};
+
+type Args = {
+  commentId: string;
+  username: string;
+};
+
+const upvoteCommentResolver = (input: Input) => {
+  return async (parent: any, args: Args, context: any, resolveInfo: any) => {
     const { commentId, username } = args;
 
     if (!commentId || !username) {
@@ -21,10 +32,8 @@ const undoUpvoteCommentResolver = ({ Comment, User, driver }) => {
       const singleRecord = result.records[0];
       const upvotedByUser = singleRecord.get("result").upvotedByUser;
 
-      if (!upvotedByUser) {
-        throw new Error(
-          "Can't undo upvote because you haven't upvoted this comment yet"
-        );
+      if (upvotedByUser) {
+        throw new Error("You have already upvoted this comment");
       }
       // Fetch comment
       const commentSelectionSet = `
@@ -39,10 +48,10 @@ const undoUpvoteCommentResolver = ({ Comment, User, driver }) => {
           }
           weightedVotesCount
           UpvotedByUsers {
-              username
+            username
           }
           UpvotedByUsersAggregate {
-              count
+            count
           }
         }
       `;
@@ -71,32 +80,31 @@ const undoUpvoteCommentResolver = ({ Comment, User, driver }) => {
           commentKarma
       }
      `;
-      const voterUserResult = await User.find({
+      const upvoterUserResult = await User.find({
         where: {
           username,
         },
         selectionSet: userSelectionSet,
       });
 
-      if (voterUserResult.length === 0) {
-        throw new Error(
-          "User data not found for the user who is undoing the upvote"
-        );
+      if (upvoterUserResult.length === 0) {
+        throw new Error("User not found");
       }
 
-      const voterUser = voterUserResult[0];
+      const upvoterUser = upvoterUserResult[0];
 
-      let weightedVoteBonus = getWeightedVoteBonus(voterUser);
+      const weightedVoteBonus = getWeightedVoteBonus(upvoterUser);
 
-      // Update weighted votes count on the comment and remove the relationship
-      const undoUpvoteCommentQuery = `
-       MATCH (c:Comment { id: $commentId })<-[r:UPVOTED_COMMENT]-(u:User { username: $username })
-       SET c.weightedVotesCount = coalesce(c.weightedVotesCount, 0) - 1 - $weightedVoteBonus
-       DELETE r
-       RETURN c
-     `;
+      // Update weighted votes count on the comment
+      // and create a relationship between the user and the comment.
+      const updateCommentQuery = `
+        MATCH (c:Comment { id: $commentId }), (u:User { username: $username })
+        SET c.weightedVotesCount = coalesce(c.weightedVotesCount, 0) + 1 + $weightedVoteBonus
+        CREATE (u)-[:UPVOTED_COMMENT]->(c)
+        RETURN c
+      `;
 
-      await tx.run(undoUpvoteCommentQuery, {
+      await tx.run(updateCommentQuery, {
         commentId,
         username,
         weightedVoteBonus,
@@ -106,24 +114,26 @@ const undoUpvoteCommentResolver = ({ Comment, User, driver }) => {
       if (postAuthorUsername) {
         await User.update({
           where: { username: postAuthorUsername },
-          update: { commentKarma: postAuthorKarma - 1 },
+          update: { commentKarma: postAuthorKarma + 1 },
         });
       }
 
       await tx.commit();
 
       const existingUpvotedByUsers = comment.UpvotedByUsers || [];
-      const existingUpvotedByUsersAggregate =
-        comment.UpvotedByUsersAggregate || { count: 0 };
+      const existingUpvotedByUsersCount = comment.UpvotedByUsersAggregate?.count || 0;
 
       return {
         id: commentId,
-        weightedVotesCount: comment.weightedVotesCount - 1 - weightedVoteBonus,
-        UpvotedByUsers: existingUpvotedByUsers.filter(
-          (user) => user.username !== username
-        ),
+        weightedVotesCount: comment.weightedVotesCount + 1 + weightedVoteBonus,
+        UpvotedByUsers: [
+          ...existingUpvotedByUsers,
+          {
+            username,
+          },
+        ],
         UpvotedByUsersAggregate: {
-          count: existingUpvotedByUsersAggregate.count - 1,
+          count: existingUpvotedByUsersCount + 1,
         },
       };
     } catch (e) {
@@ -147,4 +157,4 @@ const undoUpvoteCommentResolver = ({ Comment, User, driver }) => {
   };
 };
 
-module.exports = undoUpvoteCommentResolver;
+export default upvoteCommentResolver;

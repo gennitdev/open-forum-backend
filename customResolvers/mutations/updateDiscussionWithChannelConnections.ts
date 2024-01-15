@@ -1,7 +1,22 @@
-const { updateDiscussionChannelQuery, severConnectionBetweenDiscussionAndChannelQuery } = require("../cypher/cypherQueries");
+import { updateDiscussionChannelQuery, severConnectionBetweenDiscussionAndChannelQuery } from "../cypher/cypherQueries";
+import { DiscussionWhere, DiscussionUpdateInput } from "../../src/generated/graphql";
+import { ApolloError } from "apollo-server";
 
-const getResolver = ({ Discussion, driver }) => {
-  return async (parent, args, context, info) => {
+type Input = {
+  Discussion: any;
+  driver: any;
+};
+
+type Args = {
+  discussionWhere: DiscussionWhere;
+  discussionUpdateInput: DiscussionUpdateInput;
+  channelConnections: string[];
+  channelDisconnections: string[];
+};
+
+const getResolver = (input: Input) => {
+  const { Discussion, driver } = input;
+  return async (parent: any, args: Args, context: any, info: any) => {
     const {
       discussionWhere,
       discussionUpdateInput,
@@ -94,10 +109,10 @@ const getResolver = ({ Discussion, driver }) => {
       session.close();
 
       return result[0];
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error updating discussion:", error);
       throw new Error(`Failed to update discussion. ${error.message}`);
     }
   };
 };
-module.exports = getResolver;
+export default getResolver;

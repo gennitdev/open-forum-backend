@@ -1,7 +1,20 @@
-const { updateEventChannelQuery, severConnectionBetweenEventAndChannelQuery } = require("../cypher/cypherQueries");
+import { updateEventChannelQuery, severConnectionBetweenEventAndChannelQuery } from "../cypher/cypherQueries";
+import { EventWhere, EventUpdateInput } from "../../src/generated/graphql";
 
-const getResolver = ({ Event, driver }) => {
-  return async (parent, args, context, info) => {
+type Input = {
+  Event: any;
+  driver: any;
+};
+
+type Args = {
+  eventWhere: EventWhere;
+  eventUpdateInput: EventUpdateInput;
+  channelConnections: string[];
+  channelDisconnections: string[];
+};
+
+const getResolver = (input: Input) => {
+  return async (parent: any, args: Args, context: any, info: any) => {
     const {
       eventWhere,
       eventUpdateInput,
@@ -106,10 +119,11 @@ const getResolver = ({ Event, driver }) => {
       session.close();
 
       return result[0];
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error updating event:", error);
       throw new Error(`Failed to update event. ${error.message}`);
     }
   };
 };
-module.exports = getResolver;
+
+export default getResolver;

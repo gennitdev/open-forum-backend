@@ -1,8 +1,8 @@
 "use strict";
-const { shield, allow, deny, and, or, not } = require("graphql-shield");
-const rules = require("./rules");
-const { ApolloError } = require("apollo-server");
-const permissionList = shield({
+var _a = require("graphql-shield"), shield = _a.shield, allow = _a.allow, deny = _a.deny, and = _a.and, or = _a.or, not = _a.not;
+var rules = require("./rules");
+var ApolloError = require("apollo-server").ApolloError;
+var permissionList = shield({
     Query: {
         "*": allow,
     },

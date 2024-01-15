@@ -1,7 +1,18 @@
-const { createEventChannelQuery } = require("../cypher/cypherQueries");
+import { createEventChannelQuery } from "../cypher/cypherQueries";
 
-const getResolver = ({Event, driver}) => {
-  return async (parent, args, context, info) => {
+type Input = {
+  Event: any;
+  driver: any;
+};
+
+type Args = {
+  eventCreateInput: any;
+  channelConnections: string[];
+};
+
+const getResolver = (input: Input) => {
+  const { Event, driver } = input;
+  return async (parent: any, args: Args, context: any, info: any) => {
     const { eventCreateInput, channelConnections } = args;
 
     if (!channelConnections || channelConnections.length === 0) {
@@ -53,7 +64,7 @@ const getResolver = ({Event, driver}) => {
     try {
       const response = await Event.create({
         input: [eventCreateInput],
-        selectionSet: `{ events ${selectionSet} }`
+        selectionSet: `{ events ${selectionSet} }`,
       });
       const newEvent = response.events[0];
 
@@ -87,4 +98,5 @@ const getResolver = ({Event, driver}) => {
     }
   };
 };
-module.exports = getResolver;
+
+export default getResolver;

@@ -1,7 +1,19 @@
-const { createDiscussionChannelQuery } = require("../cypher/cypherQueries");
+import { createDiscussionChannelQuery } from "../cypher/cypherQueries";
+import { DiscussionCreateInput } from "../../src/generated/graphql";
 
-const getResolver = ({Discussion, driver}) => {
-  return async (parent, args, context, info) => {
+type Args = {
+  discussionCreateInput: DiscussionCreateInput;
+  channelConnections: string[];
+};
+
+type Input = {
+  Discussion: any;
+  driver: any;
+};
+
+const getResolver = (input: Input) => {
+  const {Discussion, driver} = input;
+  return async (parent: any, args: Args, context: any, info: any) => {
     // The reason why we cannot use the auto-generated resolver
     // to create a Discussion with DiscussionChannels already linked
     // is because the creation of the DiscussionChannel nodes
@@ -107,4 +119,4 @@ const getResolver = ({Discussion, driver}) => {
     }
   };
 };
-module.exports = getResolver;
+export default getResolver;

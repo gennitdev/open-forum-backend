@@ -1,6 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const config = {
+var config = {
     overwrite: true,
     schema: "http://localhost:4000",
     generates: {
@@ -9,4 +7,4 @@ const config = {
         }
     }
 };
-exports.default = config;
+export default config;
