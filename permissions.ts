@@ -1,6 +1,5 @@
 import { shield, allow, deny, and, or, not } from "graphql-shield";
-import rules from "./rules";
-import { ApolloError } from "apollo-server";
+import rules from "./rules.js";
 
 const permissionList = shield({
     Query: {

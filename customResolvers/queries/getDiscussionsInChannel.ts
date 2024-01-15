@@ -1,6 +1,6 @@
 import { DiscussionChannel, DiscussionChannelWhere } from "../../src/generated/graphql";
-import { getDiscussionChannelsQuery } from "../cypher/cypherQueries";
-import  { timeFrameOptions } from "./utils";
+import { getDiscussionChannelsQuery } from "../cypher/cypherQueries.js";
+import  { timeFrameOptions } from "./utils.js";
 
 const discussionChannelSelectionSet = `
   {

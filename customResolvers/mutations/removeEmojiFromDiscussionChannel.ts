@@ -1,4 +1,4 @@
-import { removeEmoji } from "./updateEmoji";
+import { removeEmoji } from "./updateEmoji.js";
 
 type Input = {
   DiscussionChannel: any;

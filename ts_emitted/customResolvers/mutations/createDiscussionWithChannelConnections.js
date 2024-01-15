@@ -1,4 +1,4 @@
-import { createDiscussionChannelQuery } from "../cypher/cypherQueries";
+import { createDiscussionChannelQuery } from "../cypher/cypherQueries.js";
 const getResolver = (input) => {
     const { Discussion, driver } = input;
     return async (parent, args, context, info) => {

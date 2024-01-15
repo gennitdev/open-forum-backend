@@ -27,7 +27,16 @@ const getUserFromEmail = async (email: string, EmailModel: any) => {
   }
 };
 
-const setUserDataOnContext = async (context: any, getPermissionInfo: boolean) => {
+type SetUserDataInput = {
+  context: {
+    ogm: any;
+    req: any;
+  };
+  getPermissionInfo: boolean;
+};
+
+const setUserDataOnContext = async (input: SetUserDataInput) => {
+  const { context, getPermissionInfo } = input;
   const { ogm, req } = context;
   const token = req?.headers?.authorization || "";
   if (!token) {
@@ -36,7 +45,6 @@ const setUserDataOnContext = async (context: any, getPermissionInfo: boolean) =>
   const decoded = jwt.decode(token.replace("Bearer ", ""));
   if (!decoded) {
     return {
-      driver,
       req,
       ogm,
     };
@@ -92,7 +100,10 @@ const setUserDataOnContext = async (context: any, getPermissionInfo: boolean) =>
 const isAuthenticatedAndVerified = rule({ cache: "contextual" })(
   async (parent: any, args: any, context: any, info: any) => {
     // Set user data on context
-    context.user = await setUserDataOnContext(context, false);
+    context.user = await setUserDataOnContext({
+      context, 
+      getPermissionInfo: false,
+    });
     if (!context.user?.username) {
       return new Error(ERROR_MESSAGES.channel.notAuthenticated);
     }
@@ -129,7 +140,10 @@ const hasServerPermission = async (permission: string, context: any) => {
   console.log('has server permission check is running. checking for permission named ', permission)
 
   // 1. Check for server roles on the user object.
-  context.user = await setUserDataOnContext(context, true);
+  context.user = await setUserDataOnContext({
+    context, 
+    getPermissionInfo: true
+  });
   console.log('set user data on context. user data is ', context.user)
   const usersServerRoles = context.user?.data?.ServerRoles || [];
   console.log('users server roles are ', usersServerRoles)

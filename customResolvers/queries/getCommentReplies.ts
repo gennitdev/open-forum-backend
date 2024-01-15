@@ -1,4 +1,4 @@
-import { getCommentRepliesQuery } from "../cypher/cypherQueries";
+import { getCommentRepliesQuery } from "../cypher/cypherQueries.js";
 
 const commentSelectionSet = `
  {

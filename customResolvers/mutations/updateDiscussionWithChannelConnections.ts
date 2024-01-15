@@ -1,4 +1,4 @@
-import { updateDiscussionChannelQuery, severConnectionBetweenDiscussionAndChannelQuery } from "../cypher/cypherQueries";
+import { updateDiscussionChannelQuery, severConnectionBetweenDiscussionAndChannelQuery } from "../cypher/cypherQueries.js";
 import { DiscussionWhere, DiscussionUpdateInput } from "../../src/generated/graphql";
 
 type Input = {

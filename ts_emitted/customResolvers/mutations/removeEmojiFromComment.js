@@ -1,4 +1,4 @@
-import { removeEmoji } from "./updateEmoji";
+import { removeEmoji } from "./updateEmoji.js";
 const getRemoveEmojiResolver = (input) => {
     const { Comment } = input;
     return async (parent, args, context, resolveInfo) => {

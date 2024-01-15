@@ -1,4 +1,4 @@
-import { createEventChannelQuery } from "../cypher/cypherQueries";
+import { createEventChannelQuery } from "../cypher/cypherQueries.js";
 
 type Input = {
   Event: any;

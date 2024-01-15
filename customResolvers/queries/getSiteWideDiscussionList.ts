@@ -1,5 +1,5 @@
-import { getSiteWideDiscussionsQuery } from "../cypher/cypherQueries";
-import { timeFrameOptions } from "./utils";
+import { getSiteWideDiscussionsQuery } from "../cypher/cypherQueries.js";
+import { timeFrameOptions } from "./utils.js";
 
 type Input = {
   Discussion: any;

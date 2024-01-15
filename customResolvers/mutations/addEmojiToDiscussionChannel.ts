@@ -1,4 +1,4 @@
-import { updateEmoji } from "./updateEmoji";
+import { updateEmoji } from "./updateEmoji.js";
 
 type Args = {
   discussionChannelId: string;

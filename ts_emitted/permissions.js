@@ -1,5 +1,5 @@
 import { shield, allow, deny, and, or } from "graphql-shield";
-import rules from "./rules";
+import rules from "./rules.js";
 const permissionList = shield({
     Query: {
         "*": allow,

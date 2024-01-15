@@ -1,6 +1,6 @@
 import {
   getCommentsQuery,
-} from "../cypher/cypherQueries";
+} from "../cypher/cypherQueries.js";
 
 const discussionChannelSelectionSet = `
 {

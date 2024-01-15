@@ -1,5 +1,5 @@
 import { DateTime } from "luxon";
-import math from "mathjs";
+import { log } from "mathjs";
 export const getAccountAgeInMonths = (createdAt) => {
     const now = DateTime.now();
     const accountCreated = DateTime.fromJSDate(new Date(createdAt));
@@ -15,11 +15,11 @@ export const getWeightedVoteBonus = (user) => {
     // Votes count more if the account has more comment karma.
     if (user.commentKarma && user.commentKarma > 0) {
         commentKarma = user.commentKarma;
-        weightedVoteBonus += parseFloat(math.log(commentKarma, 10).toFixed(5));
+        weightedVoteBonus += parseFloat(log(commentKarma, 10).toFixed(5));
     }
     // Votes count more if the account is older.
     if (accountAgeInMonths > 0) {
-        weightedVoteBonus += parseFloat(math.log(accountAgeInMonths, 10).toFixed(5));
+        weightedVoteBonus += parseFloat(log(accountAgeInMonths, 10).toFixed(5));
     }
     return weightedVoteBonus;
 };

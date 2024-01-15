@@ -1,6 +1,6 @@
 import {
     getEventCommentsQuery,
-  }from "../cypher/cypherQueries";
+  }from "../cypher/cypherQueries.js";
 
 const eventSelectionSet = `
   {

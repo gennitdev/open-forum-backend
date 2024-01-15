@@ -1,4 +1,4 @@
-import { getCommentsQuery, } from "../cypher/cypherQueries";
+import { getCommentsQuery, } from "../cypher/cypherQueries.js";
 const discussionChannelSelectionSet = `
 {
     id

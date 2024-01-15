@@ -25,8 +25,9 @@ const getUserFromEmail = async (email, EmailModel) => {
         return null;
     }
 };
-const setUserDataOnContext = async (context, getPermissionInfo) => {
+const setUserDataOnContext = async (input) => {
     var _a;
+    const { context, getPermissionInfo } = input;
     const { ogm, req } = context;
     const token = ((_a = req === null || req === void 0 ? void 0 : req.headers) === null || _a === void 0 ? void 0 : _a.authorization) || "";
     if (!token) {
@@ -35,7 +36,6 @@ const setUserDataOnContext = async (context, getPermissionInfo) => {
     const decoded = jwt.decode(token.replace("Bearer ", ""));
     if (!decoded) {
         return {
-            driver,
             req,
             ogm,
         };
@@ -86,7 +86,10 @@ const setUserDataOnContext = async (context, getPermissionInfo) => {
 const isAuthenticatedAndVerified = rule({ cache: "contextual" })(async (parent, args, context, info) => {
     var _a;
     // Set user data on context
-    context.user = await setUserDataOnContext(context, false);
+    context.user = await setUserDataOnContext({
+        context,
+        getPermissionInfo: false,
+    });
     if (!((_a = context.user) === null || _a === void 0 ? void 0 : _a.username)) {
         return new Error(ERROR_MESSAGES.channel.notAuthenticated);
     }
@@ -113,7 +116,10 @@ const hasServerPermission = async (permission, context) => {
     var _a, _b, _c, _d;
     console.log('has server permission check is running. checking for permission named ', permission);
     // 1. Check for server roles on the user object.
-    context.user = await setUserDataOnContext(context, true);
+    context.user = await setUserDataOnContext({
+        context,
+        getPermissionInfo: true
+    });
     console.log('set user data on context. user data is ', context.user);
     const usersServerRoles = ((_b = (_a = context.user) === null || _a === void 0 ? void 0 : _a.data) === null || _b === void 0 ? void 0 : _b.ServerRoles) || [];
     console.log('users server roles are ', usersServerRoles);

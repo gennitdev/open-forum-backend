@@ -1,4 +1,4 @@
-import { getEventCommentsQuery, } from "../cypher/cypherQueries";
+import { getEventCommentsQuery, } from "../cypher/cypherQueries.js";
 const eventSelectionSet = `
   {
     id

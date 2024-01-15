@@ -1,4 +1,4 @@
-import { updateEventChannelQuery, severConnectionBetweenEventAndChannelQuery } from "../cypher/cypherQueries";
+import { updateEventChannelQuery, severConnectionBetweenEventAndChannelQuery } from "../cypher/cypherQueries.js";
 import { EventWhere, EventUpdateInput } from "../../src/generated/graphql";
 
 type Input = {

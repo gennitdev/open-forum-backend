@@ -1,4 +1,4 @@
-import { updateEmoji } from "./updateEmoji";
+import { updateEmoji } from "./updateEmoji.js";
 const getResolver = (input) => {
     const { DiscussionChannel } = input;
     return async (parent, args, context, resolveInfo) => {

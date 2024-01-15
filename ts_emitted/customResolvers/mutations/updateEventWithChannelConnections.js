@@ -1,4 +1,4 @@
-import { updateEventChannelQuery, severConnectionBetweenEventAndChannelQuery } from "../cypher/cypherQueries";
+import { updateEventChannelQuery, severConnectionBetweenEventAndChannelQuery } from "../cypher/cypherQueries.js";
 const getResolver = (input) => {
     const { Event, driver } = input;
     return async (parent, args, context, info) => {

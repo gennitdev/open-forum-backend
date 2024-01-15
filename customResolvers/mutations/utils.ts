@@ -1,6 +1,6 @@
 import { DateTime } from "luxon";
 import { User } from "../../src/generated/graphql";
-import math from "mathjs";
+import { log } from "mathjs";
 
 export const getAccountAgeInMonths = (createdAt: Date) => {
   const now = DateTime.now();
@@ -21,13 +21,13 @@ export const getWeightedVoteBonus = (user: User) => {
   // Votes count more if the account has more comment karma.
   if (user.commentKarma && user.commentKarma > 0) {
     commentKarma = user.commentKarma;
-    weightedVoteBonus += parseFloat(math.log(commentKarma, 10).toFixed(5));
+    weightedVoteBonus += parseFloat(log(commentKarma, 10).toFixed(5));
   }
 
   // Votes count more if the account is older.
   if (accountAgeInMonths > 0) {
     weightedVoteBonus += parseFloat(
-      math.log(accountAgeInMonths, 10).toFixed(5)
+      log(accountAgeInMonths, 10).toFixed(5)
     );
   }
 

@@ -1,4 +1,4 @@
-import { updateDiscussionChannelQuery, severConnectionBetweenDiscussionAndChannelQuery } from "../cypher/cypherQueries";
+import { updateDiscussionChannelQuery, severConnectionBetweenDiscussionAndChannelQuery } from "../cypher/cypherQueries.js";
 const getResolver = (input) => {
     const { Discussion, driver } = input;
     return async (parent, args, context, info) => {

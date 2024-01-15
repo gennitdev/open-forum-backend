@@ -1,5 +1,5 @@
-import { commentIsUpvotedByUserQuery } from "../cypher/cypherQueries";
-import { getWeightedVoteBonus } from "./utils";
+import { commentIsUpvotedByUserQuery } from "../cypher/cypherQueries.js";
+import { getWeightedVoteBonus } from "./utils.js";
 const undoUpvoteCommentResolver = (input) => {
     const { Comment, User, driver } = input;
     return async (parent, args, context, resolveInfo) => {

@@ -1,5 +1,5 @@
-import { discussionChannelIsUpvotedByUserQuery, } from "../cypher/cypherQueries";
-import { getWeightedVoteBonus } from "./utils";
+import { discussionChannelIsUpvotedByUserQuery, } from "../cypher/cypherQueries.js";
+import { getWeightedVoteBonus } from "./utils.js";
 const undoUpvoteDiscussionChannelResolver = (input) => {
     const { DiscussionChannel, User, driver } = input;
     return async (parent, args, context, resolveInfo) => {

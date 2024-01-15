@@ -1,6 +1,6 @@
 import { User } from "../../src/generated/graphql";
-import { commentIsUpvotedByUserQuery } from "../cypher/cypherQueries";
-import { getWeightedVoteBonus } from "./utils";
+import { commentIsUpvotedByUserQuery } from "../cypher/cypherQueries.js";
+import { getWeightedVoteBonus } from "./utils.js";
 
 type Input = {
   Comment: any;
