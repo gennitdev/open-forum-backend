@@ -92,7 +92,7 @@ const getResolver = (input: Input) => {
       session.close();
 
       return result[0];
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error creating event:", error);
       throw new Error(`Failed to create event. ${error.message}`);
     }

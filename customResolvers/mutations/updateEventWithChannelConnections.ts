@@ -14,6 +14,7 @@ type Args = {
 };
 
 const getResolver = (input: Input) => {
+  const { Event, driver } = input;
   return async (parent: any, args: Args, context: any, info: any) => {
     const {
       eventWhere,
@@ -30,6 +31,9 @@ const getResolver = (input: Input) => {
 
     try {
       // Update the event
+
+      // ignore TS errors
+      // @ts-ignore
       await Event.update({
         where: eventWhere,
         update: eventUpdateInput,
@@ -110,6 +114,7 @@ const getResolver = (input: Input) => {
         }
       `;
 
+      // @ts-ignore
       const result = await Event.find({
         where: {
           id: updatedEventId,

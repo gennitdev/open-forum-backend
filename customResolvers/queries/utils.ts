@@ -1,7 +1,7 @@
-const luxon = require("luxon");
+import luxon from "luxon";
 
 
-const timeFrameOptions = {
+export const timeFrameOptions = {
   // Conversion to UTC is required for the time comparison
   // to be in a consistent timezone.
   day: {
@@ -18,6 +18,6 @@ const timeFrameOptions = {
   },
 }
 
-module.exports = {
+export default {
     timeFrameOptions,
 }

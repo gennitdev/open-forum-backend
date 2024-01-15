@@ -1,8 +1,28 @@
-const { getSiteWideDiscussionsQuery } = require("../cypher/cypherQueries");
-const { timeFrameOptions } = require("./utils");
+import { getSiteWideDiscussionsQuery } from "../cypher/cypherQueries";
+import { timeFrameOptions } from "./utils";
 
-const getResolver = ({ driver, Discussion }) => {
-  return async (parent, args, context, info) => {
+type Input = {
+  Discussion: any;
+  driver: any;
+};
+
+type Args = {
+  searchInput: string;
+  selectedChannels: string[];
+  selectedTags: string[];
+  options: {
+    offset: string;
+    limit: string;
+    resultsOrder: string;
+    sort: string;
+    timeFrame: string;
+  };
+};
+
+const getResolver = (input: Input) => {
+  const { driver, Discussion } = input;
+
+  return async (parent: any, args: Args, context: any, info: any) => {
     const { searchInput, selectedChannels, selectedTags, options } = args;
     const { offset, limit, resultsOrder, sort, timeFrame } = options || {};
 
@@ -74,7 +94,7 @@ const getResolver = ({ driver, Discussion }) => {
             }
           );
 
-          const newDiscussions = newDiscussionResult.records.map((record) => {
+          const newDiscussions = newDiscussionResult.records.map((record: any) => {
             return record.get("discussion");
           });
 
@@ -88,7 +108,9 @@ const getResolver = ({ driver, Discussion }) => {
           // Treat a null weightedVotesCount as 0.
           let selectedTimeFrame = timeFrameOptions.year.start;
 
+          // @ts-ignore
           if (timeFrameOptions[timeFrame]) {
+            // @ts-ignore
             selectedTimeFrame = timeFrameOptions[timeFrame].start;
           }
           const topDiscussionsResult = await session.run(
@@ -105,7 +127,7 @@ const getResolver = ({ driver, Discussion }) => {
             }
           );
 
-          const discussions = topDiscussionsResult.records.map((record) => {
+          const discussions = topDiscussionsResult.records.map((record: any) => {
             return record.get("discussion");
           });
 
@@ -130,7 +152,7 @@ const getResolver = ({ driver, Discussion }) => {
             }
           );
 
-          const hotDiscussions = hotDiscussionsResult.records.map((record) => {
+          const hotDiscussions = hotDiscussionsResult.records.map((record: any) => {
             return record.get("discussion");
           });
 
@@ -139,7 +161,7 @@ const getResolver = ({ driver, Discussion }) => {
             aggregateDiscussionCount: count,
           };
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error getting discussions:", error);
       throw new Error(`Failed to fetch discussions. ${error.message}`);
     } finally {
@@ -148,4 +170,4 @@ const getResolver = ({ driver, Discussion }) => {
   };
 };
 
-module.exports = getResolver;
+export default getResolver;

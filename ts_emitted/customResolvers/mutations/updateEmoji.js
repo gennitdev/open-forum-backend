@@ -1,6 +1,6 @@
-export var updateEmoji = function (emojiJSON, input) {
-    var emojiLabel = input.emojiLabel, unicode = input.unicode, username = input.username;
-    var emoji = {};
+export const updateEmoji = (emojiJSON, input) => {
+    const { emojiLabel, unicode, username } = input;
+    let emoji = {};
     // Parse the existing emoji JSON
     if (emojiJSON) {
         emoji = JSON.parse(emojiJSON);
@@ -18,15 +18,15 @@ export var updateEmoji = function (emojiJSON, input) {
     // Convert updated emoji back to JSON
     return JSON.stringify(emoji);
 };
-export var removeEmoji = function (emojiJSON, input) {
-    var emojiLabel = input.emojiLabel, username = input.username;
-    var emoji = {};
+export const removeEmoji = (emojiJSON, input) => {
+    const { emojiLabel, username } = input;
+    let emoji = {};
     if (emojiJSON) {
         emoji = JSON.parse(emojiJSON);
     }
     if (emoji[emojiLabel]) {
-        for (var unicode in emoji[emojiLabel]) {
-            var userIndex = emoji[emojiLabel][unicode].indexOf(username);
+        for (const unicode in emoji[emojiLabel]) {
+            const userIndex = emoji[emojiLabel][unicode].indexOf(username);
             if (userIndex > -1) {
                 emoji[emojiLabel][unicode].splice(userIndex, 1);
                 if (emoji[emojiLabel][unicode].length === 0) {

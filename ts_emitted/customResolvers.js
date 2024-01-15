@@ -1,41 +1,45 @@
-"use strict";
-var OGM = require("@neo4j/graphql-ogm").OGM;
-var typeDefs = require("./typeDefs");
-var GraphQLJSON = require("graphql-type-json");
-var createDiscussionWithChannelConnections = require("./customResolvers/mutations/createDiscussionWithChannelConnections");
-var updateDiscussionWithChannelConnections = require("./customResolvers/mutations/updateDiscussionWithChannelConnections");
-var createEventWithChannelConnections = require("./customResolvers/mutations/createEventWithChannelConnections");
-var updateEventWithChannelConnections = require("./customResolvers/mutations/updateEventWithChannelConnections");
-var getSiteWideDiscussionList = require("./customResolvers/queries/getSiteWideDiscussionList");
-var getCommentSection = require("./customResolvers/queries/getCommentSection");
-var getEventComments = require("./customResolvers/queries/getEventComments");
-var getCommentReplies = require("./customResolvers/queries/getCommentReplies");
-var getDiscussionsInChannel = require("./customResolvers/queries/getDiscussionsInChannel");
-var addEmojiToComment = require("./customResolvers/mutations/addEmojiToComment");
-var removeEmojiFromComment = require("./customResolvers/mutations/removeEmojiFromComment");
-var addEmojiToDiscussionChannel = require("./customResolvers/mutations/addEmojiToDiscussionChannel");
-var removeEmojiFromDiscussionChannel = require("./customResolvers/mutations/removeEmojiFromDiscussionChannel");
-var upvoteComment = require("./customResolvers/mutations/upvoteComment");
-var undoUpvoteComment = require("./customResolvers/mutations/undoUpvoteComment");
-var upvoteDiscussionChannel = require("./customResolvers/mutations/upvoteDiscussionChannel");
-var undoUpvoteDiscussionChannel = require("./customResolvers/mutations/undoUpvoteDiscussionChannel");
-var getSubredditResolver = require("./customResolvers/queries/getSubreddit");
-var getSubredditSidebar = require("./customResolvers/queries/getSubredditSidebar");
-var createSignedStorageURL = require("./customResolvers/mutations/createSignedStorageURL");
-module.exports = function (driver) {
-    var ogm = new OGM({
-        typeDefs: typeDefs,
-        driver: driver,
+import { OGM } from "@neo4j/graphql-ogm";
+import typeDefs from "./typeDefs";
+import GraphQLJSON from "graphql-type-json";
+import createDiscussionWithChannelConnections from "./customResolvers/mutations/createDiscussionWithChannelConnections";
+import updateDiscussionWithChannelConnections from "./customResolvers/mutations/updateDiscussionWithChannelConnections";
+import createEventWithChannelConnections from "./customResolvers/mutations/createEventWithChannelConnections";
+import updateEventWithChannelConnections from "./customResolvers/mutations/updateEventWithChannelConnections";
+import getSiteWideDiscussionList from "./customResolvers/queries/getSiteWideDiscussionList";
+import getCommentSection from "./customResolvers/queries/getCommentSection";
+import getEventComments from "./customResolvers/queries/getEventComments";
+import getCommentReplies from "./customResolvers/queries/getCommentReplies";
+import getDiscussionsInChannel from "./customResolvers/queries/getDiscussionsInChannel";
+import addEmojiToComment from "./customResolvers/mutations/addEmojiToComment";
+import removeEmojiFromComment from "./customResolvers/mutations/removeEmojiFromComment";
+import addEmojiToDiscussionChannel from "./customResolvers/mutations/addEmojiToDiscussionChannel";
+import removeEmojiFromDiscussionChannel from "./customResolvers/mutations/removeEmojiFromDiscussionChannel";
+import upvoteComment from "./customResolvers/mutations/upvoteComment";
+import undoUpvoteComment from "./customResolvers/mutations/undoUpvoteComment";
+import upvoteDiscussionChannel from "./customResolvers/mutations/upvoteDiscussionChannel";
+import undoUpvoteDiscussionChannel from "./customResolvers/mutations/undoUpvoteDiscussionChannel";
+import getSubredditResolver from "./customResolvers/queries/getSubreddit";
+import getSubredditSidebar from "./customResolvers/queries/getSubredditSidebar";
+import createSignedStorageURL from "./customResolvers/mutations/createSignedStorageURL";
+// const { ModelMap } = "./ogm-types"; // this file will be auto-generated using 'generate'
+export default function (driver) {
+    // const ogm = new OGM<ModelMap>({
+    //   typeDefs,
+    //   driver,
+    // });
+    const ogm = new OGM({
+        typeDefs,
+        driver,
     });
-    var Discussion = ogm.model("Discussion");
-    var DiscussionChannel = ogm.model("DiscussionChannel");
-    var Event = ogm.model("Event");
-    var Comment = ogm.model("Comment");
-    var User = ogm.model("User");
-    var resolvers = {
+    const Discussion = ogm.model("Discussion");
+    const DiscussionChannel = ogm.model("DiscussionChannel");
+    const Event = ogm.model("Event");
+    const Comment = ogm.model("Comment");
+    const User = ogm.model("User");
+    const resolvers = {
         JSON: GraphQLJSON,
         CommentAuthor: {
-            __resolveType: function (obj, context, info) {
+            __resolveType(obj, context, info) {
                 if (obj.username) {
                     return "User";
                 }
@@ -47,84 +51,85 @@ module.exports = function (driver) {
         },
         Query: {
             getSiteWideDiscussionList: getSiteWideDiscussionList({
-                Discussion: Discussion,
-                driver: driver,
+                Discussion,
+                driver,
             }),
             getDiscussionsInChannel: getDiscussionsInChannel({
-                driver: driver,
-                DiscussionChannel: DiscussionChannel,
+                driver,
+                DiscussionChannel,
             }),
             getCommentSection: getCommentSection({
-                driver: driver,
-                DiscussionChannel: DiscussionChannel,
-                Comment: Comment,
+                driver,
+                DiscussionChannel,
+                Comment,
             }),
             getEventComments: getEventComments({
-                driver: driver,
-                Event: Event,
-                Comment: Comment,
+                driver,
+                Event,
+                Comment,
             }),
             getCommentReplies: getCommentReplies({
-                driver: driver,
-                Comment: Comment,
+                driver,
+                Comment,
             }),
             getSubreddit: getSubredditResolver(),
             getSubredditSidebar: getSubredditSidebar(),
         },
         Mutation: {
             createDiscussionWithChannelConnections: createDiscussionWithChannelConnections({
-                Discussion: Discussion,
-                driver: driver,
+                Discussion,
+                driver,
             }),
             updateDiscussionWithChannelConnections: updateDiscussionWithChannelConnections({
-                Discussion: Discussion,
-                driver: driver,
+                Discussion,
+                driver,
             }),
             createEventWithChannelConnections: createEventWithChannelConnections({
-                Event: Event,
-                driver: driver,
+                Event,
+                driver,
             }),
             updateEventWithChannelConnections: updateEventWithChannelConnections({
-                Event: Event,
-                driver: driver,
+                Event,
+                driver,
             }),
             addEmojiToComment: addEmojiToComment({
-                Comment: Comment,
+                Comment,
             }),
             removeEmojiFromComment: removeEmojiFromComment({
-                Comment: Comment,
+                Comment,
             }),
             addEmojiToDiscussionChannel: addEmojiToDiscussionChannel({
-                DiscussionChannel: DiscussionChannel,
+                DiscussionChannel,
             }),
             removeEmojiFromDiscussionChannel: removeEmojiFromDiscussionChannel({
-                DiscussionChannel: DiscussionChannel,
+                DiscussionChannel,
             }),
             upvoteComment: upvoteComment({
-                Comment: Comment,
-                User: User,
-                driver: driver,
+                Comment,
+                User,
+                driver,
             }),
             undoUpvoteComment: undoUpvoteComment({
-                Comment: Comment,
-                User: User,
-                driver: driver,
+                Comment,
+                User,
+                driver,
             }),
             upvoteDiscussionChannel: upvoteDiscussionChannel({
-                DiscussionChannel: DiscussionChannel,
-                User: User,
-                driver: driver,
+                DiscussionChannel,
+                User,
+                driver,
             }),
             undoUpvoteDiscussionChannel: undoUpvoteDiscussionChannel({
-                DiscussionChannel: DiscussionChannel,
-                User: User,
-                driver: driver,
+                DiscussionChannel,
+                User,
+                driver,
             }),
             createSignedStorageURL: createSignedStorageURL(),
         },
     };
     return {
-        resolvers: resolvers,
-        ogm: ogm,
+        resolvers,
+        ogm,
     };
-};
+}
+;

@@ -13,6 +13,7 @@ type Args = {
 };
 
 const upvoteCommentResolver = (input: Input) => {
+  const { Comment, User, driver } = input;
   return async (parent: any, args: Args, context: any, resolveInfo: any) => {
     const { commentId, username } = args;
 
@@ -56,6 +57,7 @@ const upvoteCommentResolver = (input: Input) => {
         }
       `;
 
+      // @ts-ignore
       const commentResult = await Comment.find({
         where: {
           id: commentId,

@@ -1,33 +1,39 @@
-const { OGM } = require("@neo4j/graphql-ogm");
-const typeDefs = require("./typeDefs");
-const GraphQLJSON = require("graphql-type-json");
-const createDiscussionWithChannelConnections = require("./customResolvers/mutations/createDiscussionWithChannelConnections");
-const updateDiscussionWithChannelConnections = require("./customResolvers/mutations/updateDiscussionWithChannelConnections");
+import { OGM } from "@neo4j/graphql-ogm";
+import typeDefs from "./typeDefs";
+import GraphQLJSON from "graphql-type-json";
+import createDiscussionWithChannelConnections from "./customResolvers/mutations/createDiscussionWithChannelConnections";
+import updateDiscussionWithChannelConnections from "./customResolvers/mutations/updateDiscussionWithChannelConnections";
 
-const createEventWithChannelConnections = require("./customResolvers/mutations/createEventWithChannelConnections");
-const updateEventWithChannelConnections = require("./customResolvers/mutations/updateEventWithChannelConnections");
+import createEventWithChannelConnections from "./customResolvers/mutations/createEventWithChannelConnections";
+import updateEventWithChannelConnections from "./customResolvers/mutations/updateEventWithChannelConnections";
 
-const getSiteWideDiscussionList = require("./customResolvers/queries/getSiteWideDiscussionList");
-const getCommentSection = require("./customResolvers/queries/getCommentSection");
-const getEventComments = require("./customResolvers/queries/getEventComments");
-const getCommentReplies = require("./customResolvers/queries/getCommentReplies");
-const getDiscussionsInChannel = require("./customResolvers/queries/getDiscussionsInChannel");
+import getSiteWideDiscussionList from "./customResolvers/queries/getSiteWideDiscussionList";
+import getCommentSection from "./customResolvers/queries/getCommentSection";
+import getEventComments from "./customResolvers/queries/getEventComments";
+import getCommentReplies from "./customResolvers/queries/getCommentReplies";
+import getDiscussionsInChannel from "./customResolvers/queries/getDiscussionsInChannel";
 
-const addEmojiToComment = require("./customResolvers/mutations/addEmojiToComment");
-const removeEmojiFromComment = require("./customResolvers/mutations/removeEmojiFromComment");
-const addEmojiToDiscussionChannel = require("./customResolvers/mutations/addEmojiToDiscussionChannel");
-const removeEmojiFromDiscussionChannel = require("./customResolvers/mutations/removeEmojiFromDiscussionChannel");
+import addEmojiToComment from "./customResolvers/mutations/addEmojiToComment";
+import removeEmojiFromComment from "./customResolvers/mutations/removeEmojiFromComment";
+import addEmojiToDiscussionChannel from "./customResolvers/mutations/addEmojiToDiscussionChannel";
+import removeEmojiFromDiscussionChannel from "./customResolvers/mutations/removeEmojiFromDiscussionChannel";
 
-const upvoteComment = require("./customResolvers/mutations/upvoteComment");
-const undoUpvoteComment = require("./customResolvers/mutations/undoUpvoteComment");
-const upvoteDiscussionChannel = require("./customResolvers/mutations/upvoteDiscussionChannel");
-const undoUpvoteDiscussionChannel = require("./customResolvers/mutations/undoUpvoteDiscussionChannel");
+import upvoteComment from "./customResolvers/mutations/upvoteComment";
+import undoUpvoteComment from "./customResolvers/mutations/undoUpvoteComment";
+import upvoteDiscussionChannel from "./customResolvers/mutations/upvoteDiscussionChannel";
+import undoUpvoteDiscussionChannel from "./customResolvers/mutations/undoUpvoteDiscussionChannel";
 
-const getSubredditResolver = require("./customResolvers/queries/getSubreddit");
-const getSubredditSidebar = require("./customResolvers/queries/getSubredditSidebar");
-const createSignedStorageURL = require("./customResolvers/mutations/createSignedStorageURL");
+import getSubredditResolver from "./customResolvers/queries/getSubreddit";
+import getSubredditSidebar from "./customResolvers/queries/getSubredditSidebar";
+import createSignedStorageURL from "./customResolvers/mutations/createSignedStorageURL";
 
-module.exports = function (driver: any) {
+// const { ModelMap } = "./ogm-types"; // this file will be auto-generated using 'generate'
+
+export default function (driver: any) {
+  // const ogm = new OGM<ModelMap>({
+  //   typeDefs,
+  //   driver,
+  // });
   const ogm = new OGM({
     typeDefs,
     driver,

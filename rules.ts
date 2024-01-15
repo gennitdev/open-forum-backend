@@ -1,6 +1,6 @@
-const { User, ServerRole } = require("./src/generated/graphql");
-const jwt = require("jsonwebtoken");
-const { rule } = require("graphql-shield");
+import { User, ServerRole } from "./src/generated/graphql";
+import jwt from "jsonwebtoken";
+import { rule } from "graphql-shield";
 
 const ERROR_MESSAGES = {
   generic: {
@@ -42,6 +42,12 @@ const setUserDataOnContext = async (context: any, getPermissionInfo: boolean) =>
     };
   }
 
+  // @ts-ignore
+  if (!decoded?.email) {
+    return new Error(ERROR_MESSAGES.channel.notAuthenticated);
+  }
+
+  // @ts-ignore
   const { email, email_verified } = decoded;
   const Email = ogm.model("Email");
   const User = ogm.model("User");
@@ -256,4 +262,4 @@ const ruleList = {
   isAdmin,
 };
 
-module.exports = ruleList;
+export default ruleList;

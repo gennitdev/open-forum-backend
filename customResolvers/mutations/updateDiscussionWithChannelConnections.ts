@@ -1,6 +1,5 @@
 import { updateDiscussionChannelQuery, severConnectionBetweenDiscussionAndChannelQuery } from "../cypher/cypherQueries";
 import { DiscussionWhere, DiscussionUpdateInput } from "../../src/generated/graphql";
-import { ApolloError } from "apollo-server";
 
 type Input = {
   Discussion: any;

@@ -1,17 +1,20 @@
-const { Neo4jGraphQL } = require("@neo4j/graphql");
-const { ApolloServer } = require("apollo-server");
-const { applyMiddleware } = require("graphql-middleware");
-const typesDefinitions = require("./typeDefs");
+import { Neo4jGraphQL } from "@neo4j/graphql";
+import { ApolloServer } from "apollo-server";
+import { applyMiddleware } from "graphql-middleware";
+import typesDefinitions from "./typeDefs";
+import { generate } from "@neo4j/graphql-ogm";
+import permissions from "./permissions";
+import path from "path";
 
-const permissions = require("./permissions");
+import dotenv from "dotenv";
+dotenv.config();
 
-require("dotenv").config();
-const neo4j = require("neo4j-driver");
+import neo4j from "neo4j-driver";
 const password = process.env.NEO4J_PASSWORD;
 
 const driver = neo4j.driver(
   "bolt://localhost:7687",
-  neo4j.auth.basic("neo4j", password)
+  neo4j.auth.basic("neo4j", password as string)
 );
 
 const { ogm, resolvers } = require("./customResolvers")(driver);
@@ -50,6 +53,18 @@ REQUIRE (ec.eventId, ec.channelUniqueName) IS NODE KEY
 
 async function initializeServer() {
   try {
+    if (process.env.GENERATE_OGM_TYPES) {
+      const outFile = path.join(__dirname, "ogm-types.ts");
+
+      await generate({
+        ogm,
+        outFile,
+      });
+
+      console.log(`Generated OGM types at ${outFile}`);
+      process.exit(1);
+    }
+
     let schema = await neoSchema.getSchema();
     schema = applyMiddleware(schema, permissions);
     await ogm.init();

@@ -1,6 +1,6 @@
-const { shield, allow, deny, and, or, not } = require("graphql-shield");
-const rules = require("./rules");
-const { ApolloError } = require("apollo-server");
+import { shield, allow, deny, and, or, not } from "graphql-shield";
+import rules from "./rules";
+import { ApolloError } from "apollo-server";
 
 const permissionList = shield({
     Query: {
@@ -64,5 +64,5 @@ const permissionList = shield({
   });
   
   
-  module.exports = permissionList;
+  export default permissionList;
   

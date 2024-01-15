@@ -1,6 +1,6 @@
-const {
+import {
     getEventCommentsQuery,
-  } = require("../cypher/cypherQueries");
+  }from "../cypher/cypherQueries";
 
 const eventSelectionSet = `
   {
@@ -101,8 +101,22 @@ const commentSelectionSet = `
               }
           `;
 
-const getResolver = ({ driver, Event, Comment }) => {
-  return async (parent, args, context, info) => {
+type Input = {
+  Event: any;
+  Comment: any;
+  driver: any;
+};
+
+type Args = {
+  eventId: string;
+  offset: string;
+  limit: string;
+  sort: string;
+};
+
+const getResolver = (input: Input) => {
+  const { driver, Event, Comment } = input;
+  return async (parent: any, args: Args, context: any, info: any) => {
     const { eventId, offset, limit, sort } = args;
 
     const session = driver.session();
@@ -153,7 +167,7 @@ const getResolver = ({ driver, Event, Comment }) => {
           sortOption: "top",
         });
 
-        commentsResult = commentsResult.records.map((record) => {
+        commentsResult = commentsResult.records.map((record: any) => {
           return record.get("comment");
         });
       } else {
@@ -166,7 +180,7 @@ const getResolver = ({ driver, Event, Comment }) => {
           sortOption: "hot",
         });
 
-        commentsResult = commentsResult.records.map((record) => {
+        commentsResult = commentsResult.records.map((record: any) => {
           return record.get("comment");
         });
       }
@@ -175,7 +189,7 @@ const getResolver = ({ driver, Event, Comment }) => {
         Event: event,
         Comments: commentsResult,
       };
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error getting comment section:", error);
       throw new Error(`Failed to fetch comment section. ${error.message}`);
     } finally {
@@ -184,4 +198,4 @@ const getResolver = ({ driver, Event, Comment }) => {
   };
 };
 
-module.exports = getResolver;
+export default getResolver;

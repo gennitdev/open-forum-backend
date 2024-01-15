@@ -12,7 +12,8 @@ type Args = {
   username: string;
 };
 
-const upvoteDiscussionChannelResolver = () => {
+const upvoteDiscussionChannelResolver = (input: Input) => {
+  const { DiscussionChannel, User, driver } = input;
   return async (parent: any, args: Args, context: any, resolveInfo: any) => {
     const { discussionChannelId, username } = args;
 
@@ -56,6 +57,7 @@ const upvoteDiscussionChannelResolver = () => {
         }
       `;
 
+      // @ts-ignore
       const discussionChannelResult = await DiscussionChannel.find({
         where: {
           id: discussionChannelId,

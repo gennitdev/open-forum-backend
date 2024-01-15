@@ -1,7 +1,16 @@
-const snoowrap = require('snoowrap');
+import snoowrap from 'snoowrap';
+
+type Args = {
+  subredditName: string;
+  options?: {
+    offset?: number;
+    limit?: number;
+    sort?: string;
+  };
+}
 
 const getSubredditResolver = () => {
-  return async (parent, args, context, info) => {
+  return async (parent: any, args: Args, context: any, info: any) => {
     const { subredditName, options } = args;
     const { offset, limit, sort } = options || {};
 
@@ -12,6 +21,7 @@ const getSubredditResolver = () => {
         refreshToken: process.env.REDDIT_REFRESH_TOKEN
     })
 
+    // @ts-ignore
     const metadata = await r.getSubreddit(subredditName).fetch();
 
     const result = {
@@ -30,4 +40,4 @@ const getSubredditResolver = () => {
   };
 };
 
-module.exports = getSubredditResolver;
+export default getSubredditResolver;

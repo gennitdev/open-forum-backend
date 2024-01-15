@@ -1,6 +1,6 @@
-const {
+import {
   getCommentsQuery,
-} = require("../cypher/cypherQueries");
+} from "../cypher/cypherQueries";
 
 const discussionChannelSelectionSet = `
 {
@@ -117,9 +117,23 @@ const commentSelectionSet = `
                 }
             }
         `;
+type Input = {
+  driver: any;
+  DiscussionChannel: any;
+  Comment: any;
+};
 
-const getResolver = ({ driver, DiscussionChannel, Comment }) => {
-  return async (parent, args, context, info) => {
+type Args = {
+  channelUniqueName: string;
+  discussionId: string;
+  offset: string;
+  limit: string;
+  sort: string;
+};
+
+const getResolver = (input: Input) => {
+  const { driver, DiscussionChannel, Comment } = input;
+  return async (parent: any, args: Args, context: any, info: any) => {
     const { channelUniqueName, discussionId, offset, limit, sort } = args;
 
     const session = driver.session();
@@ -173,7 +187,7 @@ const getResolver = ({ driver, DiscussionChannel, Comment }) => {
           sortOption: "top"
         });
 
-        commentsResult = commentsResult.records.map((record) => {
+        commentsResult = commentsResult.records.map((record: any) => {
           return record.get("comment");
         });
       } else {
@@ -186,7 +200,7 @@ const getResolver = ({ driver, DiscussionChannel, Comment }) => {
           sortOption: "hot"
         });
 
-        commentsResult = commentsResult.records.map((record) => {
+        commentsResult = commentsResult.records.map((record: any) => {
           return record.get("comment");
         });
       }
@@ -195,7 +209,7 @@ const getResolver = ({ driver, DiscussionChannel, Comment }) => {
         DiscussionChannel: discussionChannel,
         Comments: commentsResult,
       };
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error getting comment section:", error);
       throw new Error(`Failed to fetch comment section. ${error.message}`);
     } finally {
@@ -204,4 +218,4 @@ const getResolver = ({ driver, DiscussionChannel, Comment }) => {
   };
 };
 
-module.exports = getResolver;
+export default getResolver;

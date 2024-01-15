@@ -1,4 +1,4 @@
-const { getCommentRepliesQuery } = require("../cypher/cypherQueries");
+import { getCommentRepliesQuery } from "../cypher/cypherQueries";
 
 const commentSelectionSet = `
  {
@@ -44,8 +44,21 @@ const commentSelectionSet = `
  }
 `;
 
-const getResolver = ({ driver, Comment }) => {
-  return async (parent, args, context, info) => {
+type Input = {
+  Comment: any;
+  driver: any;
+};
+
+type Args = {
+  commentId: string;
+  offset: string;
+  limit: string;
+  sort: string;
+};
+
+const getResolver = (input: Input) => {
+  const { driver, Comment } = input;
+  return async (parent: any, args: Args, context: any, info: any) => {
     const { commentId, offset, limit, sort } = args;
 
     const session = driver.session();
@@ -94,7 +107,7 @@ const getResolver = ({ driver, Comment }) => {
             aggregateChildCommentCount: 0,
           };
         }
-        commentsResult = topCommentsResult.records.map((record) => {
+        commentsResult = topCommentsResult.records.map((record: any) => {
           return record.get("ChildComments");
         });
         aggregateCount = await Comment.aggregate({
@@ -106,7 +119,7 @@ const getResolver = ({ driver, Comment }) => {
           aggregate: {
             count: true,
           },
-        }).then((result) => {
+        }).then((result: any) => {
           return result.count;
         });
       } else {
@@ -119,7 +132,7 @@ const getResolver = ({ driver, Comment }) => {
           sortOption: "hot",
         });
 
-        commentsResult = hotCommentsResult.records.map((record) => {
+        commentsResult = hotCommentsResult.records.map((record: any) => {
           return record.get("ChildComments");
         });
         aggregateCount = await Comment.aggregate({
@@ -131,7 +144,7 @@ const getResolver = ({ driver, Comment }) => {
           aggregate: {
             count: true,
           },
-        }).then((result) => {
+        }).then((result: any) => {
           return result.count;
         });
       }
@@ -140,7 +153,7 @@ const getResolver = ({ driver, Comment }) => {
         ChildComments: commentsResult,
         aggregateChildCommentCount: aggregateCount || 0,
       };
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error getting comment section:", error);
       throw new Error(`Failed to fetch comment section. ${error.message}`);
     } finally {
@@ -149,4 +162,4 @@ const getResolver = ({ driver, Comment }) => {
   };
 };
 
-module.exports = getResolver;
+export default getResolver;

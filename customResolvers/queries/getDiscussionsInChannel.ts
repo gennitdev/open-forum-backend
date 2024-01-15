@@ -1,5 +1,6 @@
-const { getDiscussionChannelsQuery } = require("../cypher/cypherQueries");
-const { timeFrameOptions } = require("./utils");
+import { DiscussionChannel, DiscussionChannelWhere } from "../../src/generated/graphql";
+import { getDiscussionChannelsQuery } from "../cypher/cypherQueries";
+import  { timeFrameOptions } from "./utils";
 
 const discussionChannelSelectionSet = `
   {
@@ -49,15 +50,33 @@ const discussionChannelSelectionSet = `
   }
   `;
 
-const getResolver = ({ driver, DiscussionChannel }) => {
-  return async (parent, args, context, info) => {
+type Input = {
+  DiscussionChannel: any;
+  driver: any;
+};
+
+type Args = {
+  channelUniqueName: string;
+  options: {
+    offset: string;
+    limit: string;
+    sort: string;
+    timeFrame: string;
+  };
+  selectedTags: string[];
+  searchInput: string;
+};
+
+const getResolver = (input: Input) => {
+  const { driver, DiscussionChannel } = input;
+  return async (parent: any, args: Args, context: any, info: any) => {
     const { channelUniqueName, options, selectedTags, searchInput } = args;
     const { offset, limit, sort, timeFrame } = options || {};
 
     const session = driver.session();
 
     try {
-      const filters = [
+      const filters: DiscussionChannelWhere[] = [
         {
           channelUniqueName,
         },
@@ -80,7 +99,7 @@ const getResolver = ({ driver, DiscussionChannel }) => {
         };
       }
 
-      let result = [];
+      let result: DiscussionChannel[] = [];
 
       switch (sort) {
         case "new":
@@ -106,7 +125,8 @@ const getResolver = ({ driver, DiscussionChannel }) => {
           if (selectedTags && selectedTags.length > 0) {
             filters.push({
               Discussion: {
-                Tags: {
+                // check if the related Tags contain any of the selectedTags
+                Tags_SOME: {
                   text_IN: selectedTags,
                 },
               },
@@ -137,7 +157,9 @@ const getResolver = ({ driver, DiscussionChannel }) => {
           // Treat a null weightedVotesCount as 0.
           let selectedTimeFrame = null;
 
+          // @ts-ignore
           if (timeFrameOptions[timeFrame]) {
+            // @ts-ignore
             selectedTimeFrame = timeFrameOptions[timeFrame].start;
           }
 
@@ -155,7 +177,7 @@ const getResolver = ({ driver, DiscussionChannel }) => {
           );
 
           const topDiscussionChannels = topDiscussionChannelsResult.records.map(
-            (record) => {
+            (record: any) => {
               return record.get("DiscussionChannel");
             }
           );
@@ -181,7 +203,7 @@ const getResolver = ({ driver, DiscussionChannel }) => {
           );
 
           const hotDiscussionChannels = hotDiscussionChannelsResult.records.map(
-            (record) => {
+            (record: any) => {
               return record.get("DiscussionChannel");
             }
           );
@@ -191,7 +213,7 @@ const getResolver = ({ driver, DiscussionChannel }) => {
             aggregateDiscussionChannelsCount: aggregateCount
           };
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error getting discussionChannels:", error);
       throw new Error(
         `Failed to fetch discussionChannels in channel. ${error.message}`
@@ -202,4 +224,4 @@ const getResolver = ({ driver, DiscussionChannel }) => {
   };
 };
 
-module.exports = getResolver;
+export default getResolver;

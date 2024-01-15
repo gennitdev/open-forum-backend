@@ -1,8 +1,6 @@
-"use strict";
-var _a = require("graphql-shield"), shield = _a.shield, allow = _a.allow, deny = _a.deny, and = _a.and, or = _a.or, not = _a.not;
-var rules = require("./rules");
-var ApolloError = require("apollo-server").ApolloError;
-var permissionList = shield({
+import { shield, allow, deny, and, or } from "graphql-shield";
+import rules from "./rules";
+const permissionList = shield({
     Query: {
         "*": allow,
     },
@@ -47,4 +45,4 @@ var permissionList = shield({
         // same rules for Events and RecurringEvents
     },
 });
-module.exports = permissionList;
+export default permissionList;

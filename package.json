@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "codegen": "graphql-codegen --config codegen.ts",
@@ -35,7 +36,9 @@
     "@graphql-codegen/cli": "5.0.0",
     "@graphql-codegen/typescript": "4.0.1",
     "@graphql-codegen/typescript-resolvers": "4.0.1",
+    "@types/jsonwebtoken": "^9.0.5",
     "@types/node": "^20.10.7",
+    "@types/luxon": "3.4.1",
     "typescript": "^5.3.3"
   }
 }

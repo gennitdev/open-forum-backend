@@ -161,4 +161,4 @@ const undoUpvoteCommentResolver = (input: Input) => {
   };
 };
 
-module.exports = undoUpvoteCommentResolver;
+export default undoUpvoteCommentResolver;

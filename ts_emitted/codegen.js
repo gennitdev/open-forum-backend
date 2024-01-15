@@ -1,4 +1,4 @@
-var config = {
+const config = {
     overwrite: true,
     schema: "http://localhost:4000",
     generates: {

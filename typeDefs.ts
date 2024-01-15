@@ -1,4 +1,4 @@
-const { gql } = require("apollo-server");
+import { gql } from "apollo-server";
 
 const typeDefinitions = gql`
   scalar JSON
@@ -548,4 +548,4 @@ const typeDefinitions = gql`
   }
 `;
 
-module.exports = typeDefinitions;
+export default typeDefinitions;

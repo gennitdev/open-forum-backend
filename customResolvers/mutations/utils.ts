@@ -1,9 +1,10 @@
-const { DateTime } = require("luxon");
-const math = require("mathjs");
+import { DateTime } from "luxon";
+import { User } from "../../src/generated/graphql";
+import math from "mathjs";
 
-export const getAccountAgeInMonths = (createdAt) => {
+export const getAccountAgeInMonths = (createdAt: Date) => {
   const now = DateTime.now();
-  const accountCreated = DateTime.fromJSDate(new Date(createdAt)); // Assuming createdAt is a JavaScript Date object
+  const accountCreated = DateTime.fromJSDate(new Date(createdAt)); 
   const diff = now.diff(accountCreated, ["months"]).months;
 
   // Rounding down to the nearest whole month
@@ -12,7 +13,7 @@ export const getAccountAgeInMonths = (createdAt) => {
   return accountAgeInMonths;
 };
 
-export const getWeightedVoteBonus = (user) => {
+export const getWeightedVoteBonus = (user: User) => {
   let weightedVoteBonus = 0;
   let accountAgeInMonths = getAccountAgeInMonths(user.createdAt);
   let commentKarma = 1;
