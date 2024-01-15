@@ -7,6 +7,9 @@ import path from "path";
 import dotenv from "dotenv";
 import pkg from '@neo4j/graphql-ogm';
 import getCustomResolvers from "./customResolvers.js";
+import { fileURLToPath } from 'url';
+// Convert the file URL to a directory path
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const { generate } = pkg;
 dotenv.config();
 import neo4j from "neo4j-driver";
@@ -43,7 +46,7 @@ REQUIRE (ec.eventId, ec.channelUniqueName) IS NODE KEY
 `;
 async function initializeServer() {
     try {
-        if (process.env.GENERATE_OGM_TYPES) {
+        if (process.env.GENERATE_OGM_TYPES === "true") {
             const outFile = path.join(__dirname, "ogm-types.ts");
             await generate({
                 ogm,
