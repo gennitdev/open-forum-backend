@@ -57,7 +57,6 @@ const upvoteCommentResolver = (input: Input) => {
         }
       `;
 
-      // @ts-ignore
       const commentResult = await Comment.find({
         where: {
           id: commentId,

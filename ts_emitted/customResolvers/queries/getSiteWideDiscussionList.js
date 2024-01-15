@@ -1,5 +1,12 @@
 import { getSiteWideDiscussionsQuery } from "../cypher/cypherQueries.js";
 import { timeFrameOptions } from "./utils.js";
+var timeFrameOptionKeys;
+(function (timeFrameOptionKeys) {
+    timeFrameOptionKeys["year"] = "year";
+    timeFrameOptionKeys["month"] = "month";
+    timeFrameOptionKeys["week"] = "week";
+    timeFrameOptionKeys["day"] = "day";
+})(timeFrameOptionKeys || (timeFrameOptionKeys = {}));
 const getResolver = (input) => {
     const { driver, Discussion } = input;
     return async (parent, args, context, info) => {
@@ -75,9 +82,7 @@ const getResolver = (input) => {
                     // weightedVotesCounts of the related DiscussionChannels.
                     // Treat a null weightedVotesCount as 0.
                     let selectedTimeFrame = timeFrameOptions.year.start;
-                    // @ts-ignore
                     if (timeFrameOptions[timeFrame]) {
-                        // @ts-ignore
                         selectedTimeFrame = timeFrameOptions[timeFrame].start;
                     }
                     const topDiscussionsResult = await session.run(getSiteWideDiscussionsQuery, {

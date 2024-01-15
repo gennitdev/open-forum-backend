@@ -57,7 +57,6 @@ const upvoteDiscussionChannelResolver = (input: Input) => {
         }
       `;
 
-      // @ts-ignore
       const discussionChannelResult = await DiscussionChannel.find({
         where: {
           id: discussionChannelId,

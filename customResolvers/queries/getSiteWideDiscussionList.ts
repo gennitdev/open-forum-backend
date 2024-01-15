@@ -6,6 +6,13 @@ type Input = {
   driver: any;
 };
 
+enum timeFrameOptionKeys {
+  year = "year",
+  month = "month",
+  week = "week",
+  day = "day",
+}
+
 type Args = {
   searchInput: string;
   selectedChannels: string[];
@@ -15,7 +22,7 @@ type Args = {
     limit: string;
     resultsOrder: string;
     sort: string;
-    timeFrame: string;
+    timeFrame: timeFrameOptionKeys;
   };
 };
 
@@ -94,9 +101,11 @@ const getResolver = (input: Input) => {
             }
           );
 
-          const newDiscussions = newDiscussionResult.records.map((record: any) => {
-            return record.get("discussion");
-          });
+          const newDiscussions = newDiscussionResult.records.map(
+            (record: any) => {
+              return record.get("discussion");
+            }
+          );
 
           return {
             discussions: newDiscussions,
@@ -108,9 +117,7 @@ const getResolver = (input: Input) => {
           // Treat a null weightedVotesCount as 0.
           let selectedTimeFrame = timeFrameOptions.year.start;
 
-          // @ts-ignore
           if (timeFrameOptions[timeFrame]) {
-            // @ts-ignore
             selectedTimeFrame = timeFrameOptions[timeFrame].start;
           }
           const topDiscussionsResult = await session.run(
@@ -127,9 +134,11 @@ const getResolver = (input: Input) => {
             }
           );
 
-          const discussions = topDiscussionsResult.records.map((record: any) => {
-            return record.get("discussion");
-          });
+          const discussions = topDiscussionsResult.records.map(
+            (record: any) => {
+              return record.get("discussion");
+            }
+          );
 
           return {
             discussions,
@@ -152,9 +161,11 @@ const getResolver = (input: Input) => {
             }
           );
 
-          const hotDiscussions = hotDiscussionsResult.records.map((record: any) => {
-            return record.get("discussion");
-          });
+          const hotDiscussions = hotDiscussionsResult.records.map(
+            (record: any) => {
+              return record.get("discussion");
+            }
+          );
 
           return {
             discussions: hotDiscussions,

@@ -8,8 +8,6 @@ const getResolver = (input) => {
         }
         try {
             // Update the event
-            // ignore TS errors
-            // @ts-ignore
             await Event.update({
                 where: eventWhere,
                 update: eventUpdateInput,
@@ -84,7 +82,6 @@ const getResolver = (input) => {
           }
         }
       `;
-            // @ts-ignore
             const result = await Event.find({
                 where: {
                     id: updatedEventId,

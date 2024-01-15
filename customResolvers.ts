@@ -30,8 +30,6 @@ import { ModelMap } from "./ogm-types.js";
 
 const { OGM } = pkg;
 
-// const { ModelMap } = "./ogm-types"; // this file will be auto-generated using 'generate'
-
 export default function (driver: any) {
   const ogm = new OGM<ModelMap>({
     typeDefs,

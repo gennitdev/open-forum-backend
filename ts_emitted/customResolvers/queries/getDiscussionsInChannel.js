@@ -47,6 +47,13 @@ const discussionChannelSelectionSet = `
       }
   }
   `;
+var timeFrameOptionKeys;
+(function (timeFrameOptionKeys) {
+    timeFrameOptionKeys["year"] = "year";
+    timeFrameOptionKeys["month"] = "month";
+    timeFrameOptionKeys["week"] = "week";
+    timeFrameOptionKeys["day"] = "day";
+})(timeFrameOptionKeys || (timeFrameOptionKeys = {}));
 const getResolver = (input) => {
     const { driver, DiscussionChannel } = input;
     return async (parent, args, context, info) => {
@@ -119,15 +126,13 @@ const getResolver = (input) => {
                     });
                     return {
                         discussionChannels: result,
-                        aggregateDiscussionChannelsCount: aggregateCount
+                        aggregateDiscussionChannelsCount: aggregateCount,
                     };
                 case "top":
                     // if sort is "top", get the DiscussionChannels sorted by weightedVotesCount.
                     // Treat a null weightedVotesCount as 0.
                     let selectedTimeFrame = null;
-                    // @ts-ignore
                     if (timeFrameOptions[timeFrame]) {
-                        // @ts-ignore
                         selectedTimeFrame = timeFrameOptions[timeFrame].start;
                     }
                     const topDiscussionChannelsResult = await session.run(getDiscussionChannelsQuery, {
@@ -144,7 +149,7 @@ const getResolver = (input) => {
                     });
                     return {
                         discussionChannels: topDiscussionChannels,
-                        aggregateDiscussionChannelsCount: aggregateCount
+                        aggregateDiscussionChannelsCount: aggregateCount,
                     };
                 default:
                     // By default, and if sort is "hot", get the DiscussionChannels sorted by hot,
@@ -163,7 +168,7 @@ const getResolver = (input) => {
                     });
                     return {
                         discussionChannels: hotDiscussionChannels,
-                        aggregateDiscussionChannelsCount: aggregateCount
+                        aggregateDiscussionChannelsCount: aggregateCount,
                     };
             }
         }

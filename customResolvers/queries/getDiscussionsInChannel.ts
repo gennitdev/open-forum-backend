@@ -1,6 +1,9 @@
-import { DiscussionChannel, DiscussionChannelWhere } from "../../src/generated/graphql";
+import {
+  DiscussionChannel,
+  DiscussionChannelWhere,
+} from "../../src/generated/graphql";
 import { getDiscussionChannelsQuery } from "../cypher/cypherQueries.js";
-import  { timeFrameOptions } from "./utils.js";
+import { timeFrameOptions } from "./utils.js";
 
 const discussionChannelSelectionSet = `
   {
@@ -50,6 +53,13 @@ const discussionChannelSelectionSet = `
   }
   `;
 
+enum timeFrameOptionKeys {
+  year = "year",
+  month = "month",
+  week = "week",
+  day = "day",
+}
+
 type Input = {
   DiscussionChannel: any;
   driver: any;
@@ -61,7 +71,7 @@ type Args = {
     offset: string;
     limit: string;
     sort: string;
-    timeFrame: string;
+    timeFrame: timeFrameOptionKeys;
   };
   selectedTags: string[];
   searchInput: string;
@@ -81,14 +91,15 @@ const getResolver = (input: Input) => {
           channelUniqueName,
         },
       ];
-      const aggregateDiscussionChannelsCountResult = await DiscussionChannel.aggregate({
-        where: {
-          AND: filters,
-        },
-        aggregate: {
-          count: true,
-        },
-      });
+      const aggregateDiscussionChannelsCountResult =
+        await DiscussionChannel.aggregate({
+          where: {
+            AND: filters,
+          },
+          aggregate: {
+            count: true,
+          },
+        });
 
       const aggregateCount = aggregateDiscussionChannelsCountResult?.count || 0;
 
@@ -103,8 +114,6 @@ const getResolver = (input: Input) => {
 
       switch (sort) {
         case "new":
-        
-
           if (searchInput) {
             filters.push({
               OR: [
@@ -149,7 +158,7 @@ const getResolver = (input: Input) => {
 
           return {
             discussionChannels: result,
-            aggregateDiscussionChannelsCount: aggregateCount
+            aggregateDiscussionChannelsCount: aggregateCount,
           };
 
         case "top":
@@ -157,9 +166,7 @@ const getResolver = (input: Input) => {
           // Treat a null weightedVotesCount as 0.
           let selectedTimeFrame = null;
 
-          // @ts-ignore
           if (timeFrameOptions[timeFrame]) {
-            // @ts-ignore
             selectedTimeFrame = timeFrameOptions[timeFrame].start;
           }
 
@@ -184,7 +191,7 @@ const getResolver = (input: Input) => {
 
           return {
             discussionChannels: topDiscussionChannels,
-            aggregateDiscussionChannelsCount: aggregateCount
+            aggregateDiscussionChannelsCount: aggregateCount,
           };
         default:
           // By default, and if sort is "hot", get the DiscussionChannels sorted by hot,
@@ -210,7 +217,7 @@ const getResolver = (input: Input) => {
 
           return {
             discussionChannels: hotDiscussionChannels,
-            aggregateDiscussionChannelsCount: aggregateCount
+            aggregateDiscussionChannelsCount: aggregateCount,
           };
       }
     } catch (error: any) {

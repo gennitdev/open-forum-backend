@@ -22,7 +22,6 @@ import getSubredditResolver from "./customResolvers/queries/getSubreddit.js";
 import getSubredditSidebar from "./customResolvers/queries/getSubredditSidebar.js";
 import createSignedStorageURL from "./customResolvers/mutations/createSignedStorageURL.js";
 const { OGM } = pkg;
-// const { ModelMap } = "./ogm-types"; // this file will be auto-generated using 'generate'
 export default function (driver) {
     const ogm = new OGM({
         typeDefs,
