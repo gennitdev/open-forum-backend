@@ -26,17 +26,14 @@ import undoUpvoteDiscussionChannel from "./customResolvers/mutations/undoUpvoteD
 import getSubredditResolver from "./customResolvers/queries/getSubreddit.js";
 import getSubredditSidebar from "./customResolvers/queries/getSubredditSidebar.js";
 import createSignedStorageURL from "./customResolvers/mutations/createSignedStorageURL.js";
+import { ModelMap } from "./ogm-types.js";
 
 const { OGM } = pkg;
 
 // const { ModelMap } = "./ogm-types"; // this file will be auto-generated using 'generate'
 
 export default function (driver: any) {
-  // const ogm = new OGM<ModelMap>({
-  //   typeDefs,
-  //   driver,
-  // });
-  const ogm = new OGM({
+  const ogm = new OGM<ModelMap>({
     typeDefs,
     driver,
   });

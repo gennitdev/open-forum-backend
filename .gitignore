@@ -13,3 +13,4 @@ plugins
 ssl
 config
 ts_emitted
+ogm-types.ts

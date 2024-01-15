@@ -24,10 +24,6 @@ import createSignedStorageURL from "./customResolvers/mutations/createSignedStor
 const { OGM } = pkg;
 // const { ModelMap } = "./ogm-types"; // this file will be auto-generated using 'generate'
 export default function (driver) {
-    // const ogm = new OGM<ModelMap>({
-    //   typeDefs,
-    //   driver,
-    // });
     const ogm = new OGM({
         typeDefs,
         driver,
