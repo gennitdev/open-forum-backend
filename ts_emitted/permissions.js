@@ -9,9 +9,11 @@ const permissionList = shield({
         createServerRoles: allow, // will later restrict to admins
         createServerConfigs: allow, // will later restrict to admins
         updateServerConfigs: allow, // will later restrict to admins
+        createUsers: allow,
+        updateUsers: and(rules.isAuthenticatedAndVerified, or(rules.isAccountOwner, rules.isAdmin)),
+        createChannels: and(rules.isAuthenticatedAndVerified, rules.canCreateChannel),
         updateChannels: and(rules.isAuthenticatedAndVerified, or(rules.isChannelOwner, rules.isAdmin)),
         deleteChannels: and(rules.isAuthenticatedAndVerified, or(rules.isChannelOwner, rules.isAdmin)),
-        createChannels: and(rules.isAuthenticatedAndVerified, rules.canCreateChannel)
         // updateEvents: and(rules.verifiedEmail, or(rules.isEventOwner, rules.isAdmin)),
         // deleteEvents: and(rules.verifiedEmail, or(rules.isEventOwner, rules.isAdmin)),
         // createEvents: and(rules.verifiedEmail, rules.hasChannelPermission("createEvents"), rules.hasServerPermission("createEvents"),
@@ -19,7 +21,7 @@ const permissionList = shield({
         // updateDiscussions: and(rules.verifiedEmail, or(rules.isDiscussionOwner, rules.isAdmin)),
         // deleteDiscussions: and(rules.verifiedEmail, or(rules.isDiscussionOwner, rules.isAdmin)),
         // createDiscussions: and(rules.verifiedEmail, rules.hasChannelPermission("createDiscussions"), rules.hasServerPermission("createDiscussions"),
-        // same for EventChannels
+        // same for DiscussionChannels
         // uploadFile: and(rules.verifiedEmail, rules.hasChannelPermission("uploadFile"), rules.hasServerPermissions("uploadFile")),
         // upvoteComment: and(rules.verifiedEmail, rules.hasChannelPermission("upvoteComment")),
         // upvoteDiscussion: and(rules.verifiedEmail, rules.hasChannelPermission("upvoteDiscussion")),

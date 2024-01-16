@@ -17,8 +17,6 @@ const typeDefinitions = gql`
     ModerationDashboard: ModerationDashboard
       @relationship(type: "HAS_MODERATION_DASHBOARD", direction: OUT)
     Rules: [Rule!]! @relationship(type: "HAS_RULE", direction: OUT)
-    SuspendedUsers: [User!]!
-      @relationship(type: "SUSPENDED_FROM_CHANNEL", direction: IN)
     Admins: [User!]! @relationship(type: "ADMIN_OF_CHANNEL", direction: IN)
     Moderators: [ModerationProfile!]!
       @relationship(type: "MODERATOR_OF_CHANNEL", direction: IN)
@@ -29,6 +27,7 @@ const typeDefinitions = gql`
     DiscussionChannels: [DiscussionChannel!]!
       @relationship(type: "POSTED_IN_CHANNEL", direction: IN)
     Comments: [Comment!]! @relationship(type: "HAS_COMMENT", direction: OUT) # used for aggregated comment counts
+    DefaultChannelRole: ChannelRole @relationship(type: "HAS_DEFAULT_CHANNEL_ROLE", direction: OUT)
   }
 
   type DiscussionChannel {
@@ -503,12 +502,12 @@ const typeDefinitions = gql`
   }
 
   type ServerConfig {
-    serverName: String
+    serverName: String @unique
     serverDescription: String
     serverIconURL: String
-    defaultChannelRole: ChannelRole @relationship(type: "HAS_DEFAULT_CHANNEL_ROLE", direction: OUT)
-    defaultServerRole: ServerRole! @relationship(type: "HAS_DEFAULT_SERVER_ROLE", direction: OUT)
-    defaultModRole: ModServerRole @relationship(type: "HAS_DEFAULT_MOD_ROLE", direction: OUT)
+    DefaultChannelRole: ChannelRole @relationship(type: "HAS_DEFAULT_CHANNEL_ROLE", direction: OUT)
+    DefaultServerRole: ServerRole! @relationship(type: "HAS_DEFAULT_SERVER_ROLE", direction: OUT)
+    DefaultModRole: ModServerRole @relationship(type: "HAS_DEFAULT_MOD_ROLE", direction: OUT)
   }
 
   type Query {
