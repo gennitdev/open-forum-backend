@@ -25,6 +25,7 @@ type SetUserDataInput = {
     req: any;
   };
   getPermissionInfo: boolean;
+  checkSpecificChannel?: string;
 };
 
 export const setUserDataOnContext = async (input: SetUserDataInput) => {
@@ -67,7 +68,17 @@ export const setUserDataOnContext = async (input: SetUserDataInput) => {
           ServerRoles { 
             name
             canCreateChannel
-          } 
+          }
+          ChannelRoles ${
+            input.checkSpecificChannel
+              ? `(where: { channelName: "${input.checkSpecificChannel}" })`
+              : ""
+          } {
+            name
+            canCreateEvent
+            canCreateDiscussion
+            canCreateComment
+          }
         }`,
     });
   }

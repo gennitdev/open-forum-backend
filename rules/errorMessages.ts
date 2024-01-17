@@ -2,6 +2,9 @@ export const ERROR_MESSAGES = {
   generic: {
     noPermission: "You do not have permission to do that.",
   },
+  server: {
+    noServerPermission: "You don't have permission to do that.",
+  },
   channel: {
     notFound: "Channel not found.",
     notAuthenticated: "You must be logged in to do that.",
