@@ -32,10 +32,11 @@ const permissionList = shield({
     
       createEvents: deny, // create event should not be used because
       // event creation is handled by createEventWithChannelConnections.
+      createEventWithChannelConnections: rules.canCreateEvent,
 
       // updateEvents: and(rules.verifiedEmail, or(rules.isEventOwner, rules.isAdmin)),
       // deleteEvents: and(rules.verifiedEmail, or(rules.isEventOwner, rules.isAdmin)),
-      // createEventWithChannelConnections
+      
       // updateEventWithChannelConnections
       // same for EventChannels
   

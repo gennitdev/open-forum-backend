@@ -2,6 +2,12 @@ import { setUserDataOnContext } from "./userDataHelperFunctions.js";
 import { ERROR_MESSAGES } from "./errorMessages.js";
 import { ChannelModel } from "../ogm-types.js";
 
+export const ChannelPermissionChecks = {
+  CREATE_EVENT: "createEvent",
+  CREATE_DISCUSSION: "createDiscussion",
+  CREATE_COMMENT: "createComment",
+};
+
 type HasChannelPermissionInput = {
   permission: string;
   channelName: string;
@@ -156,18 +162,17 @@ export const hasChannelPermission: (
   // Check if the permission is allowed by the default
   //    server role.
   const serverRoleToCheck = usersServerRoles[0];
-  console.log(
-    "Checking if the default server role can create channels.",
-    serverRoleToCheck.canCreateChannel
-  );
-  if (permission === "createEvent") {
-    return serverRoleToCheck.canCreateEvent;
-  }
-  if (permission === "createDiscussion") {
+
+  if (permission === ChannelPermissionChecks.CREATE_DISCUSSION) {
     console.log("checking if the default server role can create discussions");
     return serverRoleToCheck.canCreateDiscussion;
   }
-  if (permission === "createComment") {
+  if (permission === ChannelPermissionChecks.CREATE_EVENT) {
+    console.log("checking if the default server role can create events");
+    return serverRoleToCheck.canCreateEvent;
+  }
+  if (permission === ChannelPermissionChecks.CREATE_COMMENT) {
+    console.log("checking if the default server role can create comments");
     return serverRoleToCheck.canCreateComment;
   }
   console.log("The action is not allowed by the default server role.");
