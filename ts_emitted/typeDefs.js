@@ -465,7 +465,8 @@ const typeDefinitions = gql `
   }
 
   type ChannelRole {
-    name: String @unique
+    id: ID! @id
+    name: String
     channelUniqueName: String
     description: String
     canCreateDiscussion: Boolean

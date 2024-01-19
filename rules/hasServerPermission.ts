@@ -1,7 +1,10 @@
 import { setUserDataOnContext } from "./userDataHelperFunctions.js";
 import { ERROR_MESSAGES } from "./errorMessages.js";
 
-export const hasServerPermission = async (permission: string, context: any) => {
+export const hasServerPermission: (
+  permission: string,
+  context: any
+) => Promise<Error | boolean> = async (permission, context) => {
   console.log(
     "has server permission check is running. checking for permission named ",
     permission
@@ -39,15 +42,13 @@ export const hasServerPermission = async (permission: string, context: any) => {
 
   console.log("Getting the default server role.");
   const ServerConfig = context.ogm.model("ServerConfig");
-  const serverConfig = await ServerConfig.find(
-    {
-      where: { serverName: process.env.SERVER_CONFIG_NAME },
-    },
-    `{ DefaultServerRole { 
+  const serverConfig = await ServerConfig.find({
+    where: { serverName: process.env.SERVER_CONFIG_NAME },
+    selectionSet: `{ DefaultServerRole { 
         canCreateChannel
       } 
-    }`
-  );
+    }`,
+  });
 
   if (!serverConfig || !serverConfig[0]) {
     return new Error(

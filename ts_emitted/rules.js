@@ -13,6 +13,28 @@ const canCreateChannel = rule({ cache: "contextual" })(async (parent, args, ctx,
     console.log("passed rule: can create channel");
     return true;
 });
+export const canCreateDiscussion = rule({ cache: "contextual" })(async (parent, args, ctx, info) => {
+    console.log(" can create discussion rule is running, args are ", args);
+    const channelModel = ctx.ogm.model("Channel");
+    const channelConnections = args.channelConnections;
+    console.log('discussion create input is ', args.discussionCreateInput);
+    console.log("channel connections are ", channelConnections);
+    for (const channelConnection of channelConnections) {
+        const hasPermissionToCreateDiscussions = await hasChannelPermission({
+            permission: "createDiscussion",
+            channelName: channelConnection,
+            context: ctx,
+            Channel: channelModel,
+        });
+        if (hasPermissionToCreateDiscussions instanceof Error) {
+            console.log('has channel permission returned error', hasPermissionToCreateDiscussions.message);
+            console.log("The user does not have permission to create discussions in this channel: ", channelConnection);
+            return hasPermissionToCreateDiscussions;
+        }
+    }
+    console.log("passed rule: can create discussion");
+    return true;
+});
 const isAdmin = rule({ cache: "contextual" })(async (parent, args, ctx, info) => {
     const { isAdmin } = ctx.user;
     console.log("passed rule: is admin");
@@ -22,6 +44,7 @@ const ruleList = {
     isChannelOwner,
     isAuthenticatedAndVerified,
     canCreateChannel,
+    canCreateDiscussion,
     hasChannelPermission,
     isAdmin,
     isAccountOwner,

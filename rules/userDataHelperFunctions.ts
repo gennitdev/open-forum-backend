@@ -29,14 +29,17 @@ type SetUserDataInput = {
 };
 
 export const setUserDataOnContext = async (input: SetUserDataInput) => {
+  console.log("set user data on context is running", input);
   const { context, getPermissionInfo } = input;
   const { ogm, req } = context;
   const token = req?.headers?.authorization || "";
   if (!token) {
+    console.log("no token found");
     return new Error(ERROR_MESSAGES.channel.notAuthenticated);
   }
   const decoded = jwt.decode(token.replace("Bearer ", ""));
   if (!decoded) {
+    console.log("could not decode token");
     return {
       req,
       ogm,
@@ -45,6 +48,7 @@ export const setUserDataOnContext = async (input: SetUserDataInput) => {
 
   // @ts-ignore
   if (!decoded?.email) {
+    console.log("could not find email in decoded token");
     return new Error(ERROR_MESSAGES.channel.notAuthenticated);
   }
 
@@ -53,34 +57,44 @@ export const setUserDataOnContext = async (input: SetUserDataInput) => {
   const Email = ogm.model("Email");
   const User = ogm.model("User");
 
+  console.log("email is ", email);
   const username = await getUserFromEmail(email, Email);
+
+  console.log("username is ", username);
 
   // Set the user data on the context so we can use it in other rules.
   let userData;
   if (!getPermissionInfo) {
+    console.log("not getting permission info");
     userData = await User.find({
       where: { username },
     });
   } else {
-    userData = await User.find({
-      where: { username },
-      selectionSet: `{ 
-          ServerRoles { 
-            name
-            canCreateChannel
-          }
-          ChannelRoles ${
-            input.checkSpecificChannel
-              ? `(where: { channelName: "${input.checkSpecificChannel}" })`
-              : ""
-          } {
-            name
-            canCreateEvent
-            canCreateDiscussion
-            canCreateComment
-          }
-        }`,
-    });
+    console.log("getting permission info");
+    try {
+      userData = await User.find({
+        where: { username },
+        selectionSet: `{ 
+            ServerRoles { 
+              name
+              canCreateChannel
+            }
+            ChannelRoles ${
+              input.checkSpecificChannel
+                ? `(where: { channelUniqueName: "${input.checkSpecificChannel}" })`
+                : ""
+            } {
+              name
+              canCreateEvent
+              canCreateDiscussion
+              canCreateComment
+            }
+          }`,
+      });
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+      return null;
+    }
   }
   console.log("found user data", userData);
 

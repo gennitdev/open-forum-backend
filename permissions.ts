@@ -21,17 +21,32 @@ const permissionList = shield({
       updateChannels: and(rules.isAuthenticatedAndVerified, or(rules.isChannelOwner, rules.isAdmin)),
       deleteChannels: and(rules.isAuthenticatedAndVerified, or(rules.isChannelOwner, rules.isAdmin)),
       
-  
-      // updateEvents: and(rules.verifiedEmail, or(rules.isEventOwner, rules.isAdmin)),
-      // deleteEvents: and(rules.verifiedEmail, or(rules.isEventOwner, rules.isAdmin)),
-      // createEvents: and(rules.verifiedEmail, rules.hasChannelPermission("createEvents"), rules.hasServerPermission("createEvents"),
-      // same for EventChannels
-  
+      createDiscussions: deny, // create discussion should not be used because
+      // discussion creation is handled by createDiscussionWithChannelConnections.
+      createDiscussionWithChannelConnections: rules.canCreateDiscussion,
       // updateDiscussions: and(rules.verifiedEmail, or(rules.isDiscussionOwner, rules.isAdmin)),
       // deleteDiscussions: and(rules.verifiedEmail, or(rules.isDiscussionOwner, rules.isAdmin)),
-      // createDiscussions: and(rules.verifiedEmail, rules.hasChannelPermission("createDiscussions"), rules.hasServerPermission("createDiscussions"),
+      // updateDiscussionWithChannelConnections
+      
       // same for DiscussionChannels
     
+      createEvents: deny, // create event should not be used because
+      // event creation is handled by createEventWithChannelConnections.
+
+      // updateEvents: and(rules.verifiedEmail, or(rules.isEventOwner, rules.isAdmin)),
+      // deleteEvents: and(rules.verifiedEmail, or(rules.isEventOwner, rules.isAdmin)),
+      // createEventWithChannelConnections
+      // updateEventWithChannelConnections
+      // same for EventChannels
+  
+             // createComment: and(rules.verifiedEmail, rules.hasChannelPermission("createComments"), rules.hasServerPermission("createComments"),
+      // updateComments: and(rules.verifiedEmail, or(rules.isCommentAuthor, rules.isAdmin)),
+      // deleteComments: and(rules.verifiedEmail, or(rules.isCommentAuthor, rules.isAdmin)),
+      // hideComments: updateComments: and(rules.verifiedEmail, or(rules.hasChannelModPermission("hideComments"), rules.isAdmin)),
+
+
+
+
   
       // uploadFile: and(rules.verifiedEmail, rules.hasChannelPermission("uploadFile"), rules.hasServerPermissions("uploadFile")),
   
@@ -41,10 +56,6 @@ const permissionList = shield({
       // downvoteDiscussion: and(rules.verifiedEmail, rules.hasChannelPermission("downvoteDiscussion")),
       // voteWithEmoji: and(rules.verifiedEmail, rules.hasChannelPermission("canVoteWithEmoji")),
   
-      // updateComments: and(rules.verifiedEmail, or(rules.isCommentAuthor, rules.isAdmin)),
-      // deleteComments: and(rules.verifiedEmail, or(rules.isCommentAuthor, rules.isAdmin)),
-      // hideComments: updateComments: and(rules.verifiedEmail, or(rules.hasChannelModPermission("hideComments"), rules.isAdmin)),
-      // createComment: and(rules.verifiedEmail, rules.hasChannelPermission("createComments"), rules.hasServerPermission("createComments"),
   
   // the rest need updating to the format "hasChannelPermissions" for things that can be suspended or revoked in fine grained roles.
       // canGiveFeedback: and(rules.verifiedEmail, rules.isNotSuspendedFromChannel, rules.isNotSuspendedFromServer),
@@ -64,6 +75,10 @@ const permissionList = shield({
       // to create a server role you must be an admin
   
            // same rules for Events and RecurringEvents
+
+
+
+// make sure all the mutations in custom resolvers have rules
     },
   });
   
