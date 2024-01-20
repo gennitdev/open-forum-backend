@@ -129,6 +129,7 @@ export const hasChannelPermission: (
         canCreateChannel
         canCreateEvent
         canCreateDiscussion
+        canCreateComment
       } 
     }`,
   });
@@ -165,15 +166,17 @@ export const hasChannelPermission: (
 
   if (permission === ChannelPermissionChecks.CREATE_DISCUSSION) {
     console.log("checking if the default server role can create discussions");
-    return serverRoleToCheck.canCreateDiscussion;
+    return !!serverRoleToCheck.canCreateDiscussion;
   }
   if (permission === ChannelPermissionChecks.CREATE_EVENT) {
     console.log("checking if the default server role can create events");
-    return serverRoleToCheck.canCreateEvent;
+    return !!serverRoleToCheck.canCreateEvent;
   }
   if (permission === ChannelPermissionChecks.CREATE_COMMENT) {
     console.log("checking if the default server role can create comments");
-    return serverRoleToCheck.canCreateComment;
+    console.log("server role to check is ", serverRoleToCheck);
+    console.log("can create comment is ", serverRoleToCheck.canCreateComment);
+    return !!serverRoleToCheck.canCreateComment;
   }
   console.log("The action is not allowed by the default server role.");
   return new Error(ERROR_MESSAGES.channel.noChannelPermission);

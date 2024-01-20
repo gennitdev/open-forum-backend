@@ -1,13 +1,14 @@
 import { rule } from "graphql-shield";
-import { isAuthenticatedAndVerified } from "./rules/userDataHelperFunctions.js";
-import { hasServerPermission } from "./rules/hasServerPermission.js";
-import { isChannelOwner, isAccountOwner } from "./rules/isOwner.js";
-import { hasChannelPermission } from "./rules/hasChannelPermission.js";
-import { ChannelPermissionChecks } from "./rules/hasChannelPermission.js";
+import { isAuthenticatedAndVerified } from "./userDataHelperFunctions.js";
+import { hasServerPermission } from "./hasServerPermission.js";
+import { isChannelOwner, isAccountOwner } from "./isOwner.js";
+import { hasChannelPermission } from "./hasChannelPermission.js";
+import { ChannelPermissionChecks } from "./hasChannelPermission.js";
 import {
+  CommentCreateInput,
   DiscussionCreateInput,
   EventCreateInput,
-} from "./src/generated/graphql.js";
+} from "../src/generated/graphql.js";
 
 const canCreateChannel = rule({ cache: "contextual" })(
   async (parent: any, args: any, ctx: any, info: any) => {
@@ -52,6 +53,16 @@ export const canCreateDiscussion = rule({ cache: "contextual" })(
         Channel: channelModel,
       });
 
+      if (!hasPermissionToCreateDiscussions) {
+        console.log(
+          "The user does not have permission to create discussions in this channel: ",
+          channelConnection
+        );
+        return new Error(
+          "The user does not have permission to create discussions in this channel."
+        );
+      }
+
       if (hasPermissionToCreateDiscussions instanceof Error) {
         console.log(
           "has channel permission returned error",
@@ -94,6 +105,16 @@ export const canCreateEvent = rule({ cache: "contextual" })(
         Channel: channelModel,
       });
 
+      if (!hasPermissionToCreateEvents) {
+        console.log(
+          "The user does not have permission to create evens in this channel: ",
+          channelConnection
+        );
+        return new Error(
+          "The user does not have permission to create evens in this channel."
+        );
+      }
+
       if (hasPermissionToCreateEvents instanceof Error) {
         console.log(
           "has channel permission returned error",
@@ -112,6 +133,36 @@ export const canCreateEvent = rule({ cache: "contextual" })(
   }
 );
 
+type CanCreateCommentArgs = {
+  commentCreateInput: CommentCreateInput;
+};
+
+export const canCreateComment = rule({ cache: "contextual" })(
+  async (parent: any, args: CanCreateCommentArgs, ctx: any, info: any) => {
+    console.log(" can create comment rule is running ", args);
+
+    const hasPermissionToCreateComments = await hasChannelPermission({
+      permission: ChannelPermissionChecks.CREATE_COMMENT,
+      channelName: "cats",
+      context: ctx,
+      Channel: ctx.ogm.model("Channel"),
+    });
+
+    if (!hasPermissionToCreateComments) {
+      console.log("The user does not have permission to create comments.");
+      return new Error("The user does not have permission to create comments.");
+    }
+
+    if (hasPermissionToCreateComments instanceof Error) {
+      console.log("The user does not have permission to create comments.");
+      return hasPermissionToCreateComments;
+    }
+
+    console.log("passed rule: can create comment");
+    return true;
+  }
+);
+
 const isAdmin = rule({ cache: "contextual" })(
   async (parent: any, args: any, ctx: any, info: any) => {
     const { isAdmin } = ctx.user;
@@ -124,6 +175,7 @@ const ruleList = {
   isChannelOwner,
   isAuthenticatedAndVerified,
   canCreateChannel,
+  canCreateComment,
   canCreateDiscussion,
   canCreateEvent,
   hasChannelPermission,
