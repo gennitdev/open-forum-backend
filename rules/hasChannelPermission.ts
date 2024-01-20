@@ -6,6 +6,9 @@ export const ChannelPermissionChecks = {
   CREATE_EVENT: "createEvent",
   CREATE_DISCUSSION: "createDiscussion",
   CREATE_COMMENT: "createComment",
+  UPDATE_EVENT: "updateEvent",
+  UPDATE_DISCUSSION: "updateDiscussion",
+  UPDATE_COMMENT: "updateComment",
 };
 
 type HasChannelPermissionInput = {
@@ -179,7 +182,7 @@ export const hasChannelPermission: (
     return !!serverRoleToCheck.canCreateComment;
   }
   console.log("The action is not allowed by the default server role.");
-  return new Error(ERROR_MESSAGES.channel.noChannelPermission);
+  return new Error(ERROR_MESSAGES.generic.noPermission);
 };
 
 type CheckChannelPermissionInput = {

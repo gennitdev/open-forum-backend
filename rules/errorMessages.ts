@@ -5,6 +5,12 @@ export const ERROR_MESSAGES = {
   server: {
     noServerPermission: "You don't have permission to do that.",
   },
+  discussion: {
+    noId: "You must provide a discussion id.",
+    noAuthor: "Could not find the author of this discussion.",
+    notOwner: "You must be the author of this discussion to do that.",
+    noUpdatePermission: "You do not have permission to update this discussion.",
+  },
   channel: {
     notFound: "Channel not found.",
     notAuthenticated: "You must be logged in to do that.",

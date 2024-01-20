@@ -1,7 +1,13 @@
 import { rule } from "graphql-shield";
 import { isAuthenticatedAndVerified } from "./userDataHelperFunctions.js";
 import { hasServerPermission } from "./hasServerPermission.js";
-import { isChannelOwner, isAccountOwner } from "./isOwner.js";
+import { 
+  isChannelOwner, 
+  isAccountOwner,
+  isDiscussionOwner,
+  isEventOwner,
+  isCommentOwner,
+} from "./isOwner.js";
 import { ChannelPermissionChecks, hasChannelPermission } from "./hasChannelPermission.js";
 import { checkChannelPermissions } from "./hasChannelPermission.js";
 import {
@@ -51,6 +57,53 @@ export const canCreateDiscussion = rule({ cache: "contextual" })(
     });
   }
 );
+
+type CanUpdateEventArgs = {
+  eventCreateInput: EventCreateInput;
+  channelConnections: string[];
+};
+
+export const canUpdateEvent = rule({ cache: "contextual" })(
+  async (parent: any, args: CanUpdateEventArgs, ctx: any, info: any) => {
+    console.log(" can update event rule is running, args are ", args);
+
+    const channelConnections = args.channelConnections;
+
+    console.log("event create input is ", args.eventCreateInput);
+
+    console.log("channel connections are ", channelConnections);
+
+    return checkChannelPermissions({
+      channelConnections,
+      context: ctx,
+      permissionCheck: ChannelPermissionChecks.UPDATE_EVENT,
+    });
+  }
+);
+
+
+// type CanUpdateCommentArgs = {
+//   input: CommentCreateInput[];
+// };
+
+// export const canUpdateComment = rule({ cache: "contextual" })(
+//   (parent: any, args: CanUpdateCommentArgs, ctx: any, info: any) => {
+//     console.log(" can update comment rule is running ", args);
+
+//     const { input } = args;
+//     const firstItemInInput = input[0];
+
+//     if (!firstItemInInput) {
+//       return new Error("No comment create input found.");
+//     }
+
+//     const { DiscussionChannel } = firstItemInInput;
+
+//     if (!DiscussionChannel) {
+//       return new Error("No discussion channel found.");
+//     }
+//   }
+// );
 
 type CanCreateEventArgs = {
   eventCreateInput: EventCreateInput;
@@ -143,11 +196,16 @@ const isAdmin = rule({ cache: "contextual" })(
 
 const ruleList = {
   isChannelOwner,
+  isDiscussionOwner,
+  isEventOwner,
+  isCommentOwner,
   isAuthenticatedAndVerified,
   canCreateChannel,
   canCreateComment,
   canCreateDiscussion,
   canCreateEvent,
+  canUpdateEvent,
+  // canUpdateComment,
   hasChannelPermission,
   isAdmin,
   isAccountOwner,

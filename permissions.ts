@@ -16,16 +16,13 @@ const permissionList = shield({
       // prevent users from making themselves admins or moderators but allow other fields to be updated by account owner
       updateUsers: and(rules.isAuthenticatedAndVerified, or(rules.isAccountOwner, rules.isAdmin)),
       
-      createChannels: and(
-        rules.isAuthenticatedAndVerified,
-        rules.canCreateChannel,
-      ),
-      updateChannels: and(rules.isAuthenticatedAndVerified, or(rules.isChannelOwner, rules.isAdmin)),
-      deleteChannels: and(rules.isAuthenticatedAndVerified, or(rules.isChannelOwner, rules.isAdmin)),
+      createChannels:rules.canCreateChannel,
+      updateChannels: or(rules.isChannelOwner, rules.isAdmin),
+      deleteChannels: or(rules.isChannelOwner, rules.isAdmin),
     
-      createDiscussionWithChannelConnections: rules.canCreateDiscussion,
+      createDiscussionWithChannelConnections: or(rules.canCreateDiscussion, rules.isAdmin),
+      updateDiscussionWithChannelConnections:  or(rules.isDiscussionOwner, rules.isAdmin),
       // deleteDiscussions: and(rules.verifiedEmail, or(rules.isDiscussionOwner, rules.isAdmin)),
-      // updateDiscussionWithChannelConnections
       
       createEventWithChannelConnections: rules.canCreateEvent,
       // deleteEvents: and(rules.verifiedEmail, or(rules.isEventOwner, rules.isAdmin)),
