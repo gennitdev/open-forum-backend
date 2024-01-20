@@ -181,3 +181,41 @@ export const hasChannelPermission: (
   console.log("The action is not allowed by the default server role.");
   return new Error(ERROR_MESSAGES.channel.noChannelPermission);
 };
+
+type CheckChannelPermissionInput = {
+  channelConnections: string[];
+  context: any;
+  permissionCheck: string;
+};
+
+
+// Helper function to check channel permissions
+export async function checkChannelPermissions(
+  input: CheckChannelPermissionInput
+) {
+  const { channelConnections, context, permissionCheck } = input;
+  const channelModel = context.ogm.model("Channel");
+
+  console.log('checking permissions for channel connections ', channelConnections)
+
+  for (const channelConnection of channelConnections) {
+    const permissionResult = await hasChannelPermission({
+      permission: permissionCheck,
+      channelName: channelConnection,
+      context: context,
+      Channel: channelModel,
+    });
+
+    if (!permissionResult) {
+      console.log(`The user does not have permission in this channel: ${channelConnection}`);
+      return new Error("The user does not have permission in this channel.");
+    }
+
+    if (permissionResult instanceof Error) {
+      console.log("Permission check returned error", permissionResult.message);
+      return permissionResult;
+    }
+  }
+
+  return true;
+}
