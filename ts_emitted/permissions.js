@@ -19,8 +19,8 @@ const permissionList = shield({
         updateDiscussionWithChannelConnections: or(rules.isDiscussionOwner, rules.isAdmin),
         // deleteDiscussions: and(rules.verifiedEmail, or(rules.isDiscussionOwner, rules.isAdmin)),
         createEventWithChannelConnections: rules.canCreateEvent,
+        updateEventWithChannelConnections: or(rules.isEventOwner, rules.isAdmin),
         // deleteEvents: and(rules.verifiedEmail, or(rules.isEventOwner, rules.isAdmin)),
-        // updateEventWithChannelConnections
         createComments: rules.canCreateComment,
         // updateComments: and(rules.verifiedEmail, or(rules.isCommentAuthor, rules.isAdmin)),
         // deleteComments: and(rules.verifiedEmail, or(rules.isCommentAuthor, rules.isAdmin)),

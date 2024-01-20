@@ -1,6 +1,6 @@
 import { rule } from "graphql-shield";
 import { ERROR_MESSAGES } from "../rules/errorMessages.js";
-import { ChannelWhere, Channel, Discussion, DiscussionWhere, DiscussionUpdateInput, } from "../src/generated/graphql.js";
+import { ChannelWhere, Channel, Discussion, Event, DiscussionWhere, DiscussionUpdateInput, EventWhere, EventUpdateInput, } from "../src/generated/graphql.js";
 import { setUserDataOnContext } from "./userDataHelperFunctions.js";
 
 type IsChannelOwnerInput = {
@@ -96,8 +96,6 @@ export const isDiscussionOwner = rule({ cache: "contextual" })(
     const { discussionWhere } = args;
     const { id: discussionId } = discussionWhere;
 
-    
-
     // set user data
     ctx.user = await setUserDataOnContext({
       context: ctx,
@@ -156,8 +154,73 @@ export const isDiscussionOwner = rule({ cache: "contextual" })(
   }
 );
 
+type IsEventOwnerInput = {
+  eventWhere: EventWhere;
+  eventUpdateInput: EventUpdateInput;
+  channelConnections: string[];
+  channelDisconnections: string[];
+};
+
 export const isEventOwner = rule({ cache: "contextual" })(
-  async (parent: any, args: any, ctx: any, info: any) => {
+  async (parent: any, args: IsEventOwnerInput, ctx: any, info: any) => {
+    console.log("is event owner rule is running", args)
+
+    const { eventWhere } = args;
+    const { id: eventId } = eventWhere;
+
+    // set user data
+    ctx.user = await setUserDataOnContext({
+      context: ctx,
+      getPermissionInfo: false,
+    });
+
+    console.log("set user data on context. user data is ", ctx.user);
+
+    let username = ctx.user.username;
+
+    console.log("username is ", username)
+    let ogm = ctx.ogm;
+    
+    console.log("event id is ", eventId)
+
+    if (!eventId) {
+      return new Error(ERROR_MESSAGES.event.noId);
+    }
+    const EventModel = ogm.model("Event");
+
+    // Get the event owner by using the OGM on the
+    // Event model.
+    const events: Event[] = await EventModel.find({
+      where: { id: eventId },
+      selectionSet: `{ 
+            Poster { 
+                username
+            } 
+      }`,
+    });
+
+    if (!events || events.length === 0) {
+      console.log("event not found");
+      return new Error(ERROR_MESSAGES.event.notFound);
+    }
+    const event = events[0];
+    console.log('fetched event data is ', event)
+
+    // Get the event author.
+    const eventOwner = event?.Poster?.username;
+
+    if (!eventOwner) {
+      console.log("event owner not found");
+      return new Error(ERROR_MESSAGES.event.noOwner);
+    }
+    console.log("event owner is ", eventOwner);
+    console.log('logged in user is ', username)
+
+    // Check if the user is in the list of channel owners.
+    if (!eventOwner === username) {
+      return new Error(ERROR_MESSAGES.event.notOwner);
+    }
+
     console.log("passed rule: is event owner");
     return true;
   }

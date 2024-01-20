@@ -11,6 +11,13 @@ export const ERROR_MESSAGES = {
     notOwner: "You must be the author of this discussion to do that.",
     noUpdatePermission: "You do not have permission to update this discussion.",
   },
+  event: {
+    noId: "You must provide an event id.",
+    notFound: "Event not found.",
+    noOwner: "Could not find the owner of this event.",
+    notOwner: "You must be the owner of this event to do that.",
+    noUpdatePermission: "You do not have permission to update this event.",
+  },
   channel: {
     notFound: "Channel not found.",
     notAuthenticated: "You must be logged in to do that.",
