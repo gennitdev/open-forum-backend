@@ -29,7 +29,6 @@ type SetUserDataInput = {
 };
 
 export const setUserDataOnContext = async (input: SetUserDataInput) => {
-  console.log("set user data on context is running", input);
   const { context, getPermissionInfo } = input;
   const { ogm, req } = context;
   const token = req?.headers?.authorization || "";
