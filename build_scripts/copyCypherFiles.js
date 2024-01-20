@@ -27,4 +27,4 @@ files.forEach(file => {
   }
 });
 
-console.log('Cypher files copied successfully!');
+console.log('Files copied successfully!');

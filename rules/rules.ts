@@ -18,7 +18,6 @@ import {
 
 const canCreateChannel = rule({ cache: "contextual" })(
   async (parent: any, args: any, ctx: any, info: any) => {
-    console.log(" can create channel rule is running ");
 
     const hasPermissionToCreateChannels = hasServerPermission(
       "createChannel",
@@ -26,11 +25,9 @@ const canCreateChannel = rule({ cache: "contextual" })(
     );
 
     if (hasPermissionToCreateChannels instanceof Error) {
-      console.log("The user does not have permission to create channels.");
       return hasPermissionToCreateChannels;
     }
 
-    console.log("passed rule: can create channel");
     return true;
   }
 );
@@ -42,13 +39,8 @@ type CanCreateDiscussionArgs = {
 
 export const canCreateDiscussion = rule({ cache: "contextual" })(
   async (parent: any, args: CanCreateDiscussionArgs, ctx: any, info: any) => {
-    console.log(" can create discussion rule is running, args are ", args);
 
     const channelConnections = args.channelConnections;
-
-    console.log("discussion create input is ", args.discussionCreateInput);
-
-    console.log("channel connections are ", channelConnections);
 
     return checkChannelPermissions({
       channelConnections,
@@ -65,13 +57,8 @@ type CanUpdateEventArgs = {
 
 export const canUpdateEvent = rule({ cache: "contextual" })(
   async (parent: any, args: CanUpdateEventArgs, ctx: any, info: any) => {
-    console.log(" can update event rule is running, args are ", args);
 
     const channelConnections = args.channelConnections;
-
-    console.log("event create input is ", args.eventCreateInput);
-
-    console.log("channel connections are ", channelConnections);
 
     return checkChannelPermissions({
       channelConnections,
@@ -88,13 +75,8 @@ type CanCreateEventArgs = {
 
 export const canCreateEvent = rule({ cache: "contextual" })(
   async (parent: any, args: CanCreateEventArgs, ctx: any, info: any) => {
-    console.log(" can create event rule is running, args are ", args);
 
     const channelConnections = args.channelConnections;
-
-    console.log("event create input is ", args.eventCreateInput);
-
-    console.log("channel connections are ", channelConnections);
 
     return checkChannelPermissions({
       channelConnections,
@@ -110,7 +92,6 @@ type CanCreateCommentArgs = {
 
 export const canCreateComment = rule({ cache: "contextual" })(
   async (parent: any, args: CanCreateCommentArgs, ctx: any, info: any) => {
-    console.log(" can create comment rule is running ", args);
 
     const { input } = args;
     const firstItemInInput = input[0];
@@ -124,10 +105,6 @@ export const canCreateComment = rule({ cache: "contextual" })(
     if (!DiscussionChannel) {
       return new Error("No discussion channel found.");
     }
-
-
-    console.log("comment create input is ", input);
-    console.log("discussion channel is ", DiscussionChannel);
 
     const discussionChannelId = DiscussionChannel.connect?.where?.node?.id;
 
@@ -146,8 +123,6 @@ export const canCreateComment = rule({ cache: "contextual" })(
       return new Error("No discussion channel found.");
     }
 
-    console.log("discussion channel is ", discussionChannel);
-
     const channelName = discussionChannel[0]?.channelUniqueName;
 
     if (!channelName) {
@@ -165,7 +140,6 @@ export const canCreateComment = rule({ cache: "contextual" })(
 const isAdmin = rule({ cache: "contextual" })(
   async (parent: any, args: any, ctx: any, info: any) => {
     const { isAdmin } = ctx.user;
-    console.log("passed rule: is admin");
     return isAdmin;
   }
 );

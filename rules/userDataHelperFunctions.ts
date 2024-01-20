@@ -33,12 +33,10 @@ export const setUserDataOnContext = async (input: SetUserDataInput) => {
   const { ogm, req } = context;
   const token = req?.headers?.authorization || "";
   if (!token) {
-    console.log("no token found");
     return new Error(ERROR_MESSAGES.channel.notAuthenticated);
   }
   const decoded = jwt.decode(token.replace("Bearer ", ""));
   if (!decoded) {
-    console.log("could not decode token");
     return {
       req,
       ogm,
@@ -47,7 +45,6 @@ export const setUserDataOnContext = async (input: SetUserDataInput) => {
 
   // @ts-ignore
   if (!decoded?.email) {
-    console.log("could not find email in decoded token");
     return new Error(ERROR_MESSAGES.channel.notAuthenticated);
   }
 
@@ -56,20 +53,15 @@ export const setUserDataOnContext = async (input: SetUserDataInput) => {
   const Email = ogm.model("Email");
   const User = ogm.model("User");
 
-  console.log("email is ", email);
   const username = await getUserFromEmail(email, Email);
-
-  console.log("username is ", username);
 
   // Set the user data on the context so we can use it in other rules.
   let userData;
   if (!getPermissionInfo) {
-    console.log("not getting permission info");
     userData = await User.find({
       where: { username },
     });
   } else {
-    console.log("getting permission info");
     try {
       userData = await User.find({
         where: { username },
@@ -95,21 +87,14 @@ export const setUserDataOnContext = async (input: SetUserDataInput) => {
       return null;
     }
   }
-  console.log("found user data", userData);
 
   if (userData && userData[0]) {
-    console.log("setting user data on context", {
-      username,
-      email_verified,
-      data: userData[0],
-    });
     return {
       username,
       email_verified,
       data: userData[0],
     };
   }
-  console.log("could not find user data, returning null");
   return null;
 };
 
@@ -127,8 +112,6 @@ export const isAuthenticatedAndVerified = rule({ cache: "contextual" })(
     if (!context.user.email_verified) {
       return new Error(ERROR_MESSAGES.channel.notVerified);
     }
-
-    console.log("passed rule: is authenticated and verified");
     return true;
   }
 );

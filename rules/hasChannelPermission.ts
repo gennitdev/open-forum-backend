@@ -22,8 +22,6 @@ export const hasChannelPermission: (
   input: HasChannelPermissionInput
 ) => Promise<Error | boolean> = async (input: HasChannelPermissionInput) => {
   const { permission, channelName, context, Channel } = input;
-  console.log("has channel permission rule is running");
-  // example of channel permission is CreateEvents.
 
   // 1. Check for server roles on the user object.
   context.user = await setUserDataOnContext({
@@ -31,8 +29,6 @@ export const hasChannelPermission: (
     getPermissionInfo: true,
     checkSpecificChannel: channelName,
   });
-
-  console.log("set user data on context. user data is ", context.user);
 
   const usersServerRoles = context.user?.data?.ServerRoles || [];
 
@@ -45,11 +41,6 @@ export const hasChannelPermission: (
       if (!serverRole[permission]) {
         // We check if the user has been suspended
         // from the server and reject the request if so.
-        console.log(
-          `The user has a server role that does not allow the action ${permission}`,
-          permission,
-          serverRole
-        );
         return new Error(ERROR_MESSAGES.server.noServerPermission);
       }
     }
@@ -59,24 +50,15 @@ export const hasChannelPermission: (
   // Get the list of channel roles on the user object.
   const channelRoles = context.user?.data?.ChannelRoles || [];
 
-  console.log("channel roles are ", channelRoles);
-
   if (channelRoles.length > 0) {
     for (const channelRole of channelRoles) {
       if (!channelRole[permission]) {
         // We check if the user has been suspended
         // from the channel and reject the request if so.
-        console.log(
-          `The user has a channel role that does not allow the action ${permission}`,
-          permission,
-          channelRole
-        );
         return new Error(ERROR_MESSAGES.server.noServerPermission);
       }
     }
   }
-
-  console.log("users server roles are ", usersServerRoles);
 
   // 4. If there are no channel roles on the user object,
   // get the default channel role. This is located on the
@@ -103,8 +85,6 @@ export const hasChannelPermission: (
     if (defaultChannelRole) {
       channelRoles.push(defaultChannelRole);
     }
-
-    console.log("default channel role is ", defaultChannelRole);
   }
 
   // Loop over the list of channel roles. They all
@@ -119,13 +99,7 @@ export const hasChannelPermission: (
 
   // 5. We check if the user has been suspended
   // from the server and reject the request if so.
-
-  console.log("Getting the default server role.");
   const ServerConfig = context.ogm.model("ServerConfig");
-
-  console.log("getting server config where:", {
-    where: { serverName: process.env.SERVER_CONFIG_NAME },
-  });
   const serverConfig = await ServerConfig.find({
     where: { serverName: process.env.SERVER_CONFIG_NAME },
     selectionSet: `{ DefaultServerRole { 
@@ -143,15 +117,11 @@ export const hasChannelPermission: (
     );
   }
 
-  console.log("server config is ", serverConfig);
-
   const defaultServerRole = serverConfig[0]?.DefaultServerRole;
 
   if (!defaultServerRole) {
     return new Error("Could not find the default server role.");
   }
-
-  console.log("Checking the default server role", defaultServerRole);
 
   usersServerRoles.push(defaultServerRole);
 
@@ -168,20 +138,14 @@ export const hasChannelPermission: (
   const serverRoleToCheck = usersServerRoles[0];
 
   if (permission === ChannelPermissionChecks.CREATE_DISCUSSION) {
-    console.log("checking if the default server role can create discussions");
     return !!serverRoleToCheck.canCreateDiscussion;
   }
   if (permission === ChannelPermissionChecks.CREATE_EVENT) {
-    console.log("checking if the default server role can create events");
     return !!serverRoleToCheck.canCreateEvent;
   }
   if (permission === ChannelPermissionChecks.CREATE_COMMENT) {
-    console.log("checking if the default server role can create comments");
-    console.log("server role to check is ", serverRoleToCheck);
-    console.log("can create comment is ", serverRoleToCheck.canCreateComment);
     return !!serverRoleToCheck.canCreateComment;
   }
-  console.log("The action is not allowed by the default server role.");
   return new Error(ERROR_MESSAGES.generic.noPermission);
 };
 
@@ -199,8 +163,6 @@ export async function checkChannelPermissions(
   const { channelConnections, context, permissionCheck } = input;
   const channelModel = context.ogm.model("Channel");
 
-  console.log('checking permissions for channel connections ', channelConnections)
-
   for (const channelConnection of channelConnections) {
     const permissionResult = await hasChannelPermission({
       permission: permissionCheck,
@@ -210,12 +172,10 @@ export async function checkChannelPermissions(
     });
 
     if (!permissionResult) {
-      console.log(`The user does not have permission in this channel: ${channelConnection}`);
       return new Error("The user does not have permission in this channel.");
     }
 
     if (permissionResult instanceof Error) {
-      console.log("Permission check returned error", permissionResult.message);
       return permissionResult;
     }
   }
