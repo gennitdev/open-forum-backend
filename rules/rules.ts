@@ -6,7 +6,7 @@ import {
   isAccountOwner,
   isDiscussionOwner,
   isEventOwner,
-  isCommentOwner,
+  isCommentAuthor,
 } from "./isOwner.js";
 import { ChannelPermissionChecks, hasChannelPermission } from "./hasChannelPermission.js";
 import { checkChannelPermissions } from "./hasChannelPermission.js";
@@ -80,30 +80,6 @@ export const canUpdateEvent = rule({ cache: "contextual" })(
     });
   }
 );
-
-
-// type CanUpdateCommentArgs = {
-//   input: CommentCreateInput[];
-// };
-
-// export const canUpdateComment = rule({ cache: "contextual" })(
-//   (parent: any, args: CanUpdateCommentArgs, ctx: any, info: any) => {
-//     console.log(" can update comment rule is running ", args);
-
-//     const { input } = args;
-//     const firstItemInInput = input[0];
-
-//     if (!firstItemInInput) {
-//       return new Error("No comment create input found.");
-//     }
-
-//     const { DiscussionChannel } = firstItemInInput;
-
-//     if (!DiscussionChannel) {
-//       return new Error("No discussion channel found.");
-//     }
-//   }
-// );
 
 type CanCreateEventArgs = {
   eventCreateInput: EventCreateInput;
@@ -198,14 +174,12 @@ const ruleList = {
   isChannelOwner,
   isDiscussionOwner,
   isEventOwner,
-  isCommentOwner,
+  isCommentAuthor,
   isAuthenticatedAndVerified,
   canCreateChannel,
   canCreateComment,
   canCreateDiscussion,
   canCreateEvent,
-  canUpdateEvent,
-  // canUpdateComment,
   hasChannelPermission,
   isAdmin,
   isAccountOwner,

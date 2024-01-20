@@ -9,21 +9,21 @@ const permissionList = shield({
         createServerRoles: allow, // will later restrict to admins
         createServerConfigs: allow, // will later restrict to admins
         updateServerConfigs: allow, // will later restrict to admins
-        createUsers: allow, // will later require email to not be suspended from server
-        // prevent users from making themselves admins or moderators but allow other fields to be updated by account owner
+        createUsers: allow,
+        // will prevent users from making themselves admins or moderators but allow other fields to be updated by account owner
         updateUsers: and(rules.isAuthenticatedAndVerified, or(rules.isAccountOwner, rules.isAdmin)),
         createChannels: rules.canCreateChannel,
         updateChannels: or(rules.isChannelOwner, rules.isAdmin),
         deleteChannels: or(rules.isChannelOwner, rules.isAdmin),
         createDiscussionWithChannelConnections: or(rules.canCreateDiscussion, rules.isAdmin),
         updateDiscussionWithChannelConnections: or(rules.isDiscussionOwner, rules.isAdmin),
-        // deleteDiscussions: and(rules.verifiedEmail, or(rules.isDiscussionOwner, rules.isAdmin)),
+        deleteDiscussions: or(rules.isDiscussionOwner, rules.isAdmin),
         createEventWithChannelConnections: rules.canCreateEvent,
         updateEventWithChannelConnections: or(rules.isEventOwner, rules.isAdmin),
-        // deleteEvents: and(rules.verifiedEmail, or(rules.isEventOwner, rules.isAdmin)),
+        deleteEvents: or(rules.isEventOwner, rules.isAdmin),
         createComments: rules.canCreateComment,
-        // updateComments: and(rules.verifiedEmail, or(rules.isCommentAuthor, rules.isAdmin)),
-        // deleteComments: and(rules.verifiedEmail, or(rules.isCommentAuthor, rules.isAdmin)),
+        updateComments: or(rules.isCommentAuthor, rules.isAdmin),
+        deleteComments: or(rules.isCommentAuthor, rules.isAdmin),
         // uploadFile: and(rules.verifiedEmail, rules.hasChannelPermission("uploadFile"), rules.hasServerPermissions("uploadFile")),
         // upvoteComment: and(rules.verifiedEmail, rules.hasChannelPermission("upvoteComment")),
         // upvoteDiscussion: and(rules.verifiedEmail, rules.hasChannelPermission("upvoteDiscussion")),

@@ -1,31 +1,26 @@
 import { rule } from "graphql-shield";
 import { ERROR_MESSAGES } from "../rules/errorMessages.js";
-import { ChannelWhere, Channel, Discussion, Event, DiscussionWhere, DiscussionUpdateInput, EventWhere, EventUpdateInput, } from "../src/generated/graphql.js";
+import {
+  ChannelWhere,
+  Channel,
+  Comment,
+  Discussion,
+  Event,
+  DiscussionWhere,
+  DiscussionUpdateInput,
+  EventWhere,
+  EventUpdateInput,
+  CommentWhere,
+} from "../src/generated/graphql.js";
 import { setUserDataOnContext } from "./userDataHelperFunctions.js";
 
 type IsChannelOwnerInput = {
   where: ChannelWhere;
 };
 
-
-// the args to isChannelOwner are the same as args to updateChannel
-
-// {
-//   where: { uniqueName: 'innhtdthdth' },
-//   update: {
-//     description: 'dthdth',
-//     displayName: '',
-//     channelIconURL: '',
-//     channelBannerURL: '',
-//     Tags: [ [Object] ],
-//     Admins: [ [Object] ]
-//   }
-// }
-
-
 export const isChannelOwner = rule({ cache: "contextual" })(
   async (parent: any, args: IsChannelOwnerInput, ctx: any, info: any) => {
-    console.log("is channel owner rule is running", args)
+    console.log("is channel owner rule is running", args);
 
     // set user data
     ctx.user = await setUserDataOnContext({
@@ -35,11 +30,11 @@ export const isChannelOwner = rule({ cache: "contextual" })(
     console.log("set user data on context. user data is ", ctx.user);
     let username = ctx.user.username;
 
-    console.log("username is ", username)
+    console.log("username is ", username);
     let ogm = ctx.ogm;
     const { where } = args;
     const { uniqueName } = where;
-    console.log("unique name is ", uniqueName)
+    console.log("unique name is ", uniqueName);
 
     if (!uniqueName) {
       return new Error(ERROR_MESSAGES.channel.notFound);
@@ -70,7 +65,7 @@ export const isChannelOwner = rule({ cache: "contextual" })(
     // Get the list of channel owners.
     const channelOwners = channel[0].Admins.map((admin) => admin.username);
     console.log("channel owners are ", channelOwners);
-    console.log('logged in user is ', username)
+    console.log("logged in user is ", username);
 
     // Check if the user is in the list of channel owners.
     if (!channelOwners.includes(username)) {
@@ -91,7 +86,7 @@ type IsDiscussionOwnerInput = {
 
 export const isDiscussionOwner = rule({ cache: "contextual" })(
   async (parent: any, args: IsDiscussionOwnerInput, ctx: any, info: any) => {
-    console.log("is discussion owner rule is running", args)
+    console.log("is discussion owner rule is running", args);
 
     const { discussionWhere } = args;
     const { id: discussionId } = discussionWhere;
@@ -106,10 +101,10 @@ export const isDiscussionOwner = rule({ cache: "contextual" })(
 
     let username = ctx.user.username;
 
-    console.log("username is ", username)
+    console.log("username is ", username);
     let ogm = ctx.ogm;
-    
-    console.log("discussion id is ", discussionId)
+
+    console.log("discussion id is ", discussionId);
 
     if (!discussionId) {
       return new Error(ERROR_MESSAGES.discussion.noId);
@@ -132,7 +127,7 @@ export const isDiscussionOwner = rule({ cache: "contextual" })(
       return new Error(ERROR_MESSAGES.channel.notFound);
     }
     const discussion = discussions[0];
-    console.log('fetched discussion data is ', discussion)
+    console.log("fetched discussion data is ", discussion);
 
     // Get the discussion author.
     const discussionOwner = discussion?.Author?.username;
@@ -142,7 +137,7 @@ export const isDiscussionOwner = rule({ cache: "contextual" })(
       return new Error(ERROR_MESSAGES.discussion.noAuthor);
     }
     console.log("discussion owner is ", discussionOwner);
-    console.log('logged in user is ', username)
+    console.log("logged in user is ", username);
 
     // Check if the user is in the list of channel owners.
     if (!discussionOwner === username) {
@@ -163,7 +158,7 @@ type IsEventOwnerInput = {
 
 export const isEventOwner = rule({ cache: "contextual" })(
   async (parent: any, args: IsEventOwnerInput, ctx: any, info: any) => {
-    console.log("is event owner rule is running", args)
+    console.log("is event owner rule is running", args);
 
     const { eventWhere } = args;
     const { id: eventId } = eventWhere;
@@ -178,10 +173,10 @@ export const isEventOwner = rule({ cache: "contextual" })(
 
     let username = ctx.user.username;
 
-    console.log("username is ", username)
+    console.log("username is ", username);
     let ogm = ctx.ogm;
-    
-    console.log("event id is ", eventId)
+
+    console.log("event id is ", eventId);
 
     if (!eventId) {
       return new Error(ERROR_MESSAGES.event.noId);
@@ -204,7 +199,7 @@ export const isEventOwner = rule({ cache: "contextual" })(
       return new Error(ERROR_MESSAGES.event.notFound);
     }
     const event = events[0];
-    console.log('fetched event data is ', event)
+    console.log("fetched event data is ", event);
 
     // Get the event author.
     const eventOwner = event?.Poster?.username;
@@ -214,7 +209,7 @@ export const isEventOwner = rule({ cache: "contextual" })(
       return new Error(ERROR_MESSAGES.event.noOwner);
     }
     console.log("event owner is ", eventOwner);
-    console.log('logged in user is ', username)
+    console.log("logged in user is ", username);
 
     // Check if the user is in the list of channel owners.
     if (!eventOwner === username) {
@@ -226,8 +221,75 @@ export const isEventOwner = rule({ cache: "contextual" })(
   }
 );
 
-export const isCommentOwner = rule({ cache: "contextual" })(
-  async (parent: any, args: any, ctx: any, info: any) => {
+type IsCommentAuthorInput = {
+  where: CommentWhere;
+  update: CommentWhere;
+};
+
+export const isCommentAuthor = rule({ cache: "contextual" })(
+  async (parent: any, args: IsCommentAuthorInput, ctx: any, info: any) => {
+    console.log("is comment owner rule is running", args);
+
+    const { where } = args;
+    const { id: commentId } = where;
+
+    // set user data
+    ctx.user = await setUserDataOnContext({
+      context: ctx,
+      getPermissionInfo: false,
+    });
+
+    console.log("set user data on context. user data is ", ctx.user);
+
+    let username = ctx.user.username;
+
+    console.log("username is ", username);
+    let ogm = ctx.ogm;
+
+    console.log("comment id is ", commentId);
+
+    if (!commentId) {
+      return new Error(ERROR_MESSAGES.comment.noId);
+    }
+    const CommentModel = ogm.model("Comment");
+
+    // Get the comment owner by using the OGM on the
+    // Comment model.
+
+    console.log("getting comment data");
+    const comments: Comment[] = await CommentModel.find({
+      where: { id: commentId },
+      selectionSet: `{ 
+        CommentAuthor {
+          ... on User {
+            username
+          }
+        }
+      }`,
+    });
+
+    if (!comments || comments.length === 0) {
+      console.log("comment not found");
+      return new Error(ERROR_MESSAGES.comment.notFound);
+    }
+    const comment = comments[0];
+    console.log("fetched comment data is ", comment);
+
+    // Get the comment author.
+    const commentOwner = comment?.CommentAuthor?.username;
+
+    if (!commentOwner) {
+      console.log("comment owner not found");
+      return new Error(ERROR_MESSAGES.comment.noOwner);
+    }
+    console.log("comment owner is ", commentOwner);
+    console.log("logged in user is ", username);
+
+    // Check if the user is the comment author.
+    if (!commentOwner === username) {
+      return new Error(ERROR_MESSAGES.comment.notOwner);
+    }
+
     console.log("passed rule: is comment owner");
     return true;
   }
