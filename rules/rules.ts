@@ -8,7 +8,7 @@ import {
   isEventOwner,
   isCommentAuthor,
 } from "./isOwner.js";
-import { ChannelPermissionChecks, hasChannelPermission } from "./hasChannelPermission.js";
+import { ChannelPermissionChecks, ServerPermissionChecks, hasChannelPermission } from "./hasChannelPermission.js";
 import { checkChannelPermissions } from "./hasChannelPermission.js";
 import {
   CommentCreateInput,
@@ -144,6 +144,27 @@ const isAdmin = rule({ cache: "contextual" })(
   }
 );
 
+
+const canUploadFile = rule({ cache: "contextual" })(
+  async (parent: any, args: any, ctx: any, info: any) => {
+    
+    const permissionResult = await hasServerPermission(
+      ServerPermissionChecks.UPLOAD_FILE,
+      ctx
+    );
+
+    if (!permissionResult) {
+      return false;
+    }
+
+    if (permissionResult instanceof Error) {
+      return permissionResult;
+    }
+
+    return true;
+  }
+);
+
 const ruleList = {
   isChannelOwner,
   isDiscussionOwner,
@@ -157,6 +178,12 @@ const ruleList = {
   hasChannelPermission,
   isAdmin,
   isAccountOwner,
+  canUploadFile,
+  // canUpvoteComment,
+  // canUpvoteDiscussion,
+  // canDownvoteComment,
+  // canDownvoteDiscussion,
+  // canVoteWithEmoji,
 };
 
 export default ruleList;

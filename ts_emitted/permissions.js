@@ -24,12 +24,12 @@ const permissionList = shield({
         createComments: rules.canCreateComment,
         updateComments: or(rules.isCommentAuthor, rules.isAdmin),
         deleteComments: or(rules.isCommentAuthor, rules.isAdmin),
-        // uploadFile: and(rules.verifiedEmail, rules.hasChannelPermission("uploadFile"), rules.hasServerPermissions("uploadFile")),
-        // upvoteComment: and(rules.verifiedEmail, rules.hasChannelPermission("upvoteComment")),
-        // upvoteDiscussion: and(rules.verifiedEmail, rules.hasChannelPermission("upvoteDiscussion")),
-        // downvoteComment: and(rules.verifiedEmail, rules.hasChannelPermission("downvoteComment")),
-        // downvoteDiscussion: and(rules.verifiedEmail, rules.hasChannelPermission("downvoteDiscussion")),
-        // voteWithEmoji: and(rules.verifiedEmail, rules.hasChannelPermission("canVoteWithEmoji")),
+        createSignedStorageURL: rules.canUploadFile,
+        // upvoteComment: rules.canUpvoteComment,
+        // upvoteDiscussion: rules.canUpvoteDiscussion,
+        // downvoteComment: rules.canDownvoteComment,
+        // downvoteDiscussion: rules.canDownvoteDiscussion,
+        // voteWithEmoji: rules.canVoteWithEmoji,
         // MOD PERMISSIONS
         // hideComments: updateComments: and(rules.verifiedEmail, or(rules.hasChannelModPermission("hideComments"), rules.isAdmin)),
         // the rest need updating to the format "hasChannelPermissions" for things that can be suspended or revoked in fine grained roles.

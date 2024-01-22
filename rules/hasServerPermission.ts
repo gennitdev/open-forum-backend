@@ -33,6 +33,7 @@ export const hasServerPermission: (
     where: { serverName: process.env.SERVER_CONFIG_NAME },
     selectionSet: `{ DefaultServerRole { 
         canCreateChannel
+        canUploadFile
       } 
     }`,
   });
@@ -64,6 +65,9 @@ export const hasServerPermission: (
   const serverRoleToCheck = usersServerRoles[0];
   if (permission === "createChannel") {
     return serverRoleToCheck.canCreateChannel;
+  }
+  if (permission === "uploadFile") {
+    return serverRoleToCheck.canUploadFile;
   }
   return new Error(ERROR_MESSAGES.channel.noChannelPermission);
 };

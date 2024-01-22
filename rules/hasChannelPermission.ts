@@ -2,6 +2,14 @@ import { setUserDataOnContext } from "./userDataHelperFunctions.js";
 import { ERROR_MESSAGES } from "./errorMessages.js";
 import { ChannelModel } from "../ogm-types.js";
 
+export const ServerPermissionChecks = {
+  CREATE_CHANNEL: "createChannel",
+  CREATE_SERVER_ROLE: "createServerRole",
+  CREATE_SERVER_CONFIGS: "createServerConfigs",
+  UPDATE_SERVER_CONFIGS: "updateServerConfigs",
+  UPLOAD_FILE: "uploadFile",
+};
+
 export const ChannelPermissionChecks = {
   CREATE_EVENT: "createEvent",
   CREATE_DISCUSSION: "createDiscussion",
@@ -9,19 +17,37 @@ export const ChannelPermissionChecks = {
   UPDATE_EVENT: "updateEvent",
   UPDATE_DISCUSSION: "updateDiscussion",
   UPDATE_COMMENT: "updateComment",
+  UPVOTE_COMMENT: "upvoteComment",
+  UPVOTE_DISCUSSION: "upvoteDiscussion",
+  DOWNVOTE_COMMENT: "downvoteComment",
+  DOWNVOTE_DISCUSSION: "downvoteDiscussion",
+  VOTE_WITH_EMOJI: "voteWithEmoji",
+  CREATE_CHANNEL_ROLE: "createChannelRole",
+  UPDATE_CHANNEL_ROLE: "updateChannelRole",
+};
+
+export const ChannelModPermissionChecks = {
+  HIDE_COMMENTS: "hideComments",
+  GIVE_FEEDBACK: "giveFeedback",
+  OPEN_CHANNEL_SUPPORT_TICKET: "openChannelSupportTicket",
+  CLOSE_CHANNEL_SUPPORT_TICKET: "closeChannelSupportTicket",
+  OPEN_SERVER_SUPPORT_TICKET: "openServerSupportTicket",
+  CLOSE_SERVER_SUPPORT_TICKET: "closeServerSupportTicket",
+  REPORT_CONTENT: "reportContent",
 };
 
 type HasChannelPermissionInput = {
   permission: string;
   channelName: string;
   context: any;
-  Channel: ChannelModel;
 };
 
 export const hasChannelPermission: (
   input: HasChannelPermissionInput
 ) => Promise<Error | boolean> = async (input: HasChannelPermissionInput) => {
-  const { permission, channelName, context, Channel } = input;
+  const { permission, channelName, context } = input;
+
+  const Channel = context.ogm.model("Channel");
 
   // 1. Check for server roles on the user object.
   context.user = await setUserDataOnContext({
@@ -75,6 +101,8 @@ export const hasChannelPermission: (
               canCreateEvent
               canCreateDiscussion
               canCreateComment
+              canUpvoteComment
+              canUpvoteDiscussion
             } 
           }`,
     });
@@ -161,14 +189,12 @@ export async function checkChannelPermissions(
   input: CheckChannelPermissionInput
 ) {
   const { channelConnections, context, permissionCheck } = input;
-  const channelModel = context.ogm.model("Channel");
 
   for (const channelConnection of channelConnections) {
     const permissionResult = await hasChannelPermission({
       permission: permissionCheck,
       channelName: channelConnection,
       context: context,
-      Channel: channelModel,
     });
 
     if (!permissionResult) {
