@@ -27,6 +27,9 @@ export type Channel = {
   Comments: Array<Comment>;
   CommentsAggregate?: Maybe<ChannelCommentCommentsAggregationSelection>;
   CommentsConnection: ChannelCommentsConnection;
+  DefaultChannelRole?: Maybe<ChannelRole>;
+  DefaultChannelRoleAggregate?: Maybe<ChannelChannelRoleDefaultChannelRoleAggregationSelection>;
+  DefaultChannelRoleConnection: ChannelDefaultChannelRoleConnection;
   DiscussionChannels: Array<DiscussionChannel>;
   DiscussionChannelsAggregate?: Maybe<ChannelDiscussionChannelDiscussionChannelsAggregationSelection>;
   DiscussionChannelsConnection: ChannelDiscussionChannelsConnection;
@@ -45,9 +48,6 @@ export type Channel = {
   Rules: Array<Rule>;
   RulesAggregate?: Maybe<ChannelRuleRulesAggregationSelection>;
   RulesConnection: ChannelRulesConnection;
-  SuspendedUsers: Array<User>;
-  SuspendedUsersAggregate?: Maybe<ChannelUserSuspendedUsersAggregationSelection>;
-  SuspendedUsersConnection: ChannelSuspendedUsersConnection;
   Tags: Array<Tag>;
   TagsAggregate?: Maybe<ChannelTagTagsAggregationSelection>;
   TagsConnection: ChannelTagsConnection;
@@ -103,6 +103,28 @@ export type ChannelCommentsConnectionArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<Array<ChannelCommentsConnectionSort>>;
   where?: InputMaybe<ChannelCommentsConnectionWhere>;
+};
+
+
+export type ChannelDefaultChannelRoleArgs = {
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  options?: InputMaybe<ChannelRoleOptions>;
+  where?: InputMaybe<ChannelRoleWhere>;
+};
+
+
+export type ChannelDefaultChannelRoleAggregateArgs = {
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  where?: InputMaybe<ChannelRoleWhere>;
+};
+
+
+export type ChannelDefaultChannelRoleConnectionArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<Array<ChannelDefaultChannelRoleConnectionSort>>;
+  where?: InputMaybe<ChannelDefaultChannelRoleConnectionWhere>;
 };
 
 
@@ -235,28 +257,6 @@ export type ChannelRulesConnectionArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<Array<ChannelRulesConnectionSort>>;
   where?: InputMaybe<ChannelRulesConnectionWhere>;
-};
-
-
-export type ChannelSuspendedUsersArgs = {
-  directed?: InputMaybe<Scalars['Boolean']['input']>;
-  options?: InputMaybe<UserOptions>;
-  where?: InputMaybe<UserWhere>;
-};
-
-
-export type ChannelSuspendedUsersAggregateArgs = {
-  directed?: InputMaybe<Scalars['Boolean']['input']>;
-  where?: InputMaybe<UserWhere>;
-};
-
-
-export type ChannelSuspendedUsersConnectionArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  directed?: InputMaybe<Scalars['Boolean']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  sort?: InputMaybe<Array<ChannelSuspendedUsersConnectionSort>>;
-  where?: InputMaybe<ChannelSuspendedUsersConnectionWhere>;
 };
 
 
@@ -585,6 +585,20 @@ export type ChannelChannelRelatedChannelsNodeAggregateSelection = {
   uniqueName: StringAggregateSelectionNonNullable;
 };
 
+export type ChannelChannelRoleDefaultChannelRoleAggregationSelection = {
+  __typename?: 'ChannelChannelRoleDefaultChannelRoleAggregationSelection';
+  count: Scalars['Int']['output'];
+  node?: Maybe<ChannelChannelRoleDefaultChannelRoleNodeAggregateSelection>;
+};
+
+export type ChannelChannelRoleDefaultChannelRoleNodeAggregateSelection = {
+  __typename?: 'ChannelChannelRoleDefaultChannelRoleNodeAggregateSelection';
+  channelUniqueName: StringAggregateSelectionNullable;
+  description: StringAggregateSelectionNullable;
+  id: IdAggregateSelectionNonNullable;
+  name: StringAggregateSelectionNullable;
+};
+
 export type ChannelCommentCommentsAggregationSelection = {
   __typename?: 'ChannelCommentCommentsAggregationSelection';
   count: Scalars['Int']['output'];
@@ -739,13 +753,13 @@ export type ChannelCommentsUpdateFieldInput = {
 export type ChannelConnectInput = {
   Admins?: InputMaybe<Array<ChannelAdminsConnectFieldInput>>;
   Comments?: InputMaybe<Array<ChannelCommentsConnectFieldInput>>;
+  DefaultChannelRole?: InputMaybe<ChannelDefaultChannelRoleConnectFieldInput>;
   DiscussionChannels?: InputMaybe<Array<ChannelDiscussionChannelsConnectFieldInput>>;
   EventChannels?: InputMaybe<Array<ChannelEventChannelsConnectFieldInput>>;
   ModerationDashboard?: InputMaybe<ChannelModerationDashboardConnectFieldInput>;
   Moderators?: InputMaybe<Array<ChannelModeratorsConnectFieldInput>>;
   RelatedChannels?: InputMaybe<Array<ChannelRelatedChannelsConnectFieldInput>>;
   Rules?: InputMaybe<Array<ChannelRulesConnectFieldInput>>;
-  SuspendedUsers?: InputMaybe<Array<ChannelSuspendedUsersConnectFieldInput>>;
   Tags?: InputMaybe<Array<ChannelTagsConnectFieldInput>>;
 };
 
@@ -753,7 +767,6 @@ export type ChannelConnectOrCreateInput = {
   Admins?: InputMaybe<Array<ChannelAdminsConnectOrCreateFieldInput>>;
   Moderators?: InputMaybe<Array<ChannelModeratorsConnectOrCreateFieldInput>>;
   RelatedChannels?: InputMaybe<Array<ChannelRelatedChannelsConnectOrCreateFieldInput>>;
-  SuspendedUsers?: InputMaybe<Array<ChannelSuspendedUsersConnectOrCreateFieldInput>>;
   Tags?: InputMaybe<Array<ChannelTagsConnectOrCreateFieldInput>>;
 };
 
@@ -768,13 +781,13 @@ export type ChannelConnectWhere = {
 export type ChannelCreateInput = {
   Admins?: InputMaybe<ChannelAdminsFieldInput>;
   Comments?: InputMaybe<ChannelCommentsFieldInput>;
+  DefaultChannelRole?: InputMaybe<ChannelDefaultChannelRoleFieldInput>;
   DiscussionChannels?: InputMaybe<ChannelDiscussionChannelsFieldInput>;
   EventChannels?: InputMaybe<ChannelEventChannelsFieldInput>;
   ModerationDashboard?: InputMaybe<ChannelModerationDashboardFieldInput>;
   Moderators?: InputMaybe<ChannelModeratorsFieldInput>;
   RelatedChannels?: InputMaybe<ChannelRelatedChannelsFieldInput>;
   Rules?: InputMaybe<ChannelRulesFieldInput>;
-  SuspendedUsers?: InputMaybe<ChannelSuspendedUsersFieldInput>;
   Tags?: InputMaybe<ChannelTagsFieldInput>;
   channelBannerURL?: InputMaybe<Scalars['String']['input']>;
   channelIconURL?: InputMaybe<Scalars['String']['input']>;
@@ -785,29 +798,152 @@ export type ChannelCreateInput = {
   uniqueName: Scalars['String']['input'];
 };
 
+export type ChannelDefaultChannelRoleAggregateInput = {
+  AND?: InputMaybe<Array<ChannelDefaultChannelRoleAggregateInput>>;
+  NOT?: InputMaybe<ChannelDefaultChannelRoleAggregateInput>;
+  OR?: InputMaybe<Array<ChannelDefaultChannelRoleAggregateInput>>;
+  count?: InputMaybe<Scalars['Int']['input']>;
+  count_GT?: InputMaybe<Scalars['Int']['input']>;
+  count_GTE?: InputMaybe<Scalars['Int']['input']>;
+  count_LT?: InputMaybe<Scalars['Int']['input']>;
+  count_LTE?: InputMaybe<Scalars['Int']['input']>;
+  node?: InputMaybe<ChannelDefaultChannelRoleNodeAggregationWhereInput>;
+};
+
+export type ChannelDefaultChannelRoleConnectFieldInput = {
+  /** Whether or not to overwrite any matching relationship with the new properties. */
+  overwrite?: Scalars['Boolean']['input'];
+  where?: InputMaybe<ChannelRoleConnectWhere>;
+};
+
+export type ChannelDefaultChannelRoleConnection = {
+  __typename?: 'ChannelDefaultChannelRoleConnection';
+  edges: Array<ChannelDefaultChannelRoleRelationship>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type ChannelDefaultChannelRoleConnectionSort = {
+  node?: InputMaybe<ChannelRoleSort>;
+};
+
+export type ChannelDefaultChannelRoleConnectionWhere = {
+  AND?: InputMaybe<Array<ChannelDefaultChannelRoleConnectionWhere>>;
+  NOT?: InputMaybe<ChannelDefaultChannelRoleConnectionWhere>;
+  OR?: InputMaybe<Array<ChannelDefaultChannelRoleConnectionWhere>>;
+  node?: InputMaybe<ChannelRoleWhere>;
+};
+
+export type ChannelDefaultChannelRoleCreateFieldInput = {
+  node: ChannelRoleCreateInput;
+};
+
+export type ChannelDefaultChannelRoleDeleteFieldInput = {
+  where?: InputMaybe<ChannelDefaultChannelRoleConnectionWhere>;
+};
+
+export type ChannelDefaultChannelRoleDisconnectFieldInput = {
+  where?: InputMaybe<ChannelDefaultChannelRoleConnectionWhere>;
+};
+
+export type ChannelDefaultChannelRoleFieldInput = {
+  connect?: InputMaybe<ChannelDefaultChannelRoleConnectFieldInput>;
+  create?: InputMaybe<ChannelDefaultChannelRoleCreateFieldInput>;
+};
+
+export type ChannelDefaultChannelRoleNodeAggregationWhereInput = {
+  AND?: InputMaybe<Array<ChannelDefaultChannelRoleNodeAggregationWhereInput>>;
+  NOT?: InputMaybe<ChannelDefaultChannelRoleNodeAggregationWhereInput>;
+  OR?: InputMaybe<Array<ChannelDefaultChannelRoleNodeAggregationWhereInput>>;
+  channelUniqueName_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  description_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  description_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  description_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  description_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  description_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  description_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  description_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  description_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  description_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  description_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  description_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  description_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  description_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  description_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  description_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  name_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  name_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  name_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  name_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  name_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  name_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  name_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  name_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  name_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  name_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  name_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  name_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  name_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  name_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  name_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type ChannelDefaultChannelRoleRelationship = {
+  __typename?: 'ChannelDefaultChannelRoleRelationship';
+  cursor: Scalars['String']['output'];
+  node: ChannelRole;
+};
+
+export type ChannelDefaultChannelRoleUpdateConnectionInput = {
+  node?: InputMaybe<ChannelRoleUpdateInput>;
+};
+
+export type ChannelDefaultChannelRoleUpdateFieldInput = {
+  connect?: InputMaybe<ChannelDefaultChannelRoleConnectFieldInput>;
+  create?: InputMaybe<ChannelDefaultChannelRoleCreateFieldInput>;
+  delete?: InputMaybe<ChannelDefaultChannelRoleDeleteFieldInput>;
+  disconnect?: InputMaybe<ChannelDefaultChannelRoleDisconnectFieldInput>;
+  update?: InputMaybe<ChannelDefaultChannelRoleUpdateConnectionInput>;
+  where?: InputMaybe<ChannelDefaultChannelRoleConnectionWhere>;
+};
+
 export type ChannelDeleteInput = {
   Admins?: InputMaybe<Array<ChannelAdminsDeleteFieldInput>>;
   Comments?: InputMaybe<Array<ChannelCommentsDeleteFieldInput>>;
+  DefaultChannelRole?: InputMaybe<ChannelDefaultChannelRoleDeleteFieldInput>;
   DiscussionChannels?: InputMaybe<Array<ChannelDiscussionChannelsDeleteFieldInput>>;
   EventChannels?: InputMaybe<Array<ChannelEventChannelsDeleteFieldInput>>;
   ModerationDashboard?: InputMaybe<ChannelModerationDashboardDeleteFieldInput>;
   Moderators?: InputMaybe<Array<ChannelModeratorsDeleteFieldInput>>;
   RelatedChannels?: InputMaybe<Array<ChannelRelatedChannelsDeleteFieldInput>>;
   Rules?: InputMaybe<Array<ChannelRulesDeleteFieldInput>>;
-  SuspendedUsers?: InputMaybe<Array<ChannelSuspendedUsersDeleteFieldInput>>;
   Tags?: InputMaybe<Array<ChannelTagsDeleteFieldInput>>;
 };
 
 export type ChannelDisconnectInput = {
   Admins?: InputMaybe<Array<ChannelAdminsDisconnectFieldInput>>;
   Comments?: InputMaybe<Array<ChannelCommentsDisconnectFieldInput>>;
+  DefaultChannelRole?: InputMaybe<ChannelDefaultChannelRoleDisconnectFieldInput>;
   DiscussionChannels?: InputMaybe<Array<ChannelDiscussionChannelsDisconnectFieldInput>>;
   EventChannels?: InputMaybe<Array<ChannelEventChannelsDisconnectFieldInput>>;
   ModerationDashboard?: InputMaybe<ChannelModerationDashboardDisconnectFieldInput>;
   Moderators?: InputMaybe<Array<ChannelModeratorsDisconnectFieldInput>>;
   RelatedChannels?: InputMaybe<Array<ChannelRelatedChannelsDisconnectFieldInput>>;
   Rules?: InputMaybe<Array<ChannelRulesDisconnectFieldInput>>;
-  SuspendedUsers?: InputMaybe<Array<ChannelSuspendedUsersDisconnectFieldInput>>;
   Tags?: InputMaybe<Array<ChannelTagsDisconnectFieldInput>>;
 };
 
@@ -1512,13 +1648,13 @@ export type ChannelRelatedChannelsUpdateFieldInput = {
 export type ChannelRelationInput = {
   Admins?: InputMaybe<Array<ChannelAdminsCreateFieldInput>>;
   Comments?: InputMaybe<Array<ChannelCommentsCreateFieldInput>>;
+  DefaultChannelRole?: InputMaybe<ChannelDefaultChannelRoleCreateFieldInput>;
   DiscussionChannels?: InputMaybe<Array<ChannelDiscussionChannelsCreateFieldInput>>;
   EventChannels?: InputMaybe<Array<ChannelEventChannelsCreateFieldInput>>;
   ModerationDashboard?: InputMaybe<ChannelModerationDashboardCreateFieldInput>;
   Moderators?: InputMaybe<Array<ChannelModeratorsCreateFieldInput>>;
   RelatedChannels?: InputMaybe<Array<ChannelRelatedChannelsCreateFieldInput>>;
   Rules?: InputMaybe<Array<ChannelRulesCreateFieldInput>>;
-  SuspendedUsers?: InputMaybe<Array<ChannelSuspendedUsersCreateFieldInput>>;
   Tags?: InputMaybe<Array<ChannelTagsCreateFieldInput>>;
 };
 
@@ -1532,19 +1668,19 @@ export type ChannelRole = {
   canUploadFile?: Maybe<Scalars['Boolean']['output']>;
   canUpvoteComment?: Maybe<Scalars['Boolean']['output']>;
   canUpvoteDiscussion?: Maybe<Scalars['Boolean']['output']>;
+  channelUniqueName?: Maybe<Scalars['String']['output']>;
   description?: Maybe<Scalars['String']['output']>;
+  id: Scalars['ID']['output'];
   name?: Maybe<Scalars['String']['output']>;
 };
 
 export type ChannelRoleAggregateSelection = {
   __typename?: 'ChannelRoleAggregateSelection';
+  channelUniqueName: StringAggregateSelectionNullable;
   count: Scalars['Int']['output'];
   description: StringAggregateSelectionNullable;
+  id: IdAggregateSelectionNonNullable;
   name: StringAggregateSelectionNullable;
-};
-
-export type ChannelRoleConnectOrCreateWhere = {
-  node: ChannelRoleUniqueWhere;
 };
 
 export type ChannelRoleConnectWhere = {
@@ -1560,6 +1696,7 @@ export type ChannelRoleCreateInput = {
   canUploadFile?: InputMaybe<Scalars['Boolean']['input']>;
   canUpvoteComment?: InputMaybe<Scalars['Boolean']['input']>;
   canUpvoteDiscussion?: InputMaybe<Scalars['Boolean']['input']>;
+  channelUniqueName?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
 };
@@ -1568,19 +1705,6 @@ export type ChannelRoleEdge = {
   __typename?: 'ChannelRoleEdge';
   cursor: Scalars['String']['output'];
   node: ChannelRole;
-};
-
-export type ChannelRoleOnCreateInput = {
-  canCreateComment?: InputMaybe<Scalars['Boolean']['input']>;
-  canCreateDiscussion?: InputMaybe<Scalars['Boolean']['input']>;
-  canCreateEvent?: InputMaybe<Scalars['Boolean']['input']>;
-  canGiveFeedback?: InputMaybe<Scalars['Boolean']['input']>;
-  canUpdateChannel?: InputMaybe<Scalars['Boolean']['input']>;
-  canUploadFile?: InputMaybe<Scalars['Boolean']['input']>;
-  canUpvoteComment?: InputMaybe<Scalars['Boolean']['input']>;
-  canUpvoteDiscussion?: InputMaybe<Scalars['Boolean']['input']>;
-  description?: InputMaybe<Scalars['String']['input']>;
-  name?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type ChannelRoleOptions = {
@@ -1600,12 +1724,10 @@ export type ChannelRoleSort = {
   canUploadFile?: InputMaybe<SortDirection>;
   canUpvoteComment?: InputMaybe<SortDirection>;
   canUpvoteDiscussion?: InputMaybe<SortDirection>;
+  channelUniqueName?: InputMaybe<SortDirection>;
   description?: InputMaybe<SortDirection>;
+  id?: InputMaybe<SortDirection>;
   name?: InputMaybe<SortDirection>;
-};
-
-export type ChannelRoleUniqueWhere = {
-  name?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type ChannelRoleUpdateInput = {
@@ -1617,6 +1739,7 @@ export type ChannelRoleUpdateInput = {
   canUploadFile?: InputMaybe<Scalars['Boolean']['input']>;
   canUpvoteComment?: InputMaybe<Scalars['Boolean']['input']>;
   canUpvoteDiscussion?: InputMaybe<Scalars['Boolean']['input']>;
+  channelUniqueName?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
 };
@@ -1633,12 +1756,23 @@ export type ChannelRoleWhere = {
   canUploadFile?: InputMaybe<Scalars['Boolean']['input']>;
   canUpvoteComment?: InputMaybe<Scalars['Boolean']['input']>;
   canUpvoteDiscussion?: InputMaybe<Scalars['Boolean']['input']>;
+  channelUniqueName?: InputMaybe<Scalars['String']['input']>;
+  channelUniqueName_CONTAINS?: InputMaybe<Scalars['String']['input']>;
+  channelUniqueName_ENDS_WITH?: InputMaybe<Scalars['String']['input']>;
+  channelUniqueName_IN?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  channelUniqueName_MATCHES?: InputMaybe<Scalars['String']['input']>;
+  channelUniqueName_STARTS_WITH?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   description_CONTAINS?: InputMaybe<Scalars['String']['input']>;
   description_ENDS_WITH?: InputMaybe<Scalars['String']['input']>;
   description_IN?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   description_MATCHES?: InputMaybe<Scalars['String']['input']>;
   description_STARTS_WITH?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  id_CONTAINS?: InputMaybe<Scalars['ID']['input']>;
+  id_ENDS_WITH?: InputMaybe<Scalars['ID']['input']>;
+  id_IN?: InputMaybe<Array<Scalars['ID']['input']>>;
+  id_STARTS_WITH?: InputMaybe<Scalars['ID']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   name_CONTAINS?: InputMaybe<Scalars['String']['input']>;
   name_ENDS_WITH?: InputMaybe<Scalars['String']['input']>;
@@ -1786,283 +1920,6 @@ export type ChannelSort = {
   uniqueName?: InputMaybe<SortDirection>;
 };
 
-export type ChannelSuspendedUsersAggregateInput = {
-  AND?: InputMaybe<Array<ChannelSuspendedUsersAggregateInput>>;
-  NOT?: InputMaybe<ChannelSuspendedUsersAggregateInput>;
-  OR?: InputMaybe<Array<ChannelSuspendedUsersAggregateInput>>;
-  count?: InputMaybe<Scalars['Int']['input']>;
-  count_GT?: InputMaybe<Scalars['Int']['input']>;
-  count_GTE?: InputMaybe<Scalars['Int']['input']>;
-  count_LT?: InputMaybe<Scalars['Int']['input']>;
-  count_LTE?: InputMaybe<Scalars['Int']['input']>;
-  node?: InputMaybe<ChannelSuspendedUsersNodeAggregationWhereInput>;
-};
-
-export type ChannelSuspendedUsersConnectFieldInput = {
-  connect?: InputMaybe<Array<UserConnectInput>>;
-  /** Whether or not to overwrite any matching relationship with the new properties. */
-  overwrite?: Scalars['Boolean']['input'];
-  where?: InputMaybe<UserConnectWhere>;
-};
-
-export type ChannelSuspendedUsersConnectOrCreateFieldInput = {
-  onCreate: ChannelSuspendedUsersConnectOrCreateFieldInputOnCreate;
-  where: UserConnectOrCreateWhere;
-};
-
-export type ChannelSuspendedUsersConnectOrCreateFieldInputOnCreate = {
-  node: UserOnCreateInput;
-};
-
-export type ChannelSuspendedUsersConnection = {
-  __typename?: 'ChannelSuspendedUsersConnection';
-  edges: Array<ChannelSuspendedUsersRelationship>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int']['output'];
-};
-
-export type ChannelSuspendedUsersConnectionSort = {
-  node?: InputMaybe<UserSort>;
-};
-
-export type ChannelSuspendedUsersConnectionWhere = {
-  AND?: InputMaybe<Array<ChannelSuspendedUsersConnectionWhere>>;
-  NOT?: InputMaybe<ChannelSuspendedUsersConnectionWhere>;
-  OR?: InputMaybe<Array<ChannelSuspendedUsersConnectionWhere>>;
-  node?: InputMaybe<UserWhere>;
-};
-
-export type ChannelSuspendedUsersCreateFieldInput = {
-  node: UserCreateInput;
-};
-
-export type ChannelSuspendedUsersDeleteFieldInput = {
-  delete?: InputMaybe<UserDeleteInput>;
-  where?: InputMaybe<ChannelSuspendedUsersConnectionWhere>;
-};
-
-export type ChannelSuspendedUsersDisconnectFieldInput = {
-  disconnect?: InputMaybe<UserDisconnectInput>;
-  where?: InputMaybe<ChannelSuspendedUsersConnectionWhere>;
-};
-
-export type ChannelSuspendedUsersFieldInput = {
-  connect?: InputMaybe<Array<ChannelSuspendedUsersConnectFieldInput>>;
-  connectOrCreate?: InputMaybe<Array<ChannelSuspendedUsersConnectOrCreateFieldInput>>;
-  create?: InputMaybe<Array<ChannelSuspendedUsersCreateFieldInput>>;
-};
-
-export type ChannelSuspendedUsersNodeAggregationWhereInput = {
-  AND?: InputMaybe<Array<ChannelSuspendedUsersNodeAggregationWhereInput>>;
-  DefaultEmojiSkinTone_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
-  DefaultEmojiSkinTone_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
-  DefaultEmojiSkinTone_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
-  DefaultEmojiSkinTone_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
-  DefaultEmojiSkinTone_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
-  DefaultEmojiSkinTone_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  DefaultEmojiSkinTone_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
-  DefaultEmojiSkinTone_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
-  DefaultEmojiSkinTone_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
-  DefaultEmojiSkinTone_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
-  DefaultEmojiSkinTone_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  DefaultEmojiSkinTone_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
-  DefaultEmojiSkinTone_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
-  DefaultEmojiSkinTone_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
-  DefaultEmojiSkinTone_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
-  NOT?: InputMaybe<ChannelSuspendedUsersNodeAggregationWhereInput>;
-  NotificationBundleInterval_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
-  NotificationBundleInterval_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
-  NotificationBundleInterval_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
-  NotificationBundleInterval_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
-  NotificationBundleInterval_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
-  NotificationBundleInterval_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  NotificationBundleInterval_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
-  NotificationBundleInterval_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
-  NotificationBundleInterval_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
-  NotificationBundleInterval_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
-  NotificationBundleInterval_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  NotificationBundleInterval_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
-  NotificationBundleInterval_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
-  NotificationBundleInterval_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
-  NotificationBundleInterval_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
-  OR?: InputMaybe<Array<ChannelSuspendedUsersNodeAggregationWhereInput>>;
-  PreferredTimeZone_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
-  PreferredTimeZone_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
-  PreferredTimeZone_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
-  PreferredTimeZone_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
-  PreferredTimeZone_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
-  PreferredTimeZone_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  PreferredTimeZone_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
-  PreferredTimeZone_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
-  PreferredTimeZone_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
-  PreferredTimeZone_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
-  PreferredTimeZone_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  PreferredTimeZone_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
-  PreferredTimeZone_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
-  PreferredTimeZone_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
-  PreferredTimeZone_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
-  bio_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
-  bio_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
-  bio_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
-  bio_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
-  bio_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
-  bio_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  bio_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
-  bio_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
-  bio_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
-  bio_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
-  bio_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  bio_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
-  bio_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
-  bio_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
-  bio_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
-  commentKarma_AVERAGE_EQUAL?: InputMaybe<Scalars['Float']['input']>;
-  commentKarma_AVERAGE_GT?: InputMaybe<Scalars['Float']['input']>;
-  commentKarma_AVERAGE_GTE?: InputMaybe<Scalars['Float']['input']>;
-  commentKarma_AVERAGE_LT?: InputMaybe<Scalars['Float']['input']>;
-  commentKarma_AVERAGE_LTE?: InputMaybe<Scalars['Float']['input']>;
-  commentKarma_MAX_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  commentKarma_MAX_GT?: InputMaybe<Scalars['Int']['input']>;
-  commentKarma_MAX_GTE?: InputMaybe<Scalars['Int']['input']>;
-  commentKarma_MAX_LT?: InputMaybe<Scalars['Int']['input']>;
-  commentKarma_MAX_LTE?: InputMaybe<Scalars['Int']['input']>;
-  commentKarma_MIN_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  commentKarma_MIN_GT?: InputMaybe<Scalars['Int']['input']>;
-  commentKarma_MIN_GTE?: InputMaybe<Scalars['Int']['input']>;
-  commentKarma_MIN_LT?: InputMaybe<Scalars['Int']['input']>;
-  commentKarma_MIN_LTE?: InputMaybe<Scalars['Int']['input']>;
-  commentKarma_SUM_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  commentKarma_SUM_GT?: InputMaybe<Scalars['Int']['input']>;
-  commentKarma_SUM_GTE?: InputMaybe<Scalars['Int']['input']>;
-  commentKarma_SUM_LT?: InputMaybe<Scalars['Int']['input']>;
-  commentKarma_SUM_LTE?: InputMaybe<Scalars['Int']['input']>;
-  createdAt_MAX_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MAX_GT?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MAX_GTE?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MAX_LT?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MAX_LTE?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MIN_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MIN_GT?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MIN_GTE?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MIN_LT?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MIN_LTE?: InputMaybe<Scalars['DateTime']['input']>;
-  discussionKarma_AVERAGE_EQUAL?: InputMaybe<Scalars['Float']['input']>;
-  discussionKarma_AVERAGE_GT?: InputMaybe<Scalars['Float']['input']>;
-  discussionKarma_AVERAGE_GTE?: InputMaybe<Scalars['Float']['input']>;
-  discussionKarma_AVERAGE_LT?: InputMaybe<Scalars['Float']['input']>;
-  discussionKarma_AVERAGE_LTE?: InputMaybe<Scalars['Float']['input']>;
-  discussionKarma_MAX_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  discussionKarma_MAX_GT?: InputMaybe<Scalars['Int']['input']>;
-  discussionKarma_MAX_GTE?: InputMaybe<Scalars['Int']['input']>;
-  discussionKarma_MAX_LT?: InputMaybe<Scalars['Int']['input']>;
-  discussionKarma_MAX_LTE?: InputMaybe<Scalars['Int']['input']>;
-  discussionKarma_MIN_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  discussionKarma_MIN_GT?: InputMaybe<Scalars['Int']['input']>;
-  discussionKarma_MIN_GTE?: InputMaybe<Scalars['Int']['input']>;
-  discussionKarma_MIN_LT?: InputMaybe<Scalars['Int']['input']>;
-  discussionKarma_MIN_LTE?: InputMaybe<Scalars['Int']['input']>;
-  discussionKarma_SUM_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  discussionKarma_SUM_GT?: InputMaybe<Scalars['Int']['input']>;
-  discussionKarma_SUM_GTE?: InputMaybe<Scalars['Int']['input']>;
-  discussionKarma_SUM_LT?: InputMaybe<Scalars['Int']['input']>;
-  discussionKarma_SUM_LTE?: InputMaybe<Scalars['Int']['input']>;
-  displayName_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
-  displayName_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
-  displayName_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
-  displayName_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
-  displayName_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
-  displayName_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  displayName_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
-  displayName_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
-  displayName_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
-  displayName_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
-  displayName_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  displayName_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
-  displayName_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
-  displayName_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
-  displayName_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
-  location_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
-  location_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
-  location_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
-  location_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
-  location_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
-  location_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  location_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
-  location_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
-  location_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
-  location_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
-  location_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  location_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
-  location_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
-  location_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
-  location_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
-  profilePicURL_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
-  profilePicURL_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
-  profilePicURL_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
-  profilePicURL_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
-  profilePicURL_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
-  profilePicURL_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  profilePicURL_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
-  profilePicURL_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
-  profilePicURL_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
-  profilePicURL_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
-  profilePicURL_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  profilePicURL_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
-  profilePicURL_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
-  profilePicURL_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
-  profilePicURL_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
-  pronouns_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
-  pronouns_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
-  pronouns_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
-  pronouns_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
-  pronouns_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
-  pronouns_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  pronouns_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
-  pronouns_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
-  pronouns_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
-  pronouns_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
-  pronouns_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  pronouns_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
-  pronouns_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
-  pronouns_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
-  pronouns_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
-  username_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
-  username_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
-  username_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
-  username_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
-  username_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
-  username_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  username_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
-  username_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
-  username_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
-  username_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
-  username_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  username_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
-  username_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
-  username_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
-  username_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
-};
-
-export type ChannelSuspendedUsersRelationship = {
-  __typename?: 'ChannelSuspendedUsersRelationship';
-  cursor: Scalars['String']['output'];
-  node: User;
-};
-
-export type ChannelSuspendedUsersUpdateConnectionInput = {
-  node?: InputMaybe<UserUpdateInput>;
-};
-
-export type ChannelSuspendedUsersUpdateFieldInput = {
-  connect?: InputMaybe<Array<ChannelSuspendedUsersConnectFieldInput>>;
-  connectOrCreate?: InputMaybe<Array<ChannelSuspendedUsersConnectOrCreateFieldInput>>;
-  create?: InputMaybe<Array<ChannelSuspendedUsersCreateFieldInput>>;
-  delete?: InputMaybe<Array<ChannelSuspendedUsersDeleteFieldInput>>;
-  disconnect?: InputMaybe<Array<ChannelSuspendedUsersDisconnectFieldInput>>;
-  update?: InputMaybe<ChannelSuspendedUsersUpdateConnectionInput>;
-  where?: InputMaybe<ChannelSuspendedUsersConnectionWhere>;
-};
-
 export type ChannelTagTagsAggregationSelection = {
   __typename?: 'ChannelTagTagsAggregationSelection';
   count: Scalars['Int']['output'];
@@ -2188,13 +2045,13 @@ export type ChannelUniqueWhere = {
 export type ChannelUpdateInput = {
   Admins?: InputMaybe<Array<ChannelAdminsUpdateFieldInput>>;
   Comments?: InputMaybe<Array<ChannelCommentsUpdateFieldInput>>;
+  DefaultChannelRole?: InputMaybe<ChannelDefaultChannelRoleUpdateFieldInput>;
   DiscussionChannels?: InputMaybe<Array<ChannelDiscussionChannelsUpdateFieldInput>>;
   EventChannels?: InputMaybe<Array<ChannelEventChannelsUpdateFieldInput>>;
   ModerationDashboard?: InputMaybe<ChannelModerationDashboardUpdateFieldInput>;
   Moderators?: InputMaybe<Array<ChannelModeratorsUpdateFieldInput>>;
   RelatedChannels?: InputMaybe<Array<ChannelRelatedChannelsUpdateFieldInput>>;
   Rules?: InputMaybe<Array<ChannelRulesUpdateFieldInput>>;
-  SuspendedUsers?: InputMaybe<Array<ChannelSuspendedUsersUpdateFieldInput>>;
   Tags?: InputMaybe<Array<ChannelTagsUpdateFieldInput>>;
   channelBannerURL?: InputMaybe<Scalars['String']['input']>;
   channelIconURL?: InputMaybe<Scalars['String']['input']>;
@@ -2213,28 +2070,6 @@ export type ChannelUserAdminsAggregationSelection = {
 
 export type ChannelUserAdminsNodeAggregateSelection = {
   __typename?: 'ChannelUserAdminsNodeAggregateSelection';
-  DefaultEmojiSkinTone: StringAggregateSelectionNullable;
-  NotificationBundleInterval: StringAggregateSelectionNullable;
-  PreferredTimeZone: StringAggregateSelectionNullable;
-  bio: StringAggregateSelectionNullable;
-  commentKarma: IntAggregateSelectionNullable;
-  createdAt: DateTimeAggregateSelectionNonNullable;
-  discussionKarma: IntAggregateSelectionNullable;
-  displayName: StringAggregateSelectionNullable;
-  location: StringAggregateSelectionNullable;
-  profilePicURL: StringAggregateSelectionNullable;
-  pronouns: StringAggregateSelectionNullable;
-  username: StringAggregateSelectionNonNullable;
-};
-
-export type ChannelUserSuspendedUsersAggregationSelection = {
-  __typename?: 'ChannelUserSuspendedUsersAggregationSelection';
-  count: Scalars['Int']['output'];
-  node?: Maybe<ChannelUserSuspendedUsersNodeAggregateSelection>;
-};
-
-export type ChannelUserSuspendedUsersNodeAggregateSelection = {
-  __typename?: 'ChannelUserSuspendedUsersNodeAggregateSelection';
   DefaultEmojiSkinTone: StringAggregateSelectionNullable;
   NotificationBundleInterval: StringAggregateSelectionNullable;
   PreferredTimeZone: StringAggregateSelectionNullable;
@@ -2285,6 +2120,11 @@ export type ChannelWhere = {
   Comments_SINGLE?: InputMaybe<CommentWhere>;
   /** Return Channels where some of the related Comments match this filter */
   Comments_SOME?: InputMaybe<CommentWhere>;
+  DefaultChannelRole?: InputMaybe<ChannelRoleWhere>;
+  DefaultChannelRoleAggregate?: InputMaybe<ChannelDefaultChannelRoleAggregateInput>;
+  DefaultChannelRoleConnection?: InputMaybe<ChannelDefaultChannelRoleConnectionWhere>;
+  DefaultChannelRoleConnection_NOT?: InputMaybe<ChannelDefaultChannelRoleConnectionWhere>;
+  DefaultChannelRole_NOT?: InputMaybe<ChannelRoleWhere>;
   DiscussionChannelsAggregate?: InputMaybe<ChannelDiscussionChannelsAggregateInput>;
   /** Return Channels where all of the related ChannelDiscussionChannelsConnections match this filter */
   DiscussionChannelsConnection_ALL?: InputMaybe<ChannelDiscussionChannelsConnectionWhere>;
@@ -2377,23 +2217,6 @@ export type ChannelWhere = {
   Rules_SINGLE?: InputMaybe<RuleWhere>;
   /** Return Channels where some of the related Rules match this filter */
   Rules_SOME?: InputMaybe<RuleWhere>;
-  SuspendedUsersAggregate?: InputMaybe<ChannelSuspendedUsersAggregateInput>;
-  /** Return Channels where all of the related ChannelSuspendedUsersConnections match this filter */
-  SuspendedUsersConnection_ALL?: InputMaybe<ChannelSuspendedUsersConnectionWhere>;
-  /** Return Channels where none of the related ChannelSuspendedUsersConnections match this filter */
-  SuspendedUsersConnection_NONE?: InputMaybe<ChannelSuspendedUsersConnectionWhere>;
-  /** Return Channels where one of the related ChannelSuspendedUsersConnections match this filter */
-  SuspendedUsersConnection_SINGLE?: InputMaybe<ChannelSuspendedUsersConnectionWhere>;
-  /** Return Channels where some of the related ChannelSuspendedUsersConnections match this filter */
-  SuspendedUsersConnection_SOME?: InputMaybe<ChannelSuspendedUsersConnectionWhere>;
-  /** Return Channels where all of the related Users match this filter */
-  SuspendedUsers_ALL?: InputMaybe<UserWhere>;
-  /** Return Channels where none of the related Users match this filter */
-  SuspendedUsers_NONE?: InputMaybe<UserWhere>;
-  /** Return Channels where one of the related Users match this filter */
-  SuspendedUsers_SINGLE?: InputMaybe<UserWhere>;
-  /** Return Channels where some of the related Users match this filter */
-  SuspendedUsers_SOME?: InputMaybe<UserWhere>;
   TagsAggregate?: InputMaybe<ChannelTagsAggregateInput>;
   /** Return Channels where all of the related ChannelTagsConnections match this filter */
   TagsConnection_ALL?: InputMaybe<ChannelTagsConnectionWhere>;
@@ -11606,15 +11429,12 @@ export type IssuesConnection = {
 export type ModChannelRole = {
   __typename?: 'ModChannelRole';
   canCloseSupportTickets?: Maybe<Scalars['Boolean']['output']>;
-  canDownvoteComment?: Maybe<Scalars['Boolean']['output']>;
-  canDownvoteDiscussion?: Maybe<Scalars['Boolean']['output']>;
   canGiveFeedback?: Maybe<Scalars['Boolean']['output']>;
   canHideComment?: Maybe<Scalars['Boolean']['output']>;
   canHideDiscussion?: Maybe<Scalars['Boolean']['output']>;
   canHideEvent?: Maybe<Scalars['Boolean']['output']>;
   canOpenSupportTickets?: Maybe<Scalars['Boolean']['output']>;
   canReport?: Maybe<Scalars['Boolean']['output']>;
-  canResolveSupportTickets?: Maybe<Scalars['Boolean']['output']>;
   description?: Maybe<Scalars['String']['output']>;
   name?: Maybe<Scalars['String']['output']>;
 };
@@ -11636,15 +11456,12 @@ export type ModChannelRoleConnectWhere = {
 
 export type ModChannelRoleCreateInput = {
   canCloseSupportTickets?: InputMaybe<Scalars['Boolean']['input']>;
-  canDownvoteComment?: InputMaybe<Scalars['Boolean']['input']>;
-  canDownvoteDiscussion?: InputMaybe<Scalars['Boolean']['input']>;
   canGiveFeedback?: InputMaybe<Scalars['Boolean']['input']>;
   canHideComment?: InputMaybe<Scalars['Boolean']['input']>;
   canHideDiscussion?: InputMaybe<Scalars['Boolean']['input']>;
   canHideEvent?: InputMaybe<Scalars['Boolean']['input']>;
   canOpenSupportTickets?: InputMaybe<Scalars['Boolean']['input']>;
   canReport?: InputMaybe<Scalars['Boolean']['input']>;
-  canResolveSupportTickets?: InputMaybe<Scalars['Boolean']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
 };
@@ -11657,15 +11474,12 @@ export type ModChannelRoleEdge = {
 
 export type ModChannelRoleOnCreateInput = {
   canCloseSupportTickets?: InputMaybe<Scalars['Boolean']['input']>;
-  canDownvoteComment?: InputMaybe<Scalars['Boolean']['input']>;
-  canDownvoteDiscussion?: InputMaybe<Scalars['Boolean']['input']>;
   canGiveFeedback?: InputMaybe<Scalars['Boolean']['input']>;
   canHideComment?: InputMaybe<Scalars['Boolean']['input']>;
   canHideDiscussion?: InputMaybe<Scalars['Boolean']['input']>;
   canHideEvent?: InputMaybe<Scalars['Boolean']['input']>;
   canOpenSupportTickets?: InputMaybe<Scalars['Boolean']['input']>;
   canReport?: InputMaybe<Scalars['Boolean']['input']>;
-  canResolveSupportTickets?: InputMaybe<Scalars['Boolean']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
 };
@@ -11680,15 +11494,12 @@ export type ModChannelRoleOptions = {
 /** Fields to sort ModChannelRoles by. The order in which sorts are applied is not guaranteed when specifying many fields in one ModChannelRoleSort object. */
 export type ModChannelRoleSort = {
   canCloseSupportTickets?: InputMaybe<SortDirection>;
-  canDownvoteComment?: InputMaybe<SortDirection>;
-  canDownvoteDiscussion?: InputMaybe<SortDirection>;
   canGiveFeedback?: InputMaybe<SortDirection>;
   canHideComment?: InputMaybe<SortDirection>;
   canHideDiscussion?: InputMaybe<SortDirection>;
   canHideEvent?: InputMaybe<SortDirection>;
   canOpenSupportTickets?: InputMaybe<SortDirection>;
   canReport?: InputMaybe<SortDirection>;
-  canResolveSupportTickets?: InputMaybe<SortDirection>;
   description?: InputMaybe<SortDirection>;
   name?: InputMaybe<SortDirection>;
 };
@@ -11699,15 +11510,12 @@ export type ModChannelRoleUniqueWhere = {
 
 export type ModChannelRoleUpdateInput = {
   canCloseSupportTickets?: InputMaybe<Scalars['Boolean']['input']>;
-  canDownvoteComment?: InputMaybe<Scalars['Boolean']['input']>;
-  canDownvoteDiscussion?: InputMaybe<Scalars['Boolean']['input']>;
   canGiveFeedback?: InputMaybe<Scalars['Boolean']['input']>;
   canHideComment?: InputMaybe<Scalars['Boolean']['input']>;
   canHideDiscussion?: InputMaybe<Scalars['Boolean']['input']>;
   canHideEvent?: InputMaybe<Scalars['Boolean']['input']>;
   canOpenSupportTickets?: InputMaybe<Scalars['Boolean']['input']>;
   canReport?: InputMaybe<Scalars['Boolean']['input']>;
-  canResolveSupportTickets?: InputMaybe<Scalars['Boolean']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
 };
@@ -11717,15 +11525,12 @@ export type ModChannelRoleWhere = {
   NOT?: InputMaybe<ModChannelRoleWhere>;
   OR?: InputMaybe<Array<ModChannelRoleWhere>>;
   canCloseSupportTickets?: InputMaybe<Scalars['Boolean']['input']>;
-  canDownvoteComment?: InputMaybe<Scalars['Boolean']['input']>;
-  canDownvoteDiscussion?: InputMaybe<Scalars['Boolean']['input']>;
   canGiveFeedback?: InputMaybe<Scalars['Boolean']['input']>;
   canHideComment?: InputMaybe<Scalars['Boolean']['input']>;
   canHideDiscussion?: InputMaybe<Scalars['Boolean']['input']>;
   canHideEvent?: InputMaybe<Scalars['Boolean']['input']>;
   canOpenSupportTickets?: InputMaybe<Scalars['Boolean']['input']>;
   canReport?: InputMaybe<Scalars['Boolean']['input']>;
-  canResolveSupportTickets?: InputMaybe<Scalars['Boolean']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   description_CONTAINS?: InputMaybe<Scalars['String']['input']>;
   description_ENDS_WITH?: InputMaybe<Scalars['String']['input']>;
@@ -11750,6 +11555,7 @@ export type ModChannelRolesConnection = {
 export type ModServerRole = {
   __typename?: 'ModServerRole';
   canCloseSupportTickets?: Maybe<Scalars['Boolean']['output']>;
+  canGiveFeedback?: Maybe<Scalars['Boolean']['output']>;
   canLockChannel?: Maybe<Scalars['Boolean']['output']>;
   canOpenSupportTickets?: Maybe<Scalars['Boolean']['output']>;
   description?: Maybe<Scalars['String']['output']>;
@@ -11773,6 +11579,7 @@ export type ModServerRoleConnectWhere = {
 
 export type ModServerRoleCreateInput = {
   canCloseSupportTickets?: InputMaybe<Scalars['Boolean']['input']>;
+  canGiveFeedback?: InputMaybe<Scalars['Boolean']['input']>;
   canLockChannel?: InputMaybe<Scalars['Boolean']['input']>;
   canOpenSupportTickets?: InputMaybe<Scalars['Boolean']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
@@ -11787,6 +11594,7 @@ export type ModServerRoleEdge = {
 
 export type ModServerRoleOnCreateInput = {
   canCloseSupportTickets?: InputMaybe<Scalars['Boolean']['input']>;
+  canGiveFeedback?: InputMaybe<Scalars['Boolean']['input']>;
   canLockChannel?: InputMaybe<Scalars['Boolean']['input']>;
   canOpenSupportTickets?: InputMaybe<Scalars['Boolean']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
@@ -11803,6 +11611,7 @@ export type ModServerRoleOptions = {
 /** Fields to sort ModServerRoles by. The order in which sorts are applied is not guaranteed when specifying many fields in one ModServerRoleSort object. */
 export type ModServerRoleSort = {
   canCloseSupportTickets?: InputMaybe<SortDirection>;
+  canGiveFeedback?: InputMaybe<SortDirection>;
   canLockChannel?: InputMaybe<SortDirection>;
   canOpenSupportTickets?: InputMaybe<SortDirection>;
   description?: InputMaybe<SortDirection>;
@@ -11815,6 +11624,7 @@ export type ModServerRoleUniqueWhere = {
 
 export type ModServerRoleUpdateInput = {
   canCloseSupportTickets?: InputMaybe<Scalars['Boolean']['input']>;
+  canGiveFeedback?: InputMaybe<Scalars['Boolean']['input']>;
   canLockChannel?: InputMaybe<Scalars['Boolean']['input']>;
   canOpenSupportTickets?: InputMaybe<Scalars['Boolean']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
@@ -11826,6 +11636,7 @@ export type ModServerRoleWhere = {
   NOT?: InputMaybe<ModServerRoleWhere>;
   OR?: InputMaybe<Array<ModServerRoleWhere>>;
   canCloseSupportTickets?: InputMaybe<Scalars['Boolean']['input']>;
+  canGiveFeedback?: InputMaybe<Scalars['Boolean']['input']>;
   canLockChannel?: InputMaybe<Scalars['Boolean']['input']>;
   canOpenSupportTickets?: InputMaybe<Scalars['Boolean']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
@@ -17385,15 +17196,15 @@ export type RulesConnection = {
 
 export type ServerConfig = {
   __typename?: 'ServerConfig';
-  defaultChannelRole?: Maybe<ChannelRole>;
-  defaultChannelRoleAggregate?: Maybe<ServerConfigChannelRoleDefaultChannelRoleAggregationSelection>;
-  defaultChannelRoleConnection: ServerConfigDefaultChannelRoleConnection;
-  defaultModRole?: Maybe<ModServerRole>;
-  defaultModRoleAggregate?: Maybe<ServerConfigModServerRoleDefaultModRoleAggregationSelection>;
-  defaultModRoleConnection: ServerConfigDefaultModRoleConnection;
-  defaultServerRole: ServerRole;
-  defaultServerRoleAggregate?: Maybe<ServerConfigServerRoleDefaultServerRoleAggregationSelection>;
-  defaultServerRoleConnection: ServerConfigDefaultServerRoleConnection;
+  DefaultChannelRole?: Maybe<ChannelRole>;
+  DefaultChannelRoleAggregate?: Maybe<ServerConfigChannelRoleDefaultChannelRoleAggregationSelection>;
+  DefaultChannelRoleConnection: ServerConfigDefaultChannelRoleConnection;
+  DefaultModRole?: Maybe<ModServerRole>;
+  DefaultModRoleAggregate?: Maybe<ServerConfigModServerRoleDefaultModRoleAggregationSelection>;
+  DefaultModRoleConnection: ServerConfigDefaultModRoleConnection;
+  DefaultServerRole: ServerRole;
+  DefaultServerRoleAggregate?: Maybe<ServerConfigServerRoleDefaultServerRoleAggregationSelection>;
+  DefaultServerRoleConnection: ServerConfigDefaultServerRoleConnection;
   serverDescription?: Maybe<Scalars['String']['output']>;
   serverIconURL?: Maybe<Scalars['String']['output']>;
   serverName?: Maybe<Scalars['String']['output']>;
@@ -17481,26 +17292,27 @@ export type ServerConfigChannelRoleDefaultChannelRoleAggregationSelection = {
 
 export type ServerConfigChannelRoleDefaultChannelRoleNodeAggregateSelection = {
   __typename?: 'ServerConfigChannelRoleDefaultChannelRoleNodeAggregateSelection';
+  channelUniqueName: StringAggregateSelectionNullable;
   description: StringAggregateSelectionNullable;
+  id: IdAggregateSelectionNonNullable;
   name: StringAggregateSelectionNullable;
 };
 
 export type ServerConfigConnectInput = {
-  defaultChannelRole?: InputMaybe<ServerConfigDefaultChannelRoleConnectFieldInput>;
-  defaultModRole?: InputMaybe<ServerConfigDefaultModRoleConnectFieldInput>;
-  defaultServerRole?: InputMaybe<ServerConfigDefaultServerRoleConnectFieldInput>;
+  DefaultChannelRole?: InputMaybe<ServerConfigDefaultChannelRoleConnectFieldInput>;
+  DefaultModRole?: InputMaybe<ServerConfigDefaultModRoleConnectFieldInput>;
+  DefaultServerRole?: InputMaybe<ServerConfigDefaultServerRoleConnectFieldInput>;
 };
 
 export type ServerConfigConnectOrCreateInput = {
-  defaultChannelRole?: InputMaybe<ServerConfigDefaultChannelRoleConnectOrCreateFieldInput>;
-  defaultModRole?: InputMaybe<ServerConfigDefaultModRoleConnectOrCreateFieldInput>;
-  defaultServerRole?: InputMaybe<ServerConfigDefaultServerRoleConnectOrCreateFieldInput>;
+  DefaultModRole?: InputMaybe<ServerConfigDefaultModRoleConnectOrCreateFieldInput>;
+  DefaultServerRole?: InputMaybe<ServerConfigDefaultServerRoleConnectOrCreateFieldInput>;
 };
 
 export type ServerConfigCreateInput = {
-  defaultChannelRole?: InputMaybe<ServerConfigDefaultChannelRoleFieldInput>;
-  defaultModRole?: InputMaybe<ServerConfigDefaultModRoleFieldInput>;
-  defaultServerRole?: InputMaybe<ServerConfigDefaultServerRoleFieldInput>;
+  DefaultChannelRole?: InputMaybe<ServerConfigDefaultChannelRoleFieldInput>;
+  DefaultModRole?: InputMaybe<ServerConfigDefaultModRoleFieldInput>;
+  DefaultServerRole?: InputMaybe<ServerConfigDefaultServerRoleFieldInput>;
   serverDescription?: InputMaybe<Scalars['String']['input']>;
   serverIconURL?: InputMaybe<Scalars['String']['input']>;
   serverName?: InputMaybe<Scalars['String']['input']>;
@@ -17522,15 +17334,6 @@ export type ServerConfigDefaultChannelRoleConnectFieldInput = {
   /** Whether or not to overwrite any matching relationship with the new properties. */
   overwrite?: Scalars['Boolean']['input'];
   where?: InputMaybe<ChannelRoleConnectWhere>;
-};
-
-export type ServerConfigDefaultChannelRoleConnectOrCreateFieldInput = {
-  onCreate: ServerConfigDefaultChannelRoleConnectOrCreateFieldInputOnCreate;
-  where: ChannelRoleConnectOrCreateWhere;
-};
-
-export type ServerConfigDefaultChannelRoleConnectOrCreateFieldInputOnCreate = {
-  node: ChannelRoleOnCreateInput;
 };
 
 export type ServerConfigDefaultChannelRoleConnection = {
@@ -17565,7 +17368,6 @@ export type ServerConfigDefaultChannelRoleDisconnectFieldInput = {
 
 export type ServerConfigDefaultChannelRoleFieldInput = {
   connect?: InputMaybe<ServerConfigDefaultChannelRoleConnectFieldInput>;
-  connectOrCreate?: InputMaybe<ServerConfigDefaultChannelRoleConnectOrCreateFieldInput>;
   create?: InputMaybe<ServerConfigDefaultChannelRoleCreateFieldInput>;
 };
 
@@ -17573,6 +17375,21 @@ export type ServerConfigDefaultChannelRoleNodeAggregationWhereInput = {
   AND?: InputMaybe<Array<ServerConfigDefaultChannelRoleNodeAggregationWhereInput>>;
   NOT?: InputMaybe<ServerConfigDefaultChannelRoleNodeAggregationWhereInput>;
   OR?: InputMaybe<Array<ServerConfigDefaultChannelRoleNodeAggregationWhereInput>>;
+  channelUniqueName_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
   description_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
   description_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
   description_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
@@ -17617,7 +17434,6 @@ export type ServerConfigDefaultChannelRoleUpdateConnectionInput = {
 
 export type ServerConfigDefaultChannelRoleUpdateFieldInput = {
   connect?: InputMaybe<ServerConfigDefaultChannelRoleConnectFieldInput>;
-  connectOrCreate?: InputMaybe<ServerConfigDefaultChannelRoleConnectOrCreateFieldInput>;
   create?: InputMaybe<ServerConfigDefaultChannelRoleCreateFieldInput>;
   delete?: InputMaybe<ServerConfigDefaultChannelRoleDeleteFieldInput>;
   disconnect?: InputMaybe<ServerConfigDefaultChannelRoleDisconnectFieldInput>;
@@ -17864,15 +17680,15 @@ export type ServerConfigDefaultServerRoleUpdateFieldInput = {
 };
 
 export type ServerConfigDeleteInput = {
-  defaultChannelRole?: InputMaybe<ServerConfigDefaultChannelRoleDeleteFieldInput>;
-  defaultModRole?: InputMaybe<ServerConfigDefaultModRoleDeleteFieldInput>;
-  defaultServerRole?: InputMaybe<ServerConfigDefaultServerRoleDeleteFieldInput>;
+  DefaultChannelRole?: InputMaybe<ServerConfigDefaultChannelRoleDeleteFieldInput>;
+  DefaultModRole?: InputMaybe<ServerConfigDefaultModRoleDeleteFieldInput>;
+  DefaultServerRole?: InputMaybe<ServerConfigDefaultServerRoleDeleteFieldInput>;
 };
 
 export type ServerConfigDisconnectInput = {
-  defaultChannelRole?: InputMaybe<ServerConfigDefaultChannelRoleDisconnectFieldInput>;
-  defaultModRole?: InputMaybe<ServerConfigDefaultModRoleDisconnectFieldInput>;
-  defaultServerRole?: InputMaybe<ServerConfigDefaultServerRoleDisconnectFieldInput>;
+  DefaultChannelRole?: InputMaybe<ServerConfigDefaultChannelRoleDisconnectFieldInput>;
+  DefaultModRole?: InputMaybe<ServerConfigDefaultModRoleDisconnectFieldInput>;
+  DefaultServerRole?: InputMaybe<ServerConfigDefaultServerRoleDisconnectFieldInput>;
 };
 
 export type ServerConfigEdge = {
@@ -17901,9 +17717,9 @@ export type ServerConfigOptions = {
 };
 
 export type ServerConfigRelationInput = {
-  defaultChannelRole?: InputMaybe<ServerConfigDefaultChannelRoleCreateFieldInput>;
-  defaultModRole?: InputMaybe<ServerConfigDefaultModRoleCreateFieldInput>;
-  defaultServerRole?: InputMaybe<ServerConfigDefaultServerRoleCreateFieldInput>;
+  DefaultChannelRole?: InputMaybe<ServerConfigDefaultChannelRoleCreateFieldInput>;
+  DefaultModRole?: InputMaybe<ServerConfigDefaultModRoleCreateFieldInput>;
+  DefaultServerRole?: InputMaybe<ServerConfigDefaultServerRoleCreateFieldInput>;
 };
 
 export type ServerConfigServerRoleDefaultServerRoleAggregationSelection = {
@@ -17926,9 +17742,9 @@ export type ServerConfigSort = {
 };
 
 export type ServerConfigUpdateInput = {
-  defaultChannelRole?: InputMaybe<ServerConfigDefaultChannelRoleUpdateFieldInput>;
-  defaultModRole?: InputMaybe<ServerConfigDefaultModRoleUpdateFieldInput>;
-  defaultServerRole?: InputMaybe<ServerConfigDefaultServerRoleUpdateFieldInput>;
+  DefaultChannelRole?: InputMaybe<ServerConfigDefaultChannelRoleUpdateFieldInput>;
+  DefaultModRole?: InputMaybe<ServerConfigDefaultModRoleUpdateFieldInput>;
+  DefaultServerRole?: InputMaybe<ServerConfigDefaultServerRoleUpdateFieldInput>;
   serverDescription?: InputMaybe<Scalars['String']['input']>;
   serverIconURL?: InputMaybe<Scalars['String']['input']>;
   serverName?: InputMaybe<Scalars['String']['input']>;
@@ -17936,23 +17752,23 @@ export type ServerConfigUpdateInput = {
 
 export type ServerConfigWhere = {
   AND?: InputMaybe<Array<ServerConfigWhere>>;
+  DefaultChannelRole?: InputMaybe<ChannelRoleWhere>;
+  DefaultChannelRoleAggregate?: InputMaybe<ServerConfigDefaultChannelRoleAggregateInput>;
+  DefaultChannelRoleConnection?: InputMaybe<ServerConfigDefaultChannelRoleConnectionWhere>;
+  DefaultChannelRoleConnection_NOT?: InputMaybe<ServerConfigDefaultChannelRoleConnectionWhere>;
+  DefaultChannelRole_NOT?: InputMaybe<ChannelRoleWhere>;
+  DefaultModRole?: InputMaybe<ModServerRoleWhere>;
+  DefaultModRoleAggregate?: InputMaybe<ServerConfigDefaultModRoleAggregateInput>;
+  DefaultModRoleConnection?: InputMaybe<ServerConfigDefaultModRoleConnectionWhere>;
+  DefaultModRoleConnection_NOT?: InputMaybe<ServerConfigDefaultModRoleConnectionWhere>;
+  DefaultModRole_NOT?: InputMaybe<ModServerRoleWhere>;
+  DefaultServerRole?: InputMaybe<ServerRoleWhere>;
+  DefaultServerRoleAggregate?: InputMaybe<ServerConfigDefaultServerRoleAggregateInput>;
+  DefaultServerRoleConnection?: InputMaybe<ServerConfigDefaultServerRoleConnectionWhere>;
+  DefaultServerRoleConnection_NOT?: InputMaybe<ServerConfigDefaultServerRoleConnectionWhere>;
+  DefaultServerRole_NOT?: InputMaybe<ServerRoleWhere>;
   NOT?: InputMaybe<ServerConfigWhere>;
   OR?: InputMaybe<Array<ServerConfigWhere>>;
-  defaultChannelRole?: InputMaybe<ChannelRoleWhere>;
-  defaultChannelRoleAggregate?: InputMaybe<ServerConfigDefaultChannelRoleAggregateInput>;
-  defaultChannelRoleConnection?: InputMaybe<ServerConfigDefaultChannelRoleConnectionWhere>;
-  defaultChannelRoleConnection_NOT?: InputMaybe<ServerConfigDefaultChannelRoleConnectionWhere>;
-  defaultChannelRole_NOT?: InputMaybe<ChannelRoleWhere>;
-  defaultModRole?: InputMaybe<ModServerRoleWhere>;
-  defaultModRoleAggregate?: InputMaybe<ServerConfigDefaultModRoleAggregateInput>;
-  defaultModRoleConnection?: InputMaybe<ServerConfigDefaultModRoleConnectionWhere>;
-  defaultModRoleConnection_NOT?: InputMaybe<ServerConfigDefaultModRoleConnectionWhere>;
-  defaultModRole_NOT?: InputMaybe<ModServerRoleWhere>;
-  defaultServerRole?: InputMaybe<ServerRoleWhere>;
-  defaultServerRoleAggregate?: InputMaybe<ServerConfigDefaultServerRoleAggregateInput>;
-  defaultServerRoleConnection?: InputMaybe<ServerConfigDefaultServerRoleConnectionWhere>;
-  defaultServerRoleConnection_NOT?: InputMaybe<ServerConfigDefaultServerRoleConnectionWhere>;
-  defaultServerRole_NOT?: InputMaybe<ServerRoleWhere>;
   serverDescription?: InputMaybe<Scalars['String']['input']>;
   serverDescription_CONTAINS?: InputMaybe<Scalars['String']['input']>;
   serverDescription_ENDS_WITH?: InputMaybe<Scalars['String']['input']>;
@@ -20884,7 +20700,9 @@ export type UserChannelRoleChannelRolesAggregationSelection = {
 
 export type UserChannelRoleChannelRolesNodeAggregateSelection = {
   __typename?: 'UserChannelRoleChannelRolesNodeAggregateSelection';
+  channelUniqueName: StringAggregateSelectionNullable;
   description: StringAggregateSelectionNullable;
+  id: IdAggregateSelectionNonNullable;
   name: StringAggregateSelectionNullable;
 };
 
@@ -20904,15 +20722,6 @@ export type UserChannelRolesConnectFieldInput = {
   /** Whether or not to overwrite any matching relationship with the new properties. */
   overwrite?: Scalars['Boolean']['input'];
   where?: InputMaybe<ChannelRoleConnectWhere>;
-};
-
-export type UserChannelRolesConnectOrCreateFieldInput = {
-  onCreate: UserChannelRolesConnectOrCreateFieldInputOnCreate;
-  where: ChannelRoleConnectOrCreateWhere;
-};
-
-export type UserChannelRolesConnectOrCreateFieldInputOnCreate = {
-  node: ChannelRoleOnCreateInput;
 };
 
 export type UserChannelRolesConnection = {
@@ -20947,7 +20756,6 @@ export type UserChannelRolesDisconnectFieldInput = {
 
 export type UserChannelRolesFieldInput = {
   connect?: InputMaybe<Array<UserChannelRolesConnectFieldInput>>;
-  connectOrCreate?: InputMaybe<Array<UserChannelRolesConnectOrCreateFieldInput>>;
   create?: InputMaybe<Array<UserChannelRolesCreateFieldInput>>;
 };
 
@@ -20955,6 +20763,21 @@ export type UserChannelRolesNodeAggregationWhereInput = {
   AND?: InputMaybe<Array<UserChannelRolesNodeAggregationWhereInput>>;
   NOT?: InputMaybe<UserChannelRolesNodeAggregationWhereInput>;
   OR?: InputMaybe<Array<UserChannelRolesNodeAggregationWhereInput>>;
+  channelUniqueName_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
   description_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
   description_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
   description_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
@@ -20999,7 +20822,6 @@ export type UserChannelRolesUpdateConnectionInput = {
 
 export type UserChannelRolesUpdateFieldInput = {
   connect?: InputMaybe<Array<UserChannelRolesConnectFieldInput>>;
-  connectOrCreate?: InputMaybe<Array<UserChannelRolesConnectOrCreateFieldInput>>;
   create?: InputMaybe<Array<UserChannelRolesCreateFieldInput>>;
   delete?: InputMaybe<Array<UserChannelRolesDeleteFieldInput>>;
   disconnect?: InputMaybe<Array<UserChannelRolesDisconnectFieldInput>>;
@@ -21215,7 +21037,6 @@ export type UserConnectInput = {
 export type UserConnectOrCreateInput = {
   AdminOfChannels?: InputMaybe<Array<UserAdminOfChannelsConnectOrCreateFieldInput>>;
   Blocked?: InputMaybe<UserBlockedConnectOrCreateFieldInput>;
-  ChannelRoles?: InputMaybe<Array<UserChannelRolesConnectOrCreateFieldInput>>;
   Email?: InputMaybe<UserEmailConnectOrCreateFieldInput>;
   FavoriteChannels?: InputMaybe<Array<UserFavoriteChannelsConnectOrCreateFieldInput>>;
   IsBlockedBy?: InputMaybe<UserIsBlockedByConnectOrCreateFieldInput>;
@@ -24479,6 +24300,8 @@ export type ResolversTypes = {
   ChannelAggregateSelection: ResolverTypeWrapper<ChannelAggregateSelection>;
   ChannelChannelRelatedChannelsAggregationSelection: ResolverTypeWrapper<ChannelChannelRelatedChannelsAggregationSelection>;
   ChannelChannelRelatedChannelsNodeAggregateSelection: ResolverTypeWrapper<ChannelChannelRelatedChannelsNodeAggregateSelection>;
+  ChannelChannelRoleDefaultChannelRoleAggregationSelection: ResolverTypeWrapper<ChannelChannelRoleDefaultChannelRoleAggregationSelection>;
+  ChannelChannelRoleDefaultChannelRoleNodeAggregateSelection: ResolverTypeWrapper<ChannelChannelRoleDefaultChannelRoleNodeAggregateSelection>;
   ChannelCommentCommentsAggregationSelection: ResolverTypeWrapper<ChannelCommentCommentsAggregationSelection>;
   ChannelCommentCommentsNodeAggregateSelection: ResolverTypeWrapper<ChannelCommentCommentsNodeAggregateSelection>;
   ChannelCommentsAggregateInput: ChannelCommentsAggregateInput;
@@ -24499,6 +24322,19 @@ export type ResolversTypes = {
   ChannelConnectOrCreateWhere: ChannelConnectOrCreateWhere;
   ChannelConnectWhere: ChannelConnectWhere;
   ChannelCreateInput: ChannelCreateInput;
+  ChannelDefaultChannelRoleAggregateInput: ChannelDefaultChannelRoleAggregateInput;
+  ChannelDefaultChannelRoleConnectFieldInput: ChannelDefaultChannelRoleConnectFieldInput;
+  ChannelDefaultChannelRoleConnection: ResolverTypeWrapper<ChannelDefaultChannelRoleConnection>;
+  ChannelDefaultChannelRoleConnectionSort: ChannelDefaultChannelRoleConnectionSort;
+  ChannelDefaultChannelRoleConnectionWhere: ChannelDefaultChannelRoleConnectionWhere;
+  ChannelDefaultChannelRoleCreateFieldInput: ChannelDefaultChannelRoleCreateFieldInput;
+  ChannelDefaultChannelRoleDeleteFieldInput: ChannelDefaultChannelRoleDeleteFieldInput;
+  ChannelDefaultChannelRoleDisconnectFieldInput: ChannelDefaultChannelRoleDisconnectFieldInput;
+  ChannelDefaultChannelRoleFieldInput: ChannelDefaultChannelRoleFieldInput;
+  ChannelDefaultChannelRoleNodeAggregationWhereInput: ChannelDefaultChannelRoleNodeAggregationWhereInput;
+  ChannelDefaultChannelRoleRelationship: ResolverTypeWrapper<ChannelDefaultChannelRoleRelationship>;
+  ChannelDefaultChannelRoleUpdateConnectionInput: ChannelDefaultChannelRoleUpdateConnectionInput;
+  ChannelDefaultChannelRoleUpdateFieldInput: ChannelDefaultChannelRoleUpdateFieldInput;
   ChannelDeleteInput: ChannelDeleteInput;
   ChannelDisconnectInput: ChannelDisconnectInput;
   ChannelDiscussionChannelDiscussionChannelsAggregationSelection: ResolverTypeWrapper<ChannelDiscussionChannelDiscussionChannelsAggregationSelection>;
@@ -24584,14 +24420,11 @@ export type ResolversTypes = {
   ChannelRelationInput: ChannelRelationInput;
   ChannelRole: ResolverTypeWrapper<ChannelRole>;
   ChannelRoleAggregateSelection: ResolverTypeWrapper<ChannelRoleAggregateSelection>;
-  ChannelRoleConnectOrCreateWhere: ChannelRoleConnectOrCreateWhere;
   ChannelRoleConnectWhere: ChannelRoleConnectWhere;
   ChannelRoleCreateInput: ChannelRoleCreateInput;
   ChannelRoleEdge: ResolverTypeWrapper<ChannelRoleEdge>;
-  ChannelRoleOnCreateInput: ChannelRoleOnCreateInput;
   ChannelRoleOptions: ChannelRoleOptions;
   ChannelRoleSort: ChannelRoleSort;
-  ChannelRoleUniqueWhere: ChannelRoleUniqueWhere;
   ChannelRoleUpdateInput: ChannelRoleUpdateInput;
   ChannelRoleWhere: ChannelRoleWhere;
   ChannelRolesConnection: ResolverTypeWrapper<ChannelRolesConnection>;
@@ -24611,21 +24444,6 @@ export type ResolversTypes = {
   ChannelRulesUpdateConnectionInput: ChannelRulesUpdateConnectionInput;
   ChannelRulesUpdateFieldInput: ChannelRulesUpdateFieldInput;
   ChannelSort: ChannelSort;
-  ChannelSuspendedUsersAggregateInput: ChannelSuspendedUsersAggregateInput;
-  ChannelSuspendedUsersConnectFieldInput: ChannelSuspendedUsersConnectFieldInput;
-  ChannelSuspendedUsersConnectOrCreateFieldInput: ChannelSuspendedUsersConnectOrCreateFieldInput;
-  ChannelSuspendedUsersConnectOrCreateFieldInputOnCreate: ChannelSuspendedUsersConnectOrCreateFieldInputOnCreate;
-  ChannelSuspendedUsersConnection: ResolverTypeWrapper<ChannelSuspendedUsersConnection>;
-  ChannelSuspendedUsersConnectionSort: ChannelSuspendedUsersConnectionSort;
-  ChannelSuspendedUsersConnectionWhere: ChannelSuspendedUsersConnectionWhere;
-  ChannelSuspendedUsersCreateFieldInput: ChannelSuspendedUsersCreateFieldInput;
-  ChannelSuspendedUsersDeleteFieldInput: ChannelSuspendedUsersDeleteFieldInput;
-  ChannelSuspendedUsersDisconnectFieldInput: ChannelSuspendedUsersDisconnectFieldInput;
-  ChannelSuspendedUsersFieldInput: ChannelSuspendedUsersFieldInput;
-  ChannelSuspendedUsersNodeAggregationWhereInput: ChannelSuspendedUsersNodeAggregationWhereInput;
-  ChannelSuspendedUsersRelationship: ResolverTypeWrapper<ChannelSuspendedUsersRelationship>;
-  ChannelSuspendedUsersUpdateConnectionInput: ChannelSuspendedUsersUpdateConnectionInput;
-  ChannelSuspendedUsersUpdateFieldInput: ChannelSuspendedUsersUpdateFieldInput;
   ChannelTagTagsAggregationSelection: ResolverTypeWrapper<ChannelTagTagsAggregationSelection>;
   ChannelTagTagsNodeAggregateSelection: ResolverTypeWrapper<ChannelTagTagsNodeAggregateSelection>;
   ChannelTagsAggregateInput: ChannelTagsAggregateInput;
@@ -24647,8 +24465,6 @@ export type ResolversTypes = {
   ChannelUpdateInput: ChannelUpdateInput;
   ChannelUserAdminsAggregationSelection: ResolverTypeWrapper<ChannelUserAdminsAggregationSelection>;
   ChannelUserAdminsNodeAggregateSelection: ResolverTypeWrapper<ChannelUserAdminsNodeAggregateSelection>;
-  ChannelUserSuspendedUsersAggregationSelection: ResolverTypeWrapper<ChannelUserSuspendedUsersAggregationSelection>;
-  ChannelUserSuspendedUsersNodeAggregateSelection: ResolverTypeWrapper<ChannelUserSuspendedUsersNodeAggregateSelection>;
   ChannelWhere: ChannelWhere;
   ChannelsConnection: ResolverTypeWrapper<ChannelsConnection>;
   Comment: ResolverTypeWrapper<Omit<Comment, 'CommentAuthor'> & { CommentAuthor?: Maybe<ResolversTypes['CommentAuthor']> }>;
@@ -25829,8 +25645,6 @@ export type ResolversTypes = {
   ServerConfigCreateInput: ServerConfigCreateInput;
   ServerConfigDefaultChannelRoleAggregateInput: ServerConfigDefaultChannelRoleAggregateInput;
   ServerConfigDefaultChannelRoleConnectFieldInput: ServerConfigDefaultChannelRoleConnectFieldInput;
-  ServerConfigDefaultChannelRoleConnectOrCreateFieldInput: ServerConfigDefaultChannelRoleConnectOrCreateFieldInput;
-  ServerConfigDefaultChannelRoleConnectOrCreateFieldInputOnCreate: ServerConfigDefaultChannelRoleConnectOrCreateFieldInputOnCreate;
   ServerConfigDefaultChannelRoleConnection: ResolverTypeWrapper<ServerConfigDefaultChannelRoleConnection>;
   ServerConfigDefaultChannelRoleConnectionSort: ServerConfigDefaultChannelRoleConnectionSort;
   ServerConfigDefaultChannelRoleConnectionWhere: ServerConfigDefaultChannelRoleConnectionWhere;
@@ -26102,8 +25916,6 @@ export type ResolversTypes = {
   UserChannelRoleChannelRolesNodeAggregateSelection: ResolverTypeWrapper<UserChannelRoleChannelRolesNodeAggregateSelection>;
   UserChannelRolesAggregateInput: UserChannelRolesAggregateInput;
   UserChannelRolesConnectFieldInput: UserChannelRolesConnectFieldInput;
-  UserChannelRolesConnectOrCreateFieldInput: UserChannelRolesConnectOrCreateFieldInput;
-  UserChannelRolesConnectOrCreateFieldInputOnCreate: UserChannelRolesConnectOrCreateFieldInputOnCreate;
   UserChannelRolesConnection: ResolverTypeWrapper<UserChannelRolesConnection>;
   UserChannelRolesConnectionSort: UserChannelRolesConnectionSort;
   UserChannelRolesConnectionWhere: UserChannelRolesConnectionWhere;
@@ -26422,6 +26234,8 @@ export type ResolversParentTypes = {
   ChannelAggregateSelection: ChannelAggregateSelection;
   ChannelChannelRelatedChannelsAggregationSelection: ChannelChannelRelatedChannelsAggregationSelection;
   ChannelChannelRelatedChannelsNodeAggregateSelection: ChannelChannelRelatedChannelsNodeAggregateSelection;
+  ChannelChannelRoleDefaultChannelRoleAggregationSelection: ChannelChannelRoleDefaultChannelRoleAggregationSelection;
+  ChannelChannelRoleDefaultChannelRoleNodeAggregateSelection: ChannelChannelRoleDefaultChannelRoleNodeAggregateSelection;
   ChannelCommentCommentsAggregationSelection: ChannelCommentCommentsAggregationSelection;
   ChannelCommentCommentsNodeAggregateSelection: ChannelCommentCommentsNodeAggregateSelection;
   ChannelCommentsAggregateInput: ChannelCommentsAggregateInput;
@@ -26442,6 +26256,19 @@ export type ResolversParentTypes = {
   ChannelConnectOrCreateWhere: ChannelConnectOrCreateWhere;
   ChannelConnectWhere: ChannelConnectWhere;
   ChannelCreateInput: ChannelCreateInput;
+  ChannelDefaultChannelRoleAggregateInput: ChannelDefaultChannelRoleAggregateInput;
+  ChannelDefaultChannelRoleConnectFieldInput: ChannelDefaultChannelRoleConnectFieldInput;
+  ChannelDefaultChannelRoleConnection: ChannelDefaultChannelRoleConnection;
+  ChannelDefaultChannelRoleConnectionSort: ChannelDefaultChannelRoleConnectionSort;
+  ChannelDefaultChannelRoleConnectionWhere: ChannelDefaultChannelRoleConnectionWhere;
+  ChannelDefaultChannelRoleCreateFieldInput: ChannelDefaultChannelRoleCreateFieldInput;
+  ChannelDefaultChannelRoleDeleteFieldInput: ChannelDefaultChannelRoleDeleteFieldInput;
+  ChannelDefaultChannelRoleDisconnectFieldInput: ChannelDefaultChannelRoleDisconnectFieldInput;
+  ChannelDefaultChannelRoleFieldInput: ChannelDefaultChannelRoleFieldInput;
+  ChannelDefaultChannelRoleNodeAggregationWhereInput: ChannelDefaultChannelRoleNodeAggregationWhereInput;
+  ChannelDefaultChannelRoleRelationship: ChannelDefaultChannelRoleRelationship;
+  ChannelDefaultChannelRoleUpdateConnectionInput: ChannelDefaultChannelRoleUpdateConnectionInput;
+  ChannelDefaultChannelRoleUpdateFieldInput: ChannelDefaultChannelRoleUpdateFieldInput;
   ChannelDeleteInput: ChannelDeleteInput;
   ChannelDisconnectInput: ChannelDisconnectInput;
   ChannelDiscussionChannelDiscussionChannelsAggregationSelection: ChannelDiscussionChannelDiscussionChannelsAggregationSelection;
@@ -26527,14 +26354,11 @@ export type ResolversParentTypes = {
   ChannelRelationInput: ChannelRelationInput;
   ChannelRole: ChannelRole;
   ChannelRoleAggregateSelection: ChannelRoleAggregateSelection;
-  ChannelRoleConnectOrCreateWhere: ChannelRoleConnectOrCreateWhere;
   ChannelRoleConnectWhere: ChannelRoleConnectWhere;
   ChannelRoleCreateInput: ChannelRoleCreateInput;
   ChannelRoleEdge: ChannelRoleEdge;
-  ChannelRoleOnCreateInput: ChannelRoleOnCreateInput;
   ChannelRoleOptions: ChannelRoleOptions;
   ChannelRoleSort: ChannelRoleSort;
-  ChannelRoleUniqueWhere: ChannelRoleUniqueWhere;
   ChannelRoleUpdateInput: ChannelRoleUpdateInput;
   ChannelRoleWhere: ChannelRoleWhere;
   ChannelRolesConnection: ChannelRolesConnection;
@@ -26554,21 +26378,6 @@ export type ResolversParentTypes = {
   ChannelRulesUpdateConnectionInput: ChannelRulesUpdateConnectionInput;
   ChannelRulesUpdateFieldInput: ChannelRulesUpdateFieldInput;
   ChannelSort: ChannelSort;
-  ChannelSuspendedUsersAggregateInput: ChannelSuspendedUsersAggregateInput;
-  ChannelSuspendedUsersConnectFieldInput: ChannelSuspendedUsersConnectFieldInput;
-  ChannelSuspendedUsersConnectOrCreateFieldInput: ChannelSuspendedUsersConnectOrCreateFieldInput;
-  ChannelSuspendedUsersConnectOrCreateFieldInputOnCreate: ChannelSuspendedUsersConnectOrCreateFieldInputOnCreate;
-  ChannelSuspendedUsersConnection: ChannelSuspendedUsersConnection;
-  ChannelSuspendedUsersConnectionSort: ChannelSuspendedUsersConnectionSort;
-  ChannelSuspendedUsersConnectionWhere: ChannelSuspendedUsersConnectionWhere;
-  ChannelSuspendedUsersCreateFieldInput: ChannelSuspendedUsersCreateFieldInput;
-  ChannelSuspendedUsersDeleteFieldInput: ChannelSuspendedUsersDeleteFieldInput;
-  ChannelSuspendedUsersDisconnectFieldInput: ChannelSuspendedUsersDisconnectFieldInput;
-  ChannelSuspendedUsersFieldInput: ChannelSuspendedUsersFieldInput;
-  ChannelSuspendedUsersNodeAggregationWhereInput: ChannelSuspendedUsersNodeAggregationWhereInput;
-  ChannelSuspendedUsersRelationship: ChannelSuspendedUsersRelationship;
-  ChannelSuspendedUsersUpdateConnectionInput: ChannelSuspendedUsersUpdateConnectionInput;
-  ChannelSuspendedUsersUpdateFieldInput: ChannelSuspendedUsersUpdateFieldInput;
   ChannelTagTagsAggregationSelection: ChannelTagTagsAggregationSelection;
   ChannelTagTagsNodeAggregateSelection: ChannelTagTagsNodeAggregateSelection;
   ChannelTagsAggregateInput: ChannelTagsAggregateInput;
@@ -26590,8 +26399,6 @@ export type ResolversParentTypes = {
   ChannelUpdateInput: ChannelUpdateInput;
   ChannelUserAdminsAggregationSelection: ChannelUserAdminsAggregationSelection;
   ChannelUserAdminsNodeAggregateSelection: ChannelUserAdminsNodeAggregateSelection;
-  ChannelUserSuspendedUsersAggregationSelection: ChannelUserSuspendedUsersAggregationSelection;
-  ChannelUserSuspendedUsersNodeAggregateSelection: ChannelUserSuspendedUsersNodeAggregateSelection;
   ChannelWhere: ChannelWhere;
   ChannelsConnection: ChannelsConnection;
   Comment: Omit<Comment, 'CommentAuthor'> & { CommentAuthor?: Maybe<ResolversParentTypes['CommentAuthor']> };
@@ -27771,8 +27578,6 @@ export type ResolversParentTypes = {
   ServerConfigCreateInput: ServerConfigCreateInput;
   ServerConfigDefaultChannelRoleAggregateInput: ServerConfigDefaultChannelRoleAggregateInput;
   ServerConfigDefaultChannelRoleConnectFieldInput: ServerConfigDefaultChannelRoleConnectFieldInput;
-  ServerConfigDefaultChannelRoleConnectOrCreateFieldInput: ServerConfigDefaultChannelRoleConnectOrCreateFieldInput;
-  ServerConfigDefaultChannelRoleConnectOrCreateFieldInputOnCreate: ServerConfigDefaultChannelRoleConnectOrCreateFieldInputOnCreate;
   ServerConfigDefaultChannelRoleConnection: ServerConfigDefaultChannelRoleConnection;
   ServerConfigDefaultChannelRoleConnectionSort: ServerConfigDefaultChannelRoleConnectionSort;
   ServerConfigDefaultChannelRoleConnectionWhere: ServerConfigDefaultChannelRoleConnectionWhere;
@@ -28041,8 +27846,6 @@ export type ResolversParentTypes = {
   UserChannelRoleChannelRolesNodeAggregateSelection: UserChannelRoleChannelRolesNodeAggregateSelection;
   UserChannelRolesAggregateInput: UserChannelRolesAggregateInput;
   UserChannelRolesConnectFieldInput: UserChannelRolesConnectFieldInput;
-  UserChannelRolesConnectOrCreateFieldInput: UserChannelRolesConnectOrCreateFieldInput;
-  UserChannelRolesConnectOrCreateFieldInputOnCreate: UserChannelRolesConnectOrCreateFieldInputOnCreate;
   UserChannelRolesConnection: UserChannelRolesConnection;
   UserChannelRolesConnectionSort: UserChannelRolesConnectionSort;
   UserChannelRolesConnectionWhere: UserChannelRolesConnectionWhere;
@@ -28346,6 +28149,9 @@ export type ChannelResolvers<ContextType = any, ParentType extends ResolversPare
   Comments?: Resolver<Array<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<ChannelCommentsArgs, 'directed'>>;
   CommentsAggregate?: Resolver<Maybe<ResolversTypes['ChannelCommentCommentsAggregationSelection']>, ParentType, ContextType, RequireFields<ChannelCommentsAggregateArgs, 'directed'>>;
   CommentsConnection?: Resolver<ResolversTypes['ChannelCommentsConnection'], ParentType, ContextType, RequireFields<ChannelCommentsConnectionArgs, 'directed'>>;
+  DefaultChannelRole?: Resolver<Maybe<ResolversTypes['ChannelRole']>, ParentType, ContextType, RequireFields<ChannelDefaultChannelRoleArgs, 'directed'>>;
+  DefaultChannelRoleAggregate?: Resolver<Maybe<ResolversTypes['ChannelChannelRoleDefaultChannelRoleAggregationSelection']>, ParentType, ContextType, RequireFields<ChannelDefaultChannelRoleAggregateArgs, 'directed'>>;
+  DefaultChannelRoleConnection?: Resolver<ResolversTypes['ChannelDefaultChannelRoleConnection'], ParentType, ContextType, RequireFields<ChannelDefaultChannelRoleConnectionArgs, 'directed'>>;
   DiscussionChannels?: Resolver<Array<ResolversTypes['DiscussionChannel']>, ParentType, ContextType, RequireFields<ChannelDiscussionChannelsArgs, 'directed'>>;
   DiscussionChannelsAggregate?: Resolver<Maybe<ResolversTypes['ChannelDiscussionChannelDiscussionChannelsAggregationSelection']>, ParentType, ContextType, RequireFields<ChannelDiscussionChannelsAggregateArgs, 'directed'>>;
   DiscussionChannelsConnection?: Resolver<ResolversTypes['ChannelDiscussionChannelsConnection'], ParentType, ContextType, RequireFields<ChannelDiscussionChannelsConnectionArgs, 'directed'>>;
@@ -28364,9 +28170,6 @@ export type ChannelResolvers<ContextType = any, ParentType extends ResolversPare
   Rules?: Resolver<Array<ResolversTypes['Rule']>, ParentType, ContextType, RequireFields<ChannelRulesArgs, 'directed'>>;
   RulesAggregate?: Resolver<Maybe<ResolversTypes['ChannelRuleRulesAggregationSelection']>, ParentType, ContextType, RequireFields<ChannelRulesAggregateArgs, 'directed'>>;
   RulesConnection?: Resolver<ResolversTypes['ChannelRulesConnection'], ParentType, ContextType, RequireFields<ChannelRulesConnectionArgs, 'directed'>>;
-  SuspendedUsers?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, RequireFields<ChannelSuspendedUsersArgs, 'directed'>>;
-  SuspendedUsersAggregate?: Resolver<Maybe<ResolversTypes['ChannelUserSuspendedUsersAggregationSelection']>, ParentType, ContextType, RequireFields<ChannelSuspendedUsersAggregateArgs, 'directed'>>;
-  SuspendedUsersConnection?: Resolver<ResolversTypes['ChannelSuspendedUsersConnection'], ParentType, ContextType, RequireFields<ChannelSuspendedUsersConnectionArgs, 'directed'>>;
   Tags?: Resolver<Array<ResolversTypes['Tag']>, ParentType, ContextType, RequireFields<ChannelTagsArgs, 'directed'>>;
   TagsAggregate?: Resolver<Maybe<ResolversTypes['ChannelTagTagsAggregationSelection']>, ParentType, ContextType, RequireFields<ChannelTagsAggregateArgs, 'directed'>>;
   TagsConnection?: Resolver<ResolversTypes['ChannelTagsConnection'], ParentType, ContextType, RequireFields<ChannelTagsConnectionArgs, 'directed'>>;
@@ -28421,6 +28224,20 @@ export type ChannelChannelRelatedChannelsNodeAggregateSelectionResolvers<Context
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type ChannelChannelRoleDefaultChannelRoleAggregationSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ChannelChannelRoleDefaultChannelRoleAggregationSelection'] = ResolversParentTypes['ChannelChannelRoleDefaultChannelRoleAggregationSelection']> = {
+  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['ChannelChannelRoleDefaultChannelRoleNodeAggregateSelection']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ChannelChannelRoleDefaultChannelRoleNodeAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ChannelChannelRoleDefaultChannelRoleNodeAggregateSelection'] = ResolversParentTypes['ChannelChannelRoleDefaultChannelRoleNodeAggregateSelection']> = {
+  channelUniqueName?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  description?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['IDAggregateSelectionNonNullable'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type ChannelCommentCommentsAggregationSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ChannelCommentCommentsAggregationSelection'] = ResolversParentTypes['ChannelCommentCommentsAggregationSelection']> = {
   count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   node?: Resolver<Maybe<ResolversTypes['ChannelCommentCommentsNodeAggregateSelection']>, ParentType, ContextType>;
@@ -28446,6 +28263,19 @@ export type ChannelCommentsConnectionResolvers<ContextType = any, ParentType ext
 export type ChannelCommentsRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['ChannelCommentsRelationship'] = ResolversParentTypes['ChannelCommentsRelationship']> = {
   cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   node?: Resolver<ResolversTypes['Comment'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ChannelDefaultChannelRoleConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ChannelDefaultChannelRoleConnection'] = ResolversParentTypes['ChannelDefaultChannelRoleConnection']> = {
+  edges?: Resolver<Array<ResolversTypes['ChannelDefaultChannelRoleRelationship']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ChannelDefaultChannelRoleRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['ChannelDefaultChannelRoleRelationship'] = ResolversParentTypes['ChannelDefaultChannelRoleRelationship']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['ChannelRole'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -28582,14 +28412,18 @@ export type ChannelRoleResolvers<ContextType = any, ParentType extends Resolvers
   canUploadFile?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   canUpvoteComment?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   canUpvoteDiscussion?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  channelUniqueName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type ChannelRoleAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ChannelRoleAggregateSelection'] = ResolversParentTypes['ChannelRoleAggregateSelection']> = {
+  channelUniqueName?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
   count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   description?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['IDAggregateSelectionNonNullable'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -28632,19 +28466,6 @@ export type ChannelRulesRelationshipResolvers<ContextType = any, ParentType exte
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type ChannelSuspendedUsersConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ChannelSuspendedUsersConnection'] = ResolversParentTypes['ChannelSuspendedUsersConnection']> = {
-  edges?: Resolver<Array<ResolversTypes['ChannelSuspendedUsersRelationship']>, ParentType, ContextType>;
-  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
-  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ChannelSuspendedUsersRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['ChannelSuspendedUsersRelationship'] = ResolversParentTypes['ChannelSuspendedUsersRelationship']> = {
-  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  node?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
 export type ChannelTagTagsAggregationSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ChannelTagTagsAggregationSelection'] = ResolversParentTypes['ChannelTagTagsAggregationSelection']> = {
   count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   node?: Resolver<Maybe<ResolversTypes['ChannelTagTagsNodeAggregateSelection']>, ParentType, ContextType>;
@@ -28676,28 +28497,6 @@ export type ChannelUserAdminsAggregationSelectionResolvers<ContextType = any, Pa
 };
 
 export type ChannelUserAdminsNodeAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ChannelUserAdminsNodeAggregateSelection'] = ResolversParentTypes['ChannelUserAdminsNodeAggregateSelection']> = {
-  DefaultEmojiSkinTone?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
-  NotificationBundleInterval?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
-  PreferredTimeZone?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
-  bio?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
-  commentKarma?: Resolver<ResolversTypes['IntAggregateSelectionNullable'], ParentType, ContextType>;
-  createdAt?: Resolver<ResolversTypes['DateTimeAggregateSelectionNonNullable'], ParentType, ContextType>;
-  discussionKarma?: Resolver<ResolversTypes['IntAggregateSelectionNullable'], ParentType, ContextType>;
-  displayName?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
-  location?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
-  profilePicURL?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
-  pronouns?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
-  username?: Resolver<ResolversTypes['StringAggregateSelectionNonNullable'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ChannelUserSuspendedUsersAggregationSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ChannelUserSuspendedUsersAggregationSelection'] = ResolversParentTypes['ChannelUserSuspendedUsersAggregationSelection']> = {
-  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  node?: Resolver<Maybe<ResolversTypes['ChannelUserSuspendedUsersNodeAggregateSelection']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ChannelUserSuspendedUsersNodeAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ChannelUserSuspendedUsersNodeAggregateSelection'] = ResolversParentTypes['ChannelUserSuspendedUsersNodeAggregateSelection']> = {
   DefaultEmojiSkinTone?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
   NotificationBundleInterval?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
   PreferredTimeZone?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
@@ -30445,15 +30244,12 @@ export interface JsonScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes
 
 export type ModChannelRoleResolvers<ContextType = any, ParentType extends ResolversParentTypes['ModChannelRole'] = ResolversParentTypes['ModChannelRole']> = {
   canCloseSupportTickets?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
-  canDownvoteComment?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
-  canDownvoteDiscussion?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   canGiveFeedback?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   canHideComment?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   canHideDiscussion?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   canHideEvent?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   canOpenSupportTickets?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   canReport?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
-  canResolveSupportTickets?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -30481,6 +30277,7 @@ export type ModChannelRolesConnectionResolvers<ContextType = any, ParentType ext
 
 export type ModServerRoleResolvers<ContextType = any, ParentType extends ResolversParentTypes['ModServerRole'] = ResolversParentTypes['ModServerRole']> = {
   canCloseSupportTickets?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  canGiveFeedback?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   canLockChannel?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   canOpenSupportTickets?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -31448,15 +31245,15 @@ export type RulesConnectionResolvers<ContextType = any, ParentType extends Resol
 };
 
 export type ServerConfigResolvers<ContextType = any, ParentType extends ResolversParentTypes['ServerConfig'] = ResolversParentTypes['ServerConfig']> = {
-  defaultChannelRole?: Resolver<Maybe<ResolversTypes['ChannelRole']>, ParentType, ContextType, RequireFields<ServerConfigDefaultChannelRoleArgs, 'directed'>>;
-  defaultChannelRoleAggregate?: Resolver<Maybe<ResolversTypes['ServerConfigChannelRoleDefaultChannelRoleAggregationSelection']>, ParentType, ContextType, RequireFields<ServerConfigDefaultChannelRoleAggregateArgs, 'directed'>>;
-  defaultChannelRoleConnection?: Resolver<ResolversTypes['ServerConfigDefaultChannelRoleConnection'], ParentType, ContextType, RequireFields<ServerConfigDefaultChannelRoleConnectionArgs, 'directed'>>;
-  defaultModRole?: Resolver<Maybe<ResolversTypes['ModServerRole']>, ParentType, ContextType, RequireFields<ServerConfigDefaultModRoleArgs, 'directed'>>;
-  defaultModRoleAggregate?: Resolver<Maybe<ResolversTypes['ServerConfigModServerRoleDefaultModRoleAggregationSelection']>, ParentType, ContextType, RequireFields<ServerConfigDefaultModRoleAggregateArgs, 'directed'>>;
-  defaultModRoleConnection?: Resolver<ResolversTypes['ServerConfigDefaultModRoleConnection'], ParentType, ContextType, RequireFields<ServerConfigDefaultModRoleConnectionArgs, 'directed'>>;
-  defaultServerRole?: Resolver<ResolversTypes['ServerRole'], ParentType, ContextType, RequireFields<ServerConfigDefaultServerRoleArgs, 'directed'>>;
-  defaultServerRoleAggregate?: Resolver<Maybe<ResolversTypes['ServerConfigServerRoleDefaultServerRoleAggregationSelection']>, ParentType, ContextType, RequireFields<ServerConfigDefaultServerRoleAggregateArgs, 'directed'>>;
-  defaultServerRoleConnection?: Resolver<ResolversTypes['ServerConfigDefaultServerRoleConnection'], ParentType, ContextType, RequireFields<ServerConfigDefaultServerRoleConnectionArgs, 'directed'>>;
+  DefaultChannelRole?: Resolver<Maybe<ResolversTypes['ChannelRole']>, ParentType, ContextType, RequireFields<ServerConfigDefaultChannelRoleArgs, 'directed'>>;
+  DefaultChannelRoleAggregate?: Resolver<Maybe<ResolversTypes['ServerConfigChannelRoleDefaultChannelRoleAggregationSelection']>, ParentType, ContextType, RequireFields<ServerConfigDefaultChannelRoleAggregateArgs, 'directed'>>;
+  DefaultChannelRoleConnection?: Resolver<ResolversTypes['ServerConfigDefaultChannelRoleConnection'], ParentType, ContextType, RequireFields<ServerConfigDefaultChannelRoleConnectionArgs, 'directed'>>;
+  DefaultModRole?: Resolver<Maybe<ResolversTypes['ModServerRole']>, ParentType, ContextType, RequireFields<ServerConfigDefaultModRoleArgs, 'directed'>>;
+  DefaultModRoleAggregate?: Resolver<Maybe<ResolversTypes['ServerConfigModServerRoleDefaultModRoleAggregationSelection']>, ParentType, ContextType, RequireFields<ServerConfigDefaultModRoleAggregateArgs, 'directed'>>;
+  DefaultModRoleConnection?: Resolver<ResolversTypes['ServerConfigDefaultModRoleConnection'], ParentType, ContextType, RequireFields<ServerConfigDefaultModRoleConnectionArgs, 'directed'>>;
+  DefaultServerRole?: Resolver<ResolversTypes['ServerRole'], ParentType, ContextType, RequireFields<ServerConfigDefaultServerRoleArgs, 'directed'>>;
+  DefaultServerRoleAggregate?: Resolver<Maybe<ResolversTypes['ServerConfigServerRoleDefaultServerRoleAggregationSelection']>, ParentType, ContextType, RequireFields<ServerConfigDefaultServerRoleAggregateArgs, 'directed'>>;
+  DefaultServerRoleConnection?: Resolver<ResolversTypes['ServerConfigDefaultServerRoleConnection'], ParentType, ContextType, RequireFields<ServerConfigDefaultServerRoleConnectionArgs, 'directed'>>;
   serverDescription?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   serverIconURL?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   serverName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -31478,7 +31275,9 @@ export type ServerConfigChannelRoleDefaultChannelRoleAggregationSelectionResolve
 };
 
 export type ServerConfigChannelRoleDefaultChannelRoleNodeAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ServerConfigChannelRoleDefaultChannelRoleNodeAggregateSelection'] = ResolversParentTypes['ServerConfigChannelRoleDefaultChannelRoleNodeAggregateSelection']> = {
+  channelUniqueName?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
   description?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['IDAggregateSelectionNonNullable'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -32262,7 +32061,9 @@ export type UserChannelRoleChannelRolesAggregationSelectionResolvers<ContextType
 };
 
 export type UserChannelRoleChannelRolesNodeAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserChannelRoleChannelRolesNodeAggregateSelection'] = ResolversParentTypes['UserChannelRoleChannelRolesNodeAggregateSelection']> = {
+  channelUniqueName?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
   description?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['IDAggregateSelectionNonNullable'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -32768,10 +32569,14 @@ export type Resolvers<ContextType = any> = {
   ChannelAggregateSelection?: ChannelAggregateSelectionResolvers<ContextType>;
   ChannelChannelRelatedChannelsAggregationSelection?: ChannelChannelRelatedChannelsAggregationSelectionResolvers<ContextType>;
   ChannelChannelRelatedChannelsNodeAggregateSelection?: ChannelChannelRelatedChannelsNodeAggregateSelectionResolvers<ContextType>;
+  ChannelChannelRoleDefaultChannelRoleAggregationSelection?: ChannelChannelRoleDefaultChannelRoleAggregationSelectionResolvers<ContextType>;
+  ChannelChannelRoleDefaultChannelRoleNodeAggregateSelection?: ChannelChannelRoleDefaultChannelRoleNodeAggregateSelectionResolvers<ContextType>;
   ChannelCommentCommentsAggregationSelection?: ChannelCommentCommentsAggregationSelectionResolvers<ContextType>;
   ChannelCommentCommentsNodeAggregateSelection?: ChannelCommentCommentsNodeAggregateSelectionResolvers<ContextType>;
   ChannelCommentsConnection?: ChannelCommentsConnectionResolvers<ContextType>;
   ChannelCommentsRelationship?: ChannelCommentsRelationshipResolvers<ContextType>;
+  ChannelDefaultChannelRoleConnection?: ChannelDefaultChannelRoleConnectionResolvers<ContextType>;
+  ChannelDefaultChannelRoleRelationship?: ChannelDefaultChannelRoleRelationshipResolvers<ContextType>;
   ChannelDiscussionChannelDiscussionChannelsAggregationSelection?: ChannelDiscussionChannelDiscussionChannelsAggregationSelectionResolvers<ContextType>;
   ChannelDiscussionChannelDiscussionChannelsNodeAggregateSelection?: ChannelDiscussionChannelDiscussionChannelsNodeAggregateSelectionResolvers<ContextType>;
   ChannelDiscussionChannelsConnection?: ChannelDiscussionChannelsConnectionResolvers<ContextType>;
@@ -32799,16 +32604,12 @@ export type Resolvers<ContextType = any> = {
   ChannelRuleRulesNodeAggregateSelection?: ChannelRuleRulesNodeAggregateSelectionResolvers<ContextType>;
   ChannelRulesConnection?: ChannelRulesConnectionResolvers<ContextType>;
   ChannelRulesRelationship?: ChannelRulesRelationshipResolvers<ContextType>;
-  ChannelSuspendedUsersConnection?: ChannelSuspendedUsersConnectionResolvers<ContextType>;
-  ChannelSuspendedUsersRelationship?: ChannelSuspendedUsersRelationshipResolvers<ContextType>;
   ChannelTagTagsAggregationSelection?: ChannelTagTagsAggregationSelectionResolvers<ContextType>;
   ChannelTagTagsNodeAggregateSelection?: ChannelTagTagsNodeAggregateSelectionResolvers<ContextType>;
   ChannelTagsConnection?: ChannelTagsConnectionResolvers<ContextType>;
   ChannelTagsRelationship?: ChannelTagsRelationshipResolvers<ContextType>;
   ChannelUserAdminsAggregationSelection?: ChannelUserAdminsAggregationSelectionResolvers<ContextType>;
   ChannelUserAdminsNodeAggregateSelection?: ChannelUserAdminsNodeAggregateSelectionResolvers<ContextType>;
-  ChannelUserSuspendedUsersAggregationSelection?: ChannelUserSuspendedUsersAggregationSelectionResolvers<ContextType>;
-  ChannelUserSuspendedUsersNodeAggregateSelection?: ChannelUserSuspendedUsersNodeAggregateSelectionResolvers<ContextType>;
   ChannelsConnection?: ChannelsConnectionResolvers<ContextType>;
   Comment?: CommentResolvers<ContextType>;
   CommentAggregateSelection?: CommentAggregateSelectionResolvers<ContextType>;

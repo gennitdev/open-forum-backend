@@ -57,6 +57,7 @@ export const setUserDataOnContext = async (input: SetUserDataInput) => {
 
   // Set the user data on the context so we can use it in other rules.
   let userData;
+
   if (!getPermissionInfo) {
     userData = await User.find({
       where: { username },
@@ -66,6 +67,18 @@ export const setUserDataOnContext = async (input: SetUserDataInput) => {
       userData = await User.find({
         where: { username },
         selectionSet: `{ 
+            ModerationProfile {
+              ModServerRoles {
+                canGiveFeedback
+              }
+              ModChannelRoles ${
+                input.checkSpecificChannel
+                  ? `(where: { channelUniqueName: "${input.checkSpecificChannel}" })`
+                  : ""
+              } {
+                canGiveFeedback
+              }
+            }
             ServerRoles { 
               name
               canCreateChannel

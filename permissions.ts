@@ -8,13 +8,15 @@ const permissionList = shield({
     Mutation: {
       "*": deny,
       createServerRoles: allow, // will later restrict to admins
+      createModServerRoles: allow, // will later restrict to admins
       createServerConfigs: allow, // will later restrict to admins
       updateServerConfigs: allow, // will later restrict to admins
+      updateModServerRoles: allow, // will later restrict to admins
 
       createUsers: allow,
 
       // will prevent users from making themselves admins or moderators but allow other fields to be updated by account owner
-      updateUsers: and(rules.isAuthenticatedAndVerified, or(rules.isAccountOwner, rules.isAdmin)),
+      updateUsers: or(rules.isAccountOwner, rules.isAdmin),
       
       createChannels:rules.canCreateChannel,
       updateChannels: or(rules.isChannelOwner, rules.isAdmin),
@@ -42,13 +44,13 @@ const permissionList = shield({
       // Any user who can upvote a comment can undo their upvote. The undo upvote resolver 
       // checks if the user has upvoted the comment and if so, removes the upvote.
 
+      updateDiscussionChannels: rules.canGiveFeedback, // Need to check the update input to make sure the user is not trying to change the channel name or unique name.
       upvoteDiscussionChannel: rules.canUpvoteDiscussion,
       undoUpvoteDiscussionChannel: rules.canUpvoteDiscussion, // We are intentionally reusing the same rule for undoing an upvote as for upvoting.
       // Any user who can upvote a discussion can undo their upvote. The undo upvote resolver
       // checks if the user has upvoted the discussion and if so, removes the upvote.
       
       // MOD PERMISSIONS
-
       // hideComments: updateComments: and(rules.verifiedEmail, or(rules.hasChannelModPermission("hideComments"), rules.isAdmin)),
       // the rest need updating to the format "hasChannelPermissions" for things that can be suspended or revoked in fine grained roles.
       // canGiveFeedback: and(rules.verifiedEmail, rules.isNotSuspendedFromChannel, rules.isNotSuspendedFromServer),

@@ -11,6 +11,7 @@ import {
   EventWhere,
   EventUpdateInput,
   CommentWhere,
+  UserWhere,
 } from "../src/generated/graphql.js";
 import { setUserDataOnContext } from "./userDataHelperFunctions.js";
 
@@ -241,15 +242,30 @@ export const isCommentAuthor = rule({ cache: "contextual" })(
   }
 );
 
+type IsAccountOwnerArgs = {
+  where: UserWhere;
+}
 // Check if the user is the owner of the account.
 export const isAccountOwner = rule({ cache: "contextual" })(
-  async (parent: any, args: any, ctx: any, info: any) => {
-    const { username } = ctx.user;
-    const { usernameToCompare } = args;
+  async (parent: any, args: IsAccountOwnerArgs, ctx: any, info: any) => {
+    console.log("isAccountOwner", args);
+    const { username } = args.where;
 
-    if (username !== usernameToCompare) {
-      return new Error(ERROR_MESSAGES.generic.noPermission);
+    // set user data
+    ctx.user = await setUserDataOnContext({
+      context: ctx,
+      getPermissionInfo: false,
+    });
+
+    if (!username) {
+      return new Error(ERROR_MESSAGES.user.noUsername);
     }
+
+    // Check if the user is the account owner.
+    if (!username === ctx.user.username) {
+      return new Error(ERROR_MESSAGES.user.notOwner);
+    }
+
     return true;
   }
 );

@@ -1,6 +1,7 @@
 import { rule } from "graphql-shield";
 import { isAuthenticatedAndVerified } from "./userDataHelperFunctions.js";
 import { hasServerPermission } from "./hasServerPermission.js";
+import { hasServerModPermission } from "./hasServerModPermission.js";
 import {
   isChannelOwner,
   isAccountOwner,
@@ -11,6 +12,7 @@ import {
 import {
   ChannelPermissionChecks,
   ServerPermissionChecks,
+  ServerModPermissionChecks,
   hasChannelPermission,
 } from "./hasChannelPermission.js";
 import { checkChannelPermissions } from "./hasChannelPermission.js";
@@ -275,6 +277,25 @@ const canUpvoteDiscussion = rule({ cache: "contextual" })(
   }
 );
 
+const canGiveFeedback = rule({ cache: "contextual" })(
+  async (parent: any, args: any, ctx: any, info: any) => {
+    const permissionResult = await hasServerModPermission(
+      ServerModPermissionChecks.GIVE_FEEDBACK,
+      ctx
+    );
+
+    if (!permissionResult) {
+      return false;
+    }
+
+    if (permissionResult instanceof Error) {
+      return permissionResult;
+    }
+
+    return true;
+  }
+);
+
 const ruleList = {
   isChannelOwner,
   isDiscussionOwner,
@@ -291,6 +312,7 @@ const ruleList = {
   canUploadFile,
   canUpvoteComment,
   canUpvoteDiscussion,
+  canGiveFeedback
 };
 
 export default ruleList;

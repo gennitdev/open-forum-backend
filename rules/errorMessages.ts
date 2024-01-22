@@ -32,5 +32,9 @@ export const ERROR_MESSAGES = {
     notOwner: "You must be the owner of this channel to do that.",
     noChannelPermission: "You do not have permission to create channels.",
   },
+  user: {
+    noUsername: "You must provide a username.",
+    notOwner: "You must be the owner of this account to do that.",
+  }
 };
 

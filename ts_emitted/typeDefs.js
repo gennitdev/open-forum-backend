@@ -227,9 +227,6 @@ const typeDefinitions = gql `
     Issues: [Issue!]! @relationship(type: "AUTHORED_ISSUE", direction: OUT)
     IssueComments: [IssueComment!]!
       @relationship(type: "AUTHORED_ISSUE_COMMENT", direction: OUT)
-    SuspendedFromChannels: [Channel!]!
-      @relationship(type: "SUSPENDED_FROM_CHANNEL", direction: OUT)
-    suspendedFromServer: Boolean
     deleted: Boolean
     ChannelRoles: [ChannelRole!]!
       @relationship(type: "HAS_CHANNEL_ROLE", direction: OUT)
@@ -465,8 +462,7 @@ const typeDefinitions = gql `
   }
 
   type ChannelRole {
-    id: ID! @id
-    name: String
+    name: String @unique
     channelUniqueName: String
     description: String
     canCreateDiscussion: Boolean
@@ -485,12 +481,9 @@ const typeDefinitions = gql `
     canHideComment: Boolean
     canHideEvent: Boolean
     canHideDiscussion: Boolean
-    canDownvoteDiscussion: Boolean
-    canDownvoteComment: Boolean
     canGiveFeedback: Boolean
     canOpenSupportTickets: Boolean
     canCloseSupportTickets: Boolean
-    canResolveSupportTickets: Boolean
     canReport: Boolean
   }
 
@@ -500,6 +493,7 @@ const typeDefinitions = gql `
     canOpenSupportTickets: Boolean
     canLockChannel: Boolean
     canCloseSupportTickets: Boolean
+    canGiveFeedback: Boolean
   }
 
   type ServerConfig {

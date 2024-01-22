@@ -10,6 +10,13 @@ export const ServerPermissionChecks = {
   UPLOAD_FILE: "uploadFile",
 };
 
+export const ServerModPermissionChecks = {
+  OPEN_SUPPORT_TICKETS: "openSupportTickets",
+  LOCK_CHANNEL: "lockChannel",
+  CLOSE_SUPPORT_TICKETS: "closeSupportTickets",
+  GIVE_FEEDBACK: "giveFeedback",
+}
+
 export const ChannelPermissionChecks = {
   CREATE_EVENT: "createEvent",
   CREATE_DISCUSSION: "createDiscussion",
