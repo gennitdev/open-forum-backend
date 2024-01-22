@@ -165,6 +165,61 @@ const canUploadFile = rule({ cache: "contextual" })(
   }
 );
 
+type CanUpvoteCommentArgs = {
+  commentId: string;
+  username: string;
+};
+
+const canUpvoteComment = rule({ cache: "contextual" })(
+  async (parent: any, args: CanUpvoteCommentArgs, ctx: any, info: any) => {
+
+    const CommentModel = ctx.ogm.model("Comment");
+
+    const { commentId, username } = args;
+
+    if (!commentId || !username) {
+      return new Error("All arguments (commentId, username) are required");
+    }
+
+    const commentData = await CommentModel.find({
+      where: { id: commentId },
+      selectionSet: `{ 
+        id
+        DiscussionChannel {
+          channelUniqueName
+        }
+      }`,
+    });
+
+    if (!commentData || !commentData[0]) {
+      return new Error("No comment found.");
+    }
+
+    const channelThatCommentIsIn = commentData[0]?.DiscussionChannel?.channelUniqueName;
+
+    if (!channelThatCommentIsIn) {
+      return new Error("No channel found.");
+    }
+
+    const permissionResult = await hasChannelPermission({
+      permission: ChannelPermissionChecks.UPVOTE_COMMENT,
+      channelName: channelThatCommentIsIn,
+      context: ctx,
+    });
+
+    if (!permissionResult) {
+      return new Error("The user does not have permission in this channel.");
+    }
+
+    if (permissionResult instanceof Error) {
+      return permissionResult;
+    }
+    console.log("permissionResult in can upvote comment", permissionResult);
+
+    return true;
+  }
+);
+
 const ruleList = {
   isChannelOwner,
   isDiscussionOwner,
@@ -179,7 +234,7 @@ const ruleList = {
   isAdmin,
   isAccountOwner,
   canUploadFile,
-  // canUpvoteComment,
+  canUpvoteComment,
   // canUpvoteDiscussion,
   // canDownvoteComment,
   // canDownvoteDiscussion,

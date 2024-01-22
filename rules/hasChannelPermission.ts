@@ -135,6 +135,8 @@ export const hasChannelPermission: (
         canCreateEvent
         canCreateDiscussion
         canCreateComment
+        canUpvoteComment
+        canUpvoteDiscussion
       } 
     }`,
   });
@@ -173,6 +175,9 @@ export const hasChannelPermission: (
   }
   if (permission === ChannelPermissionChecks.CREATE_COMMENT) {
     return !!serverRoleToCheck.canCreateComment;
+  }
+  if (permission === ChannelPermissionChecks.UPVOTE_COMMENT) {
+    return !!serverRoleToCheck.canUpvoteComment;
   }
   return new Error(ERROR_MESSAGES.generic.noPermission);
 };

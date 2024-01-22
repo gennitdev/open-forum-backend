@@ -1,5 +1,6 @@
 import { setUserDataOnContext } from "./userDataHelperFunctions.js";
 import { ERROR_MESSAGES } from "./errorMessages.js";
+import { ServerPermissionChecks } from "./hasChannelPermission.js";
 
 export const hasServerPermission: (
   permission: string,
@@ -63,10 +64,10 @@ export const hasServerPermission: (
   // 3. Check if the permission is allowed by the default
   //    server role.
   const serverRoleToCheck = usersServerRoles[0];
-  if (permission === "createChannel") {
+  if (permission === ServerPermissionChecks.CREATE_CHANNEL) {
     return serverRoleToCheck.canCreateChannel;
   }
-  if (permission === "uploadFile") {
+  if (permission === ServerPermissionChecks.UPLOAD_FILE) {
     return serverRoleToCheck.canUploadFile;
   }
   return new Error(ERROR_MESSAGES.channel.noChannelPermission);

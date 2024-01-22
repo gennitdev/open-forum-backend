@@ -25,7 +25,10 @@ const permissionList = shield({
         updateComments: or(rules.isCommentAuthor, rules.isAdmin),
         deleteComments: or(rules.isCommentAuthor, rules.isAdmin),
         createSignedStorageURL: rules.canUploadFile,
-        // upvoteComment: rules.canUpvoteComment,
+        upvoteComment: rules.canUpvoteComment,
+        undoUpvoteComment: rules.canUpvoteComment, // We are intentionally reusing the same rule for undoing an upvote as for upvoting.
+        // Any user who can upvote a comment can undo their upvote. The undo upvote resolver 
+        // will check if the user has upvoted the comment and if so, remove the upvote.
         // upvoteDiscussion: rules.canUpvoteDiscussion,
         // downvoteComment: rules.canDownvoteComment,
         // downvoteDiscussion: rules.canDownvoteDiscussion,
