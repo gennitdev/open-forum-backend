@@ -25,6 +25,10 @@ const permissionList = shield({
         updateComments: or(rules.isCommentAuthor, rules.isAdmin),
         deleteComments: or(rules.isCommentAuthor, rules.isAdmin),
         createSignedStorageURL: rules.canUploadFile,
+        addEmojiToComment: rules.canUpvoteComment,
+        removeEmojiFromComment: rules.canUpvoteComment,
+        addEmojiToDiscussionChannel: rules.canUpvoteDiscussion,
+        removeEmojiFromDiscussionChannel: rules.canUpvoteDiscussion,
         upvoteComment: rules.canUpvoteComment,
         undoUpvoteComment: rules.canUpvoteComment, // We are intentionally reusing the same rule for undoing an upvote as for upvoting.
         // Any user who can upvote a comment can undo their upvote. The undo upvote resolver 
@@ -33,10 +37,7 @@ const permissionList = shield({
         undoUpvoteDiscussionChannel: rules.canUpvoteDiscussion, // We are intentionally reusing the same rule for undoing an upvote as for upvoting.
         // Any user who can upvote a discussion can undo their upvote. The undo upvote resolver
         // checks if the user has upvoted the discussion and if so, removes the upvote.
-        // voteWithEmoji: rules.canVoteWithEmoji,
         // MOD PERMISSIONS
-        // downvoteComment: rules.canDownvoteComment,
-        // downvoteDiscussion: rules.canDownvoteDiscussion,
         // hideComments: updateComments: and(rules.verifiedEmail, or(rules.hasChannelModPermission("hideComments"), rules.isAdmin)),
         // the rest need updating to the format "hasChannelPermissions" for things that can be suspended or revoked in fine grained roles.
         // canGiveFeedback: and(rules.verifiedEmail, rules.isNotSuspendedFromChannel, rules.isNotSuspendedFromServer),

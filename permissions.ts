@@ -33,7 +33,10 @@ const permissionList = shield({
       deleteComments: or(rules.isCommentAuthor, rules.isAdmin),
       
       createSignedStorageURL: rules.canUploadFile,
-      voteWithEmoji: rules.canUpvoteComment,
+      addEmojiToComment: rules.canUpvoteComment,
+      removeEmojiFromComment: rules.canUpvoteComment,
+      addEmojiToDiscussionChannel: rules.canUpvoteDiscussion,
+      removeEmojiFromDiscussionChannel: rules.canUpvoteDiscussion,
       upvoteComment: rules.canUpvoteComment,
       undoUpvoteComment: rules.canUpvoteComment, // We are intentionally reusing the same rule for undoing an upvote as for upvoting.
       // Any user who can upvote a comment can undo their upvote. The undo upvote resolver 
