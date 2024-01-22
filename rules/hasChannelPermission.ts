@@ -179,6 +179,9 @@ export const hasChannelPermission: (
   if (permission === ChannelPermissionChecks.UPVOTE_COMMENT) {
     return !!serverRoleToCheck.canUpvoteComment;
   }
+  if (permission === ChannelPermissionChecks.UPVOTE_DISCUSSION) {
+    return !!serverRoleToCheck.canUpvoteDiscussion;
+  }
   return new Error(ERROR_MESSAGES.generic.noPermission);
 };
 
