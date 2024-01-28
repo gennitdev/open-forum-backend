@@ -13,8 +13,6 @@ const typeDefinitions = gql `
     channelBannerURL: String
     Tags: [Tag!]! @relationship(type: "HAS_TAG", direction: OUT)
     # WikiPages:                [WikiPage]             @relationship(type: "HAS_WIKI_PAGE", direction: OUT)
-    ModerationDashboard: ModerationDashboard
-      @relationship(type: "HAS_MODERATION_DASHBOARD", direction: OUT)
     Rules: [Rule!]! @relationship(type: "HAS_RULE", direction: OUT)
     Admins: [User!]! @relationship(type: "ADMIN_OF_CHANNEL", direction: IN)
     Moderators: [ModerationProfile!]!
@@ -27,6 +25,7 @@ const typeDefinitions = gql `
       @relationship(type: "POSTED_IN_CHANNEL", direction: IN)
     Comments: [Comment!]! @relationship(type: "HAS_COMMENT", direction: OUT) # used for aggregated comment counts
     DefaultChannelRole: ChannelRole @relationship(type: "HAS_DEFAULT_CHANNEL_ROLE", direction: OUT)
+    Issues: [Issue!]! @relationship(type: "HAS_ISSUE", direction: OUT)
   }
 
   type DiscussionChannel {
@@ -60,6 +59,8 @@ const typeDefinitions = gql `
     # PastVersions:            [DiscussionVersion]     @relationship(type: "HAS_VERSION", direction: OUT)
     DiscussionChannels: [DiscussionChannel!]!
       @relationship(type: "POSTED_IN_CHANNEL", direction: IN)
+    FeedbackComments: [Comment!]! @relationship(type: "HAS_FEEDBACK_COMMENT", direction: OUT)
+    RelatedIssues: [Issue!]! @relationship(type: "HAS_RELATED_ISSUE", direction: OUT)
   }
 
   type EventChannel {
@@ -225,7 +226,7 @@ const typeDefinitions = gql `
     NotificationBundleInterval: String
     PreferredTimeZone: String
     Issues: [Issue!]! @relationship(type: "AUTHORED_ISSUE", direction: OUT)
-    IssueComments: [IssueComment!]!
+    IssueComments: [Comment!]!
       @relationship(type: "AUTHORED_ISSUE_COMMENT", direction: OUT)
     deleted: Boolean
     ChannelRoles: [ChannelRole!]!
@@ -247,7 +248,7 @@ const typeDefinitions = gql `
     Issues: [Issue!]! @relationship(type: "AUTHORED_ISSUE", direction: OUT)
     DiscussionComments: [Comment!]!
       @relationship(type: "AUTHORED_COMMENT", direction: OUT)
-    IssueComments: [IssueComment!]!
+    IssueComments: [Comment!]!
       @relationship(type: "AUTHORED_ISSUE_COMMENT", direction: OUT)
     ModChannelRoles: [ModChannelRole!]!
       @relationship(type: "HAS_MOD_ROLE", direction: OUT)
@@ -261,31 +262,14 @@ const typeDefinitions = gql `
     Author: IssueAuthor @relationship(type: "AUTHORED_ISSUE", direction: IN)
     title: String
     body: String
-    ModerationDashboard: ModerationDashboard
-      @relationship(type: "HAS_ISSUE", direction: IN)
     isOpen: Boolean!
-    Reports: [Report!]! @relationship(type: "CITED_REPORT", direction: OUT)
     createdAt: DateTime! @timestamp(operations: [CREATE])
     updatedAt: DateTime! @timestamp(operations: [UPDATE])
+    Comments: [Comment!]!
+      @relationship(type: "CITED_ISSUE", direction: IN)
   }
 
   union IssueCommentAuthor = User | ModerationProfile
-
-  type IssueComment {
-    id: ID! @id
-    Author: IssueCommentAuthor
-      @relationship(type: "AUTHORED_ISSUE_COMMENT", direction: IN)
-    createdAt: DateTime! @timestamp(operations: [CREATE])
-    updatedAt: DateTime! @timestamp(operations: [UPDATE])
-  }
-
-  type ModerationDashboard {
-    id: ID! @id
-    issueTemplate: String
-    Channel: Channel
-      @relationship(type: "HAS_MODERATION_DASHBOARD", direction: IN)
-    Issues: [Issue!]! @relationship(type: "HAS_ISSUE", direction: OUT)
-  }
 
   type Report {
     id: ID! @id
@@ -298,7 +282,7 @@ const typeDefinitions = gql `
     updatedAt: DateTime! @timestamp(operations: [UPDATE])
   }
 
-  union CommentAuthor = User #| ModerationProfile
+  union CommentAuthor = User | ModerationProfile
   type Feed {
     id: ID! @id
     title: String
