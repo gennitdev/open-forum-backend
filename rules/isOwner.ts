@@ -228,14 +228,29 @@ export const isCommentAuthor = rule({ cache: "contextual" })(
     const comment = comments[0];
 
     // Get the comment author.
-    const commentOwner = comment?.CommentAuthor?.username;
+    const commentOwner = comment?.CommentAuthor;
+    let commentOwnerName;
 
+    // The comment owner could be a user or a moderation profile.
+    // For a user, the username is stored on the user object.
+    // For a moderation profile, the displayName is stored on 
+    // the moderation profile object.
     if (!commentOwner) {
       return new Error(ERROR_MESSAGES.comment.noOwner);
     }
 
+    // @ts-ignore
+    if (commentOwner.username) {
+      // @ts-ignore
+      commentOwnerName = commentOwner.username;
+    } else if (commentOwner.displayName) {
+      commentOwnerName = commentOwner.displayName;
+    } else {
+      return new Error(ERROR_MESSAGES.comment.noOwner);
+    }
+
     // Check if the user is the comment author.
-    if (!commentOwner === username) {
+    if (!commentOwnerName === username) {
       return new Error(ERROR_MESSAGES.comment.notOwner);
     }
     return true;

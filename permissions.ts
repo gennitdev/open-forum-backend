@@ -1,4 +1,4 @@
-import { shield, allow, deny, and, or } from "graphql-shield";
+import { shield, allow, deny, or } from "graphql-shield";
 import rules from "./rules/rules.js";
 
 const permissionList = shield({
@@ -51,6 +51,11 @@ const permissionList = shield({
       // checks if the user has upvoted the discussion and if so, removes the upvote.
       
       // MOD PERMISSIONS
+      // canReportContent needs to check if the mod profile name is authentic.
+      reportDiscussion: rules.canReportContent,
+      reportComment: rules.canReportContent,
+      reportEvent: rules.canReportContent,
+      deleteIssues: allow, // rules.canDeleteIssues,
       // hideComments: updateComments: and(rules.verifiedEmail, or(rules.hasChannelModPermission("hideComments"), rules.isAdmin)),
       // the rest need updating to the format "hasChannelPermissions" for things that can be suspended or revoked in fine grained roles.
       // canGiveFeedback: and(rules.verifiedEmail, rules.isNotSuspendedFromChannel, rules.isNotSuspendedFromServer),
@@ -58,7 +63,6 @@ const permissionList = shield({
       // canCloseChannelSupportTicket: and(rules.verifiedEmail, rules.isChannelModerator, rules.isNotSuspendedFromServer),
       // canOpenServerSupportTicket: rules.verifiedEmail,
       // canCloseServerSupportTicket: and(rules.verifiedEmail, rules.isServerModerator, rules.isNotSuspendedFromServer),
-      // canReportContent: and(rules.verifiedEmail, rules.isNotSuspendedFromChannel, rules.isNotSuspendedFromServer)
     },
   });
   

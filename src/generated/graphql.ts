@@ -765,6 +765,7 @@ export type ChannelConnectInput = {
 export type ChannelConnectOrCreateInput = {
   Admins?: InputMaybe<Array<ChannelAdminsConnectOrCreateFieldInput>>;
   DefaultChannelRole?: InputMaybe<ChannelDefaultChannelRoleConnectOrCreateFieldInput>;
+  Issues?: InputMaybe<Array<ChannelIssuesConnectOrCreateFieldInput>>;
   Moderators?: InputMaybe<Array<ChannelModeratorsConnectOrCreateFieldInput>>;
   RelatedChannels?: InputMaybe<Array<ChannelRelatedChannelsConnectOrCreateFieldInput>>;
   Tags?: InputMaybe<Array<ChannelTagsConnectOrCreateFieldInput>>;
@@ -1233,11 +1234,16 @@ export type ChannelIssueIssuesAggregationSelection = {
 
 export type ChannelIssueIssuesNodeAggregateSelection = {
   __typename?: 'ChannelIssueIssuesNodeAggregateSelection';
+  authorName: StringAggregateSelectionNullable;
   body: StringAggregateSelectionNullable;
+  channelUniqueName: StringAggregateSelectionNullable;
   createdAt: DateTimeAggregateSelectionNonNullable;
   id: IdAggregateSelectionNonNullable;
+  relatedCommentId: IdAggregateSelectionNullable;
+  relatedDiscussionId: IdAggregateSelectionNullable;
+  relatedEventId: IdAggregateSelectionNullable;
   title: StringAggregateSelectionNullable;
-  updatedAt: DateTimeAggregateSelectionNonNullable;
+  updatedAt: DateTimeAggregateSelectionNullable;
 };
 
 export type ChannelIssuesAggregateInput = {
@@ -1257,6 +1263,15 @@ export type ChannelIssuesConnectFieldInput = {
   /** Whether or not to overwrite any matching relationship with the new properties. */
   overwrite?: Scalars['Boolean']['input'];
   where?: InputMaybe<IssueConnectWhere>;
+};
+
+export type ChannelIssuesConnectOrCreateFieldInput = {
+  onCreate: ChannelIssuesConnectOrCreateFieldInputOnCreate;
+  where: IssueConnectOrCreateWhere;
+};
+
+export type ChannelIssuesConnectOrCreateFieldInputOnCreate = {
+  node: IssueOnCreateInput;
 };
 
 export type ChannelIssuesConnection = {
@@ -1293,6 +1308,7 @@ export type ChannelIssuesDisconnectFieldInput = {
 
 export type ChannelIssuesFieldInput = {
   connect?: InputMaybe<Array<ChannelIssuesConnectFieldInput>>;
+  connectOrCreate?: InputMaybe<Array<ChannelIssuesConnectOrCreateFieldInput>>;
   create?: InputMaybe<Array<ChannelIssuesCreateFieldInput>>;
 };
 
@@ -1300,6 +1316,21 @@ export type ChannelIssuesNodeAggregationWhereInput = {
   AND?: InputMaybe<Array<ChannelIssuesNodeAggregationWhereInput>>;
   NOT?: InputMaybe<ChannelIssuesNodeAggregationWhereInput>;
   OR?: InputMaybe<Array<ChannelIssuesNodeAggregationWhereInput>>;
+  authorName_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  authorName_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  authorName_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  authorName_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  authorName_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  authorName_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  authorName_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  authorName_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  authorName_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  authorName_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  authorName_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  authorName_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  authorName_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  authorName_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  authorName_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
   body_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
   body_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
   body_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
@@ -1315,6 +1346,21 @@ export type ChannelIssuesNodeAggregationWhereInput = {
   body_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
   body_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
   body_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
   createdAt_MAX_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
   createdAt_MAX_GT?: InputMaybe<Scalars['DateTime']['input']>;
   createdAt_MAX_GTE?: InputMaybe<Scalars['DateTime']['input']>;
@@ -1364,6 +1410,7 @@ export type ChannelIssuesUpdateConnectionInput = {
 
 export type ChannelIssuesUpdateFieldInput = {
   connect?: InputMaybe<Array<ChannelIssuesConnectFieldInput>>;
+  connectOrCreate?: InputMaybe<Array<ChannelIssuesConnectOrCreateFieldInput>>;
   create?: InputMaybe<Array<ChannelIssuesCreateFieldInput>>;
   delete?: InputMaybe<Array<ChannelIssuesDeleteFieldInput>>;
   disconnect?: InputMaybe<Array<ChannelIssuesDisconnectFieldInput>>;
@@ -2378,6 +2425,9 @@ export type Comment = {
   ParentComment?: Maybe<Comment>;
   ParentCommentAggregate?: Maybe<CommentCommentParentCommentAggregationSelection>;
   ParentCommentConnection: CommentParentCommentConnection;
+  RelatedIssues: Array<Issue>;
+  RelatedIssuesAggregate?: Maybe<CommentIssueRelatedIssuesAggregationSelection>;
+  RelatedIssuesConnection: CommentRelatedIssuesConnection;
   Tags: Array<Tag>;
   TagsAggregate?: Maybe<CommentTagTagsAggregationSelection>;
   TagsConnection: CommentTagsConnection;
@@ -2539,6 +2589,28 @@ export type CommentParentCommentConnectionArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<Array<CommentParentCommentConnectionSort>>;
   where?: InputMaybe<CommentParentCommentConnectionWhere>;
+};
+
+
+export type CommentRelatedIssuesArgs = {
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  options?: InputMaybe<IssueOptions>;
+  where?: InputMaybe<IssueWhere>;
+};
+
+
+export type CommentRelatedIssuesAggregateArgs = {
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  where?: InputMaybe<IssueWhere>;
+};
+
+
+export type CommentRelatedIssuesConnectionArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<Array<CommentRelatedIssuesConnectionSort>>;
+  where?: InputMaybe<CommentRelatedIssuesConnectionWhere>;
 };
 
 
@@ -3132,6 +3204,7 @@ export type CommentConnectInput = {
   DownvotedByModerators?: InputMaybe<Array<CommentDownvotedByModeratorsConnectFieldInput>>;
   Event?: InputMaybe<CommentEventConnectFieldInput>;
   ParentComment?: InputMaybe<CommentParentCommentConnectFieldInput>;
+  RelatedIssues?: InputMaybe<Array<CommentRelatedIssuesConnectFieldInput>>;
   Tags?: InputMaybe<Array<CommentTagsConnectFieldInput>>;
   UpvotedByUsers?: InputMaybe<Array<CommentUpvotedByUsersConnectFieldInput>>;
 };
@@ -3140,6 +3213,7 @@ export type CommentConnectOrCreateInput = {
   Channel?: InputMaybe<CommentChannelConnectOrCreateFieldInput>;
   CommentAuthor?: InputMaybe<CommentCommentAuthorConnectOrCreateInput>;
   DownvotedByModerators?: InputMaybe<Array<CommentDownvotedByModeratorsConnectOrCreateFieldInput>>;
+  RelatedIssues?: InputMaybe<Array<CommentRelatedIssuesConnectOrCreateFieldInput>>;
   Tags?: InputMaybe<Array<CommentTagsConnectOrCreateFieldInput>>;
   UpvotedByUsers?: InputMaybe<Array<CommentUpvotedByUsersConnectOrCreateFieldInput>>;
 };
@@ -3156,6 +3230,7 @@ export type CommentCreateInput = {
   DownvotedByModerators?: InputMaybe<CommentDownvotedByModeratorsFieldInput>;
   Event?: InputMaybe<CommentEventFieldInput>;
   ParentComment?: InputMaybe<CommentParentCommentFieldInput>;
+  RelatedIssues?: InputMaybe<CommentRelatedIssuesFieldInput>;
   Tags?: InputMaybe<CommentTagsFieldInput>;
   UpvotedByUsers?: InputMaybe<CommentUpvotedByUsersFieldInput>;
   deleted?: InputMaybe<Scalars['Boolean']['input']>;
@@ -3173,6 +3248,7 @@ export type CommentDeleteInput = {
   DownvotedByModerators?: InputMaybe<Array<CommentDownvotedByModeratorsDeleteFieldInput>>;
   Event?: InputMaybe<CommentEventDeleteFieldInput>;
   ParentComment?: InputMaybe<CommentParentCommentDeleteFieldInput>;
+  RelatedIssues?: InputMaybe<Array<CommentRelatedIssuesDeleteFieldInput>>;
   Tags?: InputMaybe<Array<CommentTagsDeleteFieldInput>>;
   UpvotedByUsers?: InputMaybe<Array<CommentUpvotedByUsersDeleteFieldInput>>;
 };
@@ -3185,6 +3261,7 @@ export type CommentDisconnectInput = {
   DownvotedByModerators?: InputMaybe<Array<CommentDownvotedByModeratorsDisconnectFieldInput>>;
   Event?: InputMaybe<CommentEventDisconnectFieldInput>;
   ParentComment?: InputMaybe<CommentParentCommentDisconnectFieldInput>;
+  RelatedIssues?: InputMaybe<Array<CommentRelatedIssuesDisconnectFieldInput>>;
   Tags?: InputMaybe<Array<CommentTagsDisconnectFieldInput>>;
   UpvotedByUsers?: InputMaybe<Array<CommentUpvotedByUsersDisconnectFieldInput>>;
 };
@@ -3754,6 +3831,26 @@ export type CommentEventUpdateFieldInput = {
   where?: InputMaybe<CommentEventConnectionWhere>;
 };
 
+export type CommentIssueRelatedIssuesAggregationSelection = {
+  __typename?: 'CommentIssueRelatedIssuesAggregationSelection';
+  count: Scalars['Int']['output'];
+  node?: Maybe<CommentIssueRelatedIssuesNodeAggregateSelection>;
+};
+
+export type CommentIssueRelatedIssuesNodeAggregateSelection = {
+  __typename?: 'CommentIssueRelatedIssuesNodeAggregateSelection';
+  authorName: StringAggregateSelectionNullable;
+  body: StringAggregateSelectionNullable;
+  channelUniqueName: StringAggregateSelectionNullable;
+  createdAt: DateTimeAggregateSelectionNonNullable;
+  id: IdAggregateSelectionNonNullable;
+  relatedCommentId: IdAggregateSelectionNullable;
+  relatedDiscussionId: IdAggregateSelectionNullable;
+  relatedEventId: IdAggregateSelectionNullable;
+  title: StringAggregateSelectionNullable;
+  updatedAt: DateTimeAggregateSelectionNullable;
+};
+
 export type CommentModerationProfileDownvotedByModeratorsAggregationSelection = {
   __typename?: 'CommentModerationProfileDownvotedByModeratorsAggregationSelection';
   count: Scalars['Int']['output'];
@@ -3909,6 +4006,178 @@ export type CommentParentCommentUpdateFieldInput = {
   where?: InputMaybe<CommentParentCommentConnectionWhere>;
 };
 
+export type CommentRelatedIssuesAggregateInput = {
+  AND?: InputMaybe<Array<CommentRelatedIssuesAggregateInput>>;
+  NOT?: InputMaybe<CommentRelatedIssuesAggregateInput>;
+  OR?: InputMaybe<Array<CommentRelatedIssuesAggregateInput>>;
+  count?: InputMaybe<Scalars['Int']['input']>;
+  count_GT?: InputMaybe<Scalars['Int']['input']>;
+  count_GTE?: InputMaybe<Scalars['Int']['input']>;
+  count_LT?: InputMaybe<Scalars['Int']['input']>;
+  count_LTE?: InputMaybe<Scalars['Int']['input']>;
+  node?: InputMaybe<CommentRelatedIssuesNodeAggregationWhereInput>;
+};
+
+export type CommentRelatedIssuesConnectFieldInput = {
+  connect?: InputMaybe<Array<IssueConnectInput>>;
+  /** Whether or not to overwrite any matching relationship with the new properties. */
+  overwrite?: Scalars['Boolean']['input'];
+  where?: InputMaybe<IssueConnectWhere>;
+};
+
+export type CommentRelatedIssuesConnectOrCreateFieldInput = {
+  onCreate: CommentRelatedIssuesConnectOrCreateFieldInputOnCreate;
+  where: IssueConnectOrCreateWhere;
+};
+
+export type CommentRelatedIssuesConnectOrCreateFieldInputOnCreate = {
+  node: IssueOnCreateInput;
+};
+
+export type CommentRelatedIssuesConnection = {
+  __typename?: 'CommentRelatedIssuesConnection';
+  edges: Array<CommentRelatedIssuesRelationship>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type CommentRelatedIssuesConnectionSort = {
+  node?: InputMaybe<IssueSort>;
+};
+
+export type CommentRelatedIssuesConnectionWhere = {
+  AND?: InputMaybe<Array<CommentRelatedIssuesConnectionWhere>>;
+  NOT?: InputMaybe<CommentRelatedIssuesConnectionWhere>;
+  OR?: InputMaybe<Array<CommentRelatedIssuesConnectionWhere>>;
+  node?: InputMaybe<IssueWhere>;
+};
+
+export type CommentRelatedIssuesCreateFieldInput = {
+  node: IssueCreateInput;
+};
+
+export type CommentRelatedIssuesDeleteFieldInput = {
+  delete?: InputMaybe<IssueDeleteInput>;
+  where?: InputMaybe<CommentRelatedIssuesConnectionWhere>;
+};
+
+export type CommentRelatedIssuesDisconnectFieldInput = {
+  disconnect?: InputMaybe<IssueDisconnectInput>;
+  where?: InputMaybe<CommentRelatedIssuesConnectionWhere>;
+};
+
+export type CommentRelatedIssuesFieldInput = {
+  connect?: InputMaybe<Array<CommentRelatedIssuesConnectFieldInput>>;
+  connectOrCreate?: InputMaybe<Array<CommentRelatedIssuesConnectOrCreateFieldInput>>;
+  create?: InputMaybe<Array<CommentRelatedIssuesCreateFieldInput>>;
+};
+
+export type CommentRelatedIssuesNodeAggregationWhereInput = {
+  AND?: InputMaybe<Array<CommentRelatedIssuesNodeAggregationWhereInput>>;
+  NOT?: InputMaybe<CommentRelatedIssuesNodeAggregationWhereInput>;
+  OR?: InputMaybe<Array<CommentRelatedIssuesNodeAggregationWhereInput>>;
+  authorName_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  authorName_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  authorName_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  authorName_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  authorName_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  authorName_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  authorName_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  authorName_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  authorName_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  authorName_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  authorName_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  authorName_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  authorName_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  authorName_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  authorName_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  body_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  body_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  body_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  body_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  body_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  body_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  body_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  body_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  body_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  body_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  body_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  body_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  body_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  body_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  body_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  createdAt_MAX_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+  title_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  title_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  title_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  title_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  title_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  title_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  title_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  title_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  title_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  title_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  title_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  title_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  title_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  title_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  title_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  updatedAt_MAX_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MAX_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MAX_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MAX_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MAX_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MIN_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MIN_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MIN_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MIN_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MIN_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+};
+
+export type CommentRelatedIssuesRelationship = {
+  __typename?: 'CommentRelatedIssuesRelationship';
+  cursor: Scalars['String']['output'];
+  node: Issue;
+};
+
+export type CommentRelatedIssuesUpdateConnectionInput = {
+  node?: InputMaybe<IssueUpdateInput>;
+};
+
+export type CommentRelatedIssuesUpdateFieldInput = {
+  connect?: InputMaybe<Array<CommentRelatedIssuesConnectFieldInput>>;
+  connectOrCreate?: InputMaybe<Array<CommentRelatedIssuesConnectOrCreateFieldInput>>;
+  create?: InputMaybe<Array<CommentRelatedIssuesCreateFieldInput>>;
+  delete?: InputMaybe<Array<CommentRelatedIssuesDeleteFieldInput>>;
+  disconnect?: InputMaybe<Array<CommentRelatedIssuesDisconnectFieldInput>>;
+  update?: InputMaybe<CommentRelatedIssuesUpdateConnectionInput>;
+  where?: InputMaybe<CommentRelatedIssuesConnectionWhere>;
+};
+
 export type CommentRelationInput = {
   Channel?: InputMaybe<CommentChannelCreateFieldInput>;
   ChildComments?: InputMaybe<Array<CommentChildCommentsCreateFieldInput>>;
@@ -3917,6 +4186,7 @@ export type CommentRelationInput = {
   DownvotedByModerators?: InputMaybe<Array<CommentDownvotedByModeratorsCreateFieldInput>>;
   Event?: InputMaybe<CommentEventCreateFieldInput>;
   ParentComment?: InputMaybe<CommentParentCommentCreateFieldInput>;
+  RelatedIssues?: InputMaybe<Array<CommentRelatedIssuesCreateFieldInput>>;
   Tags?: InputMaybe<Array<CommentTagsCreateFieldInput>>;
   UpvotedByUsers?: InputMaybe<Array<CommentUpvotedByUsersCreateFieldInput>>;
 };
@@ -4163,6 +4433,7 @@ export type CommentUpdateInput = {
   DownvotedByModerators?: InputMaybe<Array<CommentDownvotedByModeratorsUpdateFieldInput>>;
   Event?: InputMaybe<CommentEventUpdateFieldInput>;
   ParentComment?: InputMaybe<CommentParentCommentUpdateFieldInput>;
+  RelatedIssues?: InputMaybe<Array<CommentRelatedIssuesUpdateFieldInput>>;
   Tags?: InputMaybe<Array<CommentTagsUpdateFieldInput>>;
   UpvotedByUsers?: InputMaybe<Array<CommentUpvotedByUsersUpdateFieldInput>>;
   deleted?: InputMaybe<Scalars['Boolean']['input']>;
@@ -4535,6 +4806,23 @@ export type CommentWhere = {
   ParentCommentConnection?: InputMaybe<CommentParentCommentConnectionWhere>;
   ParentCommentConnection_NOT?: InputMaybe<CommentParentCommentConnectionWhere>;
   ParentComment_NOT?: InputMaybe<CommentWhere>;
+  RelatedIssuesAggregate?: InputMaybe<CommentRelatedIssuesAggregateInput>;
+  /** Return Comments where all of the related CommentRelatedIssuesConnections match this filter */
+  RelatedIssuesConnection_ALL?: InputMaybe<CommentRelatedIssuesConnectionWhere>;
+  /** Return Comments where none of the related CommentRelatedIssuesConnections match this filter */
+  RelatedIssuesConnection_NONE?: InputMaybe<CommentRelatedIssuesConnectionWhere>;
+  /** Return Comments where one of the related CommentRelatedIssuesConnections match this filter */
+  RelatedIssuesConnection_SINGLE?: InputMaybe<CommentRelatedIssuesConnectionWhere>;
+  /** Return Comments where some of the related CommentRelatedIssuesConnections match this filter */
+  RelatedIssuesConnection_SOME?: InputMaybe<CommentRelatedIssuesConnectionWhere>;
+  /** Return Comments where all of the related Issues match this filter */
+  RelatedIssues_ALL?: InputMaybe<IssueWhere>;
+  /** Return Comments where none of the related Issues match this filter */
+  RelatedIssues_NONE?: InputMaybe<IssueWhere>;
+  /** Return Comments where one of the related Issues match this filter */
+  RelatedIssues_SINGLE?: InputMaybe<IssueWhere>;
+  /** Return Comments where some of the related Issues match this filter */
+  RelatedIssues_SOME?: InputMaybe<IssueWhere>;
   TagsAggregate?: InputMaybe<CommentTagsAggregateInput>;
   /** Return Comments where all of the related CommentTagsConnections match this filter */
   TagsConnection_ALL?: InputMaybe<CommentTagsConnectionWhere>;
@@ -4750,12 +5038,6 @@ export type CreateRepeatEveriesMutationResponse = {
   __typename?: 'CreateRepeatEveriesMutationResponse';
   info: CreateInfo;
   repeatEveries: Array<RepeatEvery>;
-};
-
-export type CreateReportsMutationResponse = {
-  __typename?: 'CreateReportsMutationResponse';
-  info: CreateInfo;
-  reports: Array<Report>;
 };
 
 export type CreateRulesMutationResponse = {
@@ -6598,6 +6880,7 @@ export type DiscussionConnectInput = {
 
 export type DiscussionConnectOrCreateInput = {
   Author?: InputMaybe<DiscussionAuthorConnectOrCreateFieldInput>;
+  RelatedIssues?: InputMaybe<Array<DiscussionRelatedIssuesConnectOrCreateFieldInput>>;
   Tags?: InputMaybe<Array<DiscussionTagsConnectOrCreateFieldInput>>;
 };
 
@@ -6923,11 +7206,16 @@ export type DiscussionIssueRelatedIssuesAggregationSelection = {
 
 export type DiscussionIssueRelatedIssuesNodeAggregateSelection = {
   __typename?: 'DiscussionIssueRelatedIssuesNodeAggregateSelection';
+  authorName: StringAggregateSelectionNullable;
   body: StringAggregateSelectionNullable;
+  channelUniqueName: StringAggregateSelectionNullable;
   createdAt: DateTimeAggregateSelectionNonNullable;
   id: IdAggregateSelectionNonNullable;
+  relatedCommentId: IdAggregateSelectionNullable;
+  relatedDiscussionId: IdAggregateSelectionNullable;
+  relatedEventId: IdAggregateSelectionNullable;
   title: StringAggregateSelectionNullable;
-  updatedAt: DateTimeAggregateSelectionNonNullable;
+  updatedAt: DateTimeAggregateSelectionNullable;
 };
 
 export type DiscussionListOptions = {
@@ -6961,6 +7249,15 @@ export type DiscussionRelatedIssuesConnectFieldInput = {
   /** Whether or not to overwrite any matching relationship with the new properties. */
   overwrite?: Scalars['Boolean']['input'];
   where?: InputMaybe<IssueConnectWhere>;
+};
+
+export type DiscussionRelatedIssuesConnectOrCreateFieldInput = {
+  onCreate: DiscussionRelatedIssuesConnectOrCreateFieldInputOnCreate;
+  where: IssueConnectOrCreateWhere;
+};
+
+export type DiscussionRelatedIssuesConnectOrCreateFieldInputOnCreate = {
+  node: IssueOnCreateInput;
 };
 
 export type DiscussionRelatedIssuesConnection = {
@@ -6997,6 +7294,7 @@ export type DiscussionRelatedIssuesDisconnectFieldInput = {
 
 export type DiscussionRelatedIssuesFieldInput = {
   connect?: InputMaybe<Array<DiscussionRelatedIssuesConnectFieldInput>>;
+  connectOrCreate?: InputMaybe<Array<DiscussionRelatedIssuesConnectOrCreateFieldInput>>;
   create?: InputMaybe<Array<DiscussionRelatedIssuesCreateFieldInput>>;
 };
 
@@ -7004,6 +7302,21 @@ export type DiscussionRelatedIssuesNodeAggregationWhereInput = {
   AND?: InputMaybe<Array<DiscussionRelatedIssuesNodeAggregationWhereInput>>;
   NOT?: InputMaybe<DiscussionRelatedIssuesNodeAggregationWhereInput>;
   OR?: InputMaybe<Array<DiscussionRelatedIssuesNodeAggregationWhereInput>>;
+  authorName_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  authorName_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  authorName_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  authorName_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  authorName_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  authorName_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  authorName_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  authorName_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  authorName_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  authorName_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  authorName_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  authorName_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  authorName_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  authorName_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  authorName_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
   body_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
   body_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
   body_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
@@ -7019,6 +7332,21 @@ export type DiscussionRelatedIssuesNodeAggregationWhereInput = {
   body_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
   body_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
   body_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
   createdAt_MAX_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
   createdAt_MAX_GT?: InputMaybe<Scalars['DateTime']['input']>;
   createdAt_MAX_GTE?: InputMaybe<Scalars['DateTime']['input']>;
@@ -7068,6 +7396,7 @@ export type DiscussionRelatedIssuesUpdateConnectionInput = {
 
 export type DiscussionRelatedIssuesUpdateFieldInput = {
   connect?: InputMaybe<Array<DiscussionRelatedIssuesConnectFieldInput>>;
+  connectOrCreate?: InputMaybe<Array<DiscussionRelatedIssuesConnectOrCreateFieldInput>>;
   create?: InputMaybe<Array<DiscussionRelatedIssuesCreateFieldInput>>;
   delete?: InputMaybe<Array<DiscussionRelatedIssuesDeleteFieldInput>>;
   disconnect?: InputMaybe<Array<DiscussionRelatedIssuesDisconnectFieldInput>>;
@@ -8221,6 +8550,9 @@ export type Event = {
   RecurringEvent?: Maybe<RecurringEvent>;
   RecurringEventAggregate?: Maybe<EventRecurringEventRecurringEventAggregationSelection>;
   RecurringEventConnection: EventRecurringEventConnection;
+  RelatedIssues: Array<Issue>;
+  RelatedIssuesAggregate?: Maybe<EventIssueRelatedIssuesAggregationSelection>;
+  RelatedIssuesConnection: EventRelatedIssuesConnection;
   Tags: Array<Tag>;
   TagsAggregate?: Maybe<EventTagTagsAggregationSelection>;
   TagsConnection: EventTagsConnection;
@@ -8335,6 +8667,28 @@ export type EventRecurringEventConnectionArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<Array<EventRecurringEventConnectionSort>>;
   where?: InputMaybe<EventRecurringEventConnectionWhere>;
+};
+
+
+export type EventRelatedIssuesArgs = {
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  options?: InputMaybe<IssueOptions>;
+  where?: InputMaybe<IssueWhere>;
+};
+
+
+export type EventRelatedIssuesAggregateArgs = {
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  where?: InputMaybe<IssueWhere>;
+};
+
+
+export type EventRelatedIssuesConnectionArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<Array<EventRelatedIssuesConnectionSort>>;
+  where?: InputMaybe<EventRelatedIssuesConnectionWhere>;
 };
 
 
@@ -9453,11 +9807,13 @@ export type EventConnectInput = {
   EventChannels?: InputMaybe<Array<EventEventChannelsConnectFieldInput>>;
   Poster?: InputMaybe<EventPosterConnectFieldInput>;
   RecurringEvent?: InputMaybe<EventRecurringEventConnectFieldInput>;
+  RelatedIssues?: InputMaybe<Array<EventRelatedIssuesConnectFieldInput>>;
   Tags?: InputMaybe<Array<EventTagsConnectFieldInput>>;
 };
 
 export type EventConnectOrCreateInput = {
   Poster?: InputMaybe<EventPosterConnectOrCreateFieldInput>;
+  RelatedIssues?: InputMaybe<Array<EventRelatedIssuesConnectOrCreateFieldInput>>;
   Tags?: InputMaybe<Array<EventTagsConnectOrCreateFieldInput>>;
 };
 
@@ -9470,6 +9826,7 @@ export type EventCreateInput = {
   EventChannels?: InputMaybe<EventEventChannelsFieldInput>;
   Poster?: InputMaybe<EventPosterFieldInput>;
   RecurringEvent?: InputMaybe<EventRecurringEventFieldInput>;
+  RelatedIssues?: InputMaybe<EventRelatedIssuesFieldInput>;
   Tags?: InputMaybe<EventTagsFieldInput>;
   address?: InputMaybe<Scalars['String']['input']>;
   canceled: Scalars['Boolean']['input'];
@@ -9498,6 +9855,7 @@ export type EventDeleteInput = {
   EventChannels?: InputMaybe<Array<EventEventChannelsDeleteFieldInput>>;
   Poster?: InputMaybe<EventPosterDeleteFieldInput>;
   RecurringEvent?: InputMaybe<EventRecurringEventDeleteFieldInput>;
+  RelatedIssues?: InputMaybe<Array<EventRelatedIssuesDeleteFieldInput>>;
   Tags?: InputMaybe<Array<EventTagsDeleteFieldInput>>;
 };
 
@@ -9506,6 +9864,7 @@ export type EventDisconnectInput = {
   EventChannels?: InputMaybe<Array<EventEventChannelsDisconnectFieldInput>>;
   Poster?: InputMaybe<EventPosterDisconnectFieldInput>;
   RecurringEvent?: InputMaybe<EventRecurringEventDisconnectFieldInput>;
+  RelatedIssues?: InputMaybe<Array<EventRelatedIssuesDisconnectFieldInput>>;
   Tags?: InputMaybe<Array<EventTagsDisconnectFieldInput>>;
 };
 
@@ -9633,6 +9992,26 @@ export type EventEventChannelsUpdateFieldInput = {
   disconnect?: InputMaybe<Array<EventEventChannelsDisconnectFieldInput>>;
   update?: InputMaybe<EventEventChannelsUpdateConnectionInput>;
   where?: InputMaybe<EventEventChannelsConnectionWhere>;
+};
+
+export type EventIssueRelatedIssuesAggregationSelection = {
+  __typename?: 'EventIssueRelatedIssuesAggregationSelection';
+  count: Scalars['Int']['output'];
+  node?: Maybe<EventIssueRelatedIssuesNodeAggregateSelection>;
+};
+
+export type EventIssueRelatedIssuesNodeAggregateSelection = {
+  __typename?: 'EventIssueRelatedIssuesNodeAggregateSelection';
+  authorName: StringAggregateSelectionNullable;
+  body: StringAggregateSelectionNullable;
+  channelUniqueName: StringAggregateSelectionNullable;
+  createdAt: DateTimeAggregateSelectionNonNullable;
+  id: IdAggregateSelectionNonNullable;
+  relatedCommentId: IdAggregateSelectionNullable;
+  relatedDiscussionId: IdAggregateSelectionNullable;
+  relatedEventId: IdAggregateSelectionNullable;
+  title: StringAggregateSelectionNullable;
+  updatedAt: DateTimeAggregateSelectionNullable;
 };
 
 export type EventOptions = {
@@ -10011,11 +10390,184 @@ export type EventRecurringEventUpdateFieldInput = {
   where?: InputMaybe<EventRecurringEventConnectionWhere>;
 };
 
+export type EventRelatedIssuesAggregateInput = {
+  AND?: InputMaybe<Array<EventRelatedIssuesAggregateInput>>;
+  NOT?: InputMaybe<EventRelatedIssuesAggregateInput>;
+  OR?: InputMaybe<Array<EventRelatedIssuesAggregateInput>>;
+  count?: InputMaybe<Scalars['Int']['input']>;
+  count_GT?: InputMaybe<Scalars['Int']['input']>;
+  count_GTE?: InputMaybe<Scalars['Int']['input']>;
+  count_LT?: InputMaybe<Scalars['Int']['input']>;
+  count_LTE?: InputMaybe<Scalars['Int']['input']>;
+  node?: InputMaybe<EventRelatedIssuesNodeAggregationWhereInput>;
+};
+
+export type EventRelatedIssuesConnectFieldInput = {
+  connect?: InputMaybe<Array<IssueConnectInput>>;
+  /** Whether or not to overwrite any matching relationship with the new properties. */
+  overwrite?: Scalars['Boolean']['input'];
+  where?: InputMaybe<IssueConnectWhere>;
+};
+
+export type EventRelatedIssuesConnectOrCreateFieldInput = {
+  onCreate: EventRelatedIssuesConnectOrCreateFieldInputOnCreate;
+  where: IssueConnectOrCreateWhere;
+};
+
+export type EventRelatedIssuesConnectOrCreateFieldInputOnCreate = {
+  node: IssueOnCreateInput;
+};
+
+export type EventRelatedIssuesConnection = {
+  __typename?: 'EventRelatedIssuesConnection';
+  edges: Array<EventRelatedIssuesRelationship>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type EventRelatedIssuesConnectionSort = {
+  node?: InputMaybe<IssueSort>;
+};
+
+export type EventRelatedIssuesConnectionWhere = {
+  AND?: InputMaybe<Array<EventRelatedIssuesConnectionWhere>>;
+  NOT?: InputMaybe<EventRelatedIssuesConnectionWhere>;
+  OR?: InputMaybe<Array<EventRelatedIssuesConnectionWhere>>;
+  node?: InputMaybe<IssueWhere>;
+};
+
+export type EventRelatedIssuesCreateFieldInput = {
+  node: IssueCreateInput;
+};
+
+export type EventRelatedIssuesDeleteFieldInput = {
+  delete?: InputMaybe<IssueDeleteInput>;
+  where?: InputMaybe<EventRelatedIssuesConnectionWhere>;
+};
+
+export type EventRelatedIssuesDisconnectFieldInput = {
+  disconnect?: InputMaybe<IssueDisconnectInput>;
+  where?: InputMaybe<EventRelatedIssuesConnectionWhere>;
+};
+
+export type EventRelatedIssuesFieldInput = {
+  connect?: InputMaybe<Array<EventRelatedIssuesConnectFieldInput>>;
+  connectOrCreate?: InputMaybe<Array<EventRelatedIssuesConnectOrCreateFieldInput>>;
+  create?: InputMaybe<Array<EventRelatedIssuesCreateFieldInput>>;
+};
+
+export type EventRelatedIssuesNodeAggregationWhereInput = {
+  AND?: InputMaybe<Array<EventRelatedIssuesNodeAggregationWhereInput>>;
+  NOT?: InputMaybe<EventRelatedIssuesNodeAggregationWhereInput>;
+  OR?: InputMaybe<Array<EventRelatedIssuesNodeAggregationWhereInput>>;
+  authorName_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  authorName_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  authorName_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  authorName_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  authorName_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  authorName_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  authorName_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  authorName_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  authorName_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  authorName_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  authorName_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  authorName_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  authorName_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  authorName_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  authorName_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  body_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  body_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  body_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  body_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  body_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  body_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  body_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  body_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  body_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  body_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  body_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  body_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  body_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  body_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  body_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  createdAt_MAX_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+  title_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  title_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  title_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  title_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  title_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  title_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  title_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  title_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  title_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  title_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  title_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  title_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  title_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  title_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  title_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  updatedAt_MAX_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MAX_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MAX_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MAX_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MAX_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MIN_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MIN_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MIN_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MIN_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MIN_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+};
+
+export type EventRelatedIssuesRelationship = {
+  __typename?: 'EventRelatedIssuesRelationship';
+  cursor: Scalars['String']['output'];
+  node: Issue;
+};
+
+export type EventRelatedIssuesUpdateConnectionInput = {
+  node?: InputMaybe<IssueUpdateInput>;
+};
+
+export type EventRelatedIssuesUpdateFieldInput = {
+  connect?: InputMaybe<Array<EventRelatedIssuesConnectFieldInput>>;
+  connectOrCreate?: InputMaybe<Array<EventRelatedIssuesConnectOrCreateFieldInput>>;
+  create?: InputMaybe<Array<EventRelatedIssuesCreateFieldInput>>;
+  delete?: InputMaybe<Array<EventRelatedIssuesDeleteFieldInput>>;
+  disconnect?: InputMaybe<Array<EventRelatedIssuesDisconnectFieldInput>>;
+  update?: InputMaybe<EventRelatedIssuesUpdateConnectionInput>;
+  where?: InputMaybe<EventRelatedIssuesConnectionWhere>;
+};
+
 export type EventRelationInput = {
   Comments?: InputMaybe<Array<EventCommentsCreateFieldInput>>;
   EventChannels?: InputMaybe<Array<EventEventChannelsCreateFieldInput>>;
   Poster?: InputMaybe<EventPosterCreateFieldInput>;
   RecurringEvent?: InputMaybe<EventRecurringEventCreateFieldInput>;
+  RelatedIssues?: InputMaybe<Array<EventRelatedIssuesCreateFieldInput>>;
   Tags?: InputMaybe<Array<EventTagsCreateFieldInput>>;
 };
 
@@ -10169,6 +10721,7 @@ export type EventUpdateInput = {
   EventChannels?: InputMaybe<Array<EventEventChannelsUpdateFieldInput>>;
   Poster?: InputMaybe<EventPosterUpdateFieldInput>;
   RecurringEvent?: InputMaybe<EventRecurringEventUpdateFieldInput>;
+  RelatedIssues?: InputMaybe<Array<EventRelatedIssuesUpdateFieldInput>>;
   Tags?: InputMaybe<Array<EventTagsUpdateFieldInput>>;
   address?: InputMaybe<Scalars['String']['input']>;
   canceled?: InputMaybe<Scalars['Boolean']['input']>;
@@ -10264,6 +10817,23 @@ export type EventWhere = {
   RecurringEventConnection?: InputMaybe<EventRecurringEventConnectionWhere>;
   RecurringEventConnection_NOT?: InputMaybe<EventRecurringEventConnectionWhere>;
   RecurringEvent_NOT?: InputMaybe<RecurringEventWhere>;
+  RelatedIssuesAggregate?: InputMaybe<EventRelatedIssuesAggregateInput>;
+  /** Return Events where all of the related EventRelatedIssuesConnections match this filter */
+  RelatedIssuesConnection_ALL?: InputMaybe<EventRelatedIssuesConnectionWhere>;
+  /** Return Events where none of the related EventRelatedIssuesConnections match this filter */
+  RelatedIssuesConnection_NONE?: InputMaybe<EventRelatedIssuesConnectionWhere>;
+  /** Return Events where one of the related EventRelatedIssuesConnections match this filter */
+  RelatedIssuesConnection_SINGLE?: InputMaybe<EventRelatedIssuesConnectionWhere>;
+  /** Return Events where some of the related EventRelatedIssuesConnections match this filter */
+  RelatedIssuesConnection_SOME?: InputMaybe<EventRelatedIssuesConnectionWhere>;
+  /** Return Events where all of the related Issues match this filter */
+  RelatedIssues_ALL?: InputMaybe<IssueWhere>;
+  /** Return Events where none of the related Issues match this filter */
+  RelatedIssues_NONE?: InputMaybe<IssueWhere>;
+  /** Return Events where one of the related Issues match this filter */
+  RelatedIssues_SINGLE?: InputMaybe<IssueWhere>;
+  /** Return Events where some of the related Issues match this filter */
+  RelatedIssues_SOME?: InputMaybe<IssueWhere>;
   TagsAggregate?: InputMaybe<EventTagsAggregateInput>;
   /** Return Events where all of the related EventTagsConnections match this filter */
   TagsConnection_ALL?: InputMaybe<EventTagsConnectionWhere>;
@@ -11009,6 +11579,12 @@ export type IdAggregateSelectionNonNullable = {
   shortest: Scalars['ID']['output'];
 };
 
+export type IdAggregateSelectionNullable = {
+  __typename?: 'IDAggregateSelectionNullable';
+  longest?: Maybe<Scalars['ID']['output']>;
+  shortest?: Maybe<Scalars['ID']['output']>;
+};
+
 export type IntAggregateSelectionNonNullable = {
   __typename?: 'IntAggregateSelectionNonNullable';
   average: Scalars['Float']['output'];
@@ -11029,15 +11605,32 @@ export type Issue = {
   __typename?: 'Issue';
   Author?: Maybe<IssueAuthor>;
   AuthorConnection: IssueAuthorConnection;
+  Channel?: Maybe<Channel>;
+  ChannelAggregate?: Maybe<IssueChannelChannelAggregationSelection>;
+  ChannelConnection: IssueChannelConnection;
   Comments: Array<Comment>;
   CommentsAggregate?: Maybe<IssueCommentCommentsAggregationSelection>;
   CommentsConnection: IssueCommentsConnection;
+  RelatedComment?: Maybe<Comment>;
+  RelatedCommentAggregate?: Maybe<IssueCommentRelatedCommentAggregationSelection>;
+  RelatedCommentConnection: IssueRelatedCommentConnection;
+  RelatedDiscussion?: Maybe<Discussion>;
+  RelatedDiscussionAggregate?: Maybe<IssueDiscussionRelatedDiscussionAggregationSelection>;
+  RelatedDiscussionConnection: IssueRelatedDiscussionConnection;
+  RelatedEvent?: Maybe<Event>;
+  RelatedEventAggregate?: Maybe<IssueEventRelatedEventAggregationSelection>;
+  RelatedEventConnection: IssueRelatedEventConnection;
+  authorName?: Maybe<Scalars['String']['output']>;
   body?: Maybe<Scalars['String']['output']>;
+  channelUniqueName?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
   id: Scalars['ID']['output'];
   isOpen: Scalars['Boolean']['output'];
+  relatedCommentId?: Maybe<Scalars['ID']['output']>;
+  relatedDiscussionId?: Maybe<Scalars['ID']['output']>;
+  relatedEventId?: Maybe<Scalars['ID']['output']>;
   title?: Maybe<Scalars['String']['output']>;
-  updatedAt: Scalars['DateTime']['output'];
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
 };
 
 
@@ -11053,6 +11646,28 @@ export type IssueAuthorConnectionArgs = {
   directed?: InputMaybe<Scalars['Boolean']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
   where?: InputMaybe<IssueAuthorConnectionWhere>;
+};
+
+
+export type IssueChannelArgs = {
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  options?: InputMaybe<ChannelOptions>;
+  where?: InputMaybe<ChannelWhere>;
+};
+
+
+export type IssueChannelAggregateArgs = {
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  where?: InputMaybe<ChannelWhere>;
+};
+
+
+export type IssueChannelConnectionArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<Array<IssueChannelConnectionSort>>;
+  where?: InputMaybe<IssueChannelConnectionWhere>;
 };
 
 
@@ -11077,14 +11692,85 @@ export type IssueCommentsConnectionArgs = {
   where?: InputMaybe<IssueCommentsConnectionWhere>;
 };
 
+
+export type IssueRelatedCommentArgs = {
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  options?: InputMaybe<CommentOptions>;
+  where?: InputMaybe<CommentWhere>;
+};
+
+
+export type IssueRelatedCommentAggregateArgs = {
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  where?: InputMaybe<CommentWhere>;
+};
+
+
+export type IssueRelatedCommentConnectionArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<Array<IssueRelatedCommentConnectionSort>>;
+  where?: InputMaybe<IssueRelatedCommentConnectionWhere>;
+};
+
+
+export type IssueRelatedDiscussionArgs = {
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  options?: InputMaybe<DiscussionOptions>;
+  where?: InputMaybe<DiscussionWhere>;
+};
+
+
+export type IssueRelatedDiscussionAggregateArgs = {
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  where?: InputMaybe<DiscussionWhere>;
+};
+
+
+export type IssueRelatedDiscussionConnectionArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<Array<IssueRelatedDiscussionConnectionSort>>;
+  where?: InputMaybe<IssueRelatedDiscussionConnectionWhere>;
+};
+
+
+export type IssueRelatedEventArgs = {
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  options?: InputMaybe<EventOptions>;
+  where?: InputMaybe<EventWhere>;
+};
+
+
+export type IssueRelatedEventAggregateArgs = {
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  where?: InputMaybe<EventWhere>;
+};
+
+
+export type IssueRelatedEventConnectionArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<Array<IssueRelatedEventConnectionSort>>;
+  where?: InputMaybe<IssueRelatedEventConnectionWhere>;
+};
+
 export type IssueAggregateSelection = {
   __typename?: 'IssueAggregateSelection';
+  authorName: StringAggregateSelectionNullable;
   body: StringAggregateSelectionNullable;
+  channelUniqueName: StringAggregateSelectionNullable;
   count: Scalars['Int']['output'];
   createdAt: DateTimeAggregateSelectionNonNullable;
   id: IdAggregateSelectionNonNullable;
+  relatedCommentId: IdAggregateSelectionNullable;
+  relatedDiscussionId: IdAggregateSelectionNullable;
+  relatedEventId: IdAggregateSelectionNullable;
   title: StringAggregateSelectionNullable;
-  updatedAt: DateTimeAggregateSelectionNonNullable;
+  updatedAt: DateTimeAggregateSelectionNullable;
 };
 
 export type IssueAuthor = ModerationProfile | User;
@@ -11257,6 +11943,199 @@ export type IssueAuthorWhere = {
   User?: InputMaybe<UserWhere>;
 };
 
+export type IssueChannelAggregateInput = {
+  AND?: InputMaybe<Array<IssueChannelAggregateInput>>;
+  NOT?: InputMaybe<IssueChannelAggregateInput>;
+  OR?: InputMaybe<Array<IssueChannelAggregateInput>>;
+  count?: InputMaybe<Scalars['Int']['input']>;
+  count_GT?: InputMaybe<Scalars['Int']['input']>;
+  count_GTE?: InputMaybe<Scalars['Int']['input']>;
+  count_LT?: InputMaybe<Scalars['Int']['input']>;
+  count_LTE?: InputMaybe<Scalars['Int']['input']>;
+  node?: InputMaybe<IssueChannelNodeAggregationWhereInput>;
+};
+
+export type IssueChannelChannelAggregationSelection = {
+  __typename?: 'IssueChannelChannelAggregationSelection';
+  count: Scalars['Int']['output'];
+  node?: Maybe<IssueChannelChannelNodeAggregateSelection>;
+};
+
+export type IssueChannelChannelNodeAggregateSelection = {
+  __typename?: 'IssueChannelChannelNodeAggregateSelection';
+  channelBannerURL: StringAggregateSelectionNullable;
+  channelIconURL: StringAggregateSelectionNullable;
+  createdAt: DateTimeAggregateSelectionNonNullable;
+  description: StringAggregateSelectionNullable;
+  displayName: StringAggregateSelectionNullable;
+  uniqueName: StringAggregateSelectionNonNullable;
+};
+
+export type IssueChannelConnectFieldInput = {
+  connect?: InputMaybe<ChannelConnectInput>;
+  /** Whether or not to overwrite any matching relationship with the new properties. */
+  overwrite?: Scalars['Boolean']['input'];
+  where?: InputMaybe<ChannelConnectWhere>;
+};
+
+export type IssueChannelConnectOrCreateFieldInput = {
+  onCreate: IssueChannelConnectOrCreateFieldInputOnCreate;
+  where: ChannelConnectOrCreateWhere;
+};
+
+export type IssueChannelConnectOrCreateFieldInputOnCreate = {
+  node: ChannelOnCreateInput;
+};
+
+export type IssueChannelConnection = {
+  __typename?: 'IssueChannelConnection';
+  edges: Array<IssueChannelRelationship>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type IssueChannelConnectionSort = {
+  node?: InputMaybe<ChannelSort>;
+};
+
+export type IssueChannelConnectionWhere = {
+  AND?: InputMaybe<Array<IssueChannelConnectionWhere>>;
+  NOT?: InputMaybe<IssueChannelConnectionWhere>;
+  OR?: InputMaybe<Array<IssueChannelConnectionWhere>>;
+  node?: InputMaybe<ChannelWhere>;
+};
+
+export type IssueChannelCreateFieldInput = {
+  node: ChannelCreateInput;
+};
+
+export type IssueChannelDeleteFieldInput = {
+  delete?: InputMaybe<ChannelDeleteInput>;
+  where?: InputMaybe<IssueChannelConnectionWhere>;
+};
+
+export type IssueChannelDisconnectFieldInput = {
+  disconnect?: InputMaybe<ChannelDisconnectInput>;
+  where?: InputMaybe<IssueChannelConnectionWhere>;
+};
+
+export type IssueChannelFieldInput = {
+  connect?: InputMaybe<IssueChannelConnectFieldInput>;
+  connectOrCreate?: InputMaybe<IssueChannelConnectOrCreateFieldInput>;
+  create?: InputMaybe<IssueChannelCreateFieldInput>;
+};
+
+export type IssueChannelNodeAggregationWhereInput = {
+  AND?: InputMaybe<Array<IssueChannelNodeAggregationWhereInput>>;
+  NOT?: InputMaybe<IssueChannelNodeAggregationWhereInput>;
+  OR?: InputMaybe<Array<IssueChannelNodeAggregationWhereInput>>;
+  channelBannerURL_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  channelBannerURL_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  channelBannerURL_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  channelBannerURL_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  channelBannerURL_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  channelBannerURL_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  channelBannerURL_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  channelBannerURL_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  channelBannerURL_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  channelBannerURL_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  channelBannerURL_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  channelBannerURL_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  channelBannerURL_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  channelBannerURL_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  channelBannerURL_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  channelIconURL_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  channelIconURL_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  channelIconURL_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  channelIconURL_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  channelIconURL_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  channelIconURL_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  channelIconURL_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  channelIconURL_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  channelIconURL_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  channelIconURL_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  channelIconURL_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  channelIconURL_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  channelIconURL_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  channelIconURL_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  channelIconURL_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  createdAt_MAX_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+  description_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  description_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  description_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  description_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  description_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  description_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  description_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  description_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  description_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  description_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  description_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  description_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  description_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  description_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  description_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  displayName_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  displayName_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  displayName_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  displayName_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  displayName_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  displayName_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  displayName_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  displayName_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  displayName_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  displayName_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  displayName_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  displayName_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  displayName_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  displayName_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  displayName_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  uniqueName_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  uniqueName_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  uniqueName_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  uniqueName_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  uniqueName_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  uniqueName_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  uniqueName_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  uniqueName_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  uniqueName_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  uniqueName_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  uniqueName_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  uniqueName_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  uniqueName_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  uniqueName_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  uniqueName_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type IssueChannelRelationship = {
+  __typename?: 'IssueChannelRelationship';
+  cursor: Scalars['String']['output'];
+  node: Channel;
+};
+
+export type IssueChannelUpdateConnectionInput = {
+  node?: InputMaybe<ChannelUpdateInput>;
+};
+
+export type IssueChannelUpdateFieldInput = {
+  connect?: InputMaybe<IssueChannelConnectFieldInput>;
+  connectOrCreate?: InputMaybe<IssueChannelConnectOrCreateFieldInput>;
+  create?: InputMaybe<IssueChannelCreateFieldInput>;
+  delete?: InputMaybe<IssueChannelDeleteFieldInput>;
+  disconnect?: InputMaybe<IssueChannelDisconnectFieldInput>;
+  update?: InputMaybe<IssueChannelUpdateConnectionInput>;
+  where?: InputMaybe<IssueChannelConnectionWhere>;
+};
+
 export type IssueCommentCommentsAggregationSelection = {
   __typename?: 'IssueCommentCommentsAggregationSelection';
   count: Scalars['Int']['output'];
@@ -11265,6 +12144,21 @@ export type IssueCommentCommentsAggregationSelection = {
 
 export type IssueCommentCommentsNodeAggregateSelection = {
   __typename?: 'IssueCommentCommentsNodeAggregateSelection';
+  createdAt: DateTimeAggregateSelectionNonNullable;
+  id: IdAggregateSelectionNonNullable;
+  text: StringAggregateSelectionNullable;
+  updatedAt: DateTimeAggregateSelectionNullable;
+  weightedVotesCount: FloatAggregateSelectionNullable;
+};
+
+export type IssueCommentRelatedCommentAggregationSelection = {
+  __typename?: 'IssueCommentRelatedCommentAggregationSelection';
+  count: Scalars['Int']['output'];
+  node?: Maybe<IssueCommentRelatedCommentNodeAggregateSelection>;
+};
+
+export type IssueCommentRelatedCommentNodeAggregateSelection = {
+  __typename?: 'IssueCommentRelatedCommentNodeAggregateSelection';
   createdAt: DateTimeAggregateSelectionNonNullable;
   id: IdAggregateSelectionNonNullable;
   text: StringAggregateSelectionNullable;
@@ -11410,11 +12304,20 @@ export type IssueCommentsUpdateFieldInput = {
 
 export type IssueConnectInput = {
   Author?: InputMaybe<IssueAuthorConnectInput>;
+  Channel?: InputMaybe<IssueChannelConnectFieldInput>;
   Comments?: InputMaybe<Array<IssueCommentsConnectFieldInput>>;
+  RelatedComment?: InputMaybe<IssueRelatedCommentConnectFieldInput>;
+  RelatedDiscussion?: InputMaybe<IssueRelatedDiscussionConnectFieldInput>;
+  RelatedEvent?: InputMaybe<IssueRelatedEventConnectFieldInput>;
 };
 
 export type IssueConnectOrCreateInput = {
   Author?: InputMaybe<IssueAuthorConnectOrCreateInput>;
+  Channel?: InputMaybe<IssueChannelConnectOrCreateFieldInput>;
+};
+
+export type IssueConnectOrCreateWhere = {
+  node: IssueUniqueWhere;
 };
 
 export type IssueConnectWhere = {
@@ -11423,26 +12326,94 @@ export type IssueConnectWhere = {
 
 export type IssueCreateInput = {
   Author?: InputMaybe<IssueAuthorCreateInput>;
+  Channel?: InputMaybe<IssueChannelFieldInput>;
   Comments?: InputMaybe<IssueCommentsFieldInput>;
+  RelatedComment?: InputMaybe<IssueRelatedCommentFieldInput>;
+  RelatedDiscussion?: InputMaybe<IssueRelatedDiscussionFieldInput>;
+  RelatedEvent?: InputMaybe<IssueRelatedEventFieldInput>;
+  authorName?: InputMaybe<Scalars['String']['input']>;
   body?: InputMaybe<Scalars['String']['input']>;
+  channelUniqueName?: InputMaybe<Scalars['String']['input']>;
   isOpen: Scalars['Boolean']['input'];
+  relatedCommentId?: InputMaybe<Scalars['ID']['input']>;
+  relatedDiscussionId?: InputMaybe<Scalars['ID']['input']>;
+  relatedEventId?: InputMaybe<Scalars['ID']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type IssueDeleteInput = {
   Author?: InputMaybe<IssueAuthorDeleteInput>;
+  Channel?: InputMaybe<IssueChannelDeleteFieldInput>;
   Comments?: InputMaybe<Array<IssueCommentsDeleteFieldInput>>;
+  RelatedComment?: InputMaybe<IssueRelatedCommentDeleteFieldInput>;
+  RelatedDiscussion?: InputMaybe<IssueRelatedDiscussionDeleteFieldInput>;
+  RelatedEvent?: InputMaybe<IssueRelatedEventDeleteFieldInput>;
 };
 
 export type IssueDisconnectInput = {
   Author?: InputMaybe<IssueAuthorDisconnectInput>;
+  Channel?: InputMaybe<IssueChannelDisconnectFieldInput>;
   Comments?: InputMaybe<Array<IssueCommentsDisconnectFieldInput>>;
+  RelatedComment?: InputMaybe<IssueRelatedCommentDisconnectFieldInput>;
+  RelatedDiscussion?: InputMaybe<IssueRelatedDiscussionDisconnectFieldInput>;
+  RelatedEvent?: InputMaybe<IssueRelatedEventDisconnectFieldInput>;
+};
+
+export type IssueDiscussionRelatedDiscussionAggregationSelection = {
+  __typename?: 'IssueDiscussionRelatedDiscussionAggregationSelection';
+  count: Scalars['Int']['output'];
+  node?: Maybe<IssueDiscussionRelatedDiscussionNodeAggregateSelection>;
+};
+
+export type IssueDiscussionRelatedDiscussionNodeAggregateSelection = {
+  __typename?: 'IssueDiscussionRelatedDiscussionNodeAggregateSelection';
+  body: StringAggregateSelectionNullable;
+  createdAt: DateTimeAggregateSelectionNonNullable;
+  id: IdAggregateSelectionNonNullable;
+  title: StringAggregateSelectionNonNullable;
+  updatedAt: DateTimeAggregateSelectionNullable;
 };
 
 export type IssueEdge = {
   __typename?: 'IssueEdge';
   cursor: Scalars['String']['output'];
   node: Issue;
+};
+
+export type IssueEventRelatedEventAggregationSelection = {
+  __typename?: 'IssueEventRelatedEventAggregationSelection';
+  count: Scalars['Int']['output'];
+  node?: Maybe<IssueEventRelatedEventNodeAggregateSelection>;
+};
+
+export type IssueEventRelatedEventNodeAggregateSelection = {
+  __typename?: 'IssueEventRelatedEventNodeAggregateSelection';
+  address: StringAggregateSelectionNullable;
+  cost: StringAggregateSelectionNullable;
+  coverImageURL: StringAggregateSelectionNullable;
+  createdAt: DateTimeAggregateSelectionNonNullable;
+  description: StringAggregateSelectionNullable;
+  endTime: DateTimeAggregateSelectionNonNullable;
+  id: IdAggregateSelectionNonNullable;
+  locationName: StringAggregateSelectionNullable;
+  placeId: StringAggregateSelectionNullable;
+  startTime: DateTimeAggregateSelectionNonNullable;
+  startTimeDayOfWeek: StringAggregateSelectionNullable;
+  startTimeHourOfDay: IntAggregateSelectionNullable;
+  title: StringAggregateSelectionNonNullable;
+  updatedAt: DateTimeAggregateSelectionNullable;
+  virtualEventUrl: StringAggregateSelectionNullable;
+};
+
+export type IssueOnCreateInput = {
+  authorName?: InputMaybe<Scalars['String']['input']>;
+  body?: InputMaybe<Scalars['String']['input']>;
+  channelUniqueName?: InputMaybe<Scalars['String']['input']>;
+  isOpen: Scalars['Boolean']['input'];
+  relatedCommentId?: InputMaybe<Scalars['ID']['input']>;
+  relatedDiscussionId?: InputMaybe<Scalars['ID']['input']>;
+  relatedEventId?: InputMaybe<Scalars['ID']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type IssueOptions = {
@@ -11452,26 +12423,593 @@ export type IssueOptions = {
   sort?: InputMaybe<Array<IssueSort>>;
 };
 
+export type IssueRelatedCommentAggregateInput = {
+  AND?: InputMaybe<Array<IssueRelatedCommentAggregateInput>>;
+  NOT?: InputMaybe<IssueRelatedCommentAggregateInput>;
+  OR?: InputMaybe<Array<IssueRelatedCommentAggregateInput>>;
+  count?: InputMaybe<Scalars['Int']['input']>;
+  count_GT?: InputMaybe<Scalars['Int']['input']>;
+  count_GTE?: InputMaybe<Scalars['Int']['input']>;
+  count_LT?: InputMaybe<Scalars['Int']['input']>;
+  count_LTE?: InputMaybe<Scalars['Int']['input']>;
+  node?: InputMaybe<IssueRelatedCommentNodeAggregationWhereInput>;
+};
+
+export type IssueRelatedCommentConnectFieldInput = {
+  connect?: InputMaybe<CommentConnectInput>;
+  /** Whether or not to overwrite any matching relationship with the new properties. */
+  overwrite?: Scalars['Boolean']['input'];
+  where?: InputMaybe<CommentConnectWhere>;
+};
+
+export type IssueRelatedCommentConnection = {
+  __typename?: 'IssueRelatedCommentConnection';
+  edges: Array<IssueRelatedCommentRelationship>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type IssueRelatedCommentConnectionSort = {
+  node?: InputMaybe<CommentSort>;
+};
+
+export type IssueRelatedCommentConnectionWhere = {
+  AND?: InputMaybe<Array<IssueRelatedCommentConnectionWhere>>;
+  NOT?: InputMaybe<IssueRelatedCommentConnectionWhere>;
+  OR?: InputMaybe<Array<IssueRelatedCommentConnectionWhere>>;
+  node?: InputMaybe<CommentWhere>;
+};
+
+export type IssueRelatedCommentCreateFieldInput = {
+  node: CommentCreateInput;
+};
+
+export type IssueRelatedCommentDeleteFieldInput = {
+  delete?: InputMaybe<CommentDeleteInput>;
+  where?: InputMaybe<IssueRelatedCommentConnectionWhere>;
+};
+
+export type IssueRelatedCommentDisconnectFieldInput = {
+  disconnect?: InputMaybe<CommentDisconnectInput>;
+  where?: InputMaybe<IssueRelatedCommentConnectionWhere>;
+};
+
+export type IssueRelatedCommentFieldInput = {
+  connect?: InputMaybe<IssueRelatedCommentConnectFieldInput>;
+  create?: InputMaybe<IssueRelatedCommentCreateFieldInput>;
+};
+
+export type IssueRelatedCommentNodeAggregationWhereInput = {
+  AND?: InputMaybe<Array<IssueRelatedCommentNodeAggregationWhereInput>>;
+  NOT?: InputMaybe<IssueRelatedCommentNodeAggregationWhereInput>;
+  OR?: InputMaybe<Array<IssueRelatedCommentNodeAggregationWhereInput>>;
+  createdAt_MAX_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+  text_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  text_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  text_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  text_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  text_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  text_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  text_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  text_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  text_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  text_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  text_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  text_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  text_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  text_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  text_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  updatedAt_MAX_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MAX_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MAX_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MAX_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MAX_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MIN_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MIN_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MIN_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MIN_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MIN_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+  weightedVotesCount_AVERAGE_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  weightedVotesCount_AVERAGE_GT?: InputMaybe<Scalars['Float']['input']>;
+  weightedVotesCount_AVERAGE_GTE?: InputMaybe<Scalars['Float']['input']>;
+  weightedVotesCount_AVERAGE_LT?: InputMaybe<Scalars['Float']['input']>;
+  weightedVotesCount_AVERAGE_LTE?: InputMaybe<Scalars['Float']['input']>;
+  weightedVotesCount_MAX_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  weightedVotesCount_MAX_GT?: InputMaybe<Scalars['Float']['input']>;
+  weightedVotesCount_MAX_GTE?: InputMaybe<Scalars['Float']['input']>;
+  weightedVotesCount_MAX_LT?: InputMaybe<Scalars['Float']['input']>;
+  weightedVotesCount_MAX_LTE?: InputMaybe<Scalars['Float']['input']>;
+  weightedVotesCount_MIN_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  weightedVotesCount_MIN_GT?: InputMaybe<Scalars['Float']['input']>;
+  weightedVotesCount_MIN_GTE?: InputMaybe<Scalars['Float']['input']>;
+  weightedVotesCount_MIN_LT?: InputMaybe<Scalars['Float']['input']>;
+  weightedVotesCount_MIN_LTE?: InputMaybe<Scalars['Float']['input']>;
+  weightedVotesCount_SUM_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  weightedVotesCount_SUM_GT?: InputMaybe<Scalars['Float']['input']>;
+  weightedVotesCount_SUM_GTE?: InputMaybe<Scalars['Float']['input']>;
+  weightedVotesCount_SUM_LT?: InputMaybe<Scalars['Float']['input']>;
+  weightedVotesCount_SUM_LTE?: InputMaybe<Scalars['Float']['input']>;
+};
+
+export type IssueRelatedCommentRelationship = {
+  __typename?: 'IssueRelatedCommentRelationship';
+  cursor: Scalars['String']['output'];
+  node: Comment;
+};
+
+export type IssueRelatedCommentUpdateConnectionInput = {
+  node?: InputMaybe<CommentUpdateInput>;
+};
+
+export type IssueRelatedCommentUpdateFieldInput = {
+  connect?: InputMaybe<IssueRelatedCommentConnectFieldInput>;
+  create?: InputMaybe<IssueRelatedCommentCreateFieldInput>;
+  delete?: InputMaybe<IssueRelatedCommentDeleteFieldInput>;
+  disconnect?: InputMaybe<IssueRelatedCommentDisconnectFieldInput>;
+  update?: InputMaybe<IssueRelatedCommentUpdateConnectionInput>;
+  where?: InputMaybe<IssueRelatedCommentConnectionWhere>;
+};
+
+export type IssueRelatedDiscussionAggregateInput = {
+  AND?: InputMaybe<Array<IssueRelatedDiscussionAggregateInput>>;
+  NOT?: InputMaybe<IssueRelatedDiscussionAggregateInput>;
+  OR?: InputMaybe<Array<IssueRelatedDiscussionAggregateInput>>;
+  count?: InputMaybe<Scalars['Int']['input']>;
+  count_GT?: InputMaybe<Scalars['Int']['input']>;
+  count_GTE?: InputMaybe<Scalars['Int']['input']>;
+  count_LT?: InputMaybe<Scalars['Int']['input']>;
+  count_LTE?: InputMaybe<Scalars['Int']['input']>;
+  node?: InputMaybe<IssueRelatedDiscussionNodeAggregationWhereInput>;
+};
+
+export type IssueRelatedDiscussionConnectFieldInput = {
+  connect?: InputMaybe<DiscussionConnectInput>;
+  /** Whether or not to overwrite any matching relationship with the new properties. */
+  overwrite?: Scalars['Boolean']['input'];
+  where?: InputMaybe<DiscussionConnectWhere>;
+};
+
+export type IssueRelatedDiscussionConnection = {
+  __typename?: 'IssueRelatedDiscussionConnection';
+  edges: Array<IssueRelatedDiscussionRelationship>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type IssueRelatedDiscussionConnectionSort = {
+  node?: InputMaybe<DiscussionSort>;
+};
+
+export type IssueRelatedDiscussionConnectionWhere = {
+  AND?: InputMaybe<Array<IssueRelatedDiscussionConnectionWhere>>;
+  NOT?: InputMaybe<IssueRelatedDiscussionConnectionWhere>;
+  OR?: InputMaybe<Array<IssueRelatedDiscussionConnectionWhere>>;
+  node?: InputMaybe<DiscussionWhere>;
+};
+
+export type IssueRelatedDiscussionCreateFieldInput = {
+  node: DiscussionCreateInput;
+};
+
+export type IssueRelatedDiscussionDeleteFieldInput = {
+  delete?: InputMaybe<DiscussionDeleteInput>;
+  where?: InputMaybe<IssueRelatedDiscussionConnectionWhere>;
+};
+
+export type IssueRelatedDiscussionDisconnectFieldInput = {
+  disconnect?: InputMaybe<DiscussionDisconnectInput>;
+  where?: InputMaybe<IssueRelatedDiscussionConnectionWhere>;
+};
+
+export type IssueRelatedDiscussionFieldInput = {
+  connect?: InputMaybe<IssueRelatedDiscussionConnectFieldInput>;
+  create?: InputMaybe<IssueRelatedDiscussionCreateFieldInput>;
+};
+
+export type IssueRelatedDiscussionNodeAggregationWhereInput = {
+  AND?: InputMaybe<Array<IssueRelatedDiscussionNodeAggregationWhereInput>>;
+  NOT?: InputMaybe<IssueRelatedDiscussionNodeAggregationWhereInput>;
+  OR?: InputMaybe<Array<IssueRelatedDiscussionNodeAggregationWhereInput>>;
+  body_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  body_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  body_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  body_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  body_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  body_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  body_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  body_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  body_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  body_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  body_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  body_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  body_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  body_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  body_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  createdAt_MAX_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+  title_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  title_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  title_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  title_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  title_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  title_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  title_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  title_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  title_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  title_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  title_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  title_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  title_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  title_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  title_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  updatedAt_MAX_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MAX_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MAX_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MAX_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MAX_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MIN_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MIN_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MIN_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MIN_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MIN_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+};
+
+export type IssueRelatedDiscussionRelationship = {
+  __typename?: 'IssueRelatedDiscussionRelationship';
+  cursor: Scalars['String']['output'];
+  node: Discussion;
+};
+
+export type IssueRelatedDiscussionUpdateConnectionInput = {
+  node?: InputMaybe<DiscussionUpdateInput>;
+};
+
+export type IssueRelatedDiscussionUpdateFieldInput = {
+  connect?: InputMaybe<IssueRelatedDiscussionConnectFieldInput>;
+  create?: InputMaybe<IssueRelatedDiscussionCreateFieldInput>;
+  delete?: InputMaybe<IssueRelatedDiscussionDeleteFieldInput>;
+  disconnect?: InputMaybe<IssueRelatedDiscussionDisconnectFieldInput>;
+  update?: InputMaybe<IssueRelatedDiscussionUpdateConnectionInput>;
+  where?: InputMaybe<IssueRelatedDiscussionConnectionWhere>;
+};
+
+export type IssueRelatedEventAggregateInput = {
+  AND?: InputMaybe<Array<IssueRelatedEventAggregateInput>>;
+  NOT?: InputMaybe<IssueRelatedEventAggregateInput>;
+  OR?: InputMaybe<Array<IssueRelatedEventAggregateInput>>;
+  count?: InputMaybe<Scalars['Int']['input']>;
+  count_GT?: InputMaybe<Scalars['Int']['input']>;
+  count_GTE?: InputMaybe<Scalars['Int']['input']>;
+  count_LT?: InputMaybe<Scalars['Int']['input']>;
+  count_LTE?: InputMaybe<Scalars['Int']['input']>;
+  node?: InputMaybe<IssueRelatedEventNodeAggregationWhereInput>;
+};
+
+export type IssueRelatedEventConnectFieldInput = {
+  connect?: InputMaybe<EventConnectInput>;
+  /** Whether or not to overwrite any matching relationship with the new properties. */
+  overwrite?: Scalars['Boolean']['input'];
+  where?: InputMaybe<EventConnectWhere>;
+};
+
+export type IssueRelatedEventConnection = {
+  __typename?: 'IssueRelatedEventConnection';
+  edges: Array<IssueRelatedEventRelationship>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type IssueRelatedEventConnectionSort = {
+  node?: InputMaybe<EventSort>;
+};
+
+export type IssueRelatedEventConnectionWhere = {
+  AND?: InputMaybe<Array<IssueRelatedEventConnectionWhere>>;
+  NOT?: InputMaybe<IssueRelatedEventConnectionWhere>;
+  OR?: InputMaybe<Array<IssueRelatedEventConnectionWhere>>;
+  node?: InputMaybe<EventWhere>;
+};
+
+export type IssueRelatedEventCreateFieldInput = {
+  node: EventCreateInput;
+};
+
+export type IssueRelatedEventDeleteFieldInput = {
+  delete?: InputMaybe<EventDeleteInput>;
+  where?: InputMaybe<IssueRelatedEventConnectionWhere>;
+};
+
+export type IssueRelatedEventDisconnectFieldInput = {
+  disconnect?: InputMaybe<EventDisconnectInput>;
+  where?: InputMaybe<IssueRelatedEventConnectionWhere>;
+};
+
+export type IssueRelatedEventFieldInput = {
+  connect?: InputMaybe<IssueRelatedEventConnectFieldInput>;
+  create?: InputMaybe<IssueRelatedEventCreateFieldInput>;
+};
+
+export type IssueRelatedEventNodeAggregationWhereInput = {
+  AND?: InputMaybe<Array<IssueRelatedEventNodeAggregationWhereInput>>;
+  NOT?: InputMaybe<IssueRelatedEventNodeAggregationWhereInput>;
+  OR?: InputMaybe<Array<IssueRelatedEventNodeAggregationWhereInput>>;
+  address_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  address_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  address_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  address_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  address_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  address_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  address_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  address_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  address_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  address_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  address_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  address_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  address_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  address_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  address_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  cost_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  cost_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  cost_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  cost_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  cost_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  cost_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  cost_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  cost_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  cost_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  cost_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  cost_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  cost_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  cost_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  cost_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  cost_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  coverImageURL_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  coverImageURL_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  coverImageURL_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  coverImageURL_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  coverImageURL_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  coverImageURL_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  coverImageURL_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  coverImageURL_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  coverImageURL_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  coverImageURL_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  coverImageURL_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  coverImageURL_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  coverImageURL_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  coverImageURL_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  coverImageURL_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  createdAt_MAX_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+  description_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  description_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  description_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  description_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  description_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  description_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  description_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  description_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  description_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  description_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  description_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  description_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  description_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  description_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  description_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  endTime_MAX_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
+  endTime_MAX_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  endTime_MAX_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  endTime_MAX_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  endTime_MAX_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+  endTime_MIN_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
+  endTime_MIN_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  endTime_MIN_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  endTime_MIN_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  endTime_MIN_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+  locationName_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  locationName_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  locationName_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  locationName_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  locationName_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  locationName_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  locationName_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  locationName_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  locationName_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  locationName_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  locationName_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  locationName_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  locationName_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  locationName_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  locationName_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  placeId_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  placeId_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  placeId_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  placeId_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  placeId_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  placeId_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  placeId_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  placeId_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  placeId_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  placeId_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  placeId_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  placeId_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  placeId_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  placeId_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  placeId_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  startTimeDayOfWeek_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  startTimeDayOfWeek_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  startTimeDayOfWeek_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  startTimeDayOfWeek_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  startTimeDayOfWeek_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  startTimeDayOfWeek_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  startTimeDayOfWeek_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  startTimeDayOfWeek_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  startTimeDayOfWeek_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  startTimeDayOfWeek_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  startTimeDayOfWeek_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  startTimeDayOfWeek_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  startTimeDayOfWeek_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  startTimeDayOfWeek_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  startTimeDayOfWeek_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  startTimeHourOfDay_AVERAGE_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  startTimeHourOfDay_AVERAGE_GT?: InputMaybe<Scalars['Float']['input']>;
+  startTimeHourOfDay_AVERAGE_GTE?: InputMaybe<Scalars['Float']['input']>;
+  startTimeHourOfDay_AVERAGE_LT?: InputMaybe<Scalars['Float']['input']>;
+  startTimeHourOfDay_AVERAGE_LTE?: InputMaybe<Scalars['Float']['input']>;
+  startTimeHourOfDay_MAX_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  startTimeHourOfDay_MAX_GT?: InputMaybe<Scalars['Int']['input']>;
+  startTimeHourOfDay_MAX_GTE?: InputMaybe<Scalars['Int']['input']>;
+  startTimeHourOfDay_MAX_LT?: InputMaybe<Scalars['Int']['input']>;
+  startTimeHourOfDay_MAX_LTE?: InputMaybe<Scalars['Int']['input']>;
+  startTimeHourOfDay_MIN_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  startTimeHourOfDay_MIN_GT?: InputMaybe<Scalars['Int']['input']>;
+  startTimeHourOfDay_MIN_GTE?: InputMaybe<Scalars['Int']['input']>;
+  startTimeHourOfDay_MIN_LT?: InputMaybe<Scalars['Int']['input']>;
+  startTimeHourOfDay_MIN_LTE?: InputMaybe<Scalars['Int']['input']>;
+  startTimeHourOfDay_SUM_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  startTimeHourOfDay_SUM_GT?: InputMaybe<Scalars['Int']['input']>;
+  startTimeHourOfDay_SUM_GTE?: InputMaybe<Scalars['Int']['input']>;
+  startTimeHourOfDay_SUM_LT?: InputMaybe<Scalars['Int']['input']>;
+  startTimeHourOfDay_SUM_LTE?: InputMaybe<Scalars['Int']['input']>;
+  startTime_MAX_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
+  startTime_MAX_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  startTime_MAX_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  startTime_MAX_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  startTime_MAX_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+  startTime_MIN_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
+  startTime_MIN_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  startTime_MIN_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  startTime_MIN_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  startTime_MIN_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+  title_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  title_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  title_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  title_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  title_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  title_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  title_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  title_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  title_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  title_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  title_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  title_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  title_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  title_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  title_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  updatedAt_MAX_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MAX_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MAX_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MAX_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MAX_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MIN_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MIN_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MIN_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MIN_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MIN_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+  virtualEventUrl_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  virtualEventUrl_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  virtualEventUrl_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  virtualEventUrl_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  virtualEventUrl_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  virtualEventUrl_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  virtualEventUrl_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  virtualEventUrl_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  virtualEventUrl_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  virtualEventUrl_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  virtualEventUrl_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  virtualEventUrl_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  virtualEventUrl_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  virtualEventUrl_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  virtualEventUrl_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type IssueRelatedEventRelationship = {
+  __typename?: 'IssueRelatedEventRelationship';
+  cursor: Scalars['String']['output'];
+  node: Event;
+};
+
+export type IssueRelatedEventUpdateConnectionInput = {
+  node?: InputMaybe<EventUpdateInput>;
+};
+
+export type IssueRelatedEventUpdateFieldInput = {
+  connect?: InputMaybe<IssueRelatedEventConnectFieldInput>;
+  create?: InputMaybe<IssueRelatedEventCreateFieldInput>;
+  delete?: InputMaybe<IssueRelatedEventDeleteFieldInput>;
+  disconnect?: InputMaybe<IssueRelatedEventDisconnectFieldInput>;
+  update?: InputMaybe<IssueRelatedEventUpdateConnectionInput>;
+  where?: InputMaybe<IssueRelatedEventConnectionWhere>;
+};
+
 export type IssueRelationInput = {
   Author?: InputMaybe<IssueAuthorCreateFieldInput>;
+  Channel?: InputMaybe<IssueChannelCreateFieldInput>;
   Comments?: InputMaybe<Array<IssueCommentsCreateFieldInput>>;
+  RelatedComment?: InputMaybe<IssueRelatedCommentCreateFieldInput>;
+  RelatedDiscussion?: InputMaybe<IssueRelatedDiscussionCreateFieldInput>;
+  RelatedEvent?: InputMaybe<IssueRelatedEventCreateFieldInput>;
 };
 
 /** Fields to sort Issues by. The order in which sorts are applied is not guaranteed when specifying many fields in one IssueSort object. */
 export type IssueSort = {
+  authorName?: InputMaybe<SortDirection>;
   body?: InputMaybe<SortDirection>;
+  channelUniqueName?: InputMaybe<SortDirection>;
   createdAt?: InputMaybe<SortDirection>;
   id?: InputMaybe<SortDirection>;
   isOpen?: InputMaybe<SortDirection>;
+  relatedCommentId?: InputMaybe<SortDirection>;
+  relatedDiscussionId?: InputMaybe<SortDirection>;
+  relatedEventId?: InputMaybe<SortDirection>;
   title?: InputMaybe<SortDirection>;
   updatedAt?: InputMaybe<SortDirection>;
 };
 
+export type IssueUniqueWhere = {
+  relatedCommentId?: InputMaybe<Scalars['ID']['input']>;
+  relatedDiscussionId?: InputMaybe<Scalars['ID']['input']>;
+  relatedEventId?: InputMaybe<Scalars['ID']['input']>;
+};
+
 export type IssueUpdateInput = {
   Author?: InputMaybe<IssueAuthorUpdateInput>;
+  Channel?: InputMaybe<IssueChannelUpdateFieldInput>;
   Comments?: InputMaybe<Array<IssueCommentsUpdateFieldInput>>;
+  RelatedComment?: InputMaybe<IssueRelatedCommentUpdateFieldInput>;
+  RelatedDiscussion?: InputMaybe<IssueRelatedDiscussionUpdateFieldInput>;
+  RelatedEvent?: InputMaybe<IssueRelatedEventUpdateFieldInput>;
+  authorName?: InputMaybe<Scalars['String']['input']>;
   body?: InputMaybe<Scalars['String']['input']>;
+  channelUniqueName?: InputMaybe<Scalars['String']['input']>;
   isOpen?: InputMaybe<Scalars['Boolean']['input']>;
+  relatedCommentId?: InputMaybe<Scalars['ID']['input']>;
+  relatedDiscussionId?: InputMaybe<Scalars['ID']['input']>;
+  relatedEventId?: InputMaybe<Scalars['ID']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -11479,6 +13017,11 @@ export type IssueWhere = {
   AND?: InputMaybe<Array<IssueWhere>>;
   AuthorConnection?: InputMaybe<IssueAuthorConnectionWhere>;
   AuthorConnection_NOT?: InputMaybe<IssueAuthorConnectionWhere>;
+  Channel?: InputMaybe<ChannelWhere>;
+  ChannelAggregate?: InputMaybe<IssueChannelAggregateInput>;
+  ChannelConnection?: InputMaybe<IssueChannelConnectionWhere>;
+  ChannelConnection_NOT?: InputMaybe<IssueChannelConnectionWhere>;
+  Channel_NOT?: InputMaybe<ChannelWhere>;
   CommentsAggregate?: InputMaybe<IssueCommentsAggregateInput>;
   /** Return Issues where all of the related IssueCommentsConnections match this filter */
   CommentsConnection_ALL?: InputMaybe<IssueCommentsConnectionWhere>;
@@ -11498,12 +13041,39 @@ export type IssueWhere = {
   Comments_SOME?: InputMaybe<CommentWhere>;
   NOT?: InputMaybe<IssueWhere>;
   OR?: InputMaybe<Array<IssueWhere>>;
+  RelatedComment?: InputMaybe<CommentWhere>;
+  RelatedCommentAggregate?: InputMaybe<IssueRelatedCommentAggregateInput>;
+  RelatedCommentConnection?: InputMaybe<IssueRelatedCommentConnectionWhere>;
+  RelatedCommentConnection_NOT?: InputMaybe<IssueRelatedCommentConnectionWhere>;
+  RelatedComment_NOT?: InputMaybe<CommentWhere>;
+  RelatedDiscussion?: InputMaybe<DiscussionWhere>;
+  RelatedDiscussionAggregate?: InputMaybe<IssueRelatedDiscussionAggregateInput>;
+  RelatedDiscussionConnection?: InputMaybe<IssueRelatedDiscussionConnectionWhere>;
+  RelatedDiscussionConnection_NOT?: InputMaybe<IssueRelatedDiscussionConnectionWhere>;
+  RelatedDiscussion_NOT?: InputMaybe<DiscussionWhere>;
+  RelatedEvent?: InputMaybe<EventWhere>;
+  RelatedEventAggregate?: InputMaybe<IssueRelatedEventAggregateInput>;
+  RelatedEventConnection?: InputMaybe<IssueRelatedEventConnectionWhere>;
+  RelatedEventConnection_NOT?: InputMaybe<IssueRelatedEventConnectionWhere>;
+  RelatedEvent_NOT?: InputMaybe<EventWhere>;
+  authorName?: InputMaybe<Scalars['String']['input']>;
+  authorName_CONTAINS?: InputMaybe<Scalars['String']['input']>;
+  authorName_ENDS_WITH?: InputMaybe<Scalars['String']['input']>;
+  authorName_IN?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  authorName_MATCHES?: InputMaybe<Scalars['String']['input']>;
+  authorName_STARTS_WITH?: InputMaybe<Scalars['String']['input']>;
   body?: InputMaybe<Scalars['String']['input']>;
   body_CONTAINS?: InputMaybe<Scalars['String']['input']>;
   body_ENDS_WITH?: InputMaybe<Scalars['String']['input']>;
   body_IN?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   body_MATCHES?: InputMaybe<Scalars['String']['input']>;
   body_STARTS_WITH?: InputMaybe<Scalars['String']['input']>;
+  channelUniqueName?: InputMaybe<Scalars['String']['input']>;
+  channelUniqueName_CONTAINS?: InputMaybe<Scalars['String']['input']>;
+  channelUniqueName_ENDS_WITH?: InputMaybe<Scalars['String']['input']>;
+  channelUniqueName_IN?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  channelUniqueName_MATCHES?: InputMaybe<Scalars['String']['input']>;
+  channelUniqueName_STARTS_WITH?: InputMaybe<Scalars['String']['input']>;
   createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   createdAt_GT?: InputMaybe<Scalars['DateTime']['input']>;
   createdAt_GTE?: InputMaybe<Scalars['DateTime']['input']>;
@@ -11516,6 +13086,21 @@ export type IssueWhere = {
   id_IN?: InputMaybe<Array<Scalars['ID']['input']>>;
   id_STARTS_WITH?: InputMaybe<Scalars['ID']['input']>;
   isOpen?: InputMaybe<Scalars['Boolean']['input']>;
+  relatedCommentId?: InputMaybe<Scalars['ID']['input']>;
+  relatedCommentId_CONTAINS?: InputMaybe<Scalars['ID']['input']>;
+  relatedCommentId_ENDS_WITH?: InputMaybe<Scalars['ID']['input']>;
+  relatedCommentId_IN?: InputMaybe<Array<InputMaybe<Scalars['ID']['input']>>>;
+  relatedCommentId_STARTS_WITH?: InputMaybe<Scalars['ID']['input']>;
+  relatedDiscussionId?: InputMaybe<Scalars['ID']['input']>;
+  relatedDiscussionId_CONTAINS?: InputMaybe<Scalars['ID']['input']>;
+  relatedDiscussionId_ENDS_WITH?: InputMaybe<Scalars['ID']['input']>;
+  relatedDiscussionId_IN?: InputMaybe<Array<InputMaybe<Scalars['ID']['input']>>>;
+  relatedDiscussionId_STARTS_WITH?: InputMaybe<Scalars['ID']['input']>;
+  relatedEventId?: InputMaybe<Scalars['ID']['input']>;
+  relatedEventId_CONTAINS?: InputMaybe<Scalars['ID']['input']>;
+  relatedEventId_ENDS_WITH?: InputMaybe<Scalars['ID']['input']>;
+  relatedEventId_IN?: InputMaybe<Array<InputMaybe<Scalars['ID']['input']>>>;
+  relatedEventId_STARTS_WITH?: InputMaybe<Scalars['ID']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
   title_CONTAINS?: InputMaybe<Scalars['String']['input']>;
   title_ENDS_WITH?: InputMaybe<Scalars['String']['input']>;
@@ -11525,7 +13110,7 @@ export type IssueWhere = {
   updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
   updatedAt_GT?: InputMaybe<Scalars['DateTime']['input']>;
   updatedAt_GTE?: InputMaybe<Scalars['DateTime']['input']>;
-  updatedAt_IN?: InputMaybe<Array<Scalars['DateTime']['input']>>;
+  updatedAt_IN?: InputMaybe<Array<InputMaybe<Scalars['DateTime']['input']>>>;
   updatedAt_LT?: InputMaybe<Scalars['DateTime']['input']>;
   updatedAt_LTE?: InputMaybe<Scalars['DateTime']['input']>;
 };
@@ -11773,9 +13358,9 @@ export type ModServerRolesConnection = {
 
 export type ModerationProfile = {
   __typename?: 'ModerationProfile';
-  AuthoredReports: Array<Report>;
-  AuthoredReportsAggregate?: Maybe<ModerationProfileReportAuthoredReportsAggregationSelection>;
-  AuthoredReportsConnection: ModerationProfileAuthoredReportsConnection;
+  AuthoredIssues: Array<Issue>;
+  AuthoredIssuesAggregate?: Maybe<ModerationProfileIssueAuthoredIssuesAggregationSelection>;
+  AuthoredIssuesConnection: ModerationProfileAuthoredIssuesConnection;
   DiscussionComments: Array<Comment>;
   DiscussionCommentsAggregate?: Maybe<ModerationProfileCommentDiscussionCommentsAggregationSelection>;
   DiscussionCommentsConnection: ModerationProfileDiscussionCommentsConnection;
@@ -11788,9 +13373,6 @@ export type ModerationProfile = {
   IssueComments: Array<Comment>;
   IssueCommentsAggregate?: Maybe<ModerationProfileCommentIssueCommentsAggregationSelection>;
   IssueCommentsConnection: ModerationProfileIssueCommentsConnection;
-  Issues: Array<Issue>;
-  IssuesAggregate?: Maybe<ModerationProfileIssueIssuesAggregationSelection>;
-  IssuesConnection: ModerationProfileIssuesConnection;
   ModChannelRoles: Array<ModChannelRole>;
   ModChannelRolesAggregate?: Maybe<ModerationProfileModChannelRoleModChannelRolesAggregationSelection>;
   ModChannelRolesConnection: ModerationProfileModChannelRolesConnection;
@@ -11805,25 +13387,25 @@ export type ModerationProfile = {
 };
 
 
-export type ModerationProfileAuthoredReportsArgs = {
+export type ModerationProfileAuthoredIssuesArgs = {
   directed?: InputMaybe<Scalars['Boolean']['input']>;
-  options?: InputMaybe<ReportOptions>;
-  where?: InputMaybe<ReportWhere>;
+  options?: InputMaybe<IssueOptions>;
+  where?: InputMaybe<IssueWhere>;
 };
 
 
-export type ModerationProfileAuthoredReportsAggregateArgs = {
+export type ModerationProfileAuthoredIssuesAggregateArgs = {
   directed?: InputMaybe<Scalars['Boolean']['input']>;
-  where?: InputMaybe<ReportWhere>;
+  where?: InputMaybe<IssueWhere>;
 };
 
 
-export type ModerationProfileAuthoredReportsConnectionArgs = {
+export type ModerationProfileAuthoredIssuesConnectionArgs = {
   after?: InputMaybe<Scalars['String']['input']>;
   directed?: InputMaybe<Scalars['Boolean']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
-  sort?: InputMaybe<Array<ModerationProfileAuthoredReportsConnectionSort>>;
-  where?: InputMaybe<ModerationProfileAuthoredReportsConnectionWhere>;
+  sort?: InputMaybe<Array<ModerationProfileAuthoredIssuesConnectionSort>>;
+  where?: InputMaybe<ModerationProfileAuthoredIssuesConnectionWhere>;
 };
 
 
@@ -11915,28 +13497,6 @@ export type ModerationProfileIssueCommentsConnectionArgs = {
 };
 
 
-export type ModerationProfileIssuesArgs = {
-  directed?: InputMaybe<Scalars['Boolean']['input']>;
-  options?: InputMaybe<IssueOptions>;
-  where?: InputMaybe<IssueWhere>;
-};
-
-
-export type ModerationProfileIssuesAggregateArgs = {
-  directed?: InputMaybe<Scalars['Boolean']['input']>;
-  where?: InputMaybe<IssueWhere>;
-};
-
-
-export type ModerationProfileIssuesConnectionArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  directed?: InputMaybe<Scalars['Boolean']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  sort?: InputMaybe<Array<ModerationProfileIssuesConnectionSort>>;
-  where?: InputMaybe<ModerationProfileIssuesConnectionWhere>;
-};
-
-
 export type ModerationProfileModChannelRolesArgs = {
   directed?: InputMaybe<Scalars['Boolean']['input']>;
   options?: InputMaybe<ModChannelRoleOptions>;
@@ -12009,66 +13569,121 @@ export type ModerationProfileAggregateSelection = {
   displayName: StringAggregateSelectionNullable;
 };
 
-export type ModerationProfileAuthoredReportsAggregateInput = {
-  AND?: InputMaybe<Array<ModerationProfileAuthoredReportsAggregateInput>>;
-  NOT?: InputMaybe<ModerationProfileAuthoredReportsAggregateInput>;
-  OR?: InputMaybe<Array<ModerationProfileAuthoredReportsAggregateInput>>;
+export type ModerationProfileAuthoredIssuesAggregateInput = {
+  AND?: InputMaybe<Array<ModerationProfileAuthoredIssuesAggregateInput>>;
+  NOT?: InputMaybe<ModerationProfileAuthoredIssuesAggregateInput>;
+  OR?: InputMaybe<Array<ModerationProfileAuthoredIssuesAggregateInput>>;
   count?: InputMaybe<Scalars['Int']['input']>;
   count_GT?: InputMaybe<Scalars['Int']['input']>;
   count_GTE?: InputMaybe<Scalars['Int']['input']>;
   count_LT?: InputMaybe<Scalars['Int']['input']>;
   count_LTE?: InputMaybe<Scalars['Int']['input']>;
-  node?: InputMaybe<ModerationProfileAuthoredReportsNodeAggregationWhereInput>;
+  node?: InputMaybe<ModerationProfileAuthoredIssuesNodeAggregationWhereInput>;
 };
 
-export type ModerationProfileAuthoredReportsConnectFieldInput = {
-  connect?: InputMaybe<Array<ReportConnectInput>>;
+export type ModerationProfileAuthoredIssuesConnectFieldInput = {
+  connect?: InputMaybe<Array<IssueConnectInput>>;
   /** Whether or not to overwrite any matching relationship with the new properties. */
   overwrite?: Scalars['Boolean']['input'];
-  where?: InputMaybe<ReportConnectWhere>;
+  where?: InputMaybe<IssueConnectWhere>;
 };
 
-export type ModerationProfileAuthoredReportsConnection = {
-  __typename?: 'ModerationProfileAuthoredReportsConnection';
-  edges: Array<ModerationProfileAuthoredReportsRelationship>;
+export type ModerationProfileAuthoredIssuesConnectOrCreateFieldInput = {
+  onCreate: ModerationProfileAuthoredIssuesConnectOrCreateFieldInputOnCreate;
+  where: IssueConnectOrCreateWhere;
+};
+
+export type ModerationProfileAuthoredIssuesConnectOrCreateFieldInputOnCreate = {
+  node: IssueOnCreateInput;
+};
+
+export type ModerationProfileAuthoredIssuesConnection = {
+  __typename?: 'ModerationProfileAuthoredIssuesConnection';
+  edges: Array<ModerationProfileAuthoredIssuesRelationship>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int']['output'];
 };
 
-export type ModerationProfileAuthoredReportsConnectionSort = {
-  node?: InputMaybe<ReportSort>;
+export type ModerationProfileAuthoredIssuesConnectionSort = {
+  node?: InputMaybe<IssueSort>;
 };
 
-export type ModerationProfileAuthoredReportsConnectionWhere = {
-  AND?: InputMaybe<Array<ModerationProfileAuthoredReportsConnectionWhere>>;
-  NOT?: InputMaybe<ModerationProfileAuthoredReportsConnectionWhere>;
-  OR?: InputMaybe<Array<ModerationProfileAuthoredReportsConnectionWhere>>;
-  node?: InputMaybe<ReportWhere>;
+export type ModerationProfileAuthoredIssuesConnectionWhere = {
+  AND?: InputMaybe<Array<ModerationProfileAuthoredIssuesConnectionWhere>>;
+  NOT?: InputMaybe<ModerationProfileAuthoredIssuesConnectionWhere>;
+  OR?: InputMaybe<Array<ModerationProfileAuthoredIssuesConnectionWhere>>;
+  node?: InputMaybe<IssueWhere>;
 };
 
-export type ModerationProfileAuthoredReportsCreateFieldInput = {
-  node: ReportCreateInput;
+export type ModerationProfileAuthoredIssuesCreateFieldInput = {
+  node: IssueCreateInput;
 };
 
-export type ModerationProfileAuthoredReportsDeleteFieldInput = {
-  delete?: InputMaybe<ReportDeleteInput>;
-  where?: InputMaybe<ModerationProfileAuthoredReportsConnectionWhere>;
+export type ModerationProfileAuthoredIssuesDeleteFieldInput = {
+  delete?: InputMaybe<IssueDeleteInput>;
+  where?: InputMaybe<ModerationProfileAuthoredIssuesConnectionWhere>;
 };
 
-export type ModerationProfileAuthoredReportsDisconnectFieldInput = {
-  disconnect?: InputMaybe<ReportDisconnectInput>;
-  where?: InputMaybe<ModerationProfileAuthoredReportsConnectionWhere>;
+export type ModerationProfileAuthoredIssuesDisconnectFieldInput = {
+  disconnect?: InputMaybe<IssueDisconnectInput>;
+  where?: InputMaybe<ModerationProfileAuthoredIssuesConnectionWhere>;
 };
 
-export type ModerationProfileAuthoredReportsFieldInput = {
-  connect?: InputMaybe<Array<ModerationProfileAuthoredReportsConnectFieldInput>>;
-  create?: InputMaybe<Array<ModerationProfileAuthoredReportsCreateFieldInput>>;
+export type ModerationProfileAuthoredIssuesFieldInput = {
+  connect?: InputMaybe<Array<ModerationProfileAuthoredIssuesConnectFieldInput>>;
+  connectOrCreate?: InputMaybe<Array<ModerationProfileAuthoredIssuesConnectOrCreateFieldInput>>;
+  create?: InputMaybe<Array<ModerationProfileAuthoredIssuesCreateFieldInput>>;
 };
 
-export type ModerationProfileAuthoredReportsNodeAggregationWhereInput = {
-  AND?: InputMaybe<Array<ModerationProfileAuthoredReportsNodeAggregationWhereInput>>;
-  NOT?: InputMaybe<ModerationProfileAuthoredReportsNodeAggregationWhereInput>;
-  OR?: InputMaybe<Array<ModerationProfileAuthoredReportsNodeAggregationWhereInput>>;
+export type ModerationProfileAuthoredIssuesNodeAggregationWhereInput = {
+  AND?: InputMaybe<Array<ModerationProfileAuthoredIssuesNodeAggregationWhereInput>>;
+  NOT?: InputMaybe<ModerationProfileAuthoredIssuesNodeAggregationWhereInput>;
+  OR?: InputMaybe<Array<ModerationProfileAuthoredIssuesNodeAggregationWhereInput>>;
+  authorName_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  authorName_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  authorName_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  authorName_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  authorName_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  authorName_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  authorName_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  authorName_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  authorName_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  authorName_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  authorName_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  authorName_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  authorName_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  authorName_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  authorName_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  body_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  body_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  body_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  body_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  body_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  body_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  body_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  body_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  body_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  body_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  body_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  body_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  body_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  body_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  body_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
   createdAt_MAX_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
   createdAt_MAX_GT?: InputMaybe<Scalars['DateTime']['input']>;
   createdAt_MAX_GTE?: InputMaybe<Scalars['DateTime']['input']>;
@@ -12079,21 +13694,21 @@ export type ModerationProfileAuthoredReportsNodeAggregationWhereInput = {
   createdAt_MIN_GTE?: InputMaybe<Scalars['DateTime']['input']>;
   createdAt_MIN_LT?: InputMaybe<Scalars['DateTime']['input']>;
   createdAt_MIN_LTE?: InputMaybe<Scalars['DateTime']['input']>;
-  text_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
-  text_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
-  text_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
-  text_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
-  text_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
-  text_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  text_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
-  text_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
-  text_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
-  text_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
-  text_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  text_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
-  text_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
-  text_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
-  text_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  title_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  title_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  title_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  title_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  title_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  title_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  title_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  title_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  title_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  title_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  title_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  title_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  title_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  title_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  title_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
   updatedAt_MAX_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
   updatedAt_MAX_GT?: InputMaybe<Scalars['DateTime']['input']>;
   updatedAt_MAX_GTE?: InputMaybe<Scalars['DateTime']['input']>;
@@ -12106,23 +13721,24 @@ export type ModerationProfileAuthoredReportsNodeAggregationWhereInput = {
   updatedAt_MIN_LTE?: InputMaybe<Scalars['DateTime']['input']>;
 };
 
-export type ModerationProfileAuthoredReportsRelationship = {
-  __typename?: 'ModerationProfileAuthoredReportsRelationship';
+export type ModerationProfileAuthoredIssuesRelationship = {
+  __typename?: 'ModerationProfileAuthoredIssuesRelationship';
   cursor: Scalars['String']['output'];
-  node: Report;
+  node: Issue;
 };
 
-export type ModerationProfileAuthoredReportsUpdateConnectionInput = {
-  node?: InputMaybe<ReportUpdateInput>;
+export type ModerationProfileAuthoredIssuesUpdateConnectionInput = {
+  node?: InputMaybe<IssueUpdateInput>;
 };
 
-export type ModerationProfileAuthoredReportsUpdateFieldInput = {
-  connect?: InputMaybe<Array<ModerationProfileAuthoredReportsConnectFieldInput>>;
-  create?: InputMaybe<Array<ModerationProfileAuthoredReportsCreateFieldInput>>;
-  delete?: InputMaybe<Array<ModerationProfileAuthoredReportsDeleteFieldInput>>;
-  disconnect?: InputMaybe<Array<ModerationProfileAuthoredReportsDisconnectFieldInput>>;
-  update?: InputMaybe<ModerationProfileAuthoredReportsUpdateConnectionInput>;
-  where?: InputMaybe<ModerationProfileAuthoredReportsConnectionWhere>;
+export type ModerationProfileAuthoredIssuesUpdateFieldInput = {
+  connect?: InputMaybe<Array<ModerationProfileAuthoredIssuesConnectFieldInput>>;
+  connectOrCreate?: InputMaybe<Array<ModerationProfileAuthoredIssuesConnectOrCreateFieldInput>>;
+  create?: InputMaybe<Array<ModerationProfileAuthoredIssuesCreateFieldInput>>;
+  delete?: InputMaybe<Array<ModerationProfileAuthoredIssuesDeleteFieldInput>>;
+  disconnect?: InputMaybe<Array<ModerationProfileAuthoredIssuesDisconnectFieldInput>>;
+  update?: InputMaybe<ModerationProfileAuthoredIssuesUpdateConnectionInput>;
+  where?: InputMaybe<ModerationProfileAuthoredIssuesConnectionWhere>;
 };
 
 export type ModerationProfileCommentDiscussionCommentsAggregationSelection = {
@@ -12171,18 +13787,18 @@ export type ModerationProfileCommentIssueCommentsNodeAggregateSelection = {
 };
 
 export type ModerationProfileConnectInput = {
-  AuthoredReports?: InputMaybe<Array<ModerationProfileAuthoredReportsConnectFieldInput>>;
+  AuthoredIssues?: InputMaybe<Array<ModerationProfileAuthoredIssuesConnectFieldInput>>;
   DiscussionComments?: InputMaybe<Array<ModerationProfileDiscussionCommentsConnectFieldInput>>;
   DownvotedComments?: InputMaybe<Array<ModerationProfileDownvotedCommentsConnectFieldInput>>;
   DownvotedDiscussionChannels?: InputMaybe<Array<ModerationProfileDownvotedDiscussionChannelsConnectFieldInput>>;
   IssueComments?: InputMaybe<Array<ModerationProfileIssueCommentsConnectFieldInput>>;
-  Issues?: InputMaybe<Array<ModerationProfileIssuesConnectFieldInput>>;
   ModChannelRoles?: InputMaybe<Array<ModerationProfileModChannelRolesConnectFieldInput>>;
   ModServerRoles?: InputMaybe<Array<ModerationProfileModServerRolesConnectFieldInput>>;
   User?: InputMaybe<ModerationProfileUserConnectFieldInput>;
 };
 
 export type ModerationProfileConnectOrCreateInput = {
+  AuthoredIssues?: InputMaybe<Array<ModerationProfileAuthoredIssuesConnectOrCreateFieldInput>>;
   ModChannelRoles?: InputMaybe<Array<ModerationProfileModChannelRolesConnectOrCreateFieldInput>>;
   ModServerRoles?: InputMaybe<Array<ModerationProfileModServerRolesConnectOrCreateFieldInput>>;
   User?: InputMaybe<ModerationProfileUserConnectOrCreateFieldInput>;
@@ -12197,12 +13813,11 @@ export type ModerationProfileConnectWhere = {
 };
 
 export type ModerationProfileCreateInput = {
-  AuthoredReports?: InputMaybe<ModerationProfileAuthoredReportsFieldInput>;
+  AuthoredIssues?: InputMaybe<ModerationProfileAuthoredIssuesFieldInput>;
   DiscussionComments?: InputMaybe<ModerationProfileDiscussionCommentsFieldInput>;
   DownvotedComments?: InputMaybe<ModerationProfileDownvotedCommentsFieldInput>;
   DownvotedDiscussionChannels?: InputMaybe<ModerationProfileDownvotedDiscussionChannelsFieldInput>;
   IssueComments?: InputMaybe<ModerationProfileIssueCommentsFieldInput>;
-  Issues?: InputMaybe<ModerationProfileIssuesFieldInput>;
   ModChannelRoles?: InputMaybe<ModerationProfileModChannelRolesFieldInput>;
   ModServerRoles?: InputMaybe<ModerationProfileModServerRolesFieldInput>;
   User?: InputMaybe<ModerationProfileUserFieldInput>;
@@ -12210,24 +13825,22 @@ export type ModerationProfileCreateInput = {
 };
 
 export type ModerationProfileDeleteInput = {
-  AuthoredReports?: InputMaybe<Array<ModerationProfileAuthoredReportsDeleteFieldInput>>;
+  AuthoredIssues?: InputMaybe<Array<ModerationProfileAuthoredIssuesDeleteFieldInput>>;
   DiscussionComments?: InputMaybe<Array<ModerationProfileDiscussionCommentsDeleteFieldInput>>;
   DownvotedComments?: InputMaybe<Array<ModerationProfileDownvotedCommentsDeleteFieldInput>>;
   DownvotedDiscussionChannels?: InputMaybe<Array<ModerationProfileDownvotedDiscussionChannelsDeleteFieldInput>>;
   IssueComments?: InputMaybe<Array<ModerationProfileIssueCommentsDeleteFieldInput>>;
-  Issues?: InputMaybe<Array<ModerationProfileIssuesDeleteFieldInput>>;
   ModChannelRoles?: InputMaybe<Array<ModerationProfileModChannelRolesDeleteFieldInput>>;
   ModServerRoles?: InputMaybe<Array<ModerationProfileModServerRolesDeleteFieldInput>>;
   User?: InputMaybe<ModerationProfileUserDeleteFieldInput>;
 };
 
 export type ModerationProfileDisconnectInput = {
-  AuthoredReports?: InputMaybe<Array<ModerationProfileAuthoredReportsDisconnectFieldInput>>;
+  AuthoredIssues?: InputMaybe<Array<ModerationProfileAuthoredIssuesDisconnectFieldInput>>;
   DiscussionComments?: InputMaybe<Array<ModerationProfileDiscussionCommentsDisconnectFieldInput>>;
   DownvotedComments?: InputMaybe<Array<ModerationProfileDownvotedCommentsDisconnectFieldInput>>;
   DownvotedDiscussionChannels?: InputMaybe<Array<ModerationProfileDownvotedDiscussionChannelsDisconnectFieldInput>>;
   IssueComments?: InputMaybe<Array<ModerationProfileIssueCommentsDisconnectFieldInput>>;
-  Issues?: InputMaybe<Array<ModerationProfileIssuesDisconnectFieldInput>>;
   ModChannelRoles?: InputMaybe<Array<ModerationProfileModChannelRolesDisconnectFieldInput>>;
   ModServerRoles?: InputMaybe<Array<ModerationProfileModServerRolesDisconnectFieldInput>>;
   User?: InputMaybe<ModerationProfileUserDisconnectFieldInput>;
@@ -12652,6 +14265,26 @@ export type ModerationProfileEdge = {
   node: ModerationProfile;
 };
 
+export type ModerationProfileIssueAuthoredIssuesAggregationSelection = {
+  __typename?: 'ModerationProfileIssueAuthoredIssuesAggregationSelection';
+  count: Scalars['Int']['output'];
+  node?: Maybe<ModerationProfileIssueAuthoredIssuesNodeAggregateSelection>;
+};
+
+export type ModerationProfileIssueAuthoredIssuesNodeAggregateSelection = {
+  __typename?: 'ModerationProfileIssueAuthoredIssuesNodeAggregateSelection';
+  authorName: StringAggregateSelectionNullable;
+  body: StringAggregateSelectionNullable;
+  channelUniqueName: StringAggregateSelectionNullable;
+  createdAt: DateTimeAggregateSelectionNonNullable;
+  id: IdAggregateSelectionNonNullable;
+  relatedCommentId: IdAggregateSelectionNullable;
+  relatedDiscussionId: IdAggregateSelectionNullable;
+  relatedEventId: IdAggregateSelectionNullable;
+  title: StringAggregateSelectionNullable;
+  updatedAt: DateTimeAggregateSelectionNullable;
+};
+
 export type ModerationProfileIssueCommentsAggregateInput = {
   AND?: InputMaybe<Array<ModerationProfileIssueCommentsAggregateInput>>;
   NOT?: InputMaybe<ModerationProfileIssueCommentsAggregateInput>;
@@ -12786,152 +14419,6 @@ export type ModerationProfileIssueCommentsUpdateFieldInput = {
   disconnect?: InputMaybe<Array<ModerationProfileIssueCommentsDisconnectFieldInput>>;
   update?: InputMaybe<ModerationProfileIssueCommentsUpdateConnectionInput>;
   where?: InputMaybe<ModerationProfileIssueCommentsConnectionWhere>;
-};
-
-export type ModerationProfileIssueIssuesAggregationSelection = {
-  __typename?: 'ModerationProfileIssueIssuesAggregationSelection';
-  count: Scalars['Int']['output'];
-  node?: Maybe<ModerationProfileIssueIssuesNodeAggregateSelection>;
-};
-
-export type ModerationProfileIssueIssuesNodeAggregateSelection = {
-  __typename?: 'ModerationProfileIssueIssuesNodeAggregateSelection';
-  body: StringAggregateSelectionNullable;
-  createdAt: DateTimeAggregateSelectionNonNullable;
-  id: IdAggregateSelectionNonNullable;
-  title: StringAggregateSelectionNullable;
-  updatedAt: DateTimeAggregateSelectionNonNullable;
-};
-
-export type ModerationProfileIssuesAggregateInput = {
-  AND?: InputMaybe<Array<ModerationProfileIssuesAggregateInput>>;
-  NOT?: InputMaybe<ModerationProfileIssuesAggregateInput>;
-  OR?: InputMaybe<Array<ModerationProfileIssuesAggregateInput>>;
-  count?: InputMaybe<Scalars['Int']['input']>;
-  count_GT?: InputMaybe<Scalars['Int']['input']>;
-  count_GTE?: InputMaybe<Scalars['Int']['input']>;
-  count_LT?: InputMaybe<Scalars['Int']['input']>;
-  count_LTE?: InputMaybe<Scalars['Int']['input']>;
-  node?: InputMaybe<ModerationProfileIssuesNodeAggregationWhereInput>;
-};
-
-export type ModerationProfileIssuesConnectFieldInput = {
-  connect?: InputMaybe<Array<IssueConnectInput>>;
-  /** Whether or not to overwrite any matching relationship with the new properties. */
-  overwrite?: Scalars['Boolean']['input'];
-  where?: InputMaybe<IssueConnectWhere>;
-};
-
-export type ModerationProfileIssuesConnection = {
-  __typename?: 'ModerationProfileIssuesConnection';
-  edges: Array<ModerationProfileIssuesRelationship>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int']['output'];
-};
-
-export type ModerationProfileIssuesConnectionSort = {
-  node?: InputMaybe<IssueSort>;
-};
-
-export type ModerationProfileIssuesConnectionWhere = {
-  AND?: InputMaybe<Array<ModerationProfileIssuesConnectionWhere>>;
-  NOT?: InputMaybe<ModerationProfileIssuesConnectionWhere>;
-  OR?: InputMaybe<Array<ModerationProfileIssuesConnectionWhere>>;
-  node?: InputMaybe<IssueWhere>;
-};
-
-export type ModerationProfileIssuesCreateFieldInput = {
-  node: IssueCreateInput;
-};
-
-export type ModerationProfileIssuesDeleteFieldInput = {
-  delete?: InputMaybe<IssueDeleteInput>;
-  where?: InputMaybe<ModerationProfileIssuesConnectionWhere>;
-};
-
-export type ModerationProfileIssuesDisconnectFieldInput = {
-  disconnect?: InputMaybe<IssueDisconnectInput>;
-  where?: InputMaybe<ModerationProfileIssuesConnectionWhere>;
-};
-
-export type ModerationProfileIssuesFieldInput = {
-  connect?: InputMaybe<Array<ModerationProfileIssuesConnectFieldInput>>;
-  create?: InputMaybe<Array<ModerationProfileIssuesCreateFieldInput>>;
-};
-
-export type ModerationProfileIssuesNodeAggregationWhereInput = {
-  AND?: InputMaybe<Array<ModerationProfileIssuesNodeAggregationWhereInput>>;
-  NOT?: InputMaybe<ModerationProfileIssuesNodeAggregationWhereInput>;
-  OR?: InputMaybe<Array<ModerationProfileIssuesNodeAggregationWhereInput>>;
-  body_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
-  body_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
-  body_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
-  body_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
-  body_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
-  body_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  body_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
-  body_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
-  body_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
-  body_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
-  body_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  body_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
-  body_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
-  body_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
-  body_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
-  createdAt_MAX_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MAX_GT?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MAX_GTE?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MAX_LT?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MAX_LTE?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MIN_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MIN_GT?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MIN_GTE?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MIN_LT?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MIN_LTE?: InputMaybe<Scalars['DateTime']['input']>;
-  title_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
-  title_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
-  title_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
-  title_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
-  title_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
-  title_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  title_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
-  title_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
-  title_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
-  title_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
-  title_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  title_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
-  title_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
-  title_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
-  title_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
-  updatedAt_MAX_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
-  updatedAt_MAX_GT?: InputMaybe<Scalars['DateTime']['input']>;
-  updatedAt_MAX_GTE?: InputMaybe<Scalars['DateTime']['input']>;
-  updatedAt_MAX_LT?: InputMaybe<Scalars['DateTime']['input']>;
-  updatedAt_MAX_LTE?: InputMaybe<Scalars['DateTime']['input']>;
-  updatedAt_MIN_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
-  updatedAt_MIN_GT?: InputMaybe<Scalars['DateTime']['input']>;
-  updatedAt_MIN_GTE?: InputMaybe<Scalars['DateTime']['input']>;
-  updatedAt_MIN_LT?: InputMaybe<Scalars['DateTime']['input']>;
-  updatedAt_MIN_LTE?: InputMaybe<Scalars['DateTime']['input']>;
-};
-
-export type ModerationProfileIssuesRelationship = {
-  __typename?: 'ModerationProfileIssuesRelationship';
-  cursor: Scalars['String']['output'];
-  node: Issue;
-};
-
-export type ModerationProfileIssuesUpdateConnectionInput = {
-  node?: InputMaybe<IssueUpdateInput>;
-};
-
-export type ModerationProfileIssuesUpdateFieldInput = {
-  connect?: InputMaybe<Array<ModerationProfileIssuesConnectFieldInput>>;
-  create?: InputMaybe<Array<ModerationProfileIssuesCreateFieldInput>>;
-  delete?: InputMaybe<Array<ModerationProfileIssuesDeleteFieldInput>>;
-  disconnect?: InputMaybe<Array<ModerationProfileIssuesDisconnectFieldInput>>;
-  update?: InputMaybe<ModerationProfileIssuesUpdateConnectionInput>;
-  where?: InputMaybe<ModerationProfileIssuesConnectionWhere>;
 };
 
 export type ModerationProfileModChannelRoleModChannelRolesAggregationSelection = {
@@ -13208,29 +14695,14 @@ export type ModerationProfileOptions = {
 };
 
 export type ModerationProfileRelationInput = {
-  AuthoredReports?: InputMaybe<Array<ModerationProfileAuthoredReportsCreateFieldInput>>;
+  AuthoredIssues?: InputMaybe<Array<ModerationProfileAuthoredIssuesCreateFieldInput>>;
   DiscussionComments?: InputMaybe<Array<ModerationProfileDiscussionCommentsCreateFieldInput>>;
   DownvotedComments?: InputMaybe<Array<ModerationProfileDownvotedCommentsCreateFieldInput>>;
   DownvotedDiscussionChannels?: InputMaybe<Array<ModerationProfileDownvotedDiscussionChannelsCreateFieldInput>>;
   IssueComments?: InputMaybe<Array<ModerationProfileIssueCommentsCreateFieldInput>>;
-  Issues?: InputMaybe<Array<ModerationProfileIssuesCreateFieldInput>>;
   ModChannelRoles?: InputMaybe<Array<ModerationProfileModChannelRolesCreateFieldInput>>;
   ModServerRoles?: InputMaybe<Array<ModerationProfileModServerRolesCreateFieldInput>>;
   User?: InputMaybe<ModerationProfileUserCreateFieldInput>;
-};
-
-export type ModerationProfileReportAuthoredReportsAggregationSelection = {
-  __typename?: 'ModerationProfileReportAuthoredReportsAggregationSelection';
-  count: Scalars['Int']['output'];
-  node?: Maybe<ModerationProfileReportAuthoredReportsNodeAggregateSelection>;
-};
-
-export type ModerationProfileReportAuthoredReportsNodeAggregateSelection = {
-  __typename?: 'ModerationProfileReportAuthoredReportsNodeAggregateSelection';
-  createdAt: DateTimeAggregateSelectionNonNullable;
-  id: IdAggregateSelectionNonNullable;
-  text: StringAggregateSelectionNullable;
-  updatedAt: DateTimeAggregateSelectionNonNullable;
 };
 
 /** Fields to sort ModerationProfiles by. The order in which sorts are applied is not guaranteed when specifying many fields in one ModerationProfileSort object. */
@@ -13244,12 +14716,11 @@ export type ModerationProfileUniqueWhere = {
 };
 
 export type ModerationProfileUpdateInput = {
-  AuthoredReports?: InputMaybe<Array<ModerationProfileAuthoredReportsUpdateFieldInput>>;
+  AuthoredIssues?: InputMaybe<Array<ModerationProfileAuthoredIssuesUpdateFieldInput>>;
   DiscussionComments?: InputMaybe<Array<ModerationProfileDiscussionCommentsUpdateFieldInput>>;
   DownvotedComments?: InputMaybe<Array<ModerationProfileDownvotedCommentsUpdateFieldInput>>;
   DownvotedDiscussionChannels?: InputMaybe<Array<ModerationProfileDownvotedDiscussionChannelsUpdateFieldInput>>;
   IssueComments?: InputMaybe<Array<ModerationProfileIssueCommentsUpdateFieldInput>>;
-  Issues?: InputMaybe<Array<ModerationProfileIssuesUpdateFieldInput>>;
   ModChannelRoles?: InputMaybe<Array<ModerationProfileModChannelRolesUpdateFieldInput>>;
   ModServerRoles?: InputMaybe<Array<ModerationProfileModServerRolesUpdateFieldInput>>;
   User?: InputMaybe<ModerationProfileUserUpdateFieldInput>;
@@ -13557,23 +15028,23 @@ export type ModerationProfileUserUserNodeAggregateSelection = {
 
 export type ModerationProfileWhere = {
   AND?: InputMaybe<Array<ModerationProfileWhere>>;
-  AuthoredReportsAggregate?: InputMaybe<ModerationProfileAuthoredReportsAggregateInput>;
-  /** Return ModerationProfiles where all of the related ModerationProfileAuthoredReportsConnections match this filter */
-  AuthoredReportsConnection_ALL?: InputMaybe<ModerationProfileAuthoredReportsConnectionWhere>;
-  /** Return ModerationProfiles where none of the related ModerationProfileAuthoredReportsConnections match this filter */
-  AuthoredReportsConnection_NONE?: InputMaybe<ModerationProfileAuthoredReportsConnectionWhere>;
-  /** Return ModerationProfiles where one of the related ModerationProfileAuthoredReportsConnections match this filter */
-  AuthoredReportsConnection_SINGLE?: InputMaybe<ModerationProfileAuthoredReportsConnectionWhere>;
-  /** Return ModerationProfiles where some of the related ModerationProfileAuthoredReportsConnections match this filter */
-  AuthoredReportsConnection_SOME?: InputMaybe<ModerationProfileAuthoredReportsConnectionWhere>;
-  /** Return ModerationProfiles where all of the related Reports match this filter */
-  AuthoredReports_ALL?: InputMaybe<ReportWhere>;
-  /** Return ModerationProfiles where none of the related Reports match this filter */
-  AuthoredReports_NONE?: InputMaybe<ReportWhere>;
-  /** Return ModerationProfiles where one of the related Reports match this filter */
-  AuthoredReports_SINGLE?: InputMaybe<ReportWhere>;
-  /** Return ModerationProfiles where some of the related Reports match this filter */
-  AuthoredReports_SOME?: InputMaybe<ReportWhere>;
+  AuthoredIssuesAggregate?: InputMaybe<ModerationProfileAuthoredIssuesAggregateInput>;
+  /** Return ModerationProfiles where all of the related ModerationProfileAuthoredIssuesConnections match this filter */
+  AuthoredIssuesConnection_ALL?: InputMaybe<ModerationProfileAuthoredIssuesConnectionWhere>;
+  /** Return ModerationProfiles where none of the related ModerationProfileAuthoredIssuesConnections match this filter */
+  AuthoredIssuesConnection_NONE?: InputMaybe<ModerationProfileAuthoredIssuesConnectionWhere>;
+  /** Return ModerationProfiles where one of the related ModerationProfileAuthoredIssuesConnections match this filter */
+  AuthoredIssuesConnection_SINGLE?: InputMaybe<ModerationProfileAuthoredIssuesConnectionWhere>;
+  /** Return ModerationProfiles where some of the related ModerationProfileAuthoredIssuesConnections match this filter */
+  AuthoredIssuesConnection_SOME?: InputMaybe<ModerationProfileAuthoredIssuesConnectionWhere>;
+  /** Return ModerationProfiles where all of the related Issues match this filter */
+  AuthoredIssues_ALL?: InputMaybe<IssueWhere>;
+  /** Return ModerationProfiles where none of the related Issues match this filter */
+  AuthoredIssues_NONE?: InputMaybe<IssueWhere>;
+  /** Return ModerationProfiles where one of the related Issues match this filter */
+  AuthoredIssues_SINGLE?: InputMaybe<IssueWhere>;
+  /** Return ModerationProfiles where some of the related Issues match this filter */
+  AuthoredIssues_SOME?: InputMaybe<IssueWhere>;
   DiscussionCommentsAggregate?: InputMaybe<ModerationProfileDiscussionCommentsAggregateInput>;
   /** Return ModerationProfiles where all of the related ModerationProfileDiscussionCommentsConnections match this filter */
   DiscussionCommentsConnection_ALL?: InputMaybe<ModerationProfileDiscussionCommentsConnectionWhere>;
@@ -13642,23 +15113,6 @@ export type ModerationProfileWhere = {
   IssueComments_SINGLE?: InputMaybe<CommentWhere>;
   /** Return ModerationProfiles where some of the related Comments match this filter */
   IssueComments_SOME?: InputMaybe<CommentWhere>;
-  IssuesAggregate?: InputMaybe<ModerationProfileIssuesAggregateInput>;
-  /** Return ModerationProfiles where all of the related ModerationProfileIssuesConnections match this filter */
-  IssuesConnection_ALL?: InputMaybe<ModerationProfileIssuesConnectionWhere>;
-  /** Return ModerationProfiles where none of the related ModerationProfileIssuesConnections match this filter */
-  IssuesConnection_NONE?: InputMaybe<ModerationProfileIssuesConnectionWhere>;
-  /** Return ModerationProfiles where one of the related ModerationProfileIssuesConnections match this filter */
-  IssuesConnection_SINGLE?: InputMaybe<ModerationProfileIssuesConnectionWhere>;
-  /** Return ModerationProfiles where some of the related ModerationProfileIssuesConnections match this filter */
-  IssuesConnection_SOME?: InputMaybe<ModerationProfileIssuesConnectionWhere>;
-  /** Return ModerationProfiles where all of the related Issues match this filter */
-  Issues_ALL?: InputMaybe<IssueWhere>;
-  /** Return ModerationProfiles where none of the related Issues match this filter */
-  Issues_NONE?: InputMaybe<IssueWhere>;
-  /** Return ModerationProfiles where one of the related Issues match this filter */
-  Issues_SINGLE?: InputMaybe<IssueWhere>;
-  /** Return ModerationProfiles where some of the related Issues match this filter */
-  Issues_SOME?: InputMaybe<IssueWhere>;
   ModChannelRolesAggregate?: InputMaybe<ModerationProfileModChannelRolesAggregateInput>;
   /** Return ModerationProfiles where all of the related ModerationProfileModChannelRolesConnections match this filter */
   ModChannelRolesConnection_ALL?: InputMaybe<ModerationProfileModChannelRolesConnectionWhere>;
@@ -13749,7 +15203,6 @@ export type Mutation = {
   createRedditSubmissions: CreateRedditSubmissionsMutationResponse;
   createRepeatEnds: CreateRepeatEndsMutationResponse;
   createRepeatEveries: CreateRepeatEveriesMutationResponse;
-  createReports: CreateReportsMutationResponse;
   createRules: CreateRulesMutationResponse;
   createServerConfigs: CreateServerConfigsMutationResponse;
   createServerRoles: CreateServerRolesMutationResponse;
@@ -13781,7 +15234,6 @@ export type Mutation = {
   deleteRedditSubmissions: DeleteInfo;
   deleteRepeatEnds: DeleteInfo;
   deleteRepeatEveries: DeleteInfo;
-  deleteReports: DeleteInfo;
   deleteRules: DeleteInfo;
   deleteServerConfigs: DeleteInfo;
   deleteServerRoles: DeleteInfo;
@@ -13792,6 +15244,9 @@ export type Mutation = {
   deleteUsers: DeleteInfo;
   removeEmojiFromComment?: Maybe<Comment>;
   removeEmojiFromDiscussionChannel?: Maybe<DiscussionChannel>;
+  reportComment?: Maybe<Issue>;
+  reportDiscussion?: Maybe<Issue>;
+  reportEvent?: Maybe<Issue>;
   undoUpvoteComment?: Maybe<Comment>;
   undoUpvoteDiscussionChannel?: Maybe<DiscussionChannel>;
   updateChannelRoles: UpdateChannelRolesMutationResponse;
@@ -13818,7 +15273,6 @@ export type Mutation = {
   updateRedditSubmissions: UpdateRedditSubmissionsMutationResponse;
   updateRepeatEnds: UpdateRepeatEndsMutationResponse;
   updateRepeatEveries: UpdateRepeatEveriesMutationResponse;
-  updateReports: UpdateReportsMutationResponse;
   updateRules: UpdateRulesMutationResponse;
   updateServerConfigs: UpdateServerConfigsMutationResponse;
   updateServerRoles: UpdateServerRolesMutationResponse;
@@ -13967,11 +15421,6 @@ export type MutationCreateRepeatEndsArgs = {
 
 export type MutationCreateRepeatEveriesArgs = {
   input: Array<RepeatEveryCreateInput>;
-};
-
-
-export type MutationCreateReportsArgs = {
-  input: Array<ReportCreateInput>;
 };
 
 
@@ -14143,12 +15592,6 @@ export type MutationDeleteRepeatEveriesArgs = {
 };
 
 
-export type MutationDeleteReportsArgs = {
-  delete?: InputMaybe<ReportDeleteInput>;
-  where?: InputMaybe<ReportWhere>;
-};
-
-
 export type MutationDeleteRulesArgs = {
   where?: InputMaybe<RuleWhere>;
 };
@@ -14203,6 +15646,33 @@ export type MutationRemoveEmojiFromDiscussionChannelArgs = {
   discussionChannelId: Scalars['ID']['input'];
   emojiLabel: Scalars['String']['input'];
   username: Scalars['String']['input'];
+};
+
+
+export type MutationReportCommentArgs = {
+  authorName?: InputMaybe<Scalars['String']['input']>;
+  body?: InputMaybe<Scalars['String']['input']>;
+  channelUniqueName?: InputMaybe<Scalars['String']['input']>;
+  relatedCommentId?: InputMaybe<Scalars['ID']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type MutationReportDiscussionArgs = {
+  authorName?: InputMaybe<Scalars['String']['input']>;
+  body?: InputMaybe<Scalars['String']['input']>;
+  channelUniqueName?: InputMaybe<Scalars['String']['input']>;
+  relatedDiscussionId?: InputMaybe<Scalars['ID']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type MutationReportEventArgs = {
+  authorName?: InputMaybe<Scalars['String']['input']>;
+  body?: InputMaybe<Scalars['String']['input']>;
+  channelUniqueName?: InputMaybe<Scalars['String']['input']>;
+  relatedEventId?: InputMaybe<Scalars['ID']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -14425,17 +15895,6 @@ export type MutationUpdateRepeatEveriesArgs = {
 };
 
 
-export type MutationUpdateReportsArgs = {
-  connect?: InputMaybe<ReportConnectInput>;
-  connectOrCreate?: InputMaybe<ReportConnectOrCreateInput>;
-  create?: InputMaybe<ReportRelationInput>;
-  delete?: InputMaybe<ReportDeleteInput>;
-  disconnect?: InputMaybe<ReportDisconnectInput>;
-  update?: InputMaybe<ReportUpdateInput>;
-  where?: InputMaybe<ReportWhere>;
-};
-
-
 export type MutationUpdateRulesArgs = {
   update?: InputMaybe<RuleUpdateInput>;
   where?: InputMaybe<RuleWhere>;
@@ -14618,9 +16077,6 @@ export type Query = {
   repeatEveries: Array<RepeatEvery>;
   repeatEveriesAggregate: RepeatEveryAggregateSelection;
   repeatEveriesConnection: RepeatEveriesConnection;
-  reports: Array<Report>;
-  reportsAggregate: ReportAggregateSelection;
-  reportsConnection: ReportsConnection;
   rules: Array<Rule>;
   rulesAggregate: RuleAggregateSelection;
   rulesConnection: RulesConnection;
@@ -15114,25 +16570,6 @@ export type QueryRepeatEveriesConnectionArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<Array<InputMaybe<RepeatEverySort>>>;
   where?: InputMaybe<RepeatEveryWhere>;
-};
-
-
-export type QueryReportsArgs = {
-  options?: InputMaybe<ReportOptions>;
-  where?: InputMaybe<ReportWhere>;
-};
-
-
-export type QueryReportsAggregateArgs = {
-  where?: InputMaybe<ReportWhere>;
-};
-
-
-export type QueryReportsConnectionArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  sort?: InputMaybe<Array<InputMaybe<ReportSort>>>;
-  where?: InputMaybe<ReportWhere>;
 };
 
 
@@ -16040,635 +17477,6 @@ export enum RepeatUnit {
   Week = 'WEEK',
   Year = 'YEAR'
 }
-
-export type Report = {
-  __typename?: 'Report';
-  Author?: Maybe<ModerationProfile>;
-  AuthorAggregate?: Maybe<ReportModerationProfileAuthorAggregationSelection>;
-  AuthorConnection: ReportAuthorConnection;
-  Issues: Array<Issue>;
-  IssuesAggregate?: Maybe<ReportIssueIssuesAggregationSelection>;
-  IssuesConnection: ReportIssuesConnection;
-  RuleViolations: Array<Rule>;
-  RuleViolationsAggregate?: Maybe<ReportRuleRuleViolationsAggregationSelection>;
-  RuleViolationsConnection: ReportRuleViolationsConnection;
-  createdAt: Scalars['DateTime']['output'];
-  id: Scalars['ID']['output'];
-  text?: Maybe<Scalars['String']['output']>;
-  updatedAt: Scalars['DateTime']['output'];
-};
-
-
-export type ReportAuthorArgs = {
-  directed?: InputMaybe<Scalars['Boolean']['input']>;
-  options?: InputMaybe<ModerationProfileOptions>;
-  where?: InputMaybe<ModerationProfileWhere>;
-};
-
-
-export type ReportAuthorAggregateArgs = {
-  directed?: InputMaybe<Scalars['Boolean']['input']>;
-  where?: InputMaybe<ModerationProfileWhere>;
-};
-
-
-export type ReportAuthorConnectionArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  directed?: InputMaybe<Scalars['Boolean']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  sort?: InputMaybe<Array<ReportAuthorConnectionSort>>;
-  where?: InputMaybe<ReportAuthorConnectionWhere>;
-};
-
-
-export type ReportIssuesArgs = {
-  directed?: InputMaybe<Scalars['Boolean']['input']>;
-  options?: InputMaybe<IssueOptions>;
-  where?: InputMaybe<IssueWhere>;
-};
-
-
-export type ReportIssuesAggregateArgs = {
-  directed?: InputMaybe<Scalars['Boolean']['input']>;
-  where?: InputMaybe<IssueWhere>;
-};
-
-
-export type ReportIssuesConnectionArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  directed?: InputMaybe<Scalars['Boolean']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  sort?: InputMaybe<Array<ReportIssuesConnectionSort>>;
-  where?: InputMaybe<ReportIssuesConnectionWhere>;
-};
-
-
-export type ReportRuleViolationsArgs = {
-  directed?: InputMaybe<Scalars['Boolean']['input']>;
-  options?: InputMaybe<RuleOptions>;
-  where?: InputMaybe<RuleWhere>;
-};
-
-
-export type ReportRuleViolationsAggregateArgs = {
-  directed?: InputMaybe<Scalars['Boolean']['input']>;
-  where?: InputMaybe<RuleWhere>;
-};
-
-
-export type ReportRuleViolationsConnectionArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  directed?: InputMaybe<Scalars['Boolean']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  sort?: InputMaybe<Array<ReportRuleViolationsConnectionSort>>;
-  where?: InputMaybe<ReportRuleViolationsConnectionWhere>;
-};
-
-export type ReportAggregateSelection = {
-  __typename?: 'ReportAggregateSelection';
-  count: Scalars['Int']['output'];
-  createdAt: DateTimeAggregateSelectionNonNullable;
-  id: IdAggregateSelectionNonNullable;
-  text: StringAggregateSelectionNullable;
-  updatedAt: DateTimeAggregateSelectionNonNullable;
-};
-
-export type ReportAuthorAggregateInput = {
-  AND?: InputMaybe<Array<ReportAuthorAggregateInput>>;
-  NOT?: InputMaybe<ReportAuthorAggregateInput>;
-  OR?: InputMaybe<Array<ReportAuthorAggregateInput>>;
-  count?: InputMaybe<Scalars['Int']['input']>;
-  count_GT?: InputMaybe<Scalars['Int']['input']>;
-  count_GTE?: InputMaybe<Scalars['Int']['input']>;
-  count_LT?: InputMaybe<Scalars['Int']['input']>;
-  count_LTE?: InputMaybe<Scalars['Int']['input']>;
-  node?: InputMaybe<ReportAuthorNodeAggregationWhereInput>;
-};
-
-export type ReportAuthorConnectFieldInput = {
-  connect?: InputMaybe<ModerationProfileConnectInput>;
-  /** Whether or not to overwrite any matching relationship with the new properties. */
-  overwrite?: Scalars['Boolean']['input'];
-  where?: InputMaybe<ModerationProfileConnectWhere>;
-};
-
-export type ReportAuthorConnectOrCreateFieldInput = {
-  onCreate: ReportAuthorConnectOrCreateFieldInputOnCreate;
-  where: ModerationProfileConnectOrCreateWhere;
-};
-
-export type ReportAuthorConnectOrCreateFieldInputOnCreate = {
-  node: ModerationProfileOnCreateInput;
-};
-
-export type ReportAuthorConnection = {
-  __typename?: 'ReportAuthorConnection';
-  edges: Array<ReportAuthorRelationship>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int']['output'];
-};
-
-export type ReportAuthorConnectionSort = {
-  node?: InputMaybe<ModerationProfileSort>;
-};
-
-export type ReportAuthorConnectionWhere = {
-  AND?: InputMaybe<Array<ReportAuthorConnectionWhere>>;
-  NOT?: InputMaybe<ReportAuthorConnectionWhere>;
-  OR?: InputMaybe<Array<ReportAuthorConnectionWhere>>;
-  node?: InputMaybe<ModerationProfileWhere>;
-};
-
-export type ReportAuthorCreateFieldInput = {
-  node: ModerationProfileCreateInput;
-};
-
-export type ReportAuthorDeleteFieldInput = {
-  delete?: InputMaybe<ModerationProfileDeleteInput>;
-  where?: InputMaybe<ReportAuthorConnectionWhere>;
-};
-
-export type ReportAuthorDisconnectFieldInput = {
-  disconnect?: InputMaybe<ModerationProfileDisconnectInput>;
-  where?: InputMaybe<ReportAuthorConnectionWhere>;
-};
-
-export type ReportAuthorFieldInput = {
-  connect?: InputMaybe<ReportAuthorConnectFieldInput>;
-  connectOrCreate?: InputMaybe<ReportAuthorConnectOrCreateFieldInput>;
-  create?: InputMaybe<ReportAuthorCreateFieldInput>;
-};
-
-export type ReportAuthorNodeAggregationWhereInput = {
-  AND?: InputMaybe<Array<ReportAuthorNodeAggregationWhereInput>>;
-  NOT?: InputMaybe<ReportAuthorNodeAggregationWhereInput>;
-  OR?: InputMaybe<Array<ReportAuthorNodeAggregationWhereInput>>;
-  createdAt_MAX_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MAX_GT?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MAX_GTE?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MAX_LT?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MAX_LTE?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MIN_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MIN_GT?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MIN_GTE?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MIN_LT?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MIN_LTE?: InputMaybe<Scalars['DateTime']['input']>;
-  displayName_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
-  displayName_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
-  displayName_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
-  displayName_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
-  displayName_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
-  displayName_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  displayName_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
-  displayName_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
-  displayName_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
-  displayName_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
-  displayName_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  displayName_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
-  displayName_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
-  displayName_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
-  displayName_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
-};
-
-export type ReportAuthorRelationship = {
-  __typename?: 'ReportAuthorRelationship';
-  cursor: Scalars['String']['output'];
-  node: ModerationProfile;
-};
-
-export type ReportAuthorUpdateConnectionInput = {
-  node?: InputMaybe<ModerationProfileUpdateInput>;
-};
-
-export type ReportAuthorUpdateFieldInput = {
-  connect?: InputMaybe<ReportAuthorConnectFieldInput>;
-  connectOrCreate?: InputMaybe<ReportAuthorConnectOrCreateFieldInput>;
-  create?: InputMaybe<ReportAuthorCreateFieldInput>;
-  delete?: InputMaybe<ReportAuthorDeleteFieldInput>;
-  disconnect?: InputMaybe<ReportAuthorDisconnectFieldInput>;
-  update?: InputMaybe<ReportAuthorUpdateConnectionInput>;
-  where?: InputMaybe<ReportAuthorConnectionWhere>;
-};
-
-export type ReportConnectInput = {
-  Author?: InputMaybe<ReportAuthorConnectFieldInput>;
-  Issues?: InputMaybe<Array<ReportIssuesConnectFieldInput>>;
-  RuleViolations?: InputMaybe<Array<ReportRuleViolationsConnectFieldInput>>;
-};
-
-export type ReportConnectOrCreateInput = {
-  Author?: InputMaybe<ReportAuthorConnectOrCreateFieldInput>;
-};
-
-export type ReportConnectWhere = {
-  node: ReportWhere;
-};
-
-export type ReportCreateInput = {
-  Author?: InputMaybe<ReportAuthorFieldInput>;
-  Issues?: InputMaybe<ReportIssuesFieldInput>;
-  RuleViolations?: InputMaybe<ReportRuleViolationsFieldInput>;
-  text?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type ReportDeleteInput = {
-  Author?: InputMaybe<ReportAuthorDeleteFieldInput>;
-  Issues?: InputMaybe<Array<ReportIssuesDeleteFieldInput>>;
-  RuleViolations?: InputMaybe<Array<ReportRuleViolationsDeleteFieldInput>>;
-};
-
-export type ReportDisconnectInput = {
-  Author?: InputMaybe<ReportAuthorDisconnectFieldInput>;
-  Issues?: InputMaybe<Array<ReportIssuesDisconnectFieldInput>>;
-  RuleViolations?: InputMaybe<Array<ReportRuleViolationsDisconnectFieldInput>>;
-};
-
-export type ReportEdge = {
-  __typename?: 'ReportEdge';
-  cursor: Scalars['String']['output'];
-  node: Report;
-};
-
-export type ReportIssueIssuesAggregationSelection = {
-  __typename?: 'ReportIssueIssuesAggregationSelection';
-  count: Scalars['Int']['output'];
-  node?: Maybe<ReportIssueIssuesNodeAggregateSelection>;
-};
-
-export type ReportIssueIssuesNodeAggregateSelection = {
-  __typename?: 'ReportIssueIssuesNodeAggregateSelection';
-  body: StringAggregateSelectionNullable;
-  createdAt: DateTimeAggregateSelectionNonNullable;
-  id: IdAggregateSelectionNonNullable;
-  title: StringAggregateSelectionNullable;
-  updatedAt: DateTimeAggregateSelectionNonNullable;
-};
-
-export type ReportIssuesAggregateInput = {
-  AND?: InputMaybe<Array<ReportIssuesAggregateInput>>;
-  NOT?: InputMaybe<ReportIssuesAggregateInput>;
-  OR?: InputMaybe<Array<ReportIssuesAggregateInput>>;
-  count?: InputMaybe<Scalars['Int']['input']>;
-  count_GT?: InputMaybe<Scalars['Int']['input']>;
-  count_GTE?: InputMaybe<Scalars['Int']['input']>;
-  count_LT?: InputMaybe<Scalars['Int']['input']>;
-  count_LTE?: InputMaybe<Scalars['Int']['input']>;
-  node?: InputMaybe<ReportIssuesNodeAggregationWhereInput>;
-};
-
-export type ReportIssuesConnectFieldInput = {
-  connect?: InputMaybe<Array<IssueConnectInput>>;
-  /** Whether or not to overwrite any matching relationship with the new properties. */
-  overwrite?: Scalars['Boolean']['input'];
-  where?: InputMaybe<IssueConnectWhere>;
-};
-
-export type ReportIssuesConnection = {
-  __typename?: 'ReportIssuesConnection';
-  edges: Array<ReportIssuesRelationship>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int']['output'];
-};
-
-export type ReportIssuesConnectionSort = {
-  node?: InputMaybe<IssueSort>;
-};
-
-export type ReportIssuesConnectionWhere = {
-  AND?: InputMaybe<Array<ReportIssuesConnectionWhere>>;
-  NOT?: InputMaybe<ReportIssuesConnectionWhere>;
-  OR?: InputMaybe<Array<ReportIssuesConnectionWhere>>;
-  node?: InputMaybe<IssueWhere>;
-};
-
-export type ReportIssuesCreateFieldInput = {
-  node: IssueCreateInput;
-};
-
-export type ReportIssuesDeleteFieldInput = {
-  delete?: InputMaybe<IssueDeleteInput>;
-  where?: InputMaybe<ReportIssuesConnectionWhere>;
-};
-
-export type ReportIssuesDisconnectFieldInput = {
-  disconnect?: InputMaybe<IssueDisconnectInput>;
-  where?: InputMaybe<ReportIssuesConnectionWhere>;
-};
-
-export type ReportIssuesFieldInput = {
-  connect?: InputMaybe<Array<ReportIssuesConnectFieldInput>>;
-  create?: InputMaybe<Array<ReportIssuesCreateFieldInput>>;
-};
-
-export type ReportIssuesNodeAggregationWhereInput = {
-  AND?: InputMaybe<Array<ReportIssuesNodeAggregationWhereInput>>;
-  NOT?: InputMaybe<ReportIssuesNodeAggregationWhereInput>;
-  OR?: InputMaybe<Array<ReportIssuesNodeAggregationWhereInput>>;
-  body_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
-  body_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
-  body_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
-  body_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
-  body_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
-  body_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  body_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
-  body_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
-  body_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
-  body_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
-  body_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  body_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
-  body_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
-  body_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
-  body_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
-  createdAt_MAX_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MAX_GT?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MAX_GTE?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MAX_LT?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MAX_LTE?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MIN_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MIN_GT?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MIN_GTE?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MIN_LT?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MIN_LTE?: InputMaybe<Scalars['DateTime']['input']>;
-  title_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
-  title_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
-  title_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
-  title_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
-  title_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
-  title_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  title_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
-  title_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
-  title_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
-  title_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
-  title_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  title_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
-  title_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
-  title_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
-  title_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
-  updatedAt_MAX_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
-  updatedAt_MAX_GT?: InputMaybe<Scalars['DateTime']['input']>;
-  updatedAt_MAX_GTE?: InputMaybe<Scalars['DateTime']['input']>;
-  updatedAt_MAX_LT?: InputMaybe<Scalars['DateTime']['input']>;
-  updatedAt_MAX_LTE?: InputMaybe<Scalars['DateTime']['input']>;
-  updatedAt_MIN_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
-  updatedAt_MIN_GT?: InputMaybe<Scalars['DateTime']['input']>;
-  updatedAt_MIN_GTE?: InputMaybe<Scalars['DateTime']['input']>;
-  updatedAt_MIN_LT?: InputMaybe<Scalars['DateTime']['input']>;
-  updatedAt_MIN_LTE?: InputMaybe<Scalars['DateTime']['input']>;
-};
-
-export type ReportIssuesRelationship = {
-  __typename?: 'ReportIssuesRelationship';
-  cursor: Scalars['String']['output'];
-  node: Issue;
-};
-
-export type ReportIssuesUpdateConnectionInput = {
-  node?: InputMaybe<IssueUpdateInput>;
-};
-
-export type ReportIssuesUpdateFieldInput = {
-  connect?: InputMaybe<Array<ReportIssuesConnectFieldInput>>;
-  create?: InputMaybe<Array<ReportIssuesCreateFieldInput>>;
-  delete?: InputMaybe<Array<ReportIssuesDeleteFieldInput>>;
-  disconnect?: InputMaybe<Array<ReportIssuesDisconnectFieldInput>>;
-  update?: InputMaybe<ReportIssuesUpdateConnectionInput>;
-  where?: InputMaybe<ReportIssuesConnectionWhere>;
-};
-
-export type ReportModerationProfileAuthorAggregationSelection = {
-  __typename?: 'ReportModerationProfileAuthorAggregationSelection';
-  count: Scalars['Int']['output'];
-  node?: Maybe<ReportModerationProfileAuthorNodeAggregateSelection>;
-};
-
-export type ReportModerationProfileAuthorNodeAggregateSelection = {
-  __typename?: 'ReportModerationProfileAuthorNodeAggregateSelection';
-  createdAt: DateTimeAggregateSelectionNonNullable;
-  displayName: StringAggregateSelectionNullable;
-};
-
-export type ReportOptions = {
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  /** Specify one or more ReportSort objects to sort Reports by. The sorts will be applied in the order in which they are arranged in the array. */
-  sort?: InputMaybe<Array<ReportSort>>;
-};
-
-export type ReportRelationInput = {
-  Author?: InputMaybe<ReportAuthorCreateFieldInput>;
-  Issues?: InputMaybe<Array<ReportIssuesCreateFieldInput>>;
-  RuleViolations?: InputMaybe<Array<ReportRuleViolationsCreateFieldInput>>;
-};
-
-export type ReportRuleRuleViolationsAggregationSelection = {
-  __typename?: 'ReportRuleRuleViolationsAggregationSelection';
-  count: Scalars['Int']['output'];
-  node?: Maybe<ReportRuleRuleViolationsNodeAggregateSelection>;
-};
-
-export type ReportRuleRuleViolationsNodeAggregateSelection = {
-  __typename?: 'ReportRuleRuleViolationsNodeAggregateSelection';
-  description: StringAggregateSelectionNullable;
-  summary: StringAggregateSelectionNullable;
-};
-
-export type ReportRuleViolationsAggregateInput = {
-  AND?: InputMaybe<Array<ReportRuleViolationsAggregateInput>>;
-  NOT?: InputMaybe<ReportRuleViolationsAggregateInput>;
-  OR?: InputMaybe<Array<ReportRuleViolationsAggregateInput>>;
-  count?: InputMaybe<Scalars['Int']['input']>;
-  count_GT?: InputMaybe<Scalars['Int']['input']>;
-  count_GTE?: InputMaybe<Scalars['Int']['input']>;
-  count_LT?: InputMaybe<Scalars['Int']['input']>;
-  count_LTE?: InputMaybe<Scalars['Int']['input']>;
-  node?: InputMaybe<ReportRuleViolationsNodeAggregationWhereInput>;
-};
-
-export type ReportRuleViolationsConnectFieldInput = {
-  /** Whether or not to overwrite any matching relationship with the new properties. */
-  overwrite?: Scalars['Boolean']['input'];
-  where?: InputMaybe<RuleConnectWhere>;
-};
-
-export type ReportRuleViolationsConnection = {
-  __typename?: 'ReportRuleViolationsConnection';
-  edges: Array<ReportRuleViolationsRelationship>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int']['output'];
-};
-
-export type ReportRuleViolationsConnectionSort = {
-  node?: InputMaybe<RuleSort>;
-};
-
-export type ReportRuleViolationsConnectionWhere = {
-  AND?: InputMaybe<Array<ReportRuleViolationsConnectionWhere>>;
-  NOT?: InputMaybe<ReportRuleViolationsConnectionWhere>;
-  OR?: InputMaybe<Array<ReportRuleViolationsConnectionWhere>>;
-  node?: InputMaybe<RuleWhere>;
-};
-
-export type ReportRuleViolationsCreateFieldInput = {
-  node: RuleCreateInput;
-};
-
-export type ReportRuleViolationsDeleteFieldInput = {
-  where?: InputMaybe<ReportRuleViolationsConnectionWhere>;
-};
-
-export type ReportRuleViolationsDisconnectFieldInput = {
-  where?: InputMaybe<ReportRuleViolationsConnectionWhere>;
-};
-
-export type ReportRuleViolationsFieldInput = {
-  connect?: InputMaybe<Array<ReportRuleViolationsConnectFieldInput>>;
-  create?: InputMaybe<Array<ReportRuleViolationsCreateFieldInput>>;
-};
-
-export type ReportRuleViolationsNodeAggregationWhereInput = {
-  AND?: InputMaybe<Array<ReportRuleViolationsNodeAggregationWhereInput>>;
-  NOT?: InputMaybe<ReportRuleViolationsNodeAggregationWhereInput>;
-  OR?: InputMaybe<Array<ReportRuleViolationsNodeAggregationWhereInput>>;
-  description_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
-  description_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
-  description_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
-  description_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
-  description_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
-  description_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  description_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
-  description_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
-  description_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
-  description_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
-  description_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  description_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
-  description_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
-  description_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
-  description_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
-  summary_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
-  summary_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
-  summary_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
-  summary_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
-  summary_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
-  summary_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  summary_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
-  summary_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
-  summary_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
-  summary_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
-  summary_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  summary_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
-  summary_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
-  summary_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
-  summary_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
-};
-
-export type ReportRuleViolationsRelationship = {
-  __typename?: 'ReportRuleViolationsRelationship';
-  cursor: Scalars['String']['output'];
-  node: Rule;
-};
-
-export type ReportRuleViolationsUpdateConnectionInput = {
-  node?: InputMaybe<RuleUpdateInput>;
-};
-
-export type ReportRuleViolationsUpdateFieldInput = {
-  connect?: InputMaybe<Array<ReportRuleViolationsConnectFieldInput>>;
-  create?: InputMaybe<Array<ReportRuleViolationsCreateFieldInput>>;
-  delete?: InputMaybe<Array<ReportRuleViolationsDeleteFieldInput>>;
-  disconnect?: InputMaybe<Array<ReportRuleViolationsDisconnectFieldInput>>;
-  update?: InputMaybe<ReportRuleViolationsUpdateConnectionInput>;
-  where?: InputMaybe<ReportRuleViolationsConnectionWhere>;
-};
-
-/** Fields to sort Reports by. The order in which sorts are applied is not guaranteed when specifying many fields in one ReportSort object. */
-export type ReportSort = {
-  createdAt?: InputMaybe<SortDirection>;
-  id?: InputMaybe<SortDirection>;
-  text?: InputMaybe<SortDirection>;
-  updatedAt?: InputMaybe<SortDirection>;
-};
-
-export type ReportUpdateInput = {
-  Author?: InputMaybe<ReportAuthorUpdateFieldInput>;
-  Issues?: InputMaybe<Array<ReportIssuesUpdateFieldInput>>;
-  RuleViolations?: InputMaybe<Array<ReportRuleViolationsUpdateFieldInput>>;
-  text?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type ReportWhere = {
-  AND?: InputMaybe<Array<ReportWhere>>;
-  Author?: InputMaybe<ModerationProfileWhere>;
-  AuthorAggregate?: InputMaybe<ReportAuthorAggregateInput>;
-  AuthorConnection?: InputMaybe<ReportAuthorConnectionWhere>;
-  AuthorConnection_NOT?: InputMaybe<ReportAuthorConnectionWhere>;
-  Author_NOT?: InputMaybe<ModerationProfileWhere>;
-  IssuesAggregate?: InputMaybe<ReportIssuesAggregateInput>;
-  /** Return Reports where all of the related ReportIssuesConnections match this filter */
-  IssuesConnection_ALL?: InputMaybe<ReportIssuesConnectionWhere>;
-  /** Return Reports where none of the related ReportIssuesConnections match this filter */
-  IssuesConnection_NONE?: InputMaybe<ReportIssuesConnectionWhere>;
-  /** Return Reports where one of the related ReportIssuesConnections match this filter */
-  IssuesConnection_SINGLE?: InputMaybe<ReportIssuesConnectionWhere>;
-  /** Return Reports where some of the related ReportIssuesConnections match this filter */
-  IssuesConnection_SOME?: InputMaybe<ReportIssuesConnectionWhere>;
-  /** Return Reports where all of the related Issues match this filter */
-  Issues_ALL?: InputMaybe<IssueWhere>;
-  /** Return Reports where none of the related Issues match this filter */
-  Issues_NONE?: InputMaybe<IssueWhere>;
-  /** Return Reports where one of the related Issues match this filter */
-  Issues_SINGLE?: InputMaybe<IssueWhere>;
-  /** Return Reports where some of the related Issues match this filter */
-  Issues_SOME?: InputMaybe<IssueWhere>;
-  NOT?: InputMaybe<ReportWhere>;
-  OR?: InputMaybe<Array<ReportWhere>>;
-  RuleViolationsAggregate?: InputMaybe<ReportRuleViolationsAggregateInput>;
-  /** Return Reports where all of the related ReportRuleViolationsConnections match this filter */
-  RuleViolationsConnection_ALL?: InputMaybe<ReportRuleViolationsConnectionWhere>;
-  /** Return Reports where none of the related ReportRuleViolationsConnections match this filter */
-  RuleViolationsConnection_NONE?: InputMaybe<ReportRuleViolationsConnectionWhere>;
-  /** Return Reports where one of the related ReportRuleViolationsConnections match this filter */
-  RuleViolationsConnection_SINGLE?: InputMaybe<ReportRuleViolationsConnectionWhere>;
-  /** Return Reports where some of the related ReportRuleViolationsConnections match this filter */
-  RuleViolationsConnection_SOME?: InputMaybe<ReportRuleViolationsConnectionWhere>;
-  /** Return Reports where all of the related Rules match this filter */
-  RuleViolations_ALL?: InputMaybe<RuleWhere>;
-  /** Return Reports where none of the related Rules match this filter */
-  RuleViolations_NONE?: InputMaybe<RuleWhere>;
-  /** Return Reports where one of the related Rules match this filter */
-  RuleViolations_SINGLE?: InputMaybe<RuleWhere>;
-  /** Return Reports where some of the related Rules match this filter */
-  RuleViolations_SOME?: InputMaybe<RuleWhere>;
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_GT?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_GTE?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_IN?: InputMaybe<Array<Scalars['DateTime']['input']>>;
-  createdAt_LT?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_LTE?: InputMaybe<Scalars['DateTime']['input']>;
-  id?: InputMaybe<Scalars['ID']['input']>;
-  id_CONTAINS?: InputMaybe<Scalars['ID']['input']>;
-  id_ENDS_WITH?: InputMaybe<Scalars['ID']['input']>;
-  id_IN?: InputMaybe<Array<Scalars['ID']['input']>>;
-  id_STARTS_WITH?: InputMaybe<Scalars['ID']['input']>;
-  text?: InputMaybe<Scalars['String']['input']>;
-  text_CONTAINS?: InputMaybe<Scalars['String']['input']>;
-  text_ENDS_WITH?: InputMaybe<Scalars['String']['input']>;
-  text_IN?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  text_MATCHES?: InputMaybe<Scalars['String']['input']>;
-  text_STARTS_WITH?: InputMaybe<Scalars['String']['input']>;
-  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
-  updatedAt_GT?: InputMaybe<Scalars['DateTime']['input']>;
-  updatedAt_GTE?: InputMaybe<Scalars['DateTime']['input']>;
-  updatedAt_IN?: InputMaybe<Array<Scalars['DateTime']['input']>>;
-  updatedAt_LT?: InputMaybe<Scalars['DateTime']['input']>;
-  updatedAt_LTE?: InputMaybe<Scalars['DateTime']['input']>;
-};
-
-export type ReportsConnection = {
-  __typename?: 'ReportsConnection';
-  edges: Array<ReportEdge>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int']['output'];
-};
 
 export type Rule = {
   __typename?: 'Rule';
@@ -19147,12 +19955,6 @@ export type UpdateRepeatEveriesMutationResponse = {
   repeatEveries: Array<RepeatEvery>;
 };
 
-export type UpdateReportsMutationResponse = {
-  __typename?: 'UpdateReportsMutationResponse';
-  info: UpdateInfo;
-  reports: Array<Report>;
-};
-
 export type UpdateRulesMutationResponse = {
   __typename?: 'UpdateRulesMutationResponse';
   info: UpdateInfo;
@@ -20569,6 +21371,7 @@ export type UserConnectOrCreateInput = {
   Email?: InputMaybe<UserEmailConnectOrCreateFieldInput>;
   FavoriteChannels?: InputMaybe<Array<UserFavoriteChannelsConnectOrCreateFieldInput>>;
   IsBlockedBy?: InputMaybe<UserIsBlockedByConnectOrCreateFieldInput>;
+  Issues?: InputMaybe<Array<UserIssuesConnectOrCreateFieldInput>>;
   ModerationProfile?: InputMaybe<UserModerationProfileConnectOrCreateFieldInput>;
   RecentlyVisitedChannels?: InputMaybe<Array<UserRecentlyVisitedChannelsConnectOrCreateFieldInput>>;
   ServerRoles?: InputMaybe<Array<UserServerRolesConnectOrCreateFieldInput>>;
@@ -22216,11 +23019,16 @@ export type UserIssueIssuesAggregationSelection = {
 
 export type UserIssueIssuesNodeAggregateSelection = {
   __typename?: 'UserIssueIssuesNodeAggregateSelection';
+  authorName: StringAggregateSelectionNullable;
   body: StringAggregateSelectionNullable;
+  channelUniqueName: StringAggregateSelectionNullable;
   createdAt: DateTimeAggregateSelectionNonNullable;
   id: IdAggregateSelectionNonNullable;
+  relatedCommentId: IdAggregateSelectionNullable;
+  relatedDiscussionId: IdAggregateSelectionNullable;
+  relatedEventId: IdAggregateSelectionNullable;
   title: StringAggregateSelectionNullable;
-  updatedAt: DateTimeAggregateSelectionNonNullable;
+  updatedAt: DateTimeAggregateSelectionNullable;
 };
 
 export type UserIssuesAggregateInput = {
@@ -22240,6 +23048,15 @@ export type UserIssuesConnectFieldInput = {
   /** Whether or not to overwrite any matching relationship with the new properties. */
   overwrite?: Scalars['Boolean']['input'];
   where?: InputMaybe<IssueConnectWhere>;
+};
+
+export type UserIssuesConnectOrCreateFieldInput = {
+  onCreate: UserIssuesConnectOrCreateFieldInputOnCreate;
+  where: IssueConnectOrCreateWhere;
+};
+
+export type UserIssuesConnectOrCreateFieldInputOnCreate = {
+  node: IssueOnCreateInput;
 };
 
 export type UserIssuesConnection = {
@@ -22276,6 +23093,7 @@ export type UserIssuesDisconnectFieldInput = {
 
 export type UserIssuesFieldInput = {
   connect?: InputMaybe<Array<UserIssuesConnectFieldInput>>;
+  connectOrCreate?: InputMaybe<Array<UserIssuesConnectOrCreateFieldInput>>;
   create?: InputMaybe<Array<UserIssuesCreateFieldInput>>;
 };
 
@@ -22283,6 +23101,21 @@ export type UserIssuesNodeAggregationWhereInput = {
   AND?: InputMaybe<Array<UserIssuesNodeAggregationWhereInput>>;
   NOT?: InputMaybe<UserIssuesNodeAggregationWhereInput>;
   OR?: InputMaybe<Array<UserIssuesNodeAggregationWhereInput>>;
+  authorName_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  authorName_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  authorName_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  authorName_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  authorName_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  authorName_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  authorName_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  authorName_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  authorName_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  authorName_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  authorName_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  authorName_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  authorName_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  authorName_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  authorName_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
   body_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
   body_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
   body_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
@@ -22298,6 +23131,21 @@ export type UserIssuesNodeAggregationWhereInput = {
   body_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
   body_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
   body_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
   createdAt_MAX_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
   createdAt_MAX_GT?: InputMaybe<Scalars['DateTime']['input']>;
   createdAt_MAX_GTE?: InputMaybe<Scalars['DateTime']['input']>;
@@ -22347,6 +23195,7 @@ export type UserIssuesUpdateConnectionInput = {
 
 export type UserIssuesUpdateFieldInput = {
   connect?: InputMaybe<Array<UserIssuesConnectFieldInput>>;
+  connectOrCreate?: InputMaybe<Array<UserIssuesConnectOrCreateFieldInput>>;
   create?: InputMaybe<Array<UserIssuesCreateFieldInput>>;
   delete?: InputMaybe<Array<UserIssuesDeleteFieldInput>>;
   disconnect?: InputMaybe<Array<UserIssuesDisconnectFieldInput>>;
@@ -23719,6 +24568,8 @@ export type ResolversTypes = {
   ChannelIssueIssuesNodeAggregateSelection: ResolverTypeWrapper<ChannelIssueIssuesNodeAggregateSelection>;
   ChannelIssuesAggregateInput: ChannelIssuesAggregateInput;
   ChannelIssuesConnectFieldInput: ChannelIssuesConnectFieldInput;
+  ChannelIssuesConnectOrCreateFieldInput: ChannelIssuesConnectOrCreateFieldInput;
+  ChannelIssuesConnectOrCreateFieldInputOnCreate: ChannelIssuesConnectOrCreateFieldInputOnCreate;
   ChannelIssuesConnection: ResolverTypeWrapper<ChannelIssuesConnection>;
   ChannelIssuesConnectionSort: ChannelIssuesConnectionSort;
   ChannelIssuesConnectionWhere: ChannelIssuesConnectionWhere;
@@ -23937,6 +24788,8 @@ export type ResolversTypes = {
   CommentEventRelationship: ResolverTypeWrapper<CommentEventRelationship>;
   CommentEventUpdateConnectionInput: CommentEventUpdateConnectionInput;
   CommentEventUpdateFieldInput: CommentEventUpdateFieldInput;
+  CommentIssueRelatedIssuesAggregationSelection: ResolverTypeWrapper<CommentIssueRelatedIssuesAggregationSelection>;
+  CommentIssueRelatedIssuesNodeAggregateSelection: ResolverTypeWrapper<CommentIssueRelatedIssuesNodeAggregateSelection>;
   CommentModerationProfileDownvotedByModeratorsAggregationSelection: ResolverTypeWrapper<CommentModerationProfileDownvotedByModeratorsAggregationSelection>;
   CommentModerationProfileDownvotedByModeratorsNodeAggregateSelection: ResolverTypeWrapper<CommentModerationProfileDownvotedByModeratorsNodeAggregateSelection>;
   CommentOptions: CommentOptions;
@@ -23953,6 +24806,21 @@ export type ResolversTypes = {
   CommentParentCommentRelationship: ResolverTypeWrapper<CommentParentCommentRelationship>;
   CommentParentCommentUpdateConnectionInput: CommentParentCommentUpdateConnectionInput;
   CommentParentCommentUpdateFieldInput: CommentParentCommentUpdateFieldInput;
+  CommentRelatedIssuesAggregateInput: CommentRelatedIssuesAggregateInput;
+  CommentRelatedIssuesConnectFieldInput: CommentRelatedIssuesConnectFieldInput;
+  CommentRelatedIssuesConnectOrCreateFieldInput: CommentRelatedIssuesConnectOrCreateFieldInput;
+  CommentRelatedIssuesConnectOrCreateFieldInputOnCreate: CommentRelatedIssuesConnectOrCreateFieldInputOnCreate;
+  CommentRelatedIssuesConnection: ResolverTypeWrapper<CommentRelatedIssuesConnection>;
+  CommentRelatedIssuesConnectionSort: CommentRelatedIssuesConnectionSort;
+  CommentRelatedIssuesConnectionWhere: CommentRelatedIssuesConnectionWhere;
+  CommentRelatedIssuesCreateFieldInput: CommentRelatedIssuesCreateFieldInput;
+  CommentRelatedIssuesDeleteFieldInput: CommentRelatedIssuesDeleteFieldInput;
+  CommentRelatedIssuesDisconnectFieldInput: CommentRelatedIssuesDisconnectFieldInput;
+  CommentRelatedIssuesFieldInput: CommentRelatedIssuesFieldInput;
+  CommentRelatedIssuesNodeAggregationWhereInput: CommentRelatedIssuesNodeAggregationWhereInput;
+  CommentRelatedIssuesRelationship: ResolverTypeWrapper<CommentRelatedIssuesRelationship>;
+  CommentRelatedIssuesUpdateConnectionInput: CommentRelatedIssuesUpdateConnectionInput;
+  CommentRelatedIssuesUpdateFieldInput: CommentRelatedIssuesUpdateFieldInput;
   CommentRelationInput: CommentRelationInput;
   CommentRepliesFormat: ResolverTypeWrapper<CommentRepliesFormat>;
   CommentRepliesFormatAggregateSelection: ResolverTypeWrapper<CommentRepliesFormatAggregateSelection>;
@@ -24032,7 +24900,6 @@ export type ResolversTypes = {
   CreateRedditSubmissionsMutationResponse: ResolverTypeWrapper<CreateRedditSubmissionsMutationResponse>;
   CreateRepeatEndsMutationResponse: ResolverTypeWrapper<CreateRepeatEndsMutationResponse>;
   CreateRepeatEveriesMutationResponse: ResolverTypeWrapper<CreateRepeatEveriesMutationResponse>;
-  CreateReportsMutationResponse: ResolverTypeWrapper<CreateReportsMutationResponse>;
   CreateRulesMutationResponse: ResolverTypeWrapper<CreateRulesMutationResponse>;
   CreateServerConfigsMutationResponse: ResolverTypeWrapper<CreateServerConfigsMutationResponse>;
   CreateServerRolesMutationResponse: ResolverTypeWrapper<CreateServerRolesMutationResponse>;
@@ -24210,6 +25077,8 @@ export type ResolversTypes = {
   DiscussionOptions: DiscussionOptions;
   DiscussionRelatedIssuesAggregateInput: DiscussionRelatedIssuesAggregateInput;
   DiscussionRelatedIssuesConnectFieldInput: DiscussionRelatedIssuesConnectFieldInput;
+  DiscussionRelatedIssuesConnectOrCreateFieldInput: DiscussionRelatedIssuesConnectOrCreateFieldInput;
+  DiscussionRelatedIssuesConnectOrCreateFieldInputOnCreate: DiscussionRelatedIssuesConnectOrCreateFieldInputOnCreate;
   DiscussionRelatedIssuesConnection: ResolverTypeWrapper<DiscussionRelatedIssuesConnection>;
   DiscussionRelatedIssuesConnectionSort: DiscussionRelatedIssuesConnectionSort;
   DiscussionRelatedIssuesConnectionWhere: DiscussionRelatedIssuesConnectionWhere;
@@ -24420,6 +25289,8 @@ export type ResolversTypes = {
   EventEventChannelsRelationship: ResolverTypeWrapper<EventEventChannelsRelationship>;
   EventEventChannelsUpdateConnectionInput: EventEventChannelsUpdateConnectionInput;
   EventEventChannelsUpdateFieldInput: EventEventChannelsUpdateFieldInput;
+  EventIssueRelatedIssuesAggregationSelection: ResolverTypeWrapper<EventIssueRelatedIssuesAggregationSelection>;
+  EventIssueRelatedIssuesNodeAggregateSelection: ResolverTypeWrapper<EventIssueRelatedIssuesNodeAggregateSelection>;
   EventOptions: EventOptions;
   EventPosterAggregateInput: EventPosterAggregateInput;
   EventPosterConnectFieldInput: EventPosterConnectFieldInput;
@@ -24451,6 +25322,21 @@ export type ResolversTypes = {
   EventRecurringEventRelationship: ResolverTypeWrapper<EventRecurringEventRelationship>;
   EventRecurringEventUpdateConnectionInput: EventRecurringEventUpdateConnectionInput;
   EventRecurringEventUpdateFieldInput: EventRecurringEventUpdateFieldInput;
+  EventRelatedIssuesAggregateInput: EventRelatedIssuesAggregateInput;
+  EventRelatedIssuesConnectFieldInput: EventRelatedIssuesConnectFieldInput;
+  EventRelatedIssuesConnectOrCreateFieldInput: EventRelatedIssuesConnectOrCreateFieldInput;
+  EventRelatedIssuesConnectOrCreateFieldInputOnCreate: EventRelatedIssuesConnectOrCreateFieldInputOnCreate;
+  EventRelatedIssuesConnection: ResolverTypeWrapper<EventRelatedIssuesConnection>;
+  EventRelatedIssuesConnectionSort: EventRelatedIssuesConnectionSort;
+  EventRelatedIssuesConnectionWhere: EventRelatedIssuesConnectionWhere;
+  EventRelatedIssuesCreateFieldInput: EventRelatedIssuesCreateFieldInput;
+  EventRelatedIssuesDeleteFieldInput: EventRelatedIssuesDeleteFieldInput;
+  EventRelatedIssuesDisconnectFieldInput: EventRelatedIssuesDisconnectFieldInput;
+  EventRelatedIssuesFieldInput: EventRelatedIssuesFieldInput;
+  EventRelatedIssuesNodeAggregationWhereInput: EventRelatedIssuesNodeAggregationWhereInput;
+  EventRelatedIssuesRelationship: ResolverTypeWrapper<EventRelatedIssuesRelationship>;
+  EventRelatedIssuesUpdateConnectionInput: EventRelatedIssuesUpdateConnectionInput;
+  EventRelatedIssuesUpdateFieldInput: EventRelatedIssuesUpdateFieldInput;
   EventRelationInput: EventRelationInput;
   EventSort: EventSort;
   EventTagTagsAggregationSelection: ResolverTypeWrapper<EventTagTagsAggregationSelection>;
@@ -24528,6 +25414,7 @@ export type ResolversTypes = {
   FloatAggregateSelectionNullable: ResolverTypeWrapper<FloatAggregateSelectionNullable>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   IDAggregateSelectionNonNullable: ResolverTypeWrapper<IdAggregateSelectionNonNullable>;
+  IDAggregateSelectionNullable: ResolverTypeWrapper<IdAggregateSelectionNullable>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   IntAggregateSelectionNonNullable: ResolverTypeWrapper<IntAggregateSelectionNonNullable>;
   IntAggregateSelectionNullable: ResolverTypeWrapper<IntAggregateSelectionNullable>;
@@ -24565,8 +25452,27 @@ export type ResolversTypes = {
   IssueAuthorUserUpdateConnectionInput: IssueAuthorUserUpdateConnectionInput;
   IssueAuthorUserUpdateFieldInput: IssueAuthorUserUpdateFieldInput;
   IssueAuthorWhere: IssueAuthorWhere;
+  IssueChannelAggregateInput: IssueChannelAggregateInput;
+  IssueChannelChannelAggregationSelection: ResolverTypeWrapper<IssueChannelChannelAggregationSelection>;
+  IssueChannelChannelNodeAggregateSelection: ResolverTypeWrapper<IssueChannelChannelNodeAggregateSelection>;
+  IssueChannelConnectFieldInput: IssueChannelConnectFieldInput;
+  IssueChannelConnectOrCreateFieldInput: IssueChannelConnectOrCreateFieldInput;
+  IssueChannelConnectOrCreateFieldInputOnCreate: IssueChannelConnectOrCreateFieldInputOnCreate;
+  IssueChannelConnection: ResolverTypeWrapper<IssueChannelConnection>;
+  IssueChannelConnectionSort: IssueChannelConnectionSort;
+  IssueChannelConnectionWhere: IssueChannelConnectionWhere;
+  IssueChannelCreateFieldInput: IssueChannelCreateFieldInput;
+  IssueChannelDeleteFieldInput: IssueChannelDeleteFieldInput;
+  IssueChannelDisconnectFieldInput: IssueChannelDisconnectFieldInput;
+  IssueChannelFieldInput: IssueChannelFieldInput;
+  IssueChannelNodeAggregationWhereInput: IssueChannelNodeAggregationWhereInput;
+  IssueChannelRelationship: ResolverTypeWrapper<IssueChannelRelationship>;
+  IssueChannelUpdateConnectionInput: IssueChannelUpdateConnectionInput;
+  IssueChannelUpdateFieldInput: IssueChannelUpdateFieldInput;
   IssueCommentCommentsAggregationSelection: ResolverTypeWrapper<IssueCommentCommentsAggregationSelection>;
   IssueCommentCommentsNodeAggregateSelection: ResolverTypeWrapper<IssueCommentCommentsNodeAggregateSelection>;
+  IssueCommentRelatedCommentAggregationSelection: ResolverTypeWrapper<IssueCommentRelatedCommentAggregationSelection>;
+  IssueCommentRelatedCommentNodeAggregateSelection: ResolverTypeWrapper<IssueCommentRelatedCommentNodeAggregateSelection>;
   IssueCommentsAggregateInput: IssueCommentsAggregateInput;
   IssueCommentsConnectFieldInput: IssueCommentsConnectFieldInput;
   IssueCommentsConnection: ResolverTypeWrapper<IssueCommentsConnection>;
@@ -24582,14 +25488,60 @@ export type ResolversTypes = {
   IssueCommentsUpdateFieldInput: IssueCommentsUpdateFieldInput;
   IssueConnectInput: IssueConnectInput;
   IssueConnectOrCreateInput: IssueConnectOrCreateInput;
+  IssueConnectOrCreateWhere: IssueConnectOrCreateWhere;
   IssueConnectWhere: IssueConnectWhere;
   IssueCreateInput: IssueCreateInput;
   IssueDeleteInput: IssueDeleteInput;
   IssueDisconnectInput: IssueDisconnectInput;
+  IssueDiscussionRelatedDiscussionAggregationSelection: ResolverTypeWrapper<IssueDiscussionRelatedDiscussionAggregationSelection>;
+  IssueDiscussionRelatedDiscussionNodeAggregateSelection: ResolverTypeWrapper<IssueDiscussionRelatedDiscussionNodeAggregateSelection>;
   IssueEdge: ResolverTypeWrapper<IssueEdge>;
+  IssueEventRelatedEventAggregationSelection: ResolverTypeWrapper<IssueEventRelatedEventAggregationSelection>;
+  IssueEventRelatedEventNodeAggregateSelection: ResolverTypeWrapper<IssueEventRelatedEventNodeAggregateSelection>;
+  IssueOnCreateInput: IssueOnCreateInput;
   IssueOptions: IssueOptions;
+  IssueRelatedCommentAggregateInput: IssueRelatedCommentAggregateInput;
+  IssueRelatedCommentConnectFieldInput: IssueRelatedCommentConnectFieldInput;
+  IssueRelatedCommentConnection: ResolverTypeWrapper<IssueRelatedCommentConnection>;
+  IssueRelatedCommentConnectionSort: IssueRelatedCommentConnectionSort;
+  IssueRelatedCommentConnectionWhere: IssueRelatedCommentConnectionWhere;
+  IssueRelatedCommentCreateFieldInput: IssueRelatedCommentCreateFieldInput;
+  IssueRelatedCommentDeleteFieldInput: IssueRelatedCommentDeleteFieldInput;
+  IssueRelatedCommentDisconnectFieldInput: IssueRelatedCommentDisconnectFieldInput;
+  IssueRelatedCommentFieldInput: IssueRelatedCommentFieldInput;
+  IssueRelatedCommentNodeAggregationWhereInput: IssueRelatedCommentNodeAggregationWhereInput;
+  IssueRelatedCommentRelationship: ResolverTypeWrapper<IssueRelatedCommentRelationship>;
+  IssueRelatedCommentUpdateConnectionInput: IssueRelatedCommentUpdateConnectionInput;
+  IssueRelatedCommentUpdateFieldInput: IssueRelatedCommentUpdateFieldInput;
+  IssueRelatedDiscussionAggregateInput: IssueRelatedDiscussionAggregateInput;
+  IssueRelatedDiscussionConnectFieldInput: IssueRelatedDiscussionConnectFieldInput;
+  IssueRelatedDiscussionConnection: ResolverTypeWrapper<IssueRelatedDiscussionConnection>;
+  IssueRelatedDiscussionConnectionSort: IssueRelatedDiscussionConnectionSort;
+  IssueRelatedDiscussionConnectionWhere: IssueRelatedDiscussionConnectionWhere;
+  IssueRelatedDiscussionCreateFieldInput: IssueRelatedDiscussionCreateFieldInput;
+  IssueRelatedDiscussionDeleteFieldInput: IssueRelatedDiscussionDeleteFieldInput;
+  IssueRelatedDiscussionDisconnectFieldInput: IssueRelatedDiscussionDisconnectFieldInput;
+  IssueRelatedDiscussionFieldInput: IssueRelatedDiscussionFieldInput;
+  IssueRelatedDiscussionNodeAggregationWhereInput: IssueRelatedDiscussionNodeAggregationWhereInput;
+  IssueRelatedDiscussionRelationship: ResolverTypeWrapper<IssueRelatedDiscussionRelationship>;
+  IssueRelatedDiscussionUpdateConnectionInput: IssueRelatedDiscussionUpdateConnectionInput;
+  IssueRelatedDiscussionUpdateFieldInput: IssueRelatedDiscussionUpdateFieldInput;
+  IssueRelatedEventAggregateInput: IssueRelatedEventAggregateInput;
+  IssueRelatedEventConnectFieldInput: IssueRelatedEventConnectFieldInput;
+  IssueRelatedEventConnection: ResolverTypeWrapper<IssueRelatedEventConnection>;
+  IssueRelatedEventConnectionSort: IssueRelatedEventConnectionSort;
+  IssueRelatedEventConnectionWhere: IssueRelatedEventConnectionWhere;
+  IssueRelatedEventCreateFieldInput: IssueRelatedEventCreateFieldInput;
+  IssueRelatedEventDeleteFieldInput: IssueRelatedEventDeleteFieldInput;
+  IssueRelatedEventDisconnectFieldInput: IssueRelatedEventDisconnectFieldInput;
+  IssueRelatedEventFieldInput: IssueRelatedEventFieldInput;
+  IssueRelatedEventNodeAggregationWhereInput: IssueRelatedEventNodeAggregationWhereInput;
+  IssueRelatedEventRelationship: ResolverTypeWrapper<IssueRelatedEventRelationship>;
+  IssueRelatedEventUpdateConnectionInput: IssueRelatedEventUpdateConnectionInput;
+  IssueRelatedEventUpdateFieldInput: IssueRelatedEventUpdateFieldInput;
   IssueRelationInput: IssueRelationInput;
   IssueSort: IssueSort;
+  IssueUniqueWhere: IssueUniqueWhere;
   IssueUpdateInput: IssueUpdateInput;
   IssueWhere: IssueWhere;
   IssuesConnection: ResolverTypeWrapper<IssuesConnection>;
@@ -24622,19 +25574,21 @@ export type ResolversTypes = {
   ModServerRolesConnection: ResolverTypeWrapper<ModServerRolesConnection>;
   ModerationProfile: ResolverTypeWrapper<ModerationProfile>;
   ModerationProfileAggregateSelection: ResolverTypeWrapper<ModerationProfileAggregateSelection>;
-  ModerationProfileAuthoredReportsAggregateInput: ModerationProfileAuthoredReportsAggregateInput;
-  ModerationProfileAuthoredReportsConnectFieldInput: ModerationProfileAuthoredReportsConnectFieldInput;
-  ModerationProfileAuthoredReportsConnection: ResolverTypeWrapper<ModerationProfileAuthoredReportsConnection>;
-  ModerationProfileAuthoredReportsConnectionSort: ModerationProfileAuthoredReportsConnectionSort;
-  ModerationProfileAuthoredReportsConnectionWhere: ModerationProfileAuthoredReportsConnectionWhere;
-  ModerationProfileAuthoredReportsCreateFieldInput: ModerationProfileAuthoredReportsCreateFieldInput;
-  ModerationProfileAuthoredReportsDeleteFieldInput: ModerationProfileAuthoredReportsDeleteFieldInput;
-  ModerationProfileAuthoredReportsDisconnectFieldInput: ModerationProfileAuthoredReportsDisconnectFieldInput;
-  ModerationProfileAuthoredReportsFieldInput: ModerationProfileAuthoredReportsFieldInput;
-  ModerationProfileAuthoredReportsNodeAggregationWhereInput: ModerationProfileAuthoredReportsNodeAggregationWhereInput;
-  ModerationProfileAuthoredReportsRelationship: ResolverTypeWrapper<ModerationProfileAuthoredReportsRelationship>;
-  ModerationProfileAuthoredReportsUpdateConnectionInput: ModerationProfileAuthoredReportsUpdateConnectionInput;
-  ModerationProfileAuthoredReportsUpdateFieldInput: ModerationProfileAuthoredReportsUpdateFieldInput;
+  ModerationProfileAuthoredIssuesAggregateInput: ModerationProfileAuthoredIssuesAggregateInput;
+  ModerationProfileAuthoredIssuesConnectFieldInput: ModerationProfileAuthoredIssuesConnectFieldInput;
+  ModerationProfileAuthoredIssuesConnectOrCreateFieldInput: ModerationProfileAuthoredIssuesConnectOrCreateFieldInput;
+  ModerationProfileAuthoredIssuesConnectOrCreateFieldInputOnCreate: ModerationProfileAuthoredIssuesConnectOrCreateFieldInputOnCreate;
+  ModerationProfileAuthoredIssuesConnection: ResolverTypeWrapper<ModerationProfileAuthoredIssuesConnection>;
+  ModerationProfileAuthoredIssuesConnectionSort: ModerationProfileAuthoredIssuesConnectionSort;
+  ModerationProfileAuthoredIssuesConnectionWhere: ModerationProfileAuthoredIssuesConnectionWhere;
+  ModerationProfileAuthoredIssuesCreateFieldInput: ModerationProfileAuthoredIssuesCreateFieldInput;
+  ModerationProfileAuthoredIssuesDeleteFieldInput: ModerationProfileAuthoredIssuesDeleteFieldInput;
+  ModerationProfileAuthoredIssuesDisconnectFieldInput: ModerationProfileAuthoredIssuesDisconnectFieldInput;
+  ModerationProfileAuthoredIssuesFieldInput: ModerationProfileAuthoredIssuesFieldInput;
+  ModerationProfileAuthoredIssuesNodeAggregationWhereInput: ModerationProfileAuthoredIssuesNodeAggregationWhereInput;
+  ModerationProfileAuthoredIssuesRelationship: ResolverTypeWrapper<ModerationProfileAuthoredIssuesRelationship>;
+  ModerationProfileAuthoredIssuesUpdateConnectionInput: ModerationProfileAuthoredIssuesUpdateConnectionInput;
+  ModerationProfileAuthoredIssuesUpdateFieldInput: ModerationProfileAuthoredIssuesUpdateFieldInput;
   ModerationProfileCommentDiscussionCommentsAggregationSelection: ResolverTypeWrapper<ModerationProfileCommentDiscussionCommentsAggregationSelection>;
   ModerationProfileCommentDiscussionCommentsNodeAggregateSelection: ResolverTypeWrapper<ModerationProfileCommentDiscussionCommentsNodeAggregateSelection>;
   ModerationProfileCommentDownvotedCommentsAggregationSelection: ResolverTypeWrapper<ModerationProfileCommentDownvotedCommentsAggregationSelection>;
@@ -24690,6 +25644,8 @@ export type ResolversTypes = {
   ModerationProfileDownvotedDiscussionChannelsUpdateConnectionInput: ModerationProfileDownvotedDiscussionChannelsUpdateConnectionInput;
   ModerationProfileDownvotedDiscussionChannelsUpdateFieldInput: ModerationProfileDownvotedDiscussionChannelsUpdateFieldInput;
   ModerationProfileEdge: ResolverTypeWrapper<ModerationProfileEdge>;
+  ModerationProfileIssueAuthoredIssuesAggregationSelection: ResolverTypeWrapper<ModerationProfileIssueAuthoredIssuesAggregationSelection>;
+  ModerationProfileIssueAuthoredIssuesNodeAggregateSelection: ResolverTypeWrapper<ModerationProfileIssueAuthoredIssuesNodeAggregateSelection>;
   ModerationProfileIssueCommentsAggregateInput: ModerationProfileIssueCommentsAggregateInput;
   ModerationProfileIssueCommentsConnectFieldInput: ModerationProfileIssueCommentsConnectFieldInput;
   ModerationProfileIssueCommentsConnection: ResolverTypeWrapper<ModerationProfileIssueCommentsConnection>;
@@ -24703,21 +25659,6 @@ export type ResolversTypes = {
   ModerationProfileIssueCommentsRelationship: ResolverTypeWrapper<ModerationProfileIssueCommentsRelationship>;
   ModerationProfileIssueCommentsUpdateConnectionInput: ModerationProfileIssueCommentsUpdateConnectionInput;
   ModerationProfileIssueCommentsUpdateFieldInput: ModerationProfileIssueCommentsUpdateFieldInput;
-  ModerationProfileIssueIssuesAggregationSelection: ResolverTypeWrapper<ModerationProfileIssueIssuesAggregationSelection>;
-  ModerationProfileIssueIssuesNodeAggregateSelection: ResolverTypeWrapper<ModerationProfileIssueIssuesNodeAggregateSelection>;
-  ModerationProfileIssuesAggregateInput: ModerationProfileIssuesAggregateInput;
-  ModerationProfileIssuesConnectFieldInput: ModerationProfileIssuesConnectFieldInput;
-  ModerationProfileIssuesConnection: ResolverTypeWrapper<ModerationProfileIssuesConnection>;
-  ModerationProfileIssuesConnectionSort: ModerationProfileIssuesConnectionSort;
-  ModerationProfileIssuesConnectionWhere: ModerationProfileIssuesConnectionWhere;
-  ModerationProfileIssuesCreateFieldInput: ModerationProfileIssuesCreateFieldInput;
-  ModerationProfileIssuesDeleteFieldInput: ModerationProfileIssuesDeleteFieldInput;
-  ModerationProfileIssuesDisconnectFieldInput: ModerationProfileIssuesDisconnectFieldInput;
-  ModerationProfileIssuesFieldInput: ModerationProfileIssuesFieldInput;
-  ModerationProfileIssuesNodeAggregationWhereInput: ModerationProfileIssuesNodeAggregationWhereInput;
-  ModerationProfileIssuesRelationship: ResolverTypeWrapper<ModerationProfileIssuesRelationship>;
-  ModerationProfileIssuesUpdateConnectionInput: ModerationProfileIssuesUpdateConnectionInput;
-  ModerationProfileIssuesUpdateFieldInput: ModerationProfileIssuesUpdateFieldInput;
   ModerationProfileModChannelRoleModChannelRolesAggregationSelection: ResolverTypeWrapper<ModerationProfileModChannelRoleModChannelRolesAggregationSelection>;
   ModerationProfileModChannelRoleModChannelRolesNodeAggregateSelection: ResolverTypeWrapper<ModerationProfileModChannelRoleModChannelRolesNodeAggregateSelection>;
   ModerationProfileModChannelRolesAggregateInput: ModerationProfileModChannelRolesAggregateInput;
@@ -24755,8 +25696,6 @@ export type ResolversTypes = {
   ModerationProfileOnCreateInput: ModerationProfileOnCreateInput;
   ModerationProfileOptions: ModerationProfileOptions;
   ModerationProfileRelationInput: ModerationProfileRelationInput;
-  ModerationProfileReportAuthoredReportsAggregationSelection: ResolverTypeWrapper<ModerationProfileReportAuthoredReportsAggregationSelection>;
-  ModerationProfileReportAuthoredReportsNodeAggregateSelection: ResolverTypeWrapper<ModerationProfileReportAuthoredReportsNodeAggregateSelection>;
   ModerationProfileSort: ModerationProfileSort;
   ModerationProfileUniqueWhere: ModerationProfileUniqueWhere;
   ModerationProfileUpdateInput: ModerationProfileUpdateInput;
@@ -24843,68 +25782,6 @@ export type ResolversTypes = {
   RepeatEveryUpdateInput: RepeatEveryUpdateInput;
   RepeatEveryWhere: RepeatEveryWhere;
   RepeatUnit: RepeatUnit;
-  Report: ResolverTypeWrapper<Report>;
-  ReportAggregateSelection: ResolverTypeWrapper<ReportAggregateSelection>;
-  ReportAuthorAggregateInput: ReportAuthorAggregateInput;
-  ReportAuthorConnectFieldInput: ReportAuthorConnectFieldInput;
-  ReportAuthorConnectOrCreateFieldInput: ReportAuthorConnectOrCreateFieldInput;
-  ReportAuthorConnectOrCreateFieldInputOnCreate: ReportAuthorConnectOrCreateFieldInputOnCreate;
-  ReportAuthorConnection: ResolverTypeWrapper<ReportAuthorConnection>;
-  ReportAuthorConnectionSort: ReportAuthorConnectionSort;
-  ReportAuthorConnectionWhere: ReportAuthorConnectionWhere;
-  ReportAuthorCreateFieldInput: ReportAuthorCreateFieldInput;
-  ReportAuthorDeleteFieldInput: ReportAuthorDeleteFieldInput;
-  ReportAuthorDisconnectFieldInput: ReportAuthorDisconnectFieldInput;
-  ReportAuthorFieldInput: ReportAuthorFieldInput;
-  ReportAuthorNodeAggregationWhereInput: ReportAuthorNodeAggregationWhereInput;
-  ReportAuthorRelationship: ResolverTypeWrapper<ReportAuthorRelationship>;
-  ReportAuthorUpdateConnectionInput: ReportAuthorUpdateConnectionInput;
-  ReportAuthorUpdateFieldInput: ReportAuthorUpdateFieldInput;
-  ReportConnectInput: ReportConnectInput;
-  ReportConnectOrCreateInput: ReportConnectOrCreateInput;
-  ReportConnectWhere: ReportConnectWhere;
-  ReportCreateInput: ReportCreateInput;
-  ReportDeleteInput: ReportDeleteInput;
-  ReportDisconnectInput: ReportDisconnectInput;
-  ReportEdge: ResolverTypeWrapper<ReportEdge>;
-  ReportIssueIssuesAggregationSelection: ResolverTypeWrapper<ReportIssueIssuesAggregationSelection>;
-  ReportIssueIssuesNodeAggregateSelection: ResolverTypeWrapper<ReportIssueIssuesNodeAggregateSelection>;
-  ReportIssuesAggregateInput: ReportIssuesAggregateInput;
-  ReportIssuesConnectFieldInput: ReportIssuesConnectFieldInput;
-  ReportIssuesConnection: ResolverTypeWrapper<ReportIssuesConnection>;
-  ReportIssuesConnectionSort: ReportIssuesConnectionSort;
-  ReportIssuesConnectionWhere: ReportIssuesConnectionWhere;
-  ReportIssuesCreateFieldInput: ReportIssuesCreateFieldInput;
-  ReportIssuesDeleteFieldInput: ReportIssuesDeleteFieldInput;
-  ReportIssuesDisconnectFieldInput: ReportIssuesDisconnectFieldInput;
-  ReportIssuesFieldInput: ReportIssuesFieldInput;
-  ReportIssuesNodeAggregationWhereInput: ReportIssuesNodeAggregationWhereInput;
-  ReportIssuesRelationship: ResolverTypeWrapper<ReportIssuesRelationship>;
-  ReportIssuesUpdateConnectionInput: ReportIssuesUpdateConnectionInput;
-  ReportIssuesUpdateFieldInput: ReportIssuesUpdateFieldInput;
-  ReportModerationProfileAuthorAggregationSelection: ResolverTypeWrapper<ReportModerationProfileAuthorAggregationSelection>;
-  ReportModerationProfileAuthorNodeAggregateSelection: ResolverTypeWrapper<ReportModerationProfileAuthorNodeAggregateSelection>;
-  ReportOptions: ReportOptions;
-  ReportRelationInput: ReportRelationInput;
-  ReportRuleRuleViolationsAggregationSelection: ResolverTypeWrapper<ReportRuleRuleViolationsAggregationSelection>;
-  ReportRuleRuleViolationsNodeAggregateSelection: ResolverTypeWrapper<ReportRuleRuleViolationsNodeAggregateSelection>;
-  ReportRuleViolationsAggregateInput: ReportRuleViolationsAggregateInput;
-  ReportRuleViolationsConnectFieldInput: ReportRuleViolationsConnectFieldInput;
-  ReportRuleViolationsConnection: ResolverTypeWrapper<ReportRuleViolationsConnection>;
-  ReportRuleViolationsConnectionSort: ReportRuleViolationsConnectionSort;
-  ReportRuleViolationsConnectionWhere: ReportRuleViolationsConnectionWhere;
-  ReportRuleViolationsCreateFieldInput: ReportRuleViolationsCreateFieldInput;
-  ReportRuleViolationsDeleteFieldInput: ReportRuleViolationsDeleteFieldInput;
-  ReportRuleViolationsDisconnectFieldInput: ReportRuleViolationsDisconnectFieldInput;
-  ReportRuleViolationsFieldInput: ReportRuleViolationsFieldInput;
-  ReportRuleViolationsNodeAggregationWhereInput: ReportRuleViolationsNodeAggregationWhereInput;
-  ReportRuleViolationsRelationship: ResolverTypeWrapper<ReportRuleViolationsRelationship>;
-  ReportRuleViolationsUpdateConnectionInput: ReportRuleViolationsUpdateConnectionInput;
-  ReportRuleViolationsUpdateFieldInput: ReportRuleViolationsUpdateFieldInput;
-  ReportSort: ReportSort;
-  ReportUpdateInput: ReportUpdateInput;
-  ReportWhere: ReportWhere;
-  ReportsConnection: ResolverTypeWrapper<ReportsConnection>;
   Rule: ResolverTypeWrapper<Rule>;
   RuleAggregateSelection: ResolverTypeWrapper<RuleAggregateSelection>;
   RuleConnectWhere: RuleConnectWhere;
@@ -25144,7 +26021,6 @@ export type ResolversTypes = {
   UpdateRedditSubmissionsMutationResponse: ResolverTypeWrapper<UpdateRedditSubmissionsMutationResponse>;
   UpdateRepeatEndsMutationResponse: ResolverTypeWrapper<UpdateRepeatEndsMutationResponse>;
   UpdateRepeatEveriesMutationResponse: ResolverTypeWrapper<UpdateRepeatEveriesMutationResponse>;
-  UpdateReportsMutationResponse: ResolverTypeWrapper<UpdateReportsMutationResponse>;
   UpdateRulesMutationResponse: ResolverTypeWrapper<UpdateRulesMutationResponse>;
   UpdateServerConfigsMutationResponse: ResolverTypeWrapper<UpdateServerConfigsMutationResponse>;
   UpdateServerRolesMutationResponse: ResolverTypeWrapper<UpdateServerRolesMutationResponse>;
@@ -25376,6 +26252,8 @@ export type ResolversTypes = {
   UserIssueIssuesNodeAggregateSelection: ResolverTypeWrapper<UserIssueIssuesNodeAggregateSelection>;
   UserIssuesAggregateInput: UserIssuesAggregateInput;
   UserIssuesConnectFieldInput: UserIssuesConnectFieldInput;
+  UserIssuesConnectOrCreateFieldInput: UserIssuesConnectOrCreateFieldInput;
+  UserIssuesConnectOrCreateFieldInputOnCreate: UserIssuesConnectOrCreateFieldInputOnCreate;
   UserIssuesConnection: ResolverTypeWrapper<UserIssuesConnection>;
   UserIssuesConnectionSort: UserIssuesConnectionSort;
   UserIssuesConnectionWhere: UserIssuesConnectionWhere;
@@ -25572,6 +26450,8 @@ export type ResolversParentTypes = {
   ChannelIssueIssuesNodeAggregateSelection: ChannelIssueIssuesNodeAggregateSelection;
   ChannelIssuesAggregateInput: ChannelIssuesAggregateInput;
   ChannelIssuesConnectFieldInput: ChannelIssuesConnectFieldInput;
+  ChannelIssuesConnectOrCreateFieldInput: ChannelIssuesConnectOrCreateFieldInput;
+  ChannelIssuesConnectOrCreateFieldInputOnCreate: ChannelIssuesConnectOrCreateFieldInputOnCreate;
   ChannelIssuesConnection: ChannelIssuesConnection;
   ChannelIssuesConnectionSort: ChannelIssuesConnectionSort;
   ChannelIssuesConnectionWhere: ChannelIssuesConnectionWhere;
@@ -25790,6 +26670,8 @@ export type ResolversParentTypes = {
   CommentEventRelationship: CommentEventRelationship;
   CommentEventUpdateConnectionInput: CommentEventUpdateConnectionInput;
   CommentEventUpdateFieldInput: CommentEventUpdateFieldInput;
+  CommentIssueRelatedIssuesAggregationSelection: CommentIssueRelatedIssuesAggregationSelection;
+  CommentIssueRelatedIssuesNodeAggregateSelection: CommentIssueRelatedIssuesNodeAggregateSelection;
   CommentModerationProfileDownvotedByModeratorsAggregationSelection: CommentModerationProfileDownvotedByModeratorsAggregationSelection;
   CommentModerationProfileDownvotedByModeratorsNodeAggregateSelection: CommentModerationProfileDownvotedByModeratorsNodeAggregateSelection;
   CommentOptions: CommentOptions;
@@ -25806,6 +26688,21 @@ export type ResolversParentTypes = {
   CommentParentCommentRelationship: CommentParentCommentRelationship;
   CommentParentCommentUpdateConnectionInput: CommentParentCommentUpdateConnectionInput;
   CommentParentCommentUpdateFieldInput: CommentParentCommentUpdateFieldInput;
+  CommentRelatedIssuesAggregateInput: CommentRelatedIssuesAggregateInput;
+  CommentRelatedIssuesConnectFieldInput: CommentRelatedIssuesConnectFieldInput;
+  CommentRelatedIssuesConnectOrCreateFieldInput: CommentRelatedIssuesConnectOrCreateFieldInput;
+  CommentRelatedIssuesConnectOrCreateFieldInputOnCreate: CommentRelatedIssuesConnectOrCreateFieldInputOnCreate;
+  CommentRelatedIssuesConnection: CommentRelatedIssuesConnection;
+  CommentRelatedIssuesConnectionSort: CommentRelatedIssuesConnectionSort;
+  CommentRelatedIssuesConnectionWhere: CommentRelatedIssuesConnectionWhere;
+  CommentRelatedIssuesCreateFieldInput: CommentRelatedIssuesCreateFieldInput;
+  CommentRelatedIssuesDeleteFieldInput: CommentRelatedIssuesDeleteFieldInput;
+  CommentRelatedIssuesDisconnectFieldInput: CommentRelatedIssuesDisconnectFieldInput;
+  CommentRelatedIssuesFieldInput: CommentRelatedIssuesFieldInput;
+  CommentRelatedIssuesNodeAggregationWhereInput: CommentRelatedIssuesNodeAggregationWhereInput;
+  CommentRelatedIssuesRelationship: CommentRelatedIssuesRelationship;
+  CommentRelatedIssuesUpdateConnectionInput: CommentRelatedIssuesUpdateConnectionInput;
+  CommentRelatedIssuesUpdateFieldInput: CommentRelatedIssuesUpdateFieldInput;
   CommentRelationInput: CommentRelationInput;
   CommentRepliesFormat: CommentRepliesFormat;
   CommentRepliesFormatAggregateSelection: CommentRepliesFormatAggregateSelection;
@@ -25885,7 +26782,6 @@ export type ResolversParentTypes = {
   CreateRedditSubmissionsMutationResponse: CreateRedditSubmissionsMutationResponse;
   CreateRepeatEndsMutationResponse: CreateRepeatEndsMutationResponse;
   CreateRepeatEveriesMutationResponse: CreateRepeatEveriesMutationResponse;
-  CreateReportsMutationResponse: CreateReportsMutationResponse;
   CreateRulesMutationResponse: CreateRulesMutationResponse;
   CreateServerConfigsMutationResponse: CreateServerConfigsMutationResponse;
   CreateServerRolesMutationResponse: CreateServerRolesMutationResponse;
@@ -26063,6 +26959,8 @@ export type ResolversParentTypes = {
   DiscussionOptions: DiscussionOptions;
   DiscussionRelatedIssuesAggregateInput: DiscussionRelatedIssuesAggregateInput;
   DiscussionRelatedIssuesConnectFieldInput: DiscussionRelatedIssuesConnectFieldInput;
+  DiscussionRelatedIssuesConnectOrCreateFieldInput: DiscussionRelatedIssuesConnectOrCreateFieldInput;
+  DiscussionRelatedIssuesConnectOrCreateFieldInputOnCreate: DiscussionRelatedIssuesConnectOrCreateFieldInputOnCreate;
   DiscussionRelatedIssuesConnection: DiscussionRelatedIssuesConnection;
   DiscussionRelatedIssuesConnectionSort: DiscussionRelatedIssuesConnectionSort;
   DiscussionRelatedIssuesConnectionWhere: DiscussionRelatedIssuesConnectionWhere;
@@ -26273,6 +27171,8 @@ export type ResolversParentTypes = {
   EventEventChannelsRelationship: EventEventChannelsRelationship;
   EventEventChannelsUpdateConnectionInput: EventEventChannelsUpdateConnectionInput;
   EventEventChannelsUpdateFieldInput: EventEventChannelsUpdateFieldInput;
+  EventIssueRelatedIssuesAggregationSelection: EventIssueRelatedIssuesAggregationSelection;
+  EventIssueRelatedIssuesNodeAggregateSelection: EventIssueRelatedIssuesNodeAggregateSelection;
   EventOptions: EventOptions;
   EventPosterAggregateInput: EventPosterAggregateInput;
   EventPosterConnectFieldInput: EventPosterConnectFieldInput;
@@ -26304,6 +27204,21 @@ export type ResolversParentTypes = {
   EventRecurringEventRelationship: EventRecurringEventRelationship;
   EventRecurringEventUpdateConnectionInput: EventRecurringEventUpdateConnectionInput;
   EventRecurringEventUpdateFieldInput: EventRecurringEventUpdateFieldInput;
+  EventRelatedIssuesAggregateInput: EventRelatedIssuesAggregateInput;
+  EventRelatedIssuesConnectFieldInput: EventRelatedIssuesConnectFieldInput;
+  EventRelatedIssuesConnectOrCreateFieldInput: EventRelatedIssuesConnectOrCreateFieldInput;
+  EventRelatedIssuesConnectOrCreateFieldInputOnCreate: EventRelatedIssuesConnectOrCreateFieldInputOnCreate;
+  EventRelatedIssuesConnection: EventRelatedIssuesConnection;
+  EventRelatedIssuesConnectionSort: EventRelatedIssuesConnectionSort;
+  EventRelatedIssuesConnectionWhere: EventRelatedIssuesConnectionWhere;
+  EventRelatedIssuesCreateFieldInput: EventRelatedIssuesCreateFieldInput;
+  EventRelatedIssuesDeleteFieldInput: EventRelatedIssuesDeleteFieldInput;
+  EventRelatedIssuesDisconnectFieldInput: EventRelatedIssuesDisconnectFieldInput;
+  EventRelatedIssuesFieldInput: EventRelatedIssuesFieldInput;
+  EventRelatedIssuesNodeAggregationWhereInput: EventRelatedIssuesNodeAggregationWhereInput;
+  EventRelatedIssuesRelationship: EventRelatedIssuesRelationship;
+  EventRelatedIssuesUpdateConnectionInput: EventRelatedIssuesUpdateConnectionInput;
+  EventRelatedIssuesUpdateFieldInput: EventRelatedIssuesUpdateFieldInput;
   EventRelationInput: EventRelationInput;
   EventSort: EventSort;
   EventTagTagsAggregationSelection: EventTagTagsAggregationSelection;
@@ -26381,6 +27296,7 @@ export type ResolversParentTypes = {
   FloatAggregateSelectionNullable: FloatAggregateSelectionNullable;
   ID: Scalars['ID']['output'];
   IDAggregateSelectionNonNullable: IdAggregateSelectionNonNullable;
+  IDAggregateSelectionNullable: IdAggregateSelectionNullable;
   Int: Scalars['Int']['output'];
   IntAggregateSelectionNonNullable: IntAggregateSelectionNonNullable;
   IntAggregateSelectionNullable: IntAggregateSelectionNullable;
@@ -26418,8 +27334,27 @@ export type ResolversParentTypes = {
   IssueAuthorUserUpdateConnectionInput: IssueAuthorUserUpdateConnectionInput;
   IssueAuthorUserUpdateFieldInput: IssueAuthorUserUpdateFieldInput;
   IssueAuthorWhere: IssueAuthorWhere;
+  IssueChannelAggregateInput: IssueChannelAggregateInput;
+  IssueChannelChannelAggregationSelection: IssueChannelChannelAggregationSelection;
+  IssueChannelChannelNodeAggregateSelection: IssueChannelChannelNodeAggregateSelection;
+  IssueChannelConnectFieldInput: IssueChannelConnectFieldInput;
+  IssueChannelConnectOrCreateFieldInput: IssueChannelConnectOrCreateFieldInput;
+  IssueChannelConnectOrCreateFieldInputOnCreate: IssueChannelConnectOrCreateFieldInputOnCreate;
+  IssueChannelConnection: IssueChannelConnection;
+  IssueChannelConnectionSort: IssueChannelConnectionSort;
+  IssueChannelConnectionWhere: IssueChannelConnectionWhere;
+  IssueChannelCreateFieldInput: IssueChannelCreateFieldInput;
+  IssueChannelDeleteFieldInput: IssueChannelDeleteFieldInput;
+  IssueChannelDisconnectFieldInput: IssueChannelDisconnectFieldInput;
+  IssueChannelFieldInput: IssueChannelFieldInput;
+  IssueChannelNodeAggregationWhereInput: IssueChannelNodeAggregationWhereInput;
+  IssueChannelRelationship: IssueChannelRelationship;
+  IssueChannelUpdateConnectionInput: IssueChannelUpdateConnectionInput;
+  IssueChannelUpdateFieldInput: IssueChannelUpdateFieldInput;
   IssueCommentCommentsAggregationSelection: IssueCommentCommentsAggregationSelection;
   IssueCommentCommentsNodeAggregateSelection: IssueCommentCommentsNodeAggregateSelection;
+  IssueCommentRelatedCommentAggregationSelection: IssueCommentRelatedCommentAggregationSelection;
+  IssueCommentRelatedCommentNodeAggregateSelection: IssueCommentRelatedCommentNodeAggregateSelection;
   IssueCommentsAggregateInput: IssueCommentsAggregateInput;
   IssueCommentsConnectFieldInput: IssueCommentsConnectFieldInput;
   IssueCommentsConnection: IssueCommentsConnection;
@@ -26435,14 +27370,60 @@ export type ResolversParentTypes = {
   IssueCommentsUpdateFieldInput: IssueCommentsUpdateFieldInput;
   IssueConnectInput: IssueConnectInput;
   IssueConnectOrCreateInput: IssueConnectOrCreateInput;
+  IssueConnectOrCreateWhere: IssueConnectOrCreateWhere;
   IssueConnectWhere: IssueConnectWhere;
   IssueCreateInput: IssueCreateInput;
   IssueDeleteInput: IssueDeleteInput;
   IssueDisconnectInput: IssueDisconnectInput;
+  IssueDiscussionRelatedDiscussionAggregationSelection: IssueDiscussionRelatedDiscussionAggregationSelection;
+  IssueDiscussionRelatedDiscussionNodeAggregateSelection: IssueDiscussionRelatedDiscussionNodeAggregateSelection;
   IssueEdge: IssueEdge;
+  IssueEventRelatedEventAggregationSelection: IssueEventRelatedEventAggregationSelection;
+  IssueEventRelatedEventNodeAggregateSelection: IssueEventRelatedEventNodeAggregateSelection;
+  IssueOnCreateInput: IssueOnCreateInput;
   IssueOptions: IssueOptions;
+  IssueRelatedCommentAggregateInput: IssueRelatedCommentAggregateInput;
+  IssueRelatedCommentConnectFieldInput: IssueRelatedCommentConnectFieldInput;
+  IssueRelatedCommentConnection: IssueRelatedCommentConnection;
+  IssueRelatedCommentConnectionSort: IssueRelatedCommentConnectionSort;
+  IssueRelatedCommentConnectionWhere: IssueRelatedCommentConnectionWhere;
+  IssueRelatedCommentCreateFieldInput: IssueRelatedCommentCreateFieldInput;
+  IssueRelatedCommentDeleteFieldInput: IssueRelatedCommentDeleteFieldInput;
+  IssueRelatedCommentDisconnectFieldInput: IssueRelatedCommentDisconnectFieldInput;
+  IssueRelatedCommentFieldInput: IssueRelatedCommentFieldInput;
+  IssueRelatedCommentNodeAggregationWhereInput: IssueRelatedCommentNodeAggregationWhereInput;
+  IssueRelatedCommentRelationship: IssueRelatedCommentRelationship;
+  IssueRelatedCommentUpdateConnectionInput: IssueRelatedCommentUpdateConnectionInput;
+  IssueRelatedCommentUpdateFieldInput: IssueRelatedCommentUpdateFieldInput;
+  IssueRelatedDiscussionAggregateInput: IssueRelatedDiscussionAggregateInput;
+  IssueRelatedDiscussionConnectFieldInput: IssueRelatedDiscussionConnectFieldInput;
+  IssueRelatedDiscussionConnection: IssueRelatedDiscussionConnection;
+  IssueRelatedDiscussionConnectionSort: IssueRelatedDiscussionConnectionSort;
+  IssueRelatedDiscussionConnectionWhere: IssueRelatedDiscussionConnectionWhere;
+  IssueRelatedDiscussionCreateFieldInput: IssueRelatedDiscussionCreateFieldInput;
+  IssueRelatedDiscussionDeleteFieldInput: IssueRelatedDiscussionDeleteFieldInput;
+  IssueRelatedDiscussionDisconnectFieldInput: IssueRelatedDiscussionDisconnectFieldInput;
+  IssueRelatedDiscussionFieldInput: IssueRelatedDiscussionFieldInput;
+  IssueRelatedDiscussionNodeAggregationWhereInput: IssueRelatedDiscussionNodeAggregationWhereInput;
+  IssueRelatedDiscussionRelationship: IssueRelatedDiscussionRelationship;
+  IssueRelatedDiscussionUpdateConnectionInput: IssueRelatedDiscussionUpdateConnectionInput;
+  IssueRelatedDiscussionUpdateFieldInput: IssueRelatedDiscussionUpdateFieldInput;
+  IssueRelatedEventAggregateInput: IssueRelatedEventAggregateInput;
+  IssueRelatedEventConnectFieldInput: IssueRelatedEventConnectFieldInput;
+  IssueRelatedEventConnection: IssueRelatedEventConnection;
+  IssueRelatedEventConnectionSort: IssueRelatedEventConnectionSort;
+  IssueRelatedEventConnectionWhere: IssueRelatedEventConnectionWhere;
+  IssueRelatedEventCreateFieldInput: IssueRelatedEventCreateFieldInput;
+  IssueRelatedEventDeleteFieldInput: IssueRelatedEventDeleteFieldInput;
+  IssueRelatedEventDisconnectFieldInput: IssueRelatedEventDisconnectFieldInput;
+  IssueRelatedEventFieldInput: IssueRelatedEventFieldInput;
+  IssueRelatedEventNodeAggregationWhereInput: IssueRelatedEventNodeAggregationWhereInput;
+  IssueRelatedEventRelationship: IssueRelatedEventRelationship;
+  IssueRelatedEventUpdateConnectionInput: IssueRelatedEventUpdateConnectionInput;
+  IssueRelatedEventUpdateFieldInput: IssueRelatedEventUpdateFieldInput;
   IssueRelationInput: IssueRelationInput;
   IssueSort: IssueSort;
+  IssueUniqueWhere: IssueUniqueWhere;
   IssueUpdateInput: IssueUpdateInput;
   IssueWhere: IssueWhere;
   IssuesConnection: IssuesConnection;
@@ -26475,19 +27456,21 @@ export type ResolversParentTypes = {
   ModServerRolesConnection: ModServerRolesConnection;
   ModerationProfile: ModerationProfile;
   ModerationProfileAggregateSelection: ModerationProfileAggregateSelection;
-  ModerationProfileAuthoredReportsAggregateInput: ModerationProfileAuthoredReportsAggregateInput;
-  ModerationProfileAuthoredReportsConnectFieldInput: ModerationProfileAuthoredReportsConnectFieldInput;
-  ModerationProfileAuthoredReportsConnection: ModerationProfileAuthoredReportsConnection;
-  ModerationProfileAuthoredReportsConnectionSort: ModerationProfileAuthoredReportsConnectionSort;
-  ModerationProfileAuthoredReportsConnectionWhere: ModerationProfileAuthoredReportsConnectionWhere;
-  ModerationProfileAuthoredReportsCreateFieldInput: ModerationProfileAuthoredReportsCreateFieldInput;
-  ModerationProfileAuthoredReportsDeleteFieldInput: ModerationProfileAuthoredReportsDeleteFieldInput;
-  ModerationProfileAuthoredReportsDisconnectFieldInput: ModerationProfileAuthoredReportsDisconnectFieldInput;
-  ModerationProfileAuthoredReportsFieldInput: ModerationProfileAuthoredReportsFieldInput;
-  ModerationProfileAuthoredReportsNodeAggregationWhereInput: ModerationProfileAuthoredReportsNodeAggregationWhereInput;
-  ModerationProfileAuthoredReportsRelationship: ModerationProfileAuthoredReportsRelationship;
-  ModerationProfileAuthoredReportsUpdateConnectionInput: ModerationProfileAuthoredReportsUpdateConnectionInput;
-  ModerationProfileAuthoredReportsUpdateFieldInput: ModerationProfileAuthoredReportsUpdateFieldInput;
+  ModerationProfileAuthoredIssuesAggregateInput: ModerationProfileAuthoredIssuesAggregateInput;
+  ModerationProfileAuthoredIssuesConnectFieldInput: ModerationProfileAuthoredIssuesConnectFieldInput;
+  ModerationProfileAuthoredIssuesConnectOrCreateFieldInput: ModerationProfileAuthoredIssuesConnectOrCreateFieldInput;
+  ModerationProfileAuthoredIssuesConnectOrCreateFieldInputOnCreate: ModerationProfileAuthoredIssuesConnectOrCreateFieldInputOnCreate;
+  ModerationProfileAuthoredIssuesConnection: ModerationProfileAuthoredIssuesConnection;
+  ModerationProfileAuthoredIssuesConnectionSort: ModerationProfileAuthoredIssuesConnectionSort;
+  ModerationProfileAuthoredIssuesConnectionWhere: ModerationProfileAuthoredIssuesConnectionWhere;
+  ModerationProfileAuthoredIssuesCreateFieldInput: ModerationProfileAuthoredIssuesCreateFieldInput;
+  ModerationProfileAuthoredIssuesDeleteFieldInput: ModerationProfileAuthoredIssuesDeleteFieldInput;
+  ModerationProfileAuthoredIssuesDisconnectFieldInput: ModerationProfileAuthoredIssuesDisconnectFieldInput;
+  ModerationProfileAuthoredIssuesFieldInput: ModerationProfileAuthoredIssuesFieldInput;
+  ModerationProfileAuthoredIssuesNodeAggregationWhereInput: ModerationProfileAuthoredIssuesNodeAggregationWhereInput;
+  ModerationProfileAuthoredIssuesRelationship: ModerationProfileAuthoredIssuesRelationship;
+  ModerationProfileAuthoredIssuesUpdateConnectionInput: ModerationProfileAuthoredIssuesUpdateConnectionInput;
+  ModerationProfileAuthoredIssuesUpdateFieldInput: ModerationProfileAuthoredIssuesUpdateFieldInput;
   ModerationProfileCommentDiscussionCommentsAggregationSelection: ModerationProfileCommentDiscussionCommentsAggregationSelection;
   ModerationProfileCommentDiscussionCommentsNodeAggregateSelection: ModerationProfileCommentDiscussionCommentsNodeAggregateSelection;
   ModerationProfileCommentDownvotedCommentsAggregationSelection: ModerationProfileCommentDownvotedCommentsAggregationSelection;
@@ -26543,6 +27526,8 @@ export type ResolversParentTypes = {
   ModerationProfileDownvotedDiscussionChannelsUpdateConnectionInput: ModerationProfileDownvotedDiscussionChannelsUpdateConnectionInput;
   ModerationProfileDownvotedDiscussionChannelsUpdateFieldInput: ModerationProfileDownvotedDiscussionChannelsUpdateFieldInput;
   ModerationProfileEdge: ModerationProfileEdge;
+  ModerationProfileIssueAuthoredIssuesAggregationSelection: ModerationProfileIssueAuthoredIssuesAggregationSelection;
+  ModerationProfileIssueAuthoredIssuesNodeAggregateSelection: ModerationProfileIssueAuthoredIssuesNodeAggregateSelection;
   ModerationProfileIssueCommentsAggregateInput: ModerationProfileIssueCommentsAggregateInput;
   ModerationProfileIssueCommentsConnectFieldInput: ModerationProfileIssueCommentsConnectFieldInput;
   ModerationProfileIssueCommentsConnection: ModerationProfileIssueCommentsConnection;
@@ -26556,21 +27541,6 @@ export type ResolversParentTypes = {
   ModerationProfileIssueCommentsRelationship: ModerationProfileIssueCommentsRelationship;
   ModerationProfileIssueCommentsUpdateConnectionInput: ModerationProfileIssueCommentsUpdateConnectionInput;
   ModerationProfileIssueCommentsUpdateFieldInput: ModerationProfileIssueCommentsUpdateFieldInput;
-  ModerationProfileIssueIssuesAggregationSelection: ModerationProfileIssueIssuesAggregationSelection;
-  ModerationProfileIssueIssuesNodeAggregateSelection: ModerationProfileIssueIssuesNodeAggregateSelection;
-  ModerationProfileIssuesAggregateInput: ModerationProfileIssuesAggregateInput;
-  ModerationProfileIssuesConnectFieldInput: ModerationProfileIssuesConnectFieldInput;
-  ModerationProfileIssuesConnection: ModerationProfileIssuesConnection;
-  ModerationProfileIssuesConnectionSort: ModerationProfileIssuesConnectionSort;
-  ModerationProfileIssuesConnectionWhere: ModerationProfileIssuesConnectionWhere;
-  ModerationProfileIssuesCreateFieldInput: ModerationProfileIssuesCreateFieldInput;
-  ModerationProfileIssuesDeleteFieldInput: ModerationProfileIssuesDeleteFieldInput;
-  ModerationProfileIssuesDisconnectFieldInput: ModerationProfileIssuesDisconnectFieldInput;
-  ModerationProfileIssuesFieldInput: ModerationProfileIssuesFieldInput;
-  ModerationProfileIssuesNodeAggregationWhereInput: ModerationProfileIssuesNodeAggregationWhereInput;
-  ModerationProfileIssuesRelationship: ModerationProfileIssuesRelationship;
-  ModerationProfileIssuesUpdateConnectionInput: ModerationProfileIssuesUpdateConnectionInput;
-  ModerationProfileIssuesUpdateFieldInput: ModerationProfileIssuesUpdateFieldInput;
   ModerationProfileModChannelRoleModChannelRolesAggregationSelection: ModerationProfileModChannelRoleModChannelRolesAggregationSelection;
   ModerationProfileModChannelRoleModChannelRolesNodeAggregateSelection: ModerationProfileModChannelRoleModChannelRolesNodeAggregateSelection;
   ModerationProfileModChannelRolesAggregateInput: ModerationProfileModChannelRolesAggregateInput;
@@ -26608,8 +27578,6 @@ export type ResolversParentTypes = {
   ModerationProfileOnCreateInput: ModerationProfileOnCreateInput;
   ModerationProfileOptions: ModerationProfileOptions;
   ModerationProfileRelationInput: ModerationProfileRelationInput;
-  ModerationProfileReportAuthoredReportsAggregationSelection: ModerationProfileReportAuthoredReportsAggregationSelection;
-  ModerationProfileReportAuthoredReportsNodeAggregateSelection: ModerationProfileReportAuthoredReportsNodeAggregateSelection;
   ModerationProfileSort: ModerationProfileSort;
   ModerationProfileUniqueWhere: ModerationProfileUniqueWhere;
   ModerationProfileUpdateInput: ModerationProfileUpdateInput;
@@ -26695,68 +27663,6 @@ export type ResolversParentTypes = {
   RepeatEverySort: RepeatEverySort;
   RepeatEveryUpdateInput: RepeatEveryUpdateInput;
   RepeatEveryWhere: RepeatEveryWhere;
-  Report: Report;
-  ReportAggregateSelection: ReportAggregateSelection;
-  ReportAuthorAggregateInput: ReportAuthorAggregateInput;
-  ReportAuthorConnectFieldInput: ReportAuthorConnectFieldInput;
-  ReportAuthorConnectOrCreateFieldInput: ReportAuthorConnectOrCreateFieldInput;
-  ReportAuthorConnectOrCreateFieldInputOnCreate: ReportAuthorConnectOrCreateFieldInputOnCreate;
-  ReportAuthorConnection: ReportAuthorConnection;
-  ReportAuthorConnectionSort: ReportAuthorConnectionSort;
-  ReportAuthorConnectionWhere: ReportAuthorConnectionWhere;
-  ReportAuthorCreateFieldInput: ReportAuthorCreateFieldInput;
-  ReportAuthorDeleteFieldInput: ReportAuthorDeleteFieldInput;
-  ReportAuthorDisconnectFieldInput: ReportAuthorDisconnectFieldInput;
-  ReportAuthorFieldInput: ReportAuthorFieldInput;
-  ReportAuthorNodeAggregationWhereInput: ReportAuthorNodeAggregationWhereInput;
-  ReportAuthorRelationship: ReportAuthorRelationship;
-  ReportAuthorUpdateConnectionInput: ReportAuthorUpdateConnectionInput;
-  ReportAuthorUpdateFieldInput: ReportAuthorUpdateFieldInput;
-  ReportConnectInput: ReportConnectInput;
-  ReportConnectOrCreateInput: ReportConnectOrCreateInput;
-  ReportConnectWhere: ReportConnectWhere;
-  ReportCreateInput: ReportCreateInput;
-  ReportDeleteInput: ReportDeleteInput;
-  ReportDisconnectInput: ReportDisconnectInput;
-  ReportEdge: ReportEdge;
-  ReportIssueIssuesAggregationSelection: ReportIssueIssuesAggregationSelection;
-  ReportIssueIssuesNodeAggregateSelection: ReportIssueIssuesNodeAggregateSelection;
-  ReportIssuesAggregateInput: ReportIssuesAggregateInput;
-  ReportIssuesConnectFieldInput: ReportIssuesConnectFieldInput;
-  ReportIssuesConnection: ReportIssuesConnection;
-  ReportIssuesConnectionSort: ReportIssuesConnectionSort;
-  ReportIssuesConnectionWhere: ReportIssuesConnectionWhere;
-  ReportIssuesCreateFieldInput: ReportIssuesCreateFieldInput;
-  ReportIssuesDeleteFieldInput: ReportIssuesDeleteFieldInput;
-  ReportIssuesDisconnectFieldInput: ReportIssuesDisconnectFieldInput;
-  ReportIssuesFieldInput: ReportIssuesFieldInput;
-  ReportIssuesNodeAggregationWhereInput: ReportIssuesNodeAggregationWhereInput;
-  ReportIssuesRelationship: ReportIssuesRelationship;
-  ReportIssuesUpdateConnectionInput: ReportIssuesUpdateConnectionInput;
-  ReportIssuesUpdateFieldInput: ReportIssuesUpdateFieldInput;
-  ReportModerationProfileAuthorAggregationSelection: ReportModerationProfileAuthorAggregationSelection;
-  ReportModerationProfileAuthorNodeAggregateSelection: ReportModerationProfileAuthorNodeAggregateSelection;
-  ReportOptions: ReportOptions;
-  ReportRelationInput: ReportRelationInput;
-  ReportRuleRuleViolationsAggregationSelection: ReportRuleRuleViolationsAggregationSelection;
-  ReportRuleRuleViolationsNodeAggregateSelection: ReportRuleRuleViolationsNodeAggregateSelection;
-  ReportRuleViolationsAggregateInput: ReportRuleViolationsAggregateInput;
-  ReportRuleViolationsConnectFieldInput: ReportRuleViolationsConnectFieldInput;
-  ReportRuleViolationsConnection: ReportRuleViolationsConnection;
-  ReportRuleViolationsConnectionSort: ReportRuleViolationsConnectionSort;
-  ReportRuleViolationsConnectionWhere: ReportRuleViolationsConnectionWhere;
-  ReportRuleViolationsCreateFieldInput: ReportRuleViolationsCreateFieldInput;
-  ReportRuleViolationsDeleteFieldInput: ReportRuleViolationsDeleteFieldInput;
-  ReportRuleViolationsDisconnectFieldInput: ReportRuleViolationsDisconnectFieldInput;
-  ReportRuleViolationsFieldInput: ReportRuleViolationsFieldInput;
-  ReportRuleViolationsNodeAggregationWhereInput: ReportRuleViolationsNodeAggregationWhereInput;
-  ReportRuleViolationsRelationship: ReportRuleViolationsRelationship;
-  ReportRuleViolationsUpdateConnectionInput: ReportRuleViolationsUpdateConnectionInput;
-  ReportRuleViolationsUpdateFieldInput: ReportRuleViolationsUpdateFieldInput;
-  ReportSort: ReportSort;
-  ReportUpdateInput: ReportUpdateInput;
-  ReportWhere: ReportWhere;
-  ReportsConnection: ReportsConnection;
   Rule: Rule;
   RuleAggregateSelection: RuleAggregateSelection;
   RuleConnectWhere: RuleConnectWhere;
@@ -26993,7 +27899,6 @@ export type ResolversParentTypes = {
   UpdateRedditSubmissionsMutationResponse: UpdateRedditSubmissionsMutationResponse;
   UpdateRepeatEndsMutationResponse: UpdateRepeatEndsMutationResponse;
   UpdateRepeatEveriesMutationResponse: UpdateRepeatEveriesMutationResponse;
-  UpdateReportsMutationResponse: UpdateReportsMutationResponse;
   UpdateRulesMutationResponse: UpdateRulesMutationResponse;
   UpdateServerConfigsMutationResponse: UpdateServerConfigsMutationResponse;
   UpdateServerRolesMutationResponse: UpdateServerRolesMutationResponse;
@@ -27225,6 +28130,8 @@ export type ResolversParentTypes = {
   UserIssueIssuesNodeAggregateSelection: UserIssueIssuesNodeAggregateSelection;
   UserIssuesAggregateInput: UserIssuesAggregateInput;
   UserIssuesConnectFieldInput: UserIssuesConnectFieldInput;
+  UserIssuesConnectOrCreateFieldInput: UserIssuesConnectOrCreateFieldInput;
+  UserIssuesConnectOrCreateFieldInputOnCreate: UserIssuesConnectOrCreateFieldInputOnCreate;
   UserIssuesConnection: UserIssuesConnection;
   UserIssuesConnectionSort: UserIssuesConnectionSort;
   UserIssuesConnectionWhere: UserIssuesConnectionWhere;
@@ -27529,11 +28436,16 @@ export type ChannelIssueIssuesAggregationSelectionResolvers<ContextType = any, P
 };
 
 export type ChannelIssueIssuesNodeAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ChannelIssueIssuesNodeAggregateSelection'] = ResolversParentTypes['ChannelIssueIssuesNodeAggregateSelection']> = {
+  authorName?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
   body?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  channelUniqueName?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['DateTimeAggregateSelectionNonNullable'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['IDAggregateSelectionNonNullable'], ParentType, ContextType>;
+  relatedCommentId?: Resolver<ResolversTypes['IDAggregateSelectionNullable'], ParentType, ContextType>;
+  relatedDiscussionId?: Resolver<ResolversTypes['IDAggregateSelectionNullable'], ParentType, ContextType>;
+  relatedEventId?: Resolver<ResolversTypes['IDAggregateSelectionNullable'], ParentType, ContextType>;
   title?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
-  updatedAt?: Resolver<ResolversTypes['DateTimeAggregateSelectionNonNullable'], ParentType, ContextType>;
+  updatedAt?: Resolver<ResolversTypes['DateTimeAggregateSelectionNullable'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -27723,6 +28635,9 @@ export type CommentResolvers<ContextType = any, ParentType extends ResolversPare
   ParentComment?: Resolver<Maybe<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<CommentParentCommentArgs, 'directed'>>;
   ParentCommentAggregate?: Resolver<Maybe<ResolversTypes['CommentCommentParentCommentAggregationSelection']>, ParentType, ContextType, RequireFields<CommentParentCommentAggregateArgs, 'directed'>>;
   ParentCommentConnection?: Resolver<ResolversTypes['CommentParentCommentConnection'], ParentType, ContextType, RequireFields<CommentParentCommentConnectionArgs, 'directed'>>;
+  RelatedIssues?: Resolver<Array<ResolversTypes['Issue']>, ParentType, ContextType, RequireFields<CommentRelatedIssuesArgs, 'directed'>>;
+  RelatedIssuesAggregate?: Resolver<Maybe<ResolversTypes['CommentIssueRelatedIssuesAggregationSelection']>, ParentType, ContextType, RequireFields<CommentRelatedIssuesAggregateArgs, 'directed'>>;
+  RelatedIssuesConnection?: Resolver<ResolversTypes['CommentRelatedIssuesConnection'], ParentType, ContextType, RequireFields<CommentRelatedIssuesConnectionArgs, 'directed'>>;
   Tags?: Resolver<Array<ResolversTypes['Tag']>, ParentType, ContextType, RequireFields<CommentTagsArgs, 'directed'>>;
   TagsAggregate?: Resolver<Maybe<ResolversTypes['CommentTagTagsAggregationSelection']>, ParentType, ContextType, RequireFields<CommentTagsAggregateArgs, 'directed'>>;
   TagsConnection?: Resolver<ResolversTypes['CommentTagsConnection'], ParentType, ContextType, RequireFields<CommentTagsConnectionArgs, 'directed'>>;
@@ -27924,6 +28839,26 @@ export type CommentEventRelationshipResolvers<ContextType = any, ParentType exte
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type CommentIssueRelatedIssuesAggregationSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['CommentIssueRelatedIssuesAggregationSelection'] = ResolversParentTypes['CommentIssueRelatedIssuesAggregationSelection']> = {
+  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['CommentIssueRelatedIssuesNodeAggregateSelection']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CommentIssueRelatedIssuesNodeAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['CommentIssueRelatedIssuesNodeAggregateSelection'] = ResolversParentTypes['CommentIssueRelatedIssuesNodeAggregateSelection']> = {
+  authorName?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  body?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  channelUniqueName?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['DateTimeAggregateSelectionNonNullable'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['IDAggregateSelectionNonNullable'], ParentType, ContextType>;
+  relatedCommentId?: Resolver<ResolversTypes['IDAggregateSelectionNullable'], ParentType, ContextType>;
+  relatedDiscussionId?: Resolver<ResolversTypes['IDAggregateSelectionNullable'], ParentType, ContextType>;
+  relatedEventId?: Resolver<ResolversTypes['IDAggregateSelectionNullable'], ParentType, ContextType>;
+  title?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  updatedAt?: Resolver<ResolversTypes['DateTimeAggregateSelectionNullable'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type CommentModerationProfileDownvotedByModeratorsAggregationSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['CommentModerationProfileDownvotedByModeratorsAggregationSelection'] = ResolversParentTypes['CommentModerationProfileDownvotedByModeratorsAggregationSelection']> = {
   count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   node?: Resolver<Maybe<ResolversTypes['CommentModerationProfileDownvotedByModeratorsNodeAggregateSelection']>, ParentType, ContextType>;
@@ -27946,6 +28881,19 @@ export type CommentParentCommentConnectionResolvers<ContextType = any, ParentTyp
 export type CommentParentCommentRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['CommentParentCommentRelationship'] = ResolversParentTypes['CommentParentCommentRelationship']> = {
   cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   node?: Resolver<ResolversTypes['Comment'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CommentRelatedIssuesConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['CommentRelatedIssuesConnection'] = ResolversParentTypes['CommentRelatedIssuesConnection']> = {
+  edges?: Resolver<Array<ResolversTypes['CommentRelatedIssuesRelationship']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CommentRelatedIssuesRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['CommentRelatedIssuesRelationship'] = ResolversParentTypes['CommentRelatedIssuesRelationship']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['Issue'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -28200,12 +29148,6 @@ export type CreateRepeatEndsMutationResponseResolvers<ContextType = any, ParentT
 export type CreateRepeatEveriesMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateRepeatEveriesMutationResponse'] = ResolversParentTypes['CreateRepeatEveriesMutationResponse']> = {
   info?: Resolver<ResolversTypes['CreateInfo'], ParentType, ContextType>;
   repeatEveries?: Resolver<Array<ResolversTypes['RepeatEvery']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type CreateReportsMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateReportsMutationResponse'] = ResolversParentTypes['CreateReportsMutationResponse']> = {
-  info?: Resolver<ResolversTypes['CreateInfo'], ParentType, ContextType>;
-  reports?: Resolver<Array<ResolversTypes['Report']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -28616,11 +29558,16 @@ export type DiscussionIssueRelatedIssuesAggregationSelectionResolvers<ContextTyp
 };
 
 export type DiscussionIssueRelatedIssuesNodeAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscussionIssueRelatedIssuesNodeAggregateSelection'] = ResolversParentTypes['DiscussionIssueRelatedIssuesNodeAggregateSelection']> = {
+  authorName?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
   body?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  channelUniqueName?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['DateTimeAggregateSelectionNonNullable'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['IDAggregateSelectionNonNullable'], ParentType, ContextType>;
+  relatedCommentId?: Resolver<ResolversTypes['IDAggregateSelectionNullable'], ParentType, ContextType>;
+  relatedDiscussionId?: Resolver<ResolversTypes['IDAggregateSelectionNullable'], ParentType, ContextType>;
+  relatedEventId?: Resolver<ResolversTypes['IDAggregateSelectionNullable'], ParentType, ContextType>;
   title?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
-  updatedAt?: Resolver<ResolversTypes['DateTimeAggregateSelectionNonNullable'], ParentType, ContextType>;
+  updatedAt?: Resolver<ResolversTypes['DateTimeAggregateSelectionNullable'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -28831,6 +29778,9 @@ export type EventResolvers<ContextType = any, ParentType extends ResolversParent
   RecurringEvent?: Resolver<Maybe<ResolversTypes['RecurringEvent']>, ParentType, ContextType, RequireFields<EventRecurringEventArgs, 'directed'>>;
   RecurringEventAggregate?: Resolver<Maybe<ResolversTypes['EventRecurringEventRecurringEventAggregationSelection']>, ParentType, ContextType, RequireFields<EventRecurringEventAggregateArgs, 'directed'>>;
   RecurringEventConnection?: Resolver<ResolversTypes['EventRecurringEventConnection'], ParentType, ContextType, RequireFields<EventRecurringEventConnectionArgs, 'directed'>>;
+  RelatedIssues?: Resolver<Array<ResolversTypes['Issue']>, ParentType, ContextType, RequireFields<EventRelatedIssuesArgs, 'directed'>>;
+  RelatedIssuesAggregate?: Resolver<Maybe<ResolversTypes['EventIssueRelatedIssuesAggregationSelection']>, ParentType, ContextType, RequireFields<EventRelatedIssuesAggregateArgs, 'directed'>>;
+  RelatedIssuesConnection?: Resolver<ResolversTypes['EventRelatedIssuesConnection'], ParentType, ContextType, RequireFields<EventRelatedIssuesConnectionArgs, 'directed'>>;
   Tags?: Resolver<Array<ResolversTypes['Tag']>, ParentType, ContextType, RequireFields<EventTagsArgs, 'directed'>>;
   TagsAggregate?: Resolver<Maybe<ResolversTypes['EventTagTagsAggregationSelection']>, ParentType, ContextType, RequireFields<EventTagsAggregateArgs, 'directed'>>;
   TagsConnection?: Resolver<ResolversTypes['EventTagsConnection'], ParentType, ContextType, RequireFields<EventTagsConnectionArgs, 'directed'>>;
@@ -29100,6 +30050,26 @@ export type EventEventChannelsRelationshipResolvers<ContextType = any, ParentTyp
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type EventIssueRelatedIssuesAggregationSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['EventIssueRelatedIssuesAggregationSelection'] = ResolversParentTypes['EventIssueRelatedIssuesAggregationSelection']> = {
+  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['EventIssueRelatedIssuesNodeAggregateSelection']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type EventIssueRelatedIssuesNodeAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['EventIssueRelatedIssuesNodeAggregateSelection'] = ResolversParentTypes['EventIssueRelatedIssuesNodeAggregateSelection']> = {
+  authorName?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  body?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  channelUniqueName?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['DateTimeAggregateSelectionNonNullable'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['IDAggregateSelectionNonNullable'], ParentType, ContextType>;
+  relatedCommentId?: Resolver<ResolversTypes['IDAggregateSelectionNullable'], ParentType, ContextType>;
+  relatedDiscussionId?: Resolver<ResolversTypes['IDAggregateSelectionNullable'], ParentType, ContextType>;
+  relatedEventId?: Resolver<ResolversTypes['IDAggregateSelectionNullable'], ParentType, ContextType>;
+  title?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  updatedAt?: Resolver<ResolversTypes['DateTimeAggregateSelectionNullable'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type EventPosterConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['EventPosterConnection'] = ResolversParentTypes['EventPosterConnection']> = {
   edges?: Resolver<Array<ResolversTypes['EventPosterRelationship']>, ParentType, ContextType>;
   pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
@@ -29134,6 +30104,19 @@ export type EventRecurringEventRecurringEventNodeAggregateSelectionResolvers<Con
 export type EventRecurringEventRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['EventRecurringEventRelationship'] = ResolversParentTypes['EventRecurringEventRelationship']> = {
   cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   node?: Resolver<ResolversTypes['RecurringEvent'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type EventRelatedIssuesConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['EventRelatedIssuesConnection'] = ResolversParentTypes['EventRelatedIssuesConnection']> = {
+  edges?: Resolver<Array<ResolversTypes['EventRelatedIssuesRelationship']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type EventRelatedIssuesRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['EventRelatedIssuesRelationship'] = ResolversParentTypes['EventRelatedIssuesRelationship']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['Issue'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -29298,6 +30281,12 @@ export type IdAggregateSelectionNonNullableResolvers<ContextType = any, ParentTy
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type IdAggregateSelectionNullableResolvers<ContextType = any, ParentType extends ResolversParentTypes['IDAggregateSelectionNullable'] = ResolversParentTypes['IDAggregateSelectionNullable']> = {
+  longest?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  shortest?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type IntAggregateSelectionNonNullableResolvers<ContextType = any, ParentType extends ResolversParentTypes['IntAggregateSelectionNonNullable'] = ResolversParentTypes['IntAggregateSelectionNonNullable']> = {
   average?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   max?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
@@ -29317,25 +30306,47 @@ export type IntAggregateSelectionNullableResolvers<ContextType = any, ParentType
 export type IssueResolvers<ContextType = any, ParentType extends ResolversParentTypes['Issue'] = ResolversParentTypes['Issue']> = {
   Author?: Resolver<Maybe<ResolversTypes['IssueAuthor']>, ParentType, ContextType, RequireFields<IssueAuthorArgs, 'directed'>>;
   AuthorConnection?: Resolver<ResolversTypes['IssueAuthorConnection'], ParentType, ContextType, RequireFields<IssueAuthorConnectionArgs, 'directed'>>;
+  Channel?: Resolver<Maybe<ResolversTypes['Channel']>, ParentType, ContextType, RequireFields<IssueChannelArgs, 'directed'>>;
+  ChannelAggregate?: Resolver<Maybe<ResolversTypes['IssueChannelChannelAggregationSelection']>, ParentType, ContextType, RequireFields<IssueChannelAggregateArgs, 'directed'>>;
+  ChannelConnection?: Resolver<ResolversTypes['IssueChannelConnection'], ParentType, ContextType, RequireFields<IssueChannelConnectionArgs, 'directed'>>;
   Comments?: Resolver<Array<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<IssueCommentsArgs, 'directed'>>;
   CommentsAggregate?: Resolver<Maybe<ResolversTypes['IssueCommentCommentsAggregationSelection']>, ParentType, ContextType, RequireFields<IssueCommentsAggregateArgs, 'directed'>>;
   CommentsConnection?: Resolver<ResolversTypes['IssueCommentsConnection'], ParentType, ContextType, RequireFields<IssueCommentsConnectionArgs, 'directed'>>;
+  RelatedComment?: Resolver<Maybe<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<IssueRelatedCommentArgs, 'directed'>>;
+  RelatedCommentAggregate?: Resolver<Maybe<ResolversTypes['IssueCommentRelatedCommentAggregationSelection']>, ParentType, ContextType, RequireFields<IssueRelatedCommentAggregateArgs, 'directed'>>;
+  RelatedCommentConnection?: Resolver<ResolversTypes['IssueRelatedCommentConnection'], ParentType, ContextType, RequireFields<IssueRelatedCommentConnectionArgs, 'directed'>>;
+  RelatedDiscussion?: Resolver<Maybe<ResolversTypes['Discussion']>, ParentType, ContextType, RequireFields<IssueRelatedDiscussionArgs, 'directed'>>;
+  RelatedDiscussionAggregate?: Resolver<Maybe<ResolversTypes['IssueDiscussionRelatedDiscussionAggregationSelection']>, ParentType, ContextType, RequireFields<IssueRelatedDiscussionAggregateArgs, 'directed'>>;
+  RelatedDiscussionConnection?: Resolver<ResolversTypes['IssueRelatedDiscussionConnection'], ParentType, ContextType, RequireFields<IssueRelatedDiscussionConnectionArgs, 'directed'>>;
+  RelatedEvent?: Resolver<Maybe<ResolversTypes['Event']>, ParentType, ContextType, RequireFields<IssueRelatedEventArgs, 'directed'>>;
+  RelatedEventAggregate?: Resolver<Maybe<ResolversTypes['IssueEventRelatedEventAggregationSelection']>, ParentType, ContextType, RequireFields<IssueRelatedEventAggregateArgs, 'directed'>>;
+  RelatedEventConnection?: Resolver<ResolversTypes['IssueRelatedEventConnection'], ParentType, ContextType, RequireFields<IssueRelatedEventConnectionArgs, 'directed'>>;
+  authorName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   body?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  channelUniqueName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   isOpen?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  relatedCommentId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  relatedDiscussionId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  relatedEventId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
   title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  updatedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type IssueAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['IssueAggregateSelection'] = ResolversParentTypes['IssueAggregateSelection']> = {
+  authorName?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
   body?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  channelUniqueName?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
   count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['DateTimeAggregateSelectionNonNullable'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['IDAggregateSelectionNonNullable'], ParentType, ContextType>;
+  relatedCommentId?: Resolver<ResolversTypes['IDAggregateSelectionNullable'], ParentType, ContextType>;
+  relatedDiscussionId?: Resolver<ResolversTypes['IDAggregateSelectionNullable'], ParentType, ContextType>;
+  relatedEventId?: Resolver<ResolversTypes['IDAggregateSelectionNullable'], ParentType, ContextType>;
   title?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
-  updatedAt?: Resolver<ResolversTypes['DateTimeAggregateSelectionNonNullable'], ParentType, ContextType>;
+  updatedAt?: Resolver<ResolversTypes['DateTimeAggregateSelectionNullable'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -29356,6 +30367,35 @@ export type IssueAuthorRelationshipResolvers<ContextType = any, ParentType exten
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type IssueChannelChannelAggregationSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['IssueChannelChannelAggregationSelection'] = ResolversParentTypes['IssueChannelChannelAggregationSelection']> = {
+  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['IssueChannelChannelNodeAggregateSelection']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type IssueChannelChannelNodeAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['IssueChannelChannelNodeAggregateSelection'] = ResolversParentTypes['IssueChannelChannelNodeAggregateSelection']> = {
+  channelBannerURL?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  channelIconURL?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['DateTimeAggregateSelectionNonNullable'], ParentType, ContextType>;
+  description?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  displayName?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  uniqueName?: Resolver<ResolversTypes['StringAggregateSelectionNonNullable'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type IssueChannelConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['IssueChannelConnection'] = ResolversParentTypes['IssueChannelConnection']> = {
+  edges?: Resolver<Array<ResolversTypes['IssueChannelRelationship']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type IssueChannelRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['IssueChannelRelationship'] = ResolversParentTypes['IssueChannelRelationship']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['Channel'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type IssueCommentCommentsAggregationSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['IssueCommentCommentsAggregationSelection'] = ResolversParentTypes['IssueCommentCommentsAggregationSelection']> = {
   count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   node?: Resolver<Maybe<ResolversTypes['IssueCommentCommentsNodeAggregateSelection']>, ParentType, ContextType>;
@@ -29363,6 +30403,21 @@ export type IssueCommentCommentsAggregationSelectionResolvers<ContextType = any,
 };
 
 export type IssueCommentCommentsNodeAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['IssueCommentCommentsNodeAggregateSelection'] = ResolversParentTypes['IssueCommentCommentsNodeAggregateSelection']> = {
+  createdAt?: Resolver<ResolversTypes['DateTimeAggregateSelectionNonNullable'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['IDAggregateSelectionNonNullable'], ParentType, ContextType>;
+  text?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  updatedAt?: Resolver<ResolversTypes['DateTimeAggregateSelectionNullable'], ParentType, ContextType>;
+  weightedVotesCount?: Resolver<ResolversTypes['FloatAggregateSelectionNullable'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type IssueCommentRelatedCommentAggregationSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['IssueCommentRelatedCommentAggregationSelection'] = ResolversParentTypes['IssueCommentRelatedCommentAggregationSelection']> = {
+  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['IssueCommentRelatedCommentNodeAggregateSelection']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type IssueCommentRelatedCommentNodeAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['IssueCommentRelatedCommentNodeAggregateSelection'] = ResolversParentTypes['IssueCommentRelatedCommentNodeAggregateSelection']> = {
   createdAt?: Resolver<ResolversTypes['DateTimeAggregateSelectionNonNullable'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['IDAggregateSelectionNonNullable'], ParentType, ContextType>;
   text?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
@@ -29384,9 +30439,88 @@ export type IssueCommentsRelationshipResolvers<ContextType = any, ParentType ext
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type IssueDiscussionRelatedDiscussionAggregationSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['IssueDiscussionRelatedDiscussionAggregationSelection'] = ResolversParentTypes['IssueDiscussionRelatedDiscussionAggregationSelection']> = {
+  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['IssueDiscussionRelatedDiscussionNodeAggregateSelection']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type IssueDiscussionRelatedDiscussionNodeAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['IssueDiscussionRelatedDiscussionNodeAggregateSelection'] = ResolversParentTypes['IssueDiscussionRelatedDiscussionNodeAggregateSelection']> = {
+  body?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['DateTimeAggregateSelectionNonNullable'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['IDAggregateSelectionNonNullable'], ParentType, ContextType>;
+  title?: Resolver<ResolversTypes['StringAggregateSelectionNonNullable'], ParentType, ContextType>;
+  updatedAt?: Resolver<ResolversTypes['DateTimeAggregateSelectionNullable'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type IssueEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['IssueEdge'] = ResolversParentTypes['IssueEdge']> = {
   cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   node?: Resolver<ResolversTypes['Issue'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type IssueEventRelatedEventAggregationSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['IssueEventRelatedEventAggregationSelection'] = ResolversParentTypes['IssueEventRelatedEventAggregationSelection']> = {
+  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['IssueEventRelatedEventNodeAggregateSelection']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type IssueEventRelatedEventNodeAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['IssueEventRelatedEventNodeAggregateSelection'] = ResolversParentTypes['IssueEventRelatedEventNodeAggregateSelection']> = {
+  address?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  cost?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  coverImageURL?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['DateTimeAggregateSelectionNonNullable'], ParentType, ContextType>;
+  description?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  endTime?: Resolver<ResolversTypes['DateTimeAggregateSelectionNonNullable'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['IDAggregateSelectionNonNullable'], ParentType, ContextType>;
+  locationName?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  placeId?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  startTime?: Resolver<ResolversTypes['DateTimeAggregateSelectionNonNullable'], ParentType, ContextType>;
+  startTimeDayOfWeek?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  startTimeHourOfDay?: Resolver<ResolversTypes['IntAggregateSelectionNullable'], ParentType, ContextType>;
+  title?: Resolver<ResolversTypes['StringAggregateSelectionNonNullable'], ParentType, ContextType>;
+  updatedAt?: Resolver<ResolversTypes['DateTimeAggregateSelectionNullable'], ParentType, ContextType>;
+  virtualEventUrl?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type IssueRelatedCommentConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['IssueRelatedCommentConnection'] = ResolversParentTypes['IssueRelatedCommentConnection']> = {
+  edges?: Resolver<Array<ResolversTypes['IssueRelatedCommentRelationship']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type IssueRelatedCommentRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['IssueRelatedCommentRelationship'] = ResolversParentTypes['IssueRelatedCommentRelationship']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['Comment'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type IssueRelatedDiscussionConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['IssueRelatedDiscussionConnection'] = ResolversParentTypes['IssueRelatedDiscussionConnection']> = {
+  edges?: Resolver<Array<ResolversTypes['IssueRelatedDiscussionRelationship']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type IssueRelatedDiscussionRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['IssueRelatedDiscussionRelationship'] = ResolversParentTypes['IssueRelatedDiscussionRelationship']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['Discussion'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type IssueRelatedEventConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['IssueRelatedEventConnection'] = ResolversParentTypes['IssueRelatedEventConnection']> = {
+  edges?: Resolver<Array<ResolversTypes['IssueRelatedEventRelationship']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type IssueRelatedEventRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['IssueRelatedEventRelationship'] = ResolversParentTypes['IssueRelatedEventRelationship']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['Event'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -29465,9 +30599,9 @@ export type ModServerRolesConnectionResolvers<ContextType = any, ParentType exte
 };
 
 export type ModerationProfileResolvers<ContextType = any, ParentType extends ResolversParentTypes['ModerationProfile'] = ResolversParentTypes['ModerationProfile']> = {
-  AuthoredReports?: Resolver<Array<ResolversTypes['Report']>, ParentType, ContextType, RequireFields<ModerationProfileAuthoredReportsArgs, 'directed'>>;
-  AuthoredReportsAggregate?: Resolver<Maybe<ResolversTypes['ModerationProfileReportAuthoredReportsAggregationSelection']>, ParentType, ContextType, RequireFields<ModerationProfileAuthoredReportsAggregateArgs, 'directed'>>;
-  AuthoredReportsConnection?: Resolver<ResolversTypes['ModerationProfileAuthoredReportsConnection'], ParentType, ContextType, RequireFields<ModerationProfileAuthoredReportsConnectionArgs, 'directed'>>;
+  AuthoredIssues?: Resolver<Array<ResolversTypes['Issue']>, ParentType, ContextType, RequireFields<ModerationProfileAuthoredIssuesArgs, 'directed'>>;
+  AuthoredIssuesAggregate?: Resolver<Maybe<ResolversTypes['ModerationProfileIssueAuthoredIssuesAggregationSelection']>, ParentType, ContextType, RequireFields<ModerationProfileAuthoredIssuesAggregateArgs, 'directed'>>;
+  AuthoredIssuesConnection?: Resolver<ResolversTypes['ModerationProfileAuthoredIssuesConnection'], ParentType, ContextType, RequireFields<ModerationProfileAuthoredIssuesConnectionArgs, 'directed'>>;
   DiscussionComments?: Resolver<Array<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<ModerationProfileDiscussionCommentsArgs, 'directed'>>;
   DiscussionCommentsAggregate?: Resolver<Maybe<ResolversTypes['ModerationProfileCommentDiscussionCommentsAggregationSelection']>, ParentType, ContextType, RequireFields<ModerationProfileDiscussionCommentsAggregateArgs, 'directed'>>;
   DiscussionCommentsConnection?: Resolver<ResolversTypes['ModerationProfileDiscussionCommentsConnection'], ParentType, ContextType, RequireFields<ModerationProfileDiscussionCommentsConnectionArgs, 'directed'>>;
@@ -29480,9 +30614,6 @@ export type ModerationProfileResolvers<ContextType = any, ParentType extends Res
   IssueComments?: Resolver<Array<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<ModerationProfileIssueCommentsArgs, 'directed'>>;
   IssueCommentsAggregate?: Resolver<Maybe<ResolversTypes['ModerationProfileCommentIssueCommentsAggregationSelection']>, ParentType, ContextType, RequireFields<ModerationProfileIssueCommentsAggregateArgs, 'directed'>>;
   IssueCommentsConnection?: Resolver<ResolversTypes['ModerationProfileIssueCommentsConnection'], ParentType, ContextType, RequireFields<ModerationProfileIssueCommentsConnectionArgs, 'directed'>>;
-  Issues?: Resolver<Array<ResolversTypes['Issue']>, ParentType, ContextType, RequireFields<ModerationProfileIssuesArgs, 'directed'>>;
-  IssuesAggregate?: Resolver<Maybe<ResolversTypes['ModerationProfileIssueIssuesAggregationSelection']>, ParentType, ContextType, RequireFields<ModerationProfileIssuesAggregateArgs, 'directed'>>;
-  IssuesConnection?: Resolver<ResolversTypes['ModerationProfileIssuesConnection'], ParentType, ContextType, RequireFields<ModerationProfileIssuesConnectionArgs, 'directed'>>;
   ModChannelRoles?: Resolver<Array<ResolversTypes['ModChannelRole']>, ParentType, ContextType, RequireFields<ModerationProfileModChannelRolesArgs, 'directed'>>;
   ModChannelRolesAggregate?: Resolver<Maybe<ResolversTypes['ModerationProfileModChannelRoleModChannelRolesAggregationSelection']>, ParentType, ContextType, RequireFields<ModerationProfileModChannelRolesAggregateArgs, 'directed'>>;
   ModChannelRolesConnection?: Resolver<ResolversTypes['ModerationProfileModChannelRolesConnection'], ParentType, ContextType, RequireFields<ModerationProfileModChannelRolesConnectionArgs, 'directed'>>;
@@ -29504,16 +30635,16 @@ export type ModerationProfileAggregateSelectionResolvers<ContextType = any, Pare
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type ModerationProfileAuthoredReportsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ModerationProfileAuthoredReportsConnection'] = ResolversParentTypes['ModerationProfileAuthoredReportsConnection']> = {
-  edges?: Resolver<Array<ResolversTypes['ModerationProfileAuthoredReportsRelationship']>, ParentType, ContextType>;
+export type ModerationProfileAuthoredIssuesConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ModerationProfileAuthoredIssuesConnection'] = ResolversParentTypes['ModerationProfileAuthoredIssuesConnection']> = {
+  edges?: Resolver<Array<ResolversTypes['ModerationProfileAuthoredIssuesRelationship']>, ParentType, ContextType>;
   pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
   totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type ModerationProfileAuthoredReportsRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['ModerationProfileAuthoredReportsRelationship'] = ResolversParentTypes['ModerationProfileAuthoredReportsRelationship']> = {
+export type ModerationProfileAuthoredIssuesRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['ModerationProfileAuthoredIssuesRelationship'] = ResolversParentTypes['ModerationProfileAuthoredIssuesRelationship']> = {
   cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  node?: Resolver<ResolversTypes['Report'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['Issue'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -29622,6 +30753,26 @@ export type ModerationProfileEdgeResolvers<ContextType = any, ParentType extends
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type ModerationProfileIssueAuthoredIssuesAggregationSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ModerationProfileIssueAuthoredIssuesAggregationSelection'] = ResolversParentTypes['ModerationProfileIssueAuthoredIssuesAggregationSelection']> = {
+  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['ModerationProfileIssueAuthoredIssuesNodeAggregateSelection']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ModerationProfileIssueAuthoredIssuesNodeAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ModerationProfileIssueAuthoredIssuesNodeAggregateSelection'] = ResolversParentTypes['ModerationProfileIssueAuthoredIssuesNodeAggregateSelection']> = {
+  authorName?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  body?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  channelUniqueName?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['DateTimeAggregateSelectionNonNullable'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['IDAggregateSelectionNonNullable'], ParentType, ContextType>;
+  relatedCommentId?: Resolver<ResolversTypes['IDAggregateSelectionNullable'], ParentType, ContextType>;
+  relatedDiscussionId?: Resolver<ResolversTypes['IDAggregateSelectionNullable'], ParentType, ContextType>;
+  relatedEventId?: Resolver<ResolversTypes['IDAggregateSelectionNullable'], ParentType, ContextType>;
+  title?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  updatedAt?: Resolver<ResolversTypes['DateTimeAggregateSelectionNullable'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type ModerationProfileIssueCommentsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ModerationProfileIssueCommentsConnection'] = ResolversParentTypes['ModerationProfileIssueCommentsConnection']> = {
   edges?: Resolver<Array<ResolversTypes['ModerationProfileIssueCommentsRelationship']>, ParentType, ContextType>;
   pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
@@ -29632,34 +30783,6 @@ export type ModerationProfileIssueCommentsConnectionResolvers<ContextType = any,
 export type ModerationProfileIssueCommentsRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['ModerationProfileIssueCommentsRelationship'] = ResolversParentTypes['ModerationProfileIssueCommentsRelationship']> = {
   cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   node?: Resolver<ResolversTypes['Comment'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ModerationProfileIssueIssuesAggregationSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ModerationProfileIssueIssuesAggregationSelection'] = ResolversParentTypes['ModerationProfileIssueIssuesAggregationSelection']> = {
-  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  node?: Resolver<Maybe<ResolversTypes['ModerationProfileIssueIssuesNodeAggregateSelection']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ModerationProfileIssueIssuesNodeAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ModerationProfileIssueIssuesNodeAggregateSelection'] = ResolversParentTypes['ModerationProfileIssueIssuesNodeAggregateSelection']> = {
-  body?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
-  createdAt?: Resolver<ResolversTypes['DateTimeAggregateSelectionNonNullable'], ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['IDAggregateSelectionNonNullable'], ParentType, ContextType>;
-  title?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
-  updatedAt?: Resolver<ResolversTypes['DateTimeAggregateSelectionNonNullable'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ModerationProfileIssuesConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ModerationProfileIssuesConnection'] = ResolversParentTypes['ModerationProfileIssuesConnection']> = {
-  edges?: Resolver<Array<ResolversTypes['ModerationProfileIssuesRelationship']>, ParentType, ContextType>;
-  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
-  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ModerationProfileIssuesRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['ModerationProfileIssuesRelationship'] = ResolversParentTypes['ModerationProfileIssuesRelationship']> = {
-  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  node?: Resolver<ResolversTypes['Issue'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -29710,20 +30833,6 @@ export type ModerationProfileModServerRolesConnectionResolvers<ContextType = any
 export type ModerationProfileModServerRolesRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['ModerationProfileModServerRolesRelationship'] = ResolversParentTypes['ModerationProfileModServerRolesRelationship']> = {
   cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   node?: Resolver<ResolversTypes['ModServerRole'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ModerationProfileReportAuthoredReportsAggregationSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ModerationProfileReportAuthoredReportsAggregationSelection'] = ResolversParentTypes['ModerationProfileReportAuthoredReportsAggregationSelection']> = {
-  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  node?: Resolver<Maybe<ResolversTypes['ModerationProfileReportAuthoredReportsNodeAggregateSelection']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ModerationProfileReportAuthoredReportsNodeAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ModerationProfileReportAuthoredReportsNodeAggregateSelection'] = ResolversParentTypes['ModerationProfileReportAuthoredReportsNodeAggregateSelection']> = {
-  createdAt?: Resolver<ResolversTypes['DateTimeAggregateSelectionNonNullable'], ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['IDAggregateSelectionNonNullable'], ParentType, ContextType>;
-  text?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
-  updatedAt?: Resolver<ResolversTypes['DateTimeAggregateSelectionNonNullable'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -29796,7 +30905,6 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createRedditSubmissions?: Resolver<ResolversTypes['CreateRedditSubmissionsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateRedditSubmissionsArgs, 'input'>>;
   createRepeatEnds?: Resolver<ResolversTypes['CreateRepeatEndsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateRepeatEndsArgs, 'input'>>;
   createRepeatEveries?: Resolver<ResolversTypes['CreateRepeatEveriesMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateRepeatEveriesArgs, 'input'>>;
-  createReports?: Resolver<ResolversTypes['CreateReportsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateReportsArgs, 'input'>>;
   createRules?: Resolver<ResolversTypes['CreateRulesMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateRulesArgs, 'input'>>;
   createServerConfigs?: Resolver<ResolversTypes['CreateServerConfigsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateServerConfigsArgs, 'input'>>;
   createServerRoles?: Resolver<ResolversTypes['CreateServerRolesMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateServerRolesArgs, 'input'>>;
@@ -29828,7 +30936,6 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteRedditSubmissions?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteRedditSubmissionsArgs>>;
   deleteRepeatEnds?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteRepeatEndsArgs>>;
   deleteRepeatEveries?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteRepeatEveriesArgs>>;
-  deleteReports?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteReportsArgs>>;
   deleteRules?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteRulesArgs>>;
   deleteServerConfigs?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteServerConfigsArgs>>;
   deleteServerRoles?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteServerRolesArgs>>;
@@ -29839,6 +30946,9 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteUsers?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteUsersArgs>>;
   removeEmojiFromComment?: Resolver<Maybe<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<MutationRemoveEmojiFromCommentArgs, 'commentId' | 'emojiLabel' | 'username'>>;
   removeEmojiFromDiscussionChannel?: Resolver<Maybe<ResolversTypes['DiscussionChannel']>, ParentType, ContextType, RequireFields<MutationRemoveEmojiFromDiscussionChannelArgs, 'discussionChannelId' | 'emojiLabel' | 'username'>>;
+  reportComment?: Resolver<Maybe<ResolversTypes['Issue']>, ParentType, ContextType, Partial<MutationReportCommentArgs>>;
+  reportDiscussion?: Resolver<Maybe<ResolversTypes['Issue']>, ParentType, ContextType, Partial<MutationReportDiscussionArgs>>;
+  reportEvent?: Resolver<Maybe<ResolversTypes['Issue']>, ParentType, ContextType, Partial<MutationReportEventArgs>>;
   undoUpvoteComment?: Resolver<Maybe<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<MutationUndoUpvoteCommentArgs, 'commentId' | 'username'>>;
   undoUpvoteDiscussionChannel?: Resolver<Maybe<ResolversTypes['DiscussionChannel']>, ParentType, ContextType, RequireFields<MutationUndoUpvoteDiscussionChannelArgs, 'discussionChannelId' | 'username'>>;
   updateChannelRoles?: Resolver<ResolversTypes['UpdateChannelRolesMutationResponse'], ParentType, ContextType, Partial<MutationUpdateChannelRolesArgs>>;
@@ -29865,7 +30975,6 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   updateRedditSubmissions?: Resolver<ResolversTypes['UpdateRedditSubmissionsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateRedditSubmissionsArgs>>;
   updateRepeatEnds?: Resolver<ResolversTypes['UpdateRepeatEndsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateRepeatEndsArgs>>;
   updateRepeatEveries?: Resolver<ResolversTypes['UpdateRepeatEveriesMutationResponse'], ParentType, ContextType, Partial<MutationUpdateRepeatEveriesArgs>>;
-  updateReports?: Resolver<ResolversTypes['UpdateReportsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateReportsArgs>>;
   updateRules?: Resolver<ResolversTypes['UpdateRulesMutationResponse'], ParentType, ContextType, Partial<MutationUpdateRulesArgs>>;
   updateServerConfigs?: Resolver<ResolversTypes['UpdateServerConfigsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateServerConfigsArgs>>;
   updateServerRoles?: Resolver<ResolversTypes['UpdateServerRolesMutationResponse'], ParentType, ContextType, Partial<MutationUpdateServerRolesArgs>>;
@@ -29969,9 +31078,6 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   repeatEveries?: Resolver<Array<ResolversTypes['RepeatEvery']>, ParentType, ContextType, Partial<QueryRepeatEveriesArgs>>;
   repeatEveriesAggregate?: Resolver<ResolversTypes['RepeatEveryAggregateSelection'], ParentType, ContextType, Partial<QueryRepeatEveriesAggregateArgs>>;
   repeatEveriesConnection?: Resolver<ResolversTypes['RepeatEveriesConnection'], ParentType, ContextType, Partial<QueryRepeatEveriesConnectionArgs>>;
-  reports?: Resolver<Array<ResolversTypes['Report']>, ParentType, ContextType, Partial<QueryReportsArgs>>;
-  reportsAggregate?: Resolver<ResolversTypes['ReportAggregateSelection'], ParentType, ContextType, Partial<QueryReportsAggregateArgs>>;
-  reportsConnection?: Resolver<ResolversTypes['ReportsConnection'], ParentType, ContextType, Partial<QueryReportsConnectionArgs>>;
   rules?: Resolver<Array<ResolversTypes['Rule']>, ParentType, ContextType, Partial<QueryRulesArgs>>;
   rulesAggregate?: Resolver<ResolversTypes['RuleAggregateSelection'], ParentType, ContextType, Partial<QueryRulesAggregateArgs>>;
   rulesConnection?: Resolver<ResolversTypes['RulesConnection'], ParentType, ContextType, Partial<QueryRulesConnectionArgs>>;
@@ -30158,123 +31264,6 @@ export type RepeatEveryAggregateSelectionResolvers<ContextType = any, ParentType
 export type RepeatEveryEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['RepeatEveryEdge'] = ResolversParentTypes['RepeatEveryEdge']> = {
   cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   node?: Resolver<ResolversTypes['RepeatEvery'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ReportResolvers<ContextType = any, ParentType extends ResolversParentTypes['Report'] = ResolversParentTypes['Report']> = {
-  Author?: Resolver<Maybe<ResolversTypes['ModerationProfile']>, ParentType, ContextType, RequireFields<ReportAuthorArgs, 'directed'>>;
-  AuthorAggregate?: Resolver<Maybe<ResolversTypes['ReportModerationProfileAuthorAggregationSelection']>, ParentType, ContextType, RequireFields<ReportAuthorAggregateArgs, 'directed'>>;
-  AuthorConnection?: Resolver<ResolversTypes['ReportAuthorConnection'], ParentType, ContextType, RequireFields<ReportAuthorConnectionArgs, 'directed'>>;
-  Issues?: Resolver<Array<ResolversTypes['Issue']>, ParentType, ContextType, RequireFields<ReportIssuesArgs, 'directed'>>;
-  IssuesAggregate?: Resolver<Maybe<ResolversTypes['ReportIssueIssuesAggregationSelection']>, ParentType, ContextType, RequireFields<ReportIssuesAggregateArgs, 'directed'>>;
-  IssuesConnection?: Resolver<ResolversTypes['ReportIssuesConnection'], ParentType, ContextType, RequireFields<ReportIssuesConnectionArgs, 'directed'>>;
-  RuleViolations?: Resolver<Array<ResolversTypes['Rule']>, ParentType, ContextType, RequireFields<ReportRuleViolationsArgs, 'directed'>>;
-  RuleViolationsAggregate?: Resolver<Maybe<ResolversTypes['ReportRuleRuleViolationsAggregationSelection']>, ParentType, ContextType, RequireFields<ReportRuleViolationsAggregateArgs, 'directed'>>;
-  RuleViolationsConnection?: Resolver<ResolversTypes['ReportRuleViolationsConnection'], ParentType, ContextType, RequireFields<ReportRuleViolationsConnectionArgs, 'directed'>>;
-  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  text?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ReportAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReportAggregateSelection'] = ResolversParentTypes['ReportAggregateSelection']> = {
-  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  createdAt?: Resolver<ResolversTypes['DateTimeAggregateSelectionNonNullable'], ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['IDAggregateSelectionNonNullable'], ParentType, ContextType>;
-  text?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
-  updatedAt?: Resolver<ResolversTypes['DateTimeAggregateSelectionNonNullable'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ReportAuthorConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReportAuthorConnection'] = ResolversParentTypes['ReportAuthorConnection']> = {
-  edges?: Resolver<Array<ResolversTypes['ReportAuthorRelationship']>, ParentType, ContextType>;
-  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
-  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ReportAuthorRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReportAuthorRelationship'] = ResolversParentTypes['ReportAuthorRelationship']> = {
-  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  node?: Resolver<ResolversTypes['ModerationProfile'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ReportEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReportEdge'] = ResolversParentTypes['ReportEdge']> = {
-  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  node?: Resolver<ResolversTypes['Report'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ReportIssueIssuesAggregationSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReportIssueIssuesAggregationSelection'] = ResolversParentTypes['ReportIssueIssuesAggregationSelection']> = {
-  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  node?: Resolver<Maybe<ResolversTypes['ReportIssueIssuesNodeAggregateSelection']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ReportIssueIssuesNodeAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReportIssueIssuesNodeAggregateSelection'] = ResolversParentTypes['ReportIssueIssuesNodeAggregateSelection']> = {
-  body?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
-  createdAt?: Resolver<ResolversTypes['DateTimeAggregateSelectionNonNullable'], ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['IDAggregateSelectionNonNullable'], ParentType, ContextType>;
-  title?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
-  updatedAt?: Resolver<ResolversTypes['DateTimeAggregateSelectionNonNullable'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ReportIssuesConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReportIssuesConnection'] = ResolversParentTypes['ReportIssuesConnection']> = {
-  edges?: Resolver<Array<ResolversTypes['ReportIssuesRelationship']>, ParentType, ContextType>;
-  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
-  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ReportIssuesRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReportIssuesRelationship'] = ResolversParentTypes['ReportIssuesRelationship']> = {
-  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  node?: Resolver<ResolversTypes['Issue'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ReportModerationProfileAuthorAggregationSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReportModerationProfileAuthorAggregationSelection'] = ResolversParentTypes['ReportModerationProfileAuthorAggregationSelection']> = {
-  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  node?: Resolver<Maybe<ResolversTypes['ReportModerationProfileAuthorNodeAggregateSelection']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ReportModerationProfileAuthorNodeAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReportModerationProfileAuthorNodeAggregateSelection'] = ResolversParentTypes['ReportModerationProfileAuthorNodeAggregateSelection']> = {
-  createdAt?: Resolver<ResolversTypes['DateTimeAggregateSelectionNonNullable'], ParentType, ContextType>;
-  displayName?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ReportRuleRuleViolationsAggregationSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReportRuleRuleViolationsAggregationSelection'] = ResolversParentTypes['ReportRuleRuleViolationsAggregationSelection']> = {
-  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  node?: Resolver<Maybe<ResolversTypes['ReportRuleRuleViolationsNodeAggregateSelection']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ReportRuleRuleViolationsNodeAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReportRuleRuleViolationsNodeAggregateSelection'] = ResolversParentTypes['ReportRuleRuleViolationsNodeAggregateSelection']> = {
-  description?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
-  summary?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ReportRuleViolationsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReportRuleViolationsConnection'] = ResolversParentTypes['ReportRuleViolationsConnection']> = {
-  edges?: Resolver<Array<ResolversTypes['ReportRuleViolationsRelationship']>, ParentType, ContextType>;
-  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
-  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ReportRuleViolationsRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReportRuleViolationsRelationship'] = ResolversParentTypes['ReportRuleViolationsRelationship']> = {
-  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  node?: Resolver<ResolversTypes['Rule'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ReportsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReportsConnection'] = ResolversParentTypes['ReportsConnection']> = {
-  edges?: Resolver<Array<ResolversTypes['ReportEdge']>, ParentType, ContextType>;
-  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
-  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -30878,12 +31867,6 @@ export type UpdateRepeatEveriesMutationResponseResolvers<ContextType = any, Pare
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type UpdateReportsMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateReportsMutationResponse'] = ResolversParentTypes['UpdateReportsMutationResponse']> = {
-  info?: Resolver<ResolversTypes['UpdateInfo'], ParentType, ContextType>;
-  reports?: Resolver<Array<ResolversTypes['Report']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
 export type UpdateRulesMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateRulesMutationResponse'] = ResolversParentTypes['UpdateRulesMutationResponse']> = {
   info?: Resolver<ResolversTypes['UpdateInfo'], ParentType, ContextType>;
   rules?: Resolver<Array<ResolversTypes['Rule']>, ParentType, ContextType>;
@@ -31416,11 +32399,16 @@ export type UserIssueIssuesAggregationSelectionResolvers<ContextType = any, Pare
 };
 
 export type UserIssueIssuesNodeAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserIssueIssuesNodeAggregateSelection'] = ResolversParentTypes['UserIssueIssuesNodeAggregateSelection']> = {
+  authorName?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
   body?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  channelUniqueName?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['DateTimeAggregateSelectionNonNullable'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['IDAggregateSelectionNonNullable'], ParentType, ContextType>;
+  relatedCommentId?: Resolver<ResolversTypes['IDAggregateSelectionNullable'], ParentType, ContextType>;
+  relatedDiscussionId?: Resolver<ResolversTypes['IDAggregateSelectionNullable'], ParentType, ContextType>;
+  relatedEventId?: Resolver<ResolversTypes['IDAggregateSelectionNullable'], ParentType, ContextType>;
   title?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
-  updatedAt?: Resolver<ResolversTypes['DateTimeAggregateSelectionNonNullable'], ParentType, ContextType>;
+  updatedAt?: Resolver<ResolversTypes['DateTimeAggregateSelectionNullable'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -31652,10 +32640,14 @@ export type Resolvers<ContextType = any> = {
   CommentEventEventAggregationSelection?: CommentEventEventAggregationSelectionResolvers<ContextType>;
   CommentEventEventNodeAggregateSelection?: CommentEventEventNodeAggregateSelectionResolvers<ContextType>;
   CommentEventRelationship?: CommentEventRelationshipResolvers<ContextType>;
+  CommentIssueRelatedIssuesAggregationSelection?: CommentIssueRelatedIssuesAggregationSelectionResolvers<ContextType>;
+  CommentIssueRelatedIssuesNodeAggregateSelection?: CommentIssueRelatedIssuesNodeAggregateSelectionResolvers<ContextType>;
   CommentModerationProfileDownvotedByModeratorsAggregationSelection?: CommentModerationProfileDownvotedByModeratorsAggregationSelectionResolvers<ContextType>;
   CommentModerationProfileDownvotedByModeratorsNodeAggregateSelection?: CommentModerationProfileDownvotedByModeratorsNodeAggregateSelectionResolvers<ContextType>;
   CommentParentCommentConnection?: CommentParentCommentConnectionResolvers<ContextType>;
   CommentParentCommentRelationship?: CommentParentCommentRelationshipResolvers<ContextType>;
+  CommentRelatedIssuesConnection?: CommentRelatedIssuesConnectionResolvers<ContextType>;
+  CommentRelatedIssuesRelationship?: CommentRelatedIssuesRelationshipResolvers<ContextType>;
   CommentRepliesFormat?: CommentRepliesFormatResolvers<ContextType>;
   CommentRepliesFormatAggregateSelection?: CommentRepliesFormatAggregateSelectionResolvers<ContextType>;
   CommentRepliesFormatEdge?: CommentRepliesFormatEdgeResolvers<ContextType>;
@@ -31696,7 +32688,6 @@ export type Resolvers<ContextType = any> = {
   CreateRedditSubmissionsMutationResponse?: CreateRedditSubmissionsMutationResponseResolvers<ContextType>;
   CreateRepeatEndsMutationResponse?: CreateRepeatEndsMutationResponseResolvers<ContextType>;
   CreateRepeatEveriesMutationResponse?: CreateRepeatEveriesMutationResponseResolvers<ContextType>;
-  CreateReportsMutationResponse?: CreateReportsMutationResponseResolvers<ContextType>;
   CreateRulesMutationResponse?: CreateRulesMutationResponseResolvers<ContextType>;
   CreateServerConfigsMutationResponse?: CreateServerConfigsMutationResponseResolvers<ContextType>;
   CreateServerRolesMutationResponse?: CreateServerRolesMutationResponseResolvers<ContextType>;
@@ -31808,12 +32799,16 @@ export type Resolvers<ContextType = any> = {
   EventEventChannelEventChannelsNodeAggregateSelection?: EventEventChannelEventChannelsNodeAggregateSelectionResolvers<ContextType>;
   EventEventChannelsConnection?: EventEventChannelsConnectionResolvers<ContextType>;
   EventEventChannelsRelationship?: EventEventChannelsRelationshipResolvers<ContextType>;
+  EventIssueRelatedIssuesAggregationSelection?: EventIssueRelatedIssuesAggregationSelectionResolvers<ContextType>;
+  EventIssueRelatedIssuesNodeAggregateSelection?: EventIssueRelatedIssuesNodeAggregateSelectionResolvers<ContextType>;
   EventPosterConnection?: EventPosterConnectionResolvers<ContextType>;
   EventPosterRelationship?: EventPosterRelationshipResolvers<ContextType>;
   EventRecurringEventConnection?: EventRecurringEventConnectionResolvers<ContextType>;
   EventRecurringEventRecurringEventAggregationSelection?: EventRecurringEventRecurringEventAggregationSelectionResolvers<ContextType>;
   EventRecurringEventRecurringEventNodeAggregateSelection?: EventRecurringEventRecurringEventNodeAggregateSelectionResolvers<ContextType>;
   EventRecurringEventRelationship?: EventRecurringEventRelationshipResolvers<ContextType>;
+  EventRelatedIssuesConnection?: EventRelatedIssuesConnectionResolvers<ContextType>;
+  EventRelatedIssuesRelationship?: EventRelatedIssuesRelationshipResolvers<ContextType>;
   EventTagTagsAggregationSelection?: EventTagTagsAggregationSelectionResolvers<ContextType>;
   EventTagTagsNodeAggregateSelection?: EventTagTagsNodeAggregateSelectionResolvers<ContextType>;
   EventTagsConnection?: EventTagsConnectionResolvers<ContextType>;
@@ -31835,6 +32830,7 @@ export type Resolvers<ContextType = any> = {
   FeedsConnection?: FeedsConnectionResolvers<ContextType>;
   FloatAggregateSelectionNullable?: FloatAggregateSelectionNullableResolvers<ContextType>;
   IDAggregateSelectionNonNullable?: IdAggregateSelectionNonNullableResolvers<ContextType>;
+  IDAggregateSelectionNullable?: IdAggregateSelectionNullableResolvers<ContextType>;
   IntAggregateSelectionNonNullable?: IntAggregateSelectionNonNullableResolvers<ContextType>;
   IntAggregateSelectionNullable?: IntAggregateSelectionNullableResolvers<ContextType>;
   Issue?: IssueResolvers<ContextType>;
@@ -31842,11 +32838,27 @@ export type Resolvers<ContextType = any> = {
   IssueAuthor?: IssueAuthorResolvers<ContextType>;
   IssueAuthorConnection?: IssueAuthorConnectionResolvers<ContextType>;
   IssueAuthorRelationship?: IssueAuthorRelationshipResolvers<ContextType>;
+  IssueChannelChannelAggregationSelection?: IssueChannelChannelAggregationSelectionResolvers<ContextType>;
+  IssueChannelChannelNodeAggregateSelection?: IssueChannelChannelNodeAggregateSelectionResolvers<ContextType>;
+  IssueChannelConnection?: IssueChannelConnectionResolvers<ContextType>;
+  IssueChannelRelationship?: IssueChannelRelationshipResolvers<ContextType>;
   IssueCommentCommentsAggregationSelection?: IssueCommentCommentsAggregationSelectionResolvers<ContextType>;
   IssueCommentCommentsNodeAggregateSelection?: IssueCommentCommentsNodeAggregateSelectionResolvers<ContextType>;
+  IssueCommentRelatedCommentAggregationSelection?: IssueCommentRelatedCommentAggregationSelectionResolvers<ContextType>;
+  IssueCommentRelatedCommentNodeAggregateSelection?: IssueCommentRelatedCommentNodeAggregateSelectionResolvers<ContextType>;
   IssueCommentsConnection?: IssueCommentsConnectionResolvers<ContextType>;
   IssueCommentsRelationship?: IssueCommentsRelationshipResolvers<ContextType>;
+  IssueDiscussionRelatedDiscussionAggregationSelection?: IssueDiscussionRelatedDiscussionAggregationSelectionResolvers<ContextType>;
+  IssueDiscussionRelatedDiscussionNodeAggregateSelection?: IssueDiscussionRelatedDiscussionNodeAggregateSelectionResolvers<ContextType>;
   IssueEdge?: IssueEdgeResolvers<ContextType>;
+  IssueEventRelatedEventAggregationSelection?: IssueEventRelatedEventAggregationSelectionResolvers<ContextType>;
+  IssueEventRelatedEventNodeAggregateSelection?: IssueEventRelatedEventNodeAggregateSelectionResolvers<ContextType>;
+  IssueRelatedCommentConnection?: IssueRelatedCommentConnectionResolvers<ContextType>;
+  IssueRelatedCommentRelationship?: IssueRelatedCommentRelationshipResolvers<ContextType>;
+  IssueRelatedDiscussionConnection?: IssueRelatedDiscussionConnectionResolvers<ContextType>;
+  IssueRelatedDiscussionRelationship?: IssueRelatedDiscussionRelationshipResolvers<ContextType>;
+  IssueRelatedEventConnection?: IssueRelatedEventConnectionResolvers<ContextType>;
+  IssueRelatedEventRelationship?: IssueRelatedEventRelationshipResolvers<ContextType>;
   IssuesConnection?: IssuesConnectionResolvers<ContextType>;
   JSON?: GraphQLScalarType;
   ModChannelRole?: ModChannelRoleResolvers<ContextType>;
@@ -31859,8 +32871,8 @@ export type Resolvers<ContextType = any> = {
   ModServerRolesConnection?: ModServerRolesConnectionResolvers<ContextType>;
   ModerationProfile?: ModerationProfileResolvers<ContextType>;
   ModerationProfileAggregateSelection?: ModerationProfileAggregateSelectionResolvers<ContextType>;
-  ModerationProfileAuthoredReportsConnection?: ModerationProfileAuthoredReportsConnectionResolvers<ContextType>;
-  ModerationProfileAuthoredReportsRelationship?: ModerationProfileAuthoredReportsRelationshipResolvers<ContextType>;
+  ModerationProfileAuthoredIssuesConnection?: ModerationProfileAuthoredIssuesConnectionResolvers<ContextType>;
+  ModerationProfileAuthoredIssuesRelationship?: ModerationProfileAuthoredIssuesRelationshipResolvers<ContextType>;
   ModerationProfileCommentDiscussionCommentsAggregationSelection?: ModerationProfileCommentDiscussionCommentsAggregationSelectionResolvers<ContextType>;
   ModerationProfileCommentDiscussionCommentsNodeAggregateSelection?: ModerationProfileCommentDiscussionCommentsNodeAggregateSelectionResolvers<ContextType>;
   ModerationProfileCommentDownvotedCommentsAggregationSelection?: ModerationProfileCommentDownvotedCommentsAggregationSelectionResolvers<ContextType>;
@@ -31876,12 +32888,10 @@ export type Resolvers<ContextType = any> = {
   ModerationProfileDownvotedDiscussionChannelsConnection?: ModerationProfileDownvotedDiscussionChannelsConnectionResolvers<ContextType>;
   ModerationProfileDownvotedDiscussionChannelsRelationship?: ModerationProfileDownvotedDiscussionChannelsRelationshipResolvers<ContextType>;
   ModerationProfileEdge?: ModerationProfileEdgeResolvers<ContextType>;
+  ModerationProfileIssueAuthoredIssuesAggregationSelection?: ModerationProfileIssueAuthoredIssuesAggregationSelectionResolvers<ContextType>;
+  ModerationProfileIssueAuthoredIssuesNodeAggregateSelection?: ModerationProfileIssueAuthoredIssuesNodeAggregateSelectionResolvers<ContextType>;
   ModerationProfileIssueCommentsConnection?: ModerationProfileIssueCommentsConnectionResolvers<ContextType>;
   ModerationProfileIssueCommentsRelationship?: ModerationProfileIssueCommentsRelationshipResolvers<ContextType>;
-  ModerationProfileIssueIssuesAggregationSelection?: ModerationProfileIssueIssuesAggregationSelectionResolvers<ContextType>;
-  ModerationProfileIssueIssuesNodeAggregateSelection?: ModerationProfileIssueIssuesNodeAggregateSelectionResolvers<ContextType>;
-  ModerationProfileIssuesConnection?: ModerationProfileIssuesConnectionResolvers<ContextType>;
-  ModerationProfileIssuesRelationship?: ModerationProfileIssuesRelationshipResolvers<ContextType>;
   ModerationProfileModChannelRoleModChannelRolesAggregationSelection?: ModerationProfileModChannelRoleModChannelRolesAggregationSelectionResolvers<ContextType>;
   ModerationProfileModChannelRoleModChannelRolesNodeAggregateSelection?: ModerationProfileModChannelRoleModChannelRolesNodeAggregateSelectionResolvers<ContextType>;
   ModerationProfileModChannelRolesConnection?: ModerationProfileModChannelRolesConnectionResolvers<ContextType>;
@@ -31890,8 +32900,6 @@ export type Resolvers<ContextType = any> = {
   ModerationProfileModServerRoleModServerRolesNodeAggregateSelection?: ModerationProfileModServerRoleModServerRolesNodeAggregateSelectionResolvers<ContextType>;
   ModerationProfileModServerRolesConnection?: ModerationProfileModServerRolesConnectionResolvers<ContextType>;
   ModerationProfileModServerRolesRelationship?: ModerationProfileModServerRolesRelationshipResolvers<ContextType>;
-  ModerationProfileReportAuthoredReportsAggregationSelection?: ModerationProfileReportAuthoredReportsAggregationSelectionResolvers<ContextType>;
-  ModerationProfileReportAuthoredReportsNodeAggregateSelection?: ModerationProfileReportAuthoredReportsNodeAggregateSelectionResolvers<ContextType>;
   ModerationProfileUserConnection?: ModerationProfileUserConnectionResolvers<ContextType>;
   ModerationProfileUserRelationship?: ModerationProfileUserRelationshipResolvers<ContextType>;
   ModerationProfileUserUserAggregationSelection?: ModerationProfileUserUserAggregationSelectionResolvers<ContextType>;
@@ -31921,22 +32929,6 @@ export type Resolvers<ContextType = any> = {
   RepeatEvery?: RepeatEveryResolvers<ContextType>;
   RepeatEveryAggregateSelection?: RepeatEveryAggregateSelectionResolvers<ContextType>;
   RepeatEveryEdge?: RepeatEveryEdgeResolvers<ContextType>;
-  Report?: ReportResolvers<ContextType>;
-  ReportAggregateSelection?: ReportAggregateSelectionResolvers<ContextType>;
-  ReportAuthorConnection?: ReportAuthorConnectionResolvers<ContextType>;
-  ReportAuthorRelationship?: ReportAuthorRelationshipResolvers<ContextType>;
-  ReportEdge?: ReportEdgeResolvers<ContextType>;
-  ReportIssueIssuesAggregationSelection?: ReportIssueIssuesAggregationSelectionResolvers<ContextType>;
-  ReportIssueIssuesNodeAggregateSelection?: ReportIssueIssuesNodeAggregateSelectionResolvers<ContextType>;
-  ReportIssuesConnection?: ReportIssuesConnectionResolvers<ContextType>;
-  ReportIssuesRelationship?: ReportIssuesRelationshipResolvers<ContextType>;
-  ReportModerationProfileAuthorAggregationSelection?: ReportModerationProfileAuthorAggregationSelectionResolvers<ContextType>;
-  ReportModerationProfileAuthorNodeAggregateSelection?: ReportModerationProfileAuthorNodeAggregateSelectionResolvers<ContextType>;
-  ReportRuleRuleViolationsAggregationSelection?: ReportRuleRuleViolationsAggregationSelectionResolvers<ContextType>;
-  ReportRuleRuleViolationsNodeAggregateSelection?: ReportRuleRuleViolationsNodeAggregateSelectionResolvers<ContextType>;
-  ReportRuleViolationsConnection?: ReportRuleViolationsConnectionResolvers<ContextType>;
-  ReportRuleViolationsRelationship?: ReportRuleViolationsRelationshipResolvers<ContextType>;
-  ReportsConnection?: ReportsConnectionResolvers<ContextType>;
   Rule?: RuleResolvers<ContextType>;
   RuleAggregateSelection?: RuleAggregateSelectionResolvers<ContextType>;
   RuleEdge?: RuleEdgeResolvers<ContextType>;
@@ -32022,7 +33014,6 @@ export type Resolvers<ContextType = any> = {
   UpdateRedditSubmissionsMutationResponse?: UpdateRedditSubmissionsMutationResponseResolvers<ContextType>;
   UpdateRepeatEndsMutationResponse?: UpdateRepeatEndsMutationResponseResolvers<ContextType>;
   UpdateRepeatEveriesMutationResponse?: UpdateRepeatEveriesMutationResponseResolvers<ContextType>;
-  UpdateReportsMutationResponse?: UpdateReportsMutationResponseResolvers<ContextType>;
   UpdateRulesMutationResponse?: UpdateRulesMutationResponseResolvers<ContextType>;
   UpdateServerConfigsMutationResponse?: UpdateServerConfigsMutationResponseResolvers<ContextType>;
   UpdateServerRolesMutationResponse?: UpdateServerRolesMutationResponseResolvers<ContextType>;

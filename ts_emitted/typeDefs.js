@@ -60,7 +60,7 @@ const typeDefinitions = gql `
     DiscussionChannels: [DiscussionChannel!]!
       @relationship(type: "POSTED_IN_CHANNEL", direction: IN)
     FeedbackComments: [Comment!]! @relationship(type: "HAS_FEEDBACK_COMMENT", direction: OUT)
-    RelatedIssues: [Issue!]! @relationship(type: "HAS_RELATED_ISSUE", direction: OUT)
+    RelatedIssues: [Issue!]! @relationship(type: "CITED_ISSUE", direction: IN)
   }
 
   type EventChannel {
@@ -140,6 +140,7 @@ const typeDefinitions = gql `
     # PastVersions:          [EventVersion]    @relationship(type: "HAS_VERSION", direction: OUT)
     EventChannels: [EventChannel!]!
       @relationship(type: "POSTED_IN_CHANNEL", direction: IN)
+    RelatedIssues: [Issue!]! @relationship(type: "CITED_ISSUE", direction: IN)
   }
 
   type Comment {
@@ -165,6 +166,7 @@ const typeDefinitions = gql `
       @relationship(type: "DOWNVOTED_COMMENT", direction: IN)
     # PastVersions:            [CommentVersion]        @relationship(type: "HAS_VERSION", direction: OUT)
     emoji: JSON
+    RelatedIssues: [Issue!]! @relationship(type: "CITED_ISSUE", direction: IN)
   }
 
   type Emoji {
@@ -243,9 +245,8 @@ const typeDefinitions = gql `
       @relationship(type: "DOWNVOTED_COMMENT", direction: OUT)
     DownvotedDiscussionChannels: [DiscussionChannel!]!
       @relationship(type: "DOWNVOTED_COMMENT_SECTION", direction: OUT)
-    AuthoredReports: [Report!]!
-      @relationship(type: "AUTHORED_REPORT", direction: OUT)
-    Issues: [Issue!]! @relationship(type: "AUTHORED_ISSUE", direction: OUT)
+    AuthoredIssues: [Issue!]!
+      @relationship(type: "AUTHORED_ISSUE", direction: IN)
     DiscussionComments: [Comment!]!
       @relationship(type: "AUTHORED_COMMENT", direction: OUT)
     IssueComments: [Comment!]!
@@ -259,28 +260,26 @@ const typeDefinitions = gql `
 
   type Issue {
     id: ID! @id
-    Author: IssueAuthor @relationship(type: "AUTHORED_ISSUE", direction: IN)
+    channelUniqueName: String
+    Channel: Channel @relationship(type: "HAS_ISSUE", direction: IN)
+    authorName: String
+    Author: IssueAuthor @relationship(type: "AUTHORED_ISSUE", direction: OUT)
     title: String
     body: String
     isOpen: Boolean!
+    relatedDiscussionId: ID @unique
+    RelatedDiscussion: Discussion @relationship(type: "CITED_ISSUE", direction: OUT)
+    relatedCommentId: ID @unique
+    RelatedComment: Comment @relationship(type: "CITED_ISSUE", direction: OUT)
+    relatedEventId: ID @unique
+    RelatedEvent: Event @relationship(type: "CITED_ISSUE", direction: OUT)
     createdAt: DateTime! @timestamp(operations: [CREATE])
-    updatedAt: DateTime! @timestamp(operations: [UPDATE])
+    updatedAt: DateTime @timestamp(operations: [UPDATE])
     Comments: [Comment!]!
       @relationship(type: "CITED_ISSUE", direction: IN)
   }
 
   union IssueCommentAuthor = User | ModerationProfile
-
-  type Report {
-    id: ID! @id
-    Author: ModerationProfile
-      @relationship(type: "AUTHORED_REPORT", direction: IN)
-    text: String
-    RuleViolations: [Rule!]! @relationship(type: "CITED_RULE", direction: OUT)
-    Issues: [Issue!]! @relationship(type: "CITED_REPORT", direction: IN)
-    createdAt: DateTime! @timestamp(operations: [CREATE])
-    updatedAt: DateTime! @timestamp(operations: [UPDATE])
-  }
 
   union CommentAuthor = User | ModerationProfile
   type Feed {
@@ -353,6 +352,28 @@ const typeDefinitions = gql `
     upvoteDiscussionChannel(discussionChannelId: ID!, username: String!): DiscussionChannel
     undoUpvoteDiscussionChannel(discussionChannelId: ID!, username: String!): DiscussionChannel
     createSignedStorageURL(filename: String!, contentType: String!): SignedURL
+    reportDiscussion(
+      title: String,
+      body: String,
+      relatedDiscussionId: ID,
+      channelUniqueName: String,
+      authorName: String,
+    ): Issue
+    reportEvent(
+      title: String,
+      body: String,
+      relatedEventId: ID,
+      channelUniqueName: String,
+      authorName: String,
+    ): Issue
+    reportComment(
+      title: String,
+      body: String,
+      relatedCommentId: ID,
+      channelUniqueName: String,
+      authorName: String,
+    ): Issue
+    
   }
 
   input SiteWideDiscussionSortOrder {

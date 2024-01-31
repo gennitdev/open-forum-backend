@@ -296,6 +296,14 @@ const canGiveFeedback = rule({ cache: "contextual" })(
   }
 );
 
+const canReportContent = rule({ cache: "contextual" })(
+  async (parent: any, args: any, ctx: any, info: any) => {
+    console.log("canReportContent rule");
+
+    return true;
+  }
+);
+
 const ruleList = {
   isChannelOwner,
   isDiscussionOwner,
@@ -312,7 +320,8 @@ const ruleList = {
   canUploadFile,
   canUpvoteComment,
   canUpvoteDiscussion,
-  canGiveFeedback
+  canGiveFeedback,
+  canReportContent,
 };
 
 export default ruleList;

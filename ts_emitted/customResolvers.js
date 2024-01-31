@@ -21,6 +21,9 @@ import undoUpvoteDiscussionChannel from "./customResolvers/mutations/undoUpvoteD
 import getSubredditResolver from "./customResolvers/queries/getSubreddit.js";
 import getSubredditSidebar from "./customResolvers/queries/getSubredditSidebar.js";
 import createSignedStorageURL from "./customResolvers/mutations/createSignedStorageURL.js";
+import reportDiscussion from "./customResolvers/mutations/reportDiscussion.js";
+import reportEvent from "./customResolvers/mutations/reportEvent.js";
+import reportComment from "./customResolvers/mutations/reportComment.js";
 const { OGM } = pkg;
 export default function (driver) {
     const ogm = new OGM({
@@ -32,6 +35,7 @@ export default function (driver) {
     const Event = ogm.model("Event");
     const Comment = ogm.model("Comment");
     const User = ogm.model("User");
+    const Issue = ogm.model("Issue");
     const resolvers = {
         JSON: GraphQLJSON,
         CommentAuthor: {
@@ -121,6 +125,9 @@ export default function (driver) {
                 driver,
             }),
             createSignedStorageURL: createSignedStorageURL(),
+            reportDiscussion: reportDiscussion({ Issue }),
+            reportEvent: reportEvent({ Issue }),
+            reportComment: reportComment({ Issue }),
         },
     };
     return {
@@ -128,4 +135,3 @@ export default function (driver) {
         ogm,
     };
 }
-;
