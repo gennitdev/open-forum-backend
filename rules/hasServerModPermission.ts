@@ -19,7 +19,6 @@ export const hasServerModPermission: (
     context,
     getPermissionInfo: true,
   });
-  console.log("mod profile", context.user?.ModerationProfile)
   const modServerRoles = context.user?.ModerationProfile?.ModServerRoles || [];
 
   // 2. If there is at least one mod role on the user
@@ -49,7 +48,6 @@ export const hasServerModPermission: (
       } 
     }`,
   });
-  console.log('server config', serverConfig)
 
   if (!serverConfig || !serverConfig[0]) {
     return new Error(

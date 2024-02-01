@@ -298,7 +298,7 @@ const canGiveFeedback = rule({ cache: "contextual" })(
 
 const canReportContent = rule({ cache: "contextual" })(
   async (parent: any, args: any, ctx: any, info: any) => {
-    console.log("canReportContent rule");
+    // Placeholder rule for now
 
     return true;
   }

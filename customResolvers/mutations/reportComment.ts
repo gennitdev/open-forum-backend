@@ -13,17 +13,13 @@ type Args = {
 };
 
 const getResolver = (input: Input) => {
-  console.log("report comment resolver input", input);
   const { Issue} = input;
 
   return async (parent: any, args: Args, context: any, resolveInfo: any) => {
-    console.log("report comment resolver args", args);
-
     const { relatedCommentId, channelUniqueName, authorName, title, body } =
       args;
 
     if (!relatedCommentId || !title || !authorName || !channelUniqueName) {
-      console.log('could not find a value for relatedCommentId, title, authorName, or channelUniqueName')
       throw new Error(
         "All arguments (relatedCommentId, title, authorName, channelUniqueName) are required"
       );
@@ -35,8 +31,6 @@ const getResolver = (input: Input) => {
     // try {
       // First check if there is already an issue for the given commentId. 
       // If not, create a new issue.
-
-      console.log('checking if issue already exists for comment id', relatedCommentId)
 
       const result = await Issue.find({
         where: {
@@ -86,7 +80,6 @@ const getResolver = (input: Input) => {
           const issue = await Issue.create({
             input: [issueCreationInput],
           });
-          console.log('Issue created successfully', issue);
           return issue;
         } catch (error) {
           console.error('Error creating issue:', error);

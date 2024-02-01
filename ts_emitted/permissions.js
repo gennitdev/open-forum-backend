@@ -45,10 +45,11 @@ const permissionList = shield({
         reportDiscussion: rules.canReportContent,
         reportComment: rules.canReportContent,
         reportEvent: rules.canReportContent,
+        giveFeedbackOnDiscussion: rules.canGiveFeedback,
+        giveFeedbackOnComment: rules.canGiveFeedback,
+        giveFeedbackOnEvent: rules.canGiveFeedback,
         deleteIssues: allow, // rules.canDeleteIssues,
         // hideComments: updateComments: and(rules.verifiedEmail, or(rules.hasChannelModPermission("hideComments"), rules.isAdmin)),
-        // the rest need updating to the format "hasChannelPermissions" for things that can be suspended or revoked in fine grained roles.
-        // canGiveFeedback: and(rules.verifiedEmail, rules.isNotSuspendedFromChannel, rules.isNotSuspendedFromServer),
         // canOpenChannelSupportTicket: and(rules.verifiedEmail, rules.isNotSuspendedFromServer),
         // canCloseChannelSupportTicket: and(rules.verifiedEmail, rules.isChannelModerator, rules.isNotSuspendedFromServer),
         // canOpenServerSupportTicket: rules.verifiedEmail,

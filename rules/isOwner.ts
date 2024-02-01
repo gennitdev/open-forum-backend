@@ -263,7 +263,6 @@ type IsAccountOwnerArgs = {
 // Check if the user is the owner of the account.
 export const isAccountOwner = rule({ cache: "contextual" })(
   async (parent: any, args: IsAccountOwnerArgs, ctx: any, info: any) => {
-    console.log("isAccountOwner", args);
     const { username } = args.where;
 
     // set user data

@@ -60,7 +60,7 @@ const typeDefinitions = gql`
     # PastVersions:            [DiscussionVersion]     @relationship(type: "HAS_VERSION", direction: OUT)
     DiscussionChannels: [DiscussionChannel!]!
       @relationship(type: "POSTED_IN_CHANNEL", direction: IN)
-    FeedbackComments: [Comment!]! @relationship(type: "HAS_FEEDBACK_COMMENT", direction: OUT)
+    FeedbackComments: [Comment!]! @relationship(type: "HAS_FEEDBACK_COMMENT", direction: IN)
     RelatedIssues: [Issue!]! @relationship(type: "CITED_ISSUE", direction: IN)
   }
 
@@ -142,6 +142,7 @@ const typeDefinitions = gql`
     EventChannels: [EventChannel!]!
       @relationship(type: "POSTED_IN_CHANNEL", direction: IN)
     RelatedIssues: [Issue!]! @relationship(type: "CITED_ISSUE", direction: IN)
+    FeedbackComments: [Comment!]! @relationship(type: "HAS_FEEDBACK_COMMENT", direction: IN)
   }
 
   type Comment {
@@ -168,6 +169,10 @@ const typeDefinitions = gql`
     # PastVersions:            [CommentVersion]        @relationship(type: "HAS_VERSION", direction: OUT)
     emoji: JSON
     RelatedIssues: [Issue!]! @relationship(type: "CITED_ISSUE", direction: IN)
+    GivesFeedbackOnDiscussion: Discussion @relationship(type: "HAS_FEEDBACK_COMMENT", direction: OUT)
+    GivesFeedbackOnEvent: Event @relationship(type: "HAS_FEEDBACK_COMMENT", direction: OUT)
+    GivesFeedbackOnComment: Comment @relationship(type: "HAS_FEEDBACK_COMMENT", direction: OUT)
+    FeedbackComments: [Comment!]! @relationship(type: "HAS_FEEDBACK_COMMENT", direction: IN)
   }
 
   type Emoji {
@@ -210,7 +215,6 @@ const typeDefinitions = gql`
     CreatedFeeds: [Feed!]! @relationship(type: "CREATED_FEED", direction: OUT)
     DefaultFeed: Feed @relationship(type: "DEFAULT_FEED", direction: OUT)
     createdAt: DateTime! @timestamp(operations: [CREATE])
-    # AuthoredWikiPages:       [WikiPage]           @relationship(type: "AUTHORED_PAGE", direction: OUT)
     # WikiChangeProposals:     [WikiChangeProposal] @relationship(type: "AUTHORED_CHANGE_PROPOSAL", direction: OUT)
     # Notifications:           [Notification]       @relationship(type: "HAS_NOTIFICATION", direction: OUT)
     Blocked: User @relationship(type: "BLOCKED", direction: OUT)
@@ -248,10 +252,8 @@ const typeDefinitions = gql`
       @relationship(type: "DOWNVOTED_COMMENT_SECTION", direction: OUT)
     AuthoredIssues: [Issue!]!
       @relationship(type: "AUTHORED_ISSUE", direction: IN)
-    DiscussionComments: [Comment!]!
+    AuthoredComments: [Comment!]!
       @relationship(type: "AUTHORED_COMMENT", direction: OUT)
-    IssueComments: [Comment!]!
-      @relationship(type: "AUTHORED_ISSUE_COMMENT", direction: OUT)
     ModChannelRoles: [ModChannelRole!]!
       @relationship(type: "HAS_MOD_ROLE", direction: OUT)
     ModServerRoles: [ModServerRole!]! @relationship(type: "HAS_MOD_ROLE", direction: OUT)
@@ -374,7 +376,23 @@ const typeDefinitions = gql`
       channelUniqueName: String,
       authorName: String,
     ): Issue
-    
+    giveFeedbackOnDiscussion(
+      discussionId: ID!
+      modProfileName: String!
+      commentText: String!
+      channelUniqueName: String!
+    ): Comment
+    giveFeedbackOnEvent(
+      eventId: ID!
+      modProfileName: String!
+      commentText: String!
+      channelUniqueName: String!
+    ): Comment
+    giveFeedbackOnComment(
+      commentId: ID!
+      modProfileName: String!
+      commentText: String!
+    ): Comment
   }
 
   input SiteWideDiscussionSortOrder {
