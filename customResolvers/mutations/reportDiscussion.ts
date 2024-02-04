@@ -21,7 +21,7 @@ const getResolver = (input: Input) => {
       args;
 
     if (!relatedDiscussionId || !title || !authorName || !channelUniqueName) {
-      throw new Error(
+      return new Error(
         "All arguments (relatedDiscussionId, title, authorName, channelUniqueName) are required"
       );
     }
