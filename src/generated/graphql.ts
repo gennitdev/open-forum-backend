@@ -765,7 +765,6 @@ export type ChannelConnectInput = {
 export type ChannelConnectOrCreateInput = {
   Admins?: InputMaybe<Array<ChannelAdminsConnectOrCreateFieldInput>>;
   DefaultChannelRole?: InputMaybe<ChannelDefaultChannelRoleConnectOrCreateFieldInput>;
-  Issues?: InputMaybe<Array<ChannelIssuesConnectOrCreateFieldInput>>;
   Moderators?: InputMaybe<Array<ChannelModeratorsConnectOrCreateFieldInput>>;
   RelatedChannels?: InputMaybe<Array<ChannelRelatedChannelsConnectOrCreateFieldInput>>;
   Tags?: InputMaybe<Array<ChannelTagsConnectOrCreateFieldInput>>;
@@ -1265,15 +1264,6 @@ export type ChannelIssuesConnectFieldInput = {
   where?: InputMaybe<IssueConnectWhere>;
 };
 
-export type ChannelIssuesConnectOrCreateFieldInput = {
-  onCreate: ChannelIssuesConnectOrCreateFieldInputOnCreate;
-  where: IssueConnectOrCreateWhere;
-};
-
-export type ChannelIssuesConnectOrCreateFieldInputOnCreate = {
-  node: IssueOnCreateInput;
-};
-
 export type ChannelIssuesConnection = {
   __typename?: 'ChannelIssuesConnection';
   edges: Array<ChannelIssuesRelationship>;
@@ -1308,7 +1298,6 @@ export type ChannelIssuesDisconnectFieldInput = {
 
 export type ChannelIssuesFieldInput = {
   connect?: InputMaybe<Array<ChannelIssuesConnectFieldInput>>;
-  connectOrCreate?: InputMaybe<Array<ChannelIssuesConnectOrCreateFieldInput>>;
   create?: InputMaybe<Array<ChannelIssuesCreateFieldInput>>;
 };
 
@@ -1410,7 +1399,6 @@ export type ChannelIssuesUpdateConnectionInput = {
 
 export type ChannelIssuesUpdateFieldInput = {
   connect?: InputMaybe<Array<ChannelIssuesConnectFieldInput>>;
-  connectOrCreate?: InputMaybe<Array<ChannelIssuesConnectOrCreateFieldInput>>;
   create?: InputMaybe<Array<ChannelIssuesCreateFieldInput>>;
   delete?: InputMaybe<Array<ChannelIssuesDeleteFieldInput>>;
   disconnect?: InputMaybe<Array<ChannelIssuesDisconnectFieldInput>>;
@@ -2165,6 +2153,7 @@ export type ChannelUpdateInput = {
   Tags?: InputMaybe<Array<ChannelTagsUpdateFieldInput>>;
   channelBannerURL?: InputMaybe<Scalars['String']['input']>;
   channelIconURL?: InputMaybe<Scalars['String']['input']>;
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   deleted?: InputMaybe<Scalars['Boolean']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   displayName?: InputMaybe<Scalars['String']['input']>;
@@ -3347,7 +3336,6 @@ export type CommentConnectOrCreateInput = {
   Channel?: InputMaybe<CommentChannelConnectOrCreateFieldInput>;
   CommentAuthor?: InputMaybe<CommentCommentAuthorConnectOrCreateInput>;
   DownvotedByModerators?: InputMaybe<Array<CommentDownvotedByModeratorsConnectOrCreateFieldInput>>;
-  RelatedIssues?: InputMaybe<Array<CommentRelatedIssuesConnectOrCreateFieldInput>>;
   Tags?: InputMaybe<Array<CommentTagsConnectOrCreateFieldInput>>;
   UpvotedByUsers?: InputMaybe<Array<CommentUpvotedByUsersConnectOrCreateFieldInput>>;
 };
@@ -3375,6 +3363,7 @@ export type CommentCreateInput = {
   emoji?: InputMaybe<Scalars['JSON']['input']>;
   isRootComment: Scalars['Boolean']['input'];
   text?: InputMaybe<Scalars['String']['input']>;
+  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
   weightedVotesCount?: InputMaybe<Scalars['Float']['input']>;
 };
 
@@ -4890,15 +4879,6 @@ export type CommentRelatedIssuesConnectFieldInput = {
   where?: InputMaybe<IssueConnectWhere>;
 };
 
-export type CommentRelatedIssuesConnectOrCreateFieldInput = {
-  onCreate: CommentRelatedIssuesConnectOrCreateFieldInputOnCreate;
-  where: IssueConnectOrCreateWhere;
-};
-
-export type CommentRelatedIssuesConnectOrCreateFieldInputOnCreate = {
-  node: IssueOnCreateInput;
-};
-
 export type CommentRelatedIssuesConnection = {
   __typename?: 'CommentRelatedIssuesConnection';
   edges: Array<CommentRelatedIssuesRelationship>;
@@ -4933,7 +4913,6 @@ export type CommentRelatedIssuesDisconnectFieldInput = {
 
 export type CommentRelatedIssuesFieldInput = {
   connect?: InputMaybe<Array<CommentRelatedIssuesConnectFieldInput>>;
-  connectOrCreate?: InputMaybe<Array<CommentRelatedIssuesConnectOrCreateFieldInput>>;
   create?: InputMaybe<Array<CommentRelatedIssuesCreateFieldInput>>;
 };
 
@@ -5035,7 +5014,6 @@ export type CommentRelatedIssuesUpdateConnectionInput = {
 
 export type CommentRelatedIssuesUpdateFieldInput = {
   connect?: InputMaybe<Array<CommentRelatedIssuesConnectFieldInput>>;
-  connectOrCreate?: InputMaybe<Array<CommentRelatedIssuesConnectOrCreateFieldInput>>;
   create?: InputMaybe<Array<CommentRelatedIssuesCreateFieldInput>>;
   delete?: InputMaybe<Array<CommentRelatedIssuesDeleteFieldInput>>;
   disconnect?: InputMaybe<Array<CommentRelatedIssuesDisconnectFieldInput>>;
@@ -5309,6 +5287,7 @@ export type CommentUpdateInput = {
   RelatedIssues?: InputMaybe<Array<CommentRelatedIssuesUpdateFieldInput>>;
   Tags?: InputMaybe<Array<CommentTagsUpdateFieldInput>>;
   UpvotedByUsers?: InputMaybe<Array<CommentUpvotedByUsersUpdateFieldInput>>;
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   deleted?: InputMaybe<Scalars['Boolean']['input']>;
   emoji?: InputMaybe<Scalars['JSON']['input']>;
   isRootComment?: InputMaybe<Scalars['Boolean']['input']>;
@@ -7346,6 +7325,7 @@ export type DiscussionChannelUpdateInput = {
   DownvotedByModerators?: InputMaybe<Array<DiscussionChannelDownvotedByModeratorsUpdateFieldInput>>;
   UpvotedByUsers?: InputMaybe<Array<DiscussionChannelUpvotedByUsersUpdateFieldInput>>;
   channelUniqueName?: InputMaybe<Scalars['String']['input']>;
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   discussionId?: InputMaybe<Scalars['ID']['input']>;
   emoji?: InputMaybe<Scalars['JSON']['input']>;
   locked?: InputMaybe<Scalars['Boolean']['input']>;
@@ -7785,7 +7765,6 @@ export type DiscussionConnectInput = {
 
 export type DiscussionConnectOrCreateInput = {
   Author?: InputMaybe<DiscussionAuthorConnectOrCreateFieldInput>;
-  RelatedIssues?: InputMaybe<Array<DiscussionRelatedIssuesConnectOrCreateFieldInput>>;
   Tags?: InputMaybe<Array<DiscussionTagsConnectOrCreateFieldInput>>;
 };
 
@@ -7802,6 +7781,7 @@ export type DiscussionCreateInput = {
   body?: InputMaybe<Scalars['String']['input']>;
   deleted?: InputMaybe<Scalars['Boolean']['input']>;
   title: Scalars['String']['input'];
+  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
 };
 
 export type DiscussionDeleteInput = {
@@ -8156,15 +8136,6 @@ export type DiscussionRelatedIssuesConnectFieldInput = {
   where?: InputMaybe<IssueConnectWhere>;
 };
 
-export type DiscussionRelatedIssuesConnectOrCreateFieldInput = {
-  onCreate: DiscussionRelatedIssuesConnectOrCreateFieldInputOnCreate;
-  where: IssueConnectOrCreateWhere;
-};
-
-export type DiscussionRelatedIssuesConnectOrCreateFieldInputOnCreate = {
-  node: IssueOnCreateInput;
-};
-
 export type DiscussionRelatedIssuesConnection = {
   __typename?: 'DiscussionRelatedIssuesConnection';
   edges: Array<DiscussionRelatedIssuesRelationship>;
@@ -8199,7 +8170,6 @@ export type DiscussionRelatedIssuesDisconnectFieldInput = {
 
 export type DiscussionRelatedIssuesFieldInput = {
   connect?: InputMaybe<Array<DiscussionRelatedIssuesConnectFieldInput>>;
-  connectOrCreate?: InputMaybe<Array<DiscussionRelatedIssuesConnectOrCreateFieldInput>>;
   create?: InputMaybe<Array<DiscussionRelatedIssuesCreateFieldInput>>;
 };
 
@@ -8301,7 +8271,6 @@ export type DiscussionRelatedIssuesUpdateConnectionInput = {
 
 export type DiscussionRelatedIssuesUpdateFieldInput = {
   connect?: InputMaybe<Array<DiscussionRelatedIssuesConnectFieldInput>>;
-  connectOrCreate?: InputMaybe<Array<DiscussionRelatedIssuesConnectOrCreateFieldInput>>;
   create?: InputMaybe<Array<DiscussionRelatedIssuesCreateFieldInput>>;
   delete?: InputMaybe<Array<DiscussionRelatedIssuesDeleteFieldInput>>;
   disconnect?: InputMaybe<Array<DiscussionRelatedIssuesDisconnectFieldInput>>;
@@ -8452,6 +8421,7 @@ export type DiscussionUpdateInput = {
   RelatedIssues?: InputMaybe<Array<DiscussionRelatedIssuesUpdateFieldInput>>;
   Tags?: InputMaybe<Array<DiscussionTagsUpdateFieldInput>>;
   body?: InputMaybe<Scalars['String']['input']>;
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   deleted?: InputMaybe<Scalars['Boolean']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
 };
@@ -9381,6 +9351,7 @@ export type EmojiSort = {
 
 export type EmojiUpdateInput = {
   PostedByUser?: InputMaybe<EmojiPostedByUserUpdateFieldInput>;
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -10469,6 +10440,7 @@ export type EventChannelUpdateInput = {
   Comments?: InputMaybe<Array<EventChannelCommentsUpdateFieldInput>>;
   Event?: InputMaybe<EventChannelEventUpdateFieldInput>;
   channelUniqueName?: InputMaybe<Scalars['String']['input']>;
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   eventId?: InputMaybe<Scalars['ID']['input']>;
   locked?: InputMaybe<Scalars['Boolean']['input']>;
 };
@@ -10759,7 +10731,6 @@ export type EventConnectInput = {
 
 export type EventConnectOrCreateInput = {
   Poster?: InputMaybe<EventPosterConnectOrCreateFieldInput>;
-  RelatedIssues?: InputMaybe<Array<EventRelatedIssuesConnectOrCreateFieldInput>>;
   Tags?: InputMaybe<Array<EventTagsConnectOrCreateFieldInput>>;
 };
 
@@ -10794,6 +10765,7 @@ export type EventCreateInput = {
   startTimeDayOfWeek?: InputMaybe<Scalars['String']['input']>;
   startTimeHourOfDay?: InputMaybe<Scalars['Int']['input']>;
   title: Scalars['String']['input'];
+  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
   virtualEventUrl?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -11494,15 +11466,6 @@ export type EventRelatedIssuesConnectFieldInput = {
   where?: InputMaybe<IssueConnectWhere>;
 };
 
-export type EventRelatedIssuesConnectOrCreateFieldInput = {
-  onCreate: EventRelatedIssuesConnectOrCreateFieldInputOnCreate;
-  where: IssueConnectOrCreateWhere;
-};
-
-export type EventRelatedIssuesConnectOrCreateFieldInputOnCreate = {
-  node: IssueOnCreateInput;
-};
-
 export type EventRelatedIssuesConnection = {
   __typename?: 'EventRelatedIssuesConnection';
   edges: Array<EventRelatedIssuesRelationship>;
@@ -11537,7 +11500,6 @@ export type EventRelatedIssuesDisconnectFieldInput = {
 
 export type EventRelatedIssuesFieldInput = {
   connect?: InputMaybe<Array<EventRelatedIssuesConnectFieldInput>>;
-  connectOrCreate?: InputMaybe<Array<EventRelatedIssuesConnectOrCreateFieldInput>>;
   create?: InputMaybe<Array<EventRelatedIssuesCreateFieldInput>>;
 };
 
@@ -11639,7 +11601,6 @@ export type EventRelatedIssuesUpdateConnectionInput = {
 
 export type EventRelatedIssuesUpdateFieldInput = {
   connect?: InputMaybe<Array<EventRelatedIssuesConnectFieldInput>>;
-  connectOrCreate?: InputMaybe<Array<EventRelatedIssuesConnectOrCreateFieldInput>>;
   create?: InputMaybe<Array<EventRelatedIssuesCreateFieldInput>>;
   delete?: InputMaybe<Array<EventRelatedIssuesDeleteFieldInput>>;
   disconnect?: InputMaybe<Array<EventRelatedIssuesDisconnectFieldInput>>;
@@ -11814,6 +11775,7 @@ export type EventUpdateInput = {
   canceled?: InputMaybe<Scalars['Boolean']['input']>;
   cost?: InputMaybe<Scalars['String']['input']>;
   coverImageURL?: InputMaybe<Scalars['String']['input']>;
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   deleted?: InputMaybe<Scalars['Boolean']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   endTime?: InputMaybe<Scalars['DateTime']['input']>;
@@ -13420,10 +13382,6 @@ export type IssueConnectOrCreateInput = {
   Channel?: InputMaybe<IssueChannelConnectOrCreateFieldInput>;
 };
 
-export type IssueConnectOrCreateWhere = {
-  node: IssueUniqueWhere;
-};
-
 export type IssueConnectWhere = {
   node: IssueWhere;
 };
@@ -13443,6 +13401,7 @@ export type IssueCreateInput = {
   relatedDiscussionId?: InputMaybe<Scalars['ID']['input']>;
   relatedEventId?: InputMaybe<Scalars['ID']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
+  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
 };
 
 export type IssueDeleteInput = {
@@ -13507,17 +13466,6 @@ export type IssueEventRelatedEventNodeAggregateSelection = {
   title: StringAggregateSelectionNonNullable;
   updatedAt: DateTimeAggregateSelectionNullable;
   virtualEventUrl: StringAggregateSelectionNullable;
-};
-
-export type IssueOnCreateInput = {
-  authorName?: InputMaybe<Scalars['String']['input']>;
-  body?: InputMaybe<Scalars['String']['input']>;
-  channelUniqueName?: InputMaybe<Scalars['String']['input']>;
-  isOpen: Scalars['Boolean']['input'];
-  relatedCommentId?: InputMaybe<Scalars['ID']['input']>;
-  relatedDiscussionId?: InputMaybe<Scalars['ID']['input']>;
-  relatedEventId?: InputMaybe<Scalars['ID']['input']>;
-  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type IssueOptions = {
@@ -14094,12 +14042,6 @@ export type IssueSort = {
   updatedAt?: InputMaybe<SortDirection>;
 };
 
-export type IssueUniqueWhere = {
-  relatedCommentId?: InputMaybe<Scalars['ID']['input']>;
-  relatedDiscussionId?: InputMaybe<Scalars['ID']['input']>;
-  relatedEventId?: InputMaybe<Scalars['ID']['input']>;
-};
-
 export type IssueUpdateInput = {
   Author?: InputMaybe<IssueAuthorUpdateInput>;
   Channel?: InputMaybe<IssueChannelUpdateFieldInput>;
@@ -14110,6 +14052,7 @@ export type IssueUpdateInput = {
   authorName?: InputMaybe<Scalars['String']['input']>;
   body?: InputMaybe<Scalars['String']['input']>;
   channelUniqueName?: InputMaybe<Scalars['String']['input']>;
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   isOpen?: InputMaybe<Scalars['Boolean']['input']>;
   relatedCommentId?: InputMaybe<Scalars['ID']['input']>;
   relatedDiscussionId?: InputMaybe<Scalars['ID']['input']>;
@@ -14803,15 +14746,6 @@ export type ModerationProfileAuthoredIssuesConnectFieldInput = {
   where?: InputMaybe<IssueConnectWhere>;
 };
 
-export type ModerationProfileAuthoredIssuesConnectOrCreateFieldInput = {
-  onCreate: ModerationProfileAuthoredIssuesConnectOrCreateFieldInputOnCreate;
-  where: IssueConnectOrCreateWhere;
-};
-
-export type ModerationProfileAuthoredIssuesConnectOrCreateFieldInputOnCreate = {
-  node: IssueOnCreateInput;
-};
-
 export type ModerationProfileAuthoredIssuesConnection = {
   __typename?: 'ModerationProfileAuthoredIssuesConnection';
   edges: Array<ModerationProfileAuthoredIssuesRelationship>;
@@ -14846,7 +14780,6 @@ export type ModerationProfileAuthoredIssuesDisconnectFieldInput = {
 
 export type ModerationProfileAuthoredIssuesFieldInput = {
   connect?: InputMaybe<Array<ModerationProfileAuthoredIssuesConnectFieldInput>>;
-  connectOrCreate?: InputMaybe<Array<ModerationProfileAuthoredIssuesConnectOrCreateFieldInput>>;
   create?: InputMaybe<Array<ModerationProfileAuthoredIssuesCreateFieldInput>>;
 };
 
@@ -14948,7 +14881,6 @@ export type ModerationProfileAuthoredIssuesUpdateConnectionInput = {
 
 export type ModerationProfileAuthoredIssuesUpdateFieldInput = {
   connect?: InputMaybe<Array<ModerationProfileAuthoredIssuesConnectFieldInput>>;
-  connectOrCreate?: InputMaybe<Array<ModerationProfileAuthoredIssuesConnectOrCreateFieldInput>>;
   create?: InputMaybe<Array<ModerationProfileAuthoredIssuesCreateFieldInput>>;
   delete?: InputMaybe<Array<ModerationProfileAuthoredIssuesDeleteFieldInput>>;
   disconnect?: InputMaybe<Array<ModerationProfileAuthoredIssuesDisconnectFieldInput>>;
@@ -14997,7 +14929,6 @@ export type ModerationProfileConnectInput = {
 };
 
 export type ModerationProfileConnectOrCreateInput = {
-  AuthoredIssues?: InputMaybe<Array<ModerationProfileAuthoredIssuesConnectOrCreateFieldInput>>;
   ModChannelRoles?: InputMaybe<Array<ModerationProfileModChannelRolesConnectOrCreateFieldInput>>;
   ModServerRoles?: InputMaybe<Array<ModerationProfileModServerRolesConnectOrCreateFieldInput>>;
   User?: InputMaybe<ModerationProfileUserConnectOrCreateFieldInput>;
@@ -15646,6 +15577,7 @@ export type ModerationProfileUpdateInput = {
   ModChannelRoles?: InputMaybe<Array<ModerationProfileModChannelRolesUpdateFieldInput>>;
   ModServerRoles?: InputMaybe<Array<ModerationProfileModServerRolesUpdateFieldInput>>;
   User?: InputMaybe<ModerationProfileUserUpdateFieldInput>;
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   displayName?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -16147,14 +16079,8 @@ export type Mutation = {
   deleteSubredditSidebars: DeleteInfo;
   deleteTags: DeleteInfo;
   deleteUsers: DeleteInfo;
-  giveFeedbackOnComment?: Maybe<Comment>;
-  giveFeedbackOnDiscussion?: Maybe<Comment>;
-  giveFeedbackOnEvent?: Maybe<Comment>;
   removeEmojiFromComment?: Maybe<Comment>;
   removeEmojiFromDiscussionChannel?: Maybe<DiscussionChannel>;
-  reportComment?: Maybe<Issue>;
-  reportDiscussion?: Maybe<Issue>;
-  reportEvent?: Maybe<Issue>;
   undoUpvoteComment?: Maybe<Comment>;
   undoUpvoteDiscussionChannel?: Maybe<DiscussionChannel>;
   updateChannelRoles: UpdateChannelRolesMutationResponse;
@@ -16543,29 +16469,6 @@ export type MutationDeleteUsersArgs = {
 };
 
 
-export type MutationGiveFeedbackOnCommentArgs = {
-  commentId: Scalars['ID']['input'];
-  commentText: Scalars['String']['input'];
-  modProfileName: Scalars['String']['input'];
-};
-
-
-export type MutationGiveFeedbackOnDiscussionArgs = {
-  channelUniqueName: Scalars['String']['input'];
-  commentText: Scalars['String']['input'];
-  discussionId: Scalars['ID']['input'];
-  modProfileName: Scalars['String']['input'];
-};
-
-
-export type MutationGiveFeedbackOnEventArgs = {
-  channelUniqueName: Scalars['String']['input'];
-  commentText: Scalars['String']['input'];
-  eventId: Scalars['ID']['input'];
-  modProfileName: Scalars['String']['input'];
-};
-
-
 export type MutationRemoveEmojiFromCommentArgs = {
   commentId: Scalars['ID']['input'];
   emojiLabel: Scalars['String']['input'];
@@ -16577,33 +16480,6 @@ export type MutationRemoveEmojiFromDiscussionChannelArgs = {
   discussionChannelId: Scalars['ID']['input'];
   emojiLabel: Scalars['String']['input'];
   username: Scalars['String']['input'];
-};
-
-
-export type MutationReportCommentArgs = {
-  authorName?: InputMaybe<Scalars['String']['input']>;
-  body?: InputMaybe<Scalars['String']['input']>;
-  channelUniqueName?: InputMaybe<Scalars['String']['input']>;
-  relatedCommentId?: InputMaybe<Scalars['ID']['input']>;
-  title?: InputMaybe<Scalars['String']['input']>;
-};
-
-
-export type MutationReportDiscussionArgs = {
-  authorName?: InputMaybe<Scalars['String']['input']>;
-  body?: InputMaybe<Scalars['String']['input']>;
-  channelUniqueName?: InputMaybe<Scalars['String']['input']>;
-  relatedDiscussionId?: InputMaybe<Scalars['ID']['input']>;
-  title?: InputMaybe<Scalars['String']['input']>;
-};
-
-
-export type MutationReportEventArgs = {
-  authorName?: InputMaybe<Scalars['String']['input']>;
-  body?: InputMaybe<Scalars['String']['input']>;
-  channelUniqueName?: InputMaybe<Scalars['String']['input']>;
-  relatedEventId?: InputMaybe<Scalars['ID']['input']>;
-  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -22302,7 +22178,6 @@ export type UserConnectOrCreateInput = {
   Email?: InputMaybe<UserEmailConnectOrCreateFieldInput>;
   FavoriteChannels?: InputMaybe<Array<UserFavoriteChannelsConnectOrCreateFieldInput>>;
   IsBlockedBy?: InputMaybe<UserIsBlockedByConnectOrCreateFieldInput>;
-  Issues?: InputMaybe<Array<UserIssuesConnectOrCreateFieldInput>>;
   ModerationProfile?: InputMaybe<UserModerationProfileConnectOrCreateFieldInput>;
   RecentlyVisitedChannels?: InputMaybe<Array<UserRecentlyVisitedChannelsConnectOrCreateFieldInput>>;
   ServerRoles?: InputMaybe<Array<UserServerRolesConnectOrCreateFieldInput>>;
@@ -23981,15 +23856,6 @@ export type UserIssuesConnectFieldInput = {
   where?: InputMaybe<IssueConnectWhere>;
 };
 
-export type UserIssuesConnectOrCreateFieldInput = {
-  onCreate: UserIssuesConnectOrCreateFieldInputOnCreate;
-  where: IssueConnectOrCreateWhere;
-};
-
-export type UserIssuesConnectOrCreateFieldInputOnCreate = {
-  node: IssueOnCreateInput;
-};
-
 export type UserIssuesConnection = {
   __typename?: 'UserIssuesConnection';
   edges: Array<UserIssuesRelationship>;
@@ -24024,7 +23890,6 @@ export type UserIssuesDisconnectFieldInput = {
 
 export type UserIssuesFieldInput = {
   connect?: InputMaybe<Array<UserIssuesConnectFieldInput>>;
-  connectOrCreate?: InputMaybe<Array<UserIssuesConnectOrCreateFieldInput>>;
   create?: InputMaybe<Array<UserIssuesCreateFieldInput>>;
 };
 
@@ -24126,7 +23991,6 @@ export type UserIssuesUpdateConnectionInput = {
 
 export type UserIssuesUpdateFieldInput = {
   connect?: InputMaybe<Array<UserIssuesConnectFieldInput>>;
-  connectOrCreate?: InputMaybe<Array<UserIssuesConnectOrCreateFieldInput>>;
   create?: InputMaybe<Array<UserIssuesCreateFieldInput>>;
   delete?: InputMaybe<Array<UserIssuesDeleteFieldInput>>;
   disconnect?: InputMaybe<Array<UserIssuesDisconnectFieldInput>>;
@@ -24663,6 +24527,7 @@ export type UserUpdateInput = {
   commentKarma?: InputMaybe<Scalars['Int']['input']>;
   commentKarma_DECREMENT?: InputMaybe<Scalars['Int']['input']>;
   commentKarma_INCREMENT?: InputMaybe<Scalars['Int']['input']>;
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   deleted?: InputMaybe<Scalars['Boolean']['input']>;
   discussionKarma?: InputMaybe<Scalars['Int']['input']>;
   discussionKarma_DECREMENT?: InputMaybe<Scalars['Int']['input']>;
@@ -25499,8 +25364,6 @@ export type ResolversTypes = {
   ChannelIssueIssuesNodeAggregateSelection: ResolverTypeWrapper<ChannelIssueIssuesNodeAggregateSelection>;
   ChannelIssuesAggregateInput: ChannelIssuesAggregateInput;
   ChannelIssuesConnectFieldInput: ChannelIssuesConnectFieldInput;
-  ChannelIssuesConnectOrCreateFieldInput: ChannelIssuesConnectOrCreateFieldInput;
-  ChannelIssuesConnectOrCreateFieldInputOnCreate: ChannelIssuesConnectOrCreateFieldInputOnCreate;
   ChannelIssuesConnection: ResolverTypeWrapper<ChannelIssuesConnection>;
   ChannelIssuesConnectionSort: ChannelIssuesConnectionSort;
   ChannelIssuesConnectionWhere: ChannelIssuesConnectionWhere;
@@ -25799,8 +25662,6 @@ export type ResolversTypes = {
   CommentParentCommentUpdateFieldInput: CommentParentCommentUpdateFieldInput;
   CommentRelatedIssuesAggregateInput: CommentRelatedIssuesAggregateInput;
   CommentRelatedIssuesConnectFieldInput: CommentRelatedIssuesConnectFieldInput;
-  CommentRelatedIssuesConnectOrCreateFieldInput: CommentRelatedIssuesConnectOrCreateFieldInput;
-  CommentRelatedIssuesConnectOrCreateFieldInputOnCreate: CommentRelatedIssuesConnectOrCreateFieldInputOnCreate;
   CommentRelatedIssuesConnection: ResolverTypeWrapper<CommentRelatedIssuesConnection>;
   CommentRelatedIssuesConnectionSort: CommentRelatedIssuesConnectionSort;
   CommentRelatedIssuesConnectionWhere: CommentRelatedIssuesConnectionWhere;
@@ -26068,8 +25929,6 @@ export type ResolversTypes = {
   DiscussionOptions: DiscussionOptions;
   DiscussionRelatedIssuesAggregateInput: DiscussionRelatedIssuesAggregateInput;
   DiscussionRelatedIssuesConnectFieldInput: DiscussionRelatedIssuesConnectFieldInput;
-  DiscussionRelatedIssuesConnectOrCreateFieldInput: DiscussionRelatedIssuesConnectOrCreateFieldInput;
-  DiscussionRelatedIssuesConnectOrCreateFieldInputOnCreate: DiscussionRelatedIssuesConnectOrCreateFieldInputOnCreate;
   DiscussionRelatedIssuesConnection: ResolverTypeWrapper<DiscussionRelatedIssuesConnection>;
   DiscussionRelatedIssuesConnectionSort: DiscussionRelatedIssuesConnectionSort;
   DiscussionRelatedIssuesConnectionWhere: DiscussionRelatedIssuesConnectionWhere;
@@ -26330,8 +26189,6 @@ export type ResolversTypes = {
   EventRecurringEventUpdateFieldInput: EventRecurringEventUpdateFieldInput;
   EventRelatedIssuesAggregateInput: EventRelatedIssuesAggregateInput;
   EventRelatedIssuesConnectFieldInput: EventRelatedIssuesConnectFieldInput;
-  EventRelatedIssuesConnectOrCreateFieldInput: EventRelatedIssuesConnectOrCreateFieldInput;
-  EventRelatedIssuesConnectOrCreateFieldInputOnCreate: EventRelatedIssuesConnectOrCreateFieldInputOnCreate;
   EventRelatedIssuesConnection: ResolverTypeWrapper<EventRelatedIssuesConnection>;
   EventRelatedIssuesConnectionSort: EventRelatedIssuesConnectionSort;
   EventRelatedIssuesConnectionWhere: EventRelatedIssuesConnectionWhere;
@@ -26494,7 +26351,6 @@ export type ResolversTypes = {
   IssueCommentsUpdateFieldInput: IssueCommentsUpdateFieldInput;
   IssueConnectInput: IssueConnectInput;
   IssueConnectOrCreateInput: IssueConnectOrCreateInput;
-  IssueConnectOrCreateWhere: IssueConnectOrCreateWhere;
   IssueConnectWhere: IssueConnectWhere;
   IssueCreateInput: IssueCreateInput;
   IssueDeleteInput: IssueDeleteInput;
@@ -26504,7 +26360,6 @@ export type ResolversTypes = {
   IssueEdge: ResolverTypeWrapper<IssueEdge>;
   IssueEventRelatedEventAggregationSelection: ResolverTypeWrapper<IssueEventRelatedEventAggregationSelection>;
   IssueEventRelatedEventNodeAggregateSelection: ResolverTypeWrapper<IssueEventRelatedEventNodeAggregateSelection>;
-  IssueOnCreateInput: IssueOnCreateInput;
   IssueOptions: IssueOptions;
   IssueRelatedCommentAggregateInput: IssueRelatedCommentAggregateInput;
   IssueRelatedCommentConnectFieldInput: IssueRelatedCommentConnectFieldInput;
@@ -26547,7 +26402,6 @@ export type ResolversTypes = {
   IssueRelatedEventUpdateFieldInput: IssueRelatedEventUpdateFieldInput;
   IssueRelationInput: IssueRelationInput;
   IssueSort: IssueSort;
-  IssueUniqueWhere: IssueUniqueWhere;
   IssueUpdateInput: IssueUpdateInput;
   IssueWhere: IssueWhere;
   IssuesConnection: ResolverTypeWrapper<IssuesConnection>;
@@ -26595,8 +26449,6 @@ export type ResolversTypes = {
   ModerationProfileAuthoredCommentsUpdateFieldInput: ModerationProfileAuthoredCommentsUpdateFieldInput;
   ModerationProfileAuthoredIssuesAggregateInput: ModerationProfileAuthoredIssuesAggregateInput;
   ModerationProfileAuthoredIssuesConnectFieldInput: ModerationProfileAuthoredIssuesConnectFieldInput;
-  ModerationProfileAuthoredIssuesConnectOrCreateFieldInput: ModerationProfileAuthoredIssuesConnectOrCreateFieldInput;
-  ModerationProfileAuthoredIssuesConnectOrCreateFieldInputOnCreate: ModerationProfileAuthoredIssuesConnectOrCreateFieldInputOnCreate;
   ModerationProfileAuthoredIssuesConnection: ResolverTypeWrapper<ModerationProfileAuthoredIssuesConnection>;
   ModerationProfileAuthoredIssuesConnectionSort: ModerationProfileAuthoredIssuesConnectionSort;
   ModerationProfileAuthoredIssuesConnectionWhere: ModerationProfileAuthoredIssuesConnectionWhere;
@@ -27243,8 +27095,6 @@ export type ResolversTypes = {
   UserIssueIssuesNodeAggregateSelection: ResolverTypeWrapper<UserIssueIssuesNodeAggregateSelection>;
   UserIssuesAggregateInput: UserIssuesAggregateInput;
   UserIssuesConnectFieldInput: UserIssuesConnectFieldInput;
-  UserIssuesConnectOrCreateFieldInput: UserIssuesConnectOrCreateFieldInput;
-  UserIssuesConnectOrCreateFieldInputOnCreate: UserIssuesConnectOrCreateFieldInputOnCreate;
   UserIssuesConnection: ResolverTypeWrapper<UserIssuesConnection>;
   UserIssuesConnectionSort: UserIssuesConnectionSort;
   UserIssuesConnectionWhere: UserIssuesConnectionWhere;
@@ -27441,8 +27291,6 @@ export type ResolversParentTypes = {
   ChannelIssueIssuesNodeAggregateSelection: ChannelIssueIssuesNodeAggregateSelection;
   ChannelIssuesAggregateInput: ChannelIssuesAggregateInput;
   ChannelIssuesConnectFieldInput: ChannelIssuesConnectFieldInput;
-  ChannelIssuesConnectOrCreateFieldInput: ChannelIssuesConnectOrCreateFieldInput;
-  ChannelIssuesConnectOrCreateFieldInputOnCreate: ChannelIssuesConnectOrCreateFieldInputOnCreate;
   ChannelIssuesConnection: ChannelIssuesConnection;
   ChannelIssuesConnectionSort: ChannelIssuesConnectionSort;
   ChannelIssuesConnectionWhere: ChannelIssuesConnectionWhere;
@@ -27741,8 +27589,6 @@ export type ResolversParentTypes = {
   CommentParentCommentUpdateFieldInput: CommentParentCommentUpdateFieldInput;
   CommentRelatedIssuesAggregateInput: CommentRelatedIssuesAggregateInput;
   CommentRelatedIssuesConnectFieldInput: CommentRelatedIssuesConnectFieldInput;
-  CommentRelatedIssuesConnectOrCreateFieldInput: CommentRelatedIssuesConnectOrCreateFieldInput;
-  CommentRelatedIssuesConnectOrCreateFieldInputOnCreate: CommentRelatedIssuesConnectOrCreateFieldInputOnCreate;
   CommentRelatedIssuesConnection: CommentRelatedIssuesConnection;
   CommentRelatedIssuesConnectionSort: CommentRelatedIssuesConnectionSort;
   CommentRelatedIssuesConnectionWhere: CommentRelatedIssuesConnectionWhere;
@@ -28010,8 +27856,6 @@ export type ResolversParentTypes = {
   DiscussionOptions: DiscussionOptions;
   DiscussionRelatedIssuesAggregateInput: DiscussionRelatedIssuesAggregateInput;
   DiscussionRelatedIssuesConnectFieldInput: DiscussionRelatedIssuesConnectFieldInput;
-  DiscussionRelatedIssuesConnectOrCreateFieldInput: DiscussionRelatedIssuesConnectOrCreateFieldInput;
-  DiscussionRelatedIssuesConnectOrCreateFieldInputOnCreate: DiscussionRelatedIssuesConnectOrCreateFieldInputOnCreate;
   DiscussionRelatedIssuesConnection: DiscussionRelatedIssuesConnection;
   DiscussionRelatedIssuesConnectionSort: DiscussionRelatedIssuesConnectionSort;
   DiscussionRelatedIssuesConnectionWhere: DiscussionRelatedIssuesConnectionWhere;
@@ -28272,8 +28116,6 @@ export type ResolversParentTypes = {
   EventRecurringEventUpdateFieldInput: EventRecurringEventUpdateFieldInput;
   EventRelatedIssuesAggregateInput: EventRelatedIssuesAggregateInput;
   EventRelatedIssuesConnectFieldInput: EventRelatedIssuesConnectFieldInput;
-  EventRelatedIssuesConnectOrCreateFieldInput: EventRelatedIssuesConnectOrCreateFieldInput;
-  EventRelatedIssuesConnectOrCreateFieldInputOnCreate: EventRelatedIssuesConnectOrCreateFieldInputOnCreate;
   EventRelatedIssuesConnection: EventRelatedIssuesConnection;
   EventRelatedIssuesConnectionSort: EventRelatedIssuesConnectionSort;
   EventRelatedIssuesConnectionWhere: EventRelatedIssuesConnectionWhere;
@@ -28436,7 +28278,6 @@ export type ResolversParentTypes = {
   IssueCommentsUpdateFieldInput: IssueCommentsUpdateFieldInput;
   IssueConnectInput: IssueConnectInput;
   IssueConnectOrCreateInput: IssueConnectOrCreateInput;
-  IssueConnectOrCreateWhere: IssueConnectOrCreateWhere;
   IssueConnectWhere: IssueConnectWhere;
   IssueCreateInput: IssueCreateInput;
   IssueDeleteInput: IssueDeleteInput;
@@ -28446,7 +28287,6 @@ export type ResolversParentTypes = {
   IssueEdge: IssueEdge;
   IssueEventRelatedEventAggregationSelection: IssueEventRelatedEventAggregationSelection;
   IssueEventRelatedEventNodeAggregateSelection: IssueEventRelatedEventNodeAggregateSelection;
-  IssueOnCreateInput: IssueOnCreateInput;
   IssueOptions: IssueOptions;
   IssueRelatedCommentAggregateInput: IssueRelatedCommentAggregateInput;
   IssueRelatedCommentConnectFieldInput: IssueRelatedCommentConnectFieldInput;
@@ -28489,7 +28329,6 @@ export type ResolversParentTypes = {
   IssueRelatedEventUpdateFieldInput: IssueRelatedEventUpdateFieldInput;
   IssueRelationInput: IssueRelationInput;
   IssueSort: IssueSort;
-  IssueUniqueWhere: IssueUniqueWhere;
   IssueUpdateInput: IssueUpdateInput;
   IssueWhere: IssueWhere;
   IssuesConnection: IssuesConnection;
@@ -28537,8 +28376,6 @@ export type ResolversParentTypes = {
   ModerationProfileAuthoredCommentsUpdateFieldInput: ModerationProfileAuthoredCommentsUpdateFieldInput;
   ModerationProfileAuthoredIssuesAggregateInput: ModerationProfileAuthoredIssuesAggregateInput;
   ModerationProfileAuthoredIssuesConnectFieldInput: ModerationProfileAuthoredIssuesConnectFieldInput;
-  ModerationProfileAuthoredIssuesConnectOrCreateFieldInput: ModerationProfileAuthoredIssuesConnectOrCreateFieldInput;
-  ModerationProfileAuthoredIssuesConnectOrCreateFieldInputOnCreate: ModerationProfileAuthoredIssuesConnectOrCreateFieldInputOnCreate;
   ModerationProfileAuthoredIssuesConnection: ModerationProfileAuthoredIssuesConnection;
   ModerationProfileAuthoredIssuesConnectionSort: ModerationProfileAuthoredIssuesConnectionSort;
   ModerationProfileAuthoredIssuesConnectionWhere: ModerationProfileAuthoredIssuesConnectionWhere;
@@ -29181,8 +29018,6 @@ export type ResolversParentTypes = {
   UserIssueIssuesNodeAggregateSelection: UserIssueIssuesNodeAggregateSelection;
   UserIssuesAggregateInput: UserIssuesAggregateInput;
   UserIssuesConnectFieldInput: UserIssuesConnectFieldInput;
-  UserIssuesConnectOrCreateFieldInput: UserIssuesConnectOrCreateFieldInput;
-  UserIssuesConnectOrCreateFieldInputOnCreate: UserIssuesConnectOrCreateFieldInputOnCreate;
   UserIssuesConnection: UserIssuesConnection;
   UserIssuesConnectionSort: UserIssuesConnectionSort;
   UserIssuesConnectionWhere: UserIssuesConnectionWhere;
@@ -32129,14 +31964,8 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteSubredditSidebars?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteSubredditSidebarsArgs>>;
   deleteTags?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteTagsArgs>>;
   deleteUsers?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteUsersArgs>>;
-  giveFeedbackOnComment?: Resolver<Maybe<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<MutationGiveFeedbackOnCommentArgs, 'commentId' | 'commentText' | 'modProfileName'>>;
-  giveFeedbackOnDiscussion?: Resolver<Maybe<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<MutationGiveFeedbackOnDiscussionArgs, 'channelUniqueName' | 'commentText' | 'discussionId' | 'modProfileName'>>;
-  giveFeedbackOnEvent?: Resolver<Maybe<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<MutationGiveFeedbackOnEventArgs, 'channelUniqueName' | 'commentText' | 'eventId' | 'modProfileName'>>;
   removeEmojiFromComment?: Resolver<Maybe<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<MutationRemoveEmojiFromCommentArgs, 'commentId' | 'emojiLabel' | 'username'>>;
   removeEmojiFromDiscussionChannel?: Resolver<Maybe<ResolversTypes['DiscussionChannel']>, ParentType, ContextType, RequireFields<MutationRemoveEmojiFromDiscussionChannelArgs, 'discussionChannelId' | 'emojiLabel' | 'username'>>;
-  reportComment?: Resolver<Maybe<ResolversTypes['Issue']>, ParentType, ContextType, Partial<MutationReportCommentArgs>>;
-  reportDiscussion?: Resolver<Maybe<ResolversTypes['Issue']>, ParentType, ContextType, Partial<MutationReportDiscussionArgs>>;
-  reportEvent?: Resolver<Maybe<ResolversTypes['Issue']>, ParentType, ContextType, Partial<MutationReportEventArgs>>;
   undoUpvoteComment?: Resolver<Maybe<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<MutationUndoUpvoteCommentArgs, 'commentId' | 'username'>>;
   undoUpvoteDiscussionChannel?: Resolver<Maybe<ResolversTypes['DiscussionChannel']>, ParentType, ContextType, RequireFields<MutationUndoUpvoteDiscussionChannelArgs, 'discussionChannelId' | 'username'>>;
   updateChannelRoles?: Resolver<ResolversTypes['UpdateChannelRolesMutationResponse'], ParentType, ContextType, Partial<MutationUpdateChannelRolesArgs>>;

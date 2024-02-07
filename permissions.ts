@@ -15,7 +15,7 @@ const permissionList = shield({
 
       createUsers: allow,
 
-      // will prevent users from making themselves admins or moderators but allow other fields to be updated by account owner
+      // // will prevent users from making themselves admins or moderators but allow other fields to be updated by account owner
       updateUsers: or(rules.isAccountOwner, rules.isAdmin),
       
       createChannels:rules.canCreateChannel,
@@ -30,7 +30,7 @@ const permissionList = shield({
       updateEventWithChannelConnections: or(rules.isEventOwner, rules.isAdmin),
       deleteEvents: or(rules.isEventOwner, rules.isAdmin),
 
-      createComments: rules.canCreateComment,
+      createComments: allow ,//rules.canCreateComment,
       updateComments: or(rules.isCommentAuthor, rules.isAdmin),
       deleteComments: or(rules.isCommentAuthor, rules.isAdmin),
       
@@ -50,21 +50,18 @@ const permissionList = shield({
       // Any user who can upvote a discussion can undo their upvote. The undo upvote resolver
       // checks if the user has upvoted the discussion and if so, removes the upvote.
       
-      // MOD PERMISSIONS
-      // canReportContent needs to check if the mod profile name is authentic.
-      reportDiscussion: rules.canReportContent,
-      reportComment: rules.canReportContent,
-      reportEvent: rules.canReportContent,
-      giveFeedbackOnDiscussion: rules.canGiveFeedback,
-      giveFeedbackOnComment: rules.canGiveFeedback,
-      giveFeedbackOnEvent: rules.canGiveFeedback,
+      createIssues: allow,
       deleteIssues: allow, // rules.canDeleteIssues,
+      updateIssues: allow, // rules.canUpdateIssues,
       // hideComments: updateComments: and(rules.verifiedEmail, or(rules.hasChannelModPermission("hideComments"), rules.isAdmin)),
       // canOpenChannelSupportTicket: and(rules.verifiedEmail, rules.isNotSuspendedFromServer),
       // canCloseChannelSupportTicket: and(rules.verifiedEmail, rules.isChannelModerator, rules.isNotSuspendedFromServer),
       // canOpenServerSupportTicket: rules.verifiedEmail,
       // canCloseServerSupportTicket: and(rules.verifiedEmail, rules.isServerModerator, rules.isNotSuspendedFromServer),
     },
+  },{
+    debug: true,
+    allowExternalErrors: true
   });
   
   

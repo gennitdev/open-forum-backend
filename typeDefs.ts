@@ -3,6 +3,10 @@ import { gql } from "apollo-server";
 const typeDefinitions = gql`
   scalar JSON
 
+  union IssueCommentAuthor = User | ModerationProfile
+  union CommentAuthor = User | ModerationProfile
+  union IssueAuthor = User | ModerationProfile
+
   type Channel {
     description: String
     displayName: String
@@ -259,8 +263,6 @@ const typeDefinitions = gql`
     ModServerRoles: [ModServerRole!]! @relationship(type: "HAS_MOD_ROLE", direction: OUT)
   }
 
-  union IssueAuthor = User | ModerationProfile
-
   type Issue {
     id: ID! @id
     channelUniqueName: String
@@ -270,21 +272,19 @@ const typeDefinitions = gql`
     title: String
     body: String
     isOpen: Boolean!
-    relatedDiscussionId: ID @unique
+    relatedDiscussionId: ID
     RelatedDiscussion: Discussion @relationship(type: "CITED_ISSUE", direction: OUT)
-    relatedCommentId: ID @unique
+    relatedCommentId: ID
     RelatedComment: Comment @relationship(type: "CITED_ISSUE", direction: OUT)
-    relatedEventId: ID @unique
+    relatedEventId: ID
     RelatedEvent: Event @relationship(type: "CITED_ISSUE", direction: OUT)
     createdAt: DateTime! @timestamp(operations: [CREATE])
     updatedAt: DateTime @timestamp(operations: [UPDATE])
     Comments: [Comment!]!
-      @relationship(type: "CITED_ISSUE", direction: IN)
+      @relationship(type: "CITED_ISSUE", direction: OUT)
   }
 
-  union IssueCommentAuthor = User | ModerationProfile
 
-  union CommentAuthor = User | ModerationProfile
   type Feed {
     id: ID! @id
     title: String
@@ -355,44 +355,6 @@ const typeDefinitions = gql`
     upvoteDiscussionChannel(discussionChannelId: ID!, username: String!): DiscussionChannel
     undoUpvoteDiscussionChannel(discussionChannelId: ID!, username: String!): DiscussionChannel
     createSignedStorageURL(filename: String!, contentType: String!): SignedURL
-    reportDiscussion(
-      title: String,
-      body: String,
-      relatedDiscussionId: ID,
-      channelUniqueName: String,
-      authorName: String,
-    ): Issue
-    reportEvent(
-      title: String,
-      body: String,
-      relatedEventId: ID,
-      channelUniqueName: String,
-      authorName: String,
-    ): Issue
-    reportComment(
-      title: String,
-      body: String,
-      relatedCommentId: ID,
-      channelUniqueName: String,
-      authorName: String,
-    ): Issue
-    giveFeedbackOnDiscussion(
-      discussionId: ID!
-      modProfileName: String!
-      commentText: String!
-      channelUniqueName: String!
-    ): Comment
-    giveFeedbackOnEvent(
-      eventId: ID!
-      modProfileName: String!
-      commentText: String!
-      channelUniqueName: String!
-    ): Comment
-    giveFeedbackOnComment(
-      commentId: ID!
-      modProfileName: String!
-      commentText: String!
-    ): Comment
   }
 
   input SiteWideDiscussionSortOrder {

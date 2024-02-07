@@ -140,6 +140,9 @@ export const canCreateComment = rule({ cache: "contextual" })(
 
 const isAdmin = rule({ cache: "contextual" })(
   async (parent: any, args: any, ctx: any, info: any) => {
+    if (!ctx.user) {
+      return false;
+    }
     const { isAdmin } = ctx.user;
     return isAdmin;
   }

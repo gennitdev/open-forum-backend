@@ -21,12 +21,6 @@ import undoUpvoteDiscussionChannel from "./customResolvers/mutations/undoUpvoteD
 import getSubredditResolver from "./customResolvers/queries/getSubreddit.js";
 import getSubredditSidebar from "./customResolvers/queries/getSubredditSidebar.js";
 import createSignedStorageURL from "./customResolvers/mutations/createSignedStorageURL.js";
-import reportDiscussion from "./customResolvers/mutations/reportDiscussion.js";
-import reportEvent from "./customResolvers/mutations/reportEvent.js";
-import reportComment from "./customResolvers/mutations/reportComment.js";
-import giveFeedbackOnDiscussion from "./customResolvers/mutations/giveFeedbackOnDiscussion.js";
-import giveFeedbackOnEvent from "./customResolvers/mutations/giveFeedbackOnEvent.js";
-import giveFeedbackOnComment from "./customResolvers/mutations/giveFeedbackOnComment.js";
 const { OGM } = pkg;
 export default function (driver) {
     const ogm = new OGM({
@@ -128,18 +122,6 @@ export default function (driver) {
                 driver,
             }),
             createSignedStorageURL: createSignedStorageURL(),
-            reportDiscussion: reportDiscussion({ Issue }),
-            reportEvent: reportEvent({ Issue }),
-            reportComment: reportComment({ Issue }),
-            giveFeedbackOnDiscussion: giveFeedbackOnDiscussion({
-                Comment
-            }),
-            giveFeedbackOnEvent: giveFeedbackOnEvent({
-                Comment
-            }),
-            giveFeedbackOnComment: giveFeedbackOnComment({
-                Comment
-            }),
         },
     };
     return {
