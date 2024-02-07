@@ -272,15 +272,15 @@ const typeDefinitions = gql `
     body: String
     isOpen: Boolean!
     relatedDiscussionId: ID
-    RelatedDiscussion: Discussion @relationship(type: "CITED_ISSUE", direction: OUT)
+    # RelatedDiscussion: Discussion @relationship(type: "CITED_ISSUE", direction: OUT)
     relatedCommentId: ID
-    RelatedComment: Comment @relationship(type: "CITED_ISSUE", direction: OUT)
+    # RelatedComment: Comment @relationship(type: "CITED_ISSUE", direction: OUT)
     relatedEventId: ID
-    RelatedEvent: Event @relationship(type: "CITED_ISSUE", direction: OUT)
+    # RelatedEvent: Event @relationship(type: "CITED_ISSUE", direction: OUT)
     createdAt: DateTime! @timestamp(operations: [CREATE])
     updatedAt: DateTime @timestamp(operations: [UPDATE])
     Comments: [Comment!]!
-      @relationship(type: "CITED_ISSUE", direction: OUT)
+      @relationship(type: "COMMENTED_ON_ISSUE", direction: OUT)
   }
 
 
