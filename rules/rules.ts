@@ -307,12 +307,20 @@ const canReportContent = rule({ cache: "contextual" })(
   }
 );
 
+const issueIsValid = rule({ cache: "contextual" })(
+  async (parent: any, args: any, ctx: any, info: any) => {
+
+    return true;
+  }
+);
+
 const ruleList = {
   isChannelOwner,
   isDiscussionOwner,
   isEventOwner,
   isCommentAuthor,
   isAuthenticatedAndVerified,
+  issueIsValid,
   canCreateChannel,
   canCreateComment,
   canCreateDiscussion,

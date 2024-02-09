@@ -50,7 +50,7 @@ const permissionList = shield({
       // Any user who can upvote a discussion can undo their upvote. The undo upvote resolver
       // checks if the user has upvoted the discussion and if so, removes the upvote.
       
-      createIssues: allow,
+      createIssues: rules.issueIsValid,
       deleteIssues: allow, // rules.canDeleteIssues,
       updateIssues: allow, // rules.canUpdateIssues,
       // hideComments: updateComments: and(rules.verifiedEmail, or(rules.hasChannelModPermission("hideComments"), rules.isAdmin)),
