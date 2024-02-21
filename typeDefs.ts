@@ -157,6 +157,7 @@ const typeDefinitions = gql`
       @relationship(type: "CONTAINS_COMMENT", direction: IN)
     Event: Event @relationship(type: "HAS_COMMENT", direction: IN)
     Channel: Channel @relationship(type: "HAS_COMMENT", direction: IN)
+    Issue: Issue @relationship(type: "ACTIVITY_ON_ISSUE", direction: IN)
     ParentComment: Comment @relationship(type: "IS_REPLY_TO", direction: OUT)
     text: String
     isRootComment: Boolean!
@@ -263,6 +264,16 @@ const typeDefinitions = gql`
     ModServerRoles: [ModServerRole!]! @relationship(type: "HAS_MOD_ROLE", direction: OUT)
   }
 
+  type ModerationAction {
+    id: ID! @id
+    ModerationProfile: ModerationProfile
+      @relationship(type: "PERFORMED_MODERATION_ACTION", direction: IN)
+    Comment: Comment @relationship(type: "MODERATED_COMMENT", direction: OUT)
+    createdAt: DateTime! @timestamp(operations: [CREATE])
+    actionType: String
+    actionDescription: String
+  }
+
   type Issue {
     id: ID! @id
     channelUniqueName: String
@@ -279,6 +290,8 @@ const typeDefinitions = gql`
     updatedAt: DateTime @timestamp(operations: [UPDATE])
     Comments: [Comment!]!
       @relationship(type: "COMMENTED_ON_ISSUE", direction: OUT)
+    ActivityFeed: [ModerationAction!]!
+      @relationship(type: "ACTIVITY_ON_ISSUE", direction: OUT)
   }
 
 
