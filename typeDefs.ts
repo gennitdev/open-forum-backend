@@ -173,7 +173,6 @@ const typeDefinitions = gql`
       @relationship(type: "DOWNVOTED_COMMENT", direction: IN)
     # PastVersions:            [CommentVersion]        @relationship(type: "HAS_VERSION", direction: OUT)
     emoji: JSON
-    RelatedIssues: [Issue!]! @relationship(type: "CITED_ISSUE", direction: IN)
     GivesFeedbackOnDiscussion: Discussion @relationship(type: "HAS_FEEDBACK_COMMENT", direction: OUT)
     GivesFeedbackOnEvent: Event @relationship(type: "HAS_FEEDBACK_COMMENT", direction: OUT)
     GivesFeedbackOnComment: Comment @relationship(type: "HAS_FEEDBACK_COMMENT", direction: OUT)
@@ -288,8 +287,6 @@ const typeDefinitions = gql`
     relatedEventId: ID
     createdAt: DateTime! @timestamp(operations: [CREATE])
     updatedAt: DateTime @timestamp(operations: [UPDATE])
-    Comments: [Comment!]!
-      @relationship(type: "COMMENTED_ON_ISSUE", direction: OUT)
     ActivityFeed: [ModerationAction!]!
       @relationship(type: "ACTIVITY_ON_ISSUE", direction: OUT)
   }

@@ -2429,9 +2429,6 @@ export type Comment = {
   ParentComment?: Maybe<Comment>;
   ParentCommentAggregate?: Maybe<CommentCommentParentCommentAggregationSelection>;
   ParentCommentConnection: CommentParentCommentConnection;
-  RelatedIssues: Array<Issue>;
-  RelatedIssuesAggregate?: Maybe<CommentIssueRelatedIssuesAggregationSelection>;
-  RelatedIssuesConnection: CommentRelatedIssuesConnection;
   Tags: Array<Tag>;
   TagsAggregate?: Maybe<CommentTagTagsAggregationSelection>;
   TagsConnection: CommentTagsConnection;
@@ -2703,28 +2700,6 @@ export type CommentParentCommentConnectionArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<Array<CommentParentCommentConnectionSort>>;
   where?: InputMaybe<CommentParentCommentConnectionWhere>;
-};
-
-
-export type CommentRelatedIssuesArgs = {
-  directed?: InputMaybe<Scalars['Boolean']['input']>;
-  options?: InputMaybe<IssueOptions>;
-  where?: InputMaybe<IssueWhere>;
-};
-
-
-export type CommentRelatedIssuesAggregateArgs = {
-  directed?: InputMaybe<Scalars['Boolean']['input']>;
-  where?: InputMaybe<IssueWhere>;
-};
-
-
-export type CommentRelatedIssuesConnectionArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  directed?: InputMaybe<Scalars['Boolean']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  sort?: InputMaybe<Array<CommentRelatedIssuesConnectionSort>>;
-  where?: InputMaybe<CommentRelatedIssuesConnectionWhere>;
 };
 
 
@@ -3353,7 +3328,6 @@ export type CommentConnectInput = {
   GivesFeedbackOnEvent?: InputMaybe<CommentGivesFeedbackOnEventConnectFieldInput>;
   Issue?: InputMaybe<CommentIssueConnectFieldInput>;
   ParentComment?: InputMaybe<CommentParentCommentConnectFieldInput>;
-  RelatedIssues?: InputMaybe<Array<CommentRelatedIssuesConnectFieldInput>>;
   Tags?: InputMaybe<Array<CommentTagsConnectFieldInput>>;
   UpvotedByUsers?: InputMaybe<Array<CommentUpvotedByUsersConnectFieldInput>>;
 };
@@ -3383,7 +3357,6 @@ export type CommentCreateInput = {
   GivesFeedbackOnEvent?: InputMaybe<CommentGivesFeedbackOnEventFieldInput>;
   Issue?: InputMaybe<CommentIssueFieldInput>;
   ParentComment?: InputMaybe<CommentParentCommentFieldInput>;
-  RelatedIssues?: InputMaybe<CommentRelatedIssuesFieldInput>;
   Tags?: InputMaybe<CommentTagsFieldInput>;
   UpvotedByUsers?: InputMaybe<CommentUpvotedByUsersFieldInput>;
   deleted?: InputMaybe<Scalars['Boolean']['input']>;
@@ -3407,7 +3380,6 @@ export type CommentDeleteInput = {
   GivesFeedbackOnEvent?: InputMaybe<CommentGivesFeedbackOnEventDeleteFieldInput>;
   Issue?: InputMaybe<CommentIssueDeleteFieldInput>;
   ParentComment?: InputMaybe<CommentParentCommentDeleteFieldInput>;
-  RelatedIssues?: InputMaybe<Array<CommentRelatedIssuesDeleteFieldInput>>;
   Tags?: InputMaybe<Array<CommentTagsDeleteFieldInput>>;
   UpvotedByUsers?: InputMaybe<Array<CommentUpvotedByUsersDeleteFieldInput>>;
 };
@@ -3425,7 +3397,6 @@ export type CommentDisconnectInput = {
   GivesFeedbackOnEvent?: InputMaybe<CommentGivesFeedbackOnEventDisconnectFieldInput>;
   Issue?: InputMaybe<CommentIssueDisconnectFieldInput>;
   ParentComment?: InputMaybe<CommentParentCommentDisconnectFieldInput>;
-  RelatedIssues?: InputMaybe<Array<CommentRelatedIssuesDisconnectFieldInput>>;
   Tags?: InputMaybe<Array<CommentTagsDisconnectFieldInput>>;
   UpvotedByUsers?: InputMaybe<Array<CommentUpvotedByUsersDisconnectFieldInput>>;
 };
@@ -4876,26 +4847,6 @@ export type CommentIssueNodeAggregationWhereInput = {
   updatedAt_MIN_LTE?: InputMaybe<Scalars['DateTime']['input']>;
 };
 
-export type CommentIssueRelatedIssuesAggregationSelection = {
-  __typename?: 'CommentIssueRelatedIssuesAggregationSelection';
-  count: Scalars['Int']['output'];
-  node?: Maybe<CommentIssueRelatedIssuesNodeAggregateSelection>;
-};
-
-export type CommentIssueRelatedIssuesNodeAggregateSelection = {
-  __typename?: 'CommentIssueRelatedIssuesNodeAggregateSelection';
-  authorName: StringAggregateSelectionNullable;
-  body: StringAggregateSelectionNullable;
-  channelUniqueName: StringAggregateSelectionNullable;
-  createdAt: DateTimeAggregateSelectionNonNullable;
-  id: IdAggregateSelectionNonNullable;
-  relatedCommentId: IdAggregateSelectionNullable;
-  relatedDiscussionId: IdAggregateSelectionNullable;
-  relatedEventId: IdAggregateSelectionNullable;
-  title: StringAggregateSelectionNullable;
-  updatedAt: DateTimeAggregateSelectionNullable;
-};
-
 export type CommentIssueRelationship = {
   __typename?: 'CommentIssueRelationship';
   cursor: Scalars['String']['output'];
@@ -5070,167 +5021,6 @@ export type CommentParentCommentUpdateFieldInput = {
   where?: InputMaybe<CommentParentCommentConnectionWhere>;
 };
 
-export type CommentRelatedIssuesAggregateInput = {
-  AND?: InputMaybe<Array<CommentRelatedIssuesAggregateInput>>;
-  NOT?: InputMaybe<CommentRelatedIssuesAggregateInput>;
-  OR?: InputMaybe<Array<CommentRelatedIssuesAggregateInput>>;
-  count?: InputMaybe<Scalars['Int']['input']>;
-  count_GT?: InputMaybe<Scalars['Int']['input']>;
-  count_GTE?: InputMaybe<Scalars['Int']['input']>;
-  count_LT?: InputMaybe<Scalars['Int']['input']>;
-  count_LTE?: InputMaybe<Scalars['Int']['input']>;
-  node?: InputMaybe<CommentRelatedIssuesNodeAggregationWhereInput>;
-};
-
-export type CommentRelatedIssuesConnectFieldInput = {
-  connect?: InputMaybe<Array<IssueConnectInput>>;
-  /** Whether or not to overwrite any matching relationship with the new properties. */
-  overwrite?: Scalars['Boolean']['input'];
-  where?: InputMaybe<IssueConnectWhere>;
-};
-
-export type CommentRelatedIssuesConnection = {
-  __typename?: 'CommentRelatedIssuesConnection';
-  edges: Array<CommentRelatedIssuesRelationship>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int']['output'];
-};
-
-export type CommentRelatedIssuesConnectionSort = {
-  node?: InputMaybe<IssueSort>;
-};
-
-export type CommentRelatedIssuesConnectionWhere = {
-  AND?: InputMaybe<Array<CommentRelatedIssuesConnectionWhere>>;
-  NOT?: InputMaybe<CommentRelatedIssuesConnectionWhere>;
-  OR?: InputMaybe<Array<CommentRelatedIssuesConnectionWhere>>;
-  node?: InputMaybe<IssueWhere>;
-};
-
-export type CommentRelatedIssuesCreateFieldInput = {
-  node: IssueCreateInput;
-};
-
-export type CommentRelatedIssuesDeleteFieldInput = {
-  delete?: InputMaybe<IssueDeleteInput>;
-  where?: InputMaybe<CommentRelatedIssuesConnectionWhere>;
-};
-
-export type CommentRelatedIssuesDisconnectFieldInput = {
-  disconnect?: InputMaybe<IssueDisconnectInput>;
-  where?: InputMaybe<CommentRelatedIssuesConnectionWhere>;
-};
-
-export type CommentRelatedIssuesFieldInput = {
-  connect?: InputMaybe<Array<CommentRelatedIssuesConnectFieldInput>>;
-  create?: InputMaybe<Array<CommentRelatedIssuesCreateFieldInput>>;
-};
-
-export type CommentRelatedIssuesNodeAggregationWhereInput = {
-  AND?: InputMaybe<Array<CommentRelatedIssuesNodeAggregationWhereInput>>;
-  NOT?: InputMaybe<CommentRelatedIssuesNodeAggregationWhereInput>;
-  OR?: InputMaybe<Array<CommentRelatedIssuesNodeAggregationWhereInput>>;
-  authorName_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
-  authorName_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
-  authorName_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
-  authorName_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
-  authorName_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
-  authorName_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  authorName_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
-  authorName_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
-  authorName_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
-  authorName_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
-  authorName_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  authorName_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
-  authorName_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
-  authorName_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
-  authorName_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
-  body_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
-  body_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
-  body_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
-  body_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
-  body_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
-  body_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  body_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
-  body_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
-  body_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
-  body_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
-  body_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  body_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
-  body_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
-  body_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
-  body_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
-  channelUniqueName_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
-  channelUniqueName_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
-  channelUniqueName_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
-  channelUniqueName_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
-  channelUniqueName_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
-  channelUniqueName_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  channelUniqueName_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
-  channelUniqueName_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
-  channelUniqueName_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
-  channelUniqueName_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
-  channelUniqueName_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  channelUniqueName_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
-  channelUniqueName_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
-  channelUniqueName_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
-  channelUniqueName_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
-  createdAt_MAX_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MAX_GT?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MAX_GTE?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MAX_LT?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MAX_LTE?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MIN_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MIN_GT?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MIN_GTE?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MIN_LT?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MIN_LTE?: InputMaybe<Scalars['DateTime']['input']>;
-  title_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
-  title_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
-  title_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
-  title_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
-  title_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
-  title_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  title_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
-  title_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
-  title_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
-  title_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
-  title_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  title_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
-  title_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
-  title_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
-  title_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
-  updatedAt_MAX_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
-  updatedAt_MAX_GT?: InputMaybe<Scalars['DateTime']['input']>;
-  updatedAt_MAX_GTE?: InputMaybe<Scalars['DateTime']['input']>;
-  updatedAt_MAX_LT?: InputMaybe<Scalars['DateTime']['input']>;
-  updatedAt_MAX_LTE?: InputMaybe<Scalars['DateTime']['input']>;
-  updatedAt_MIN_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
-  updatedAt_MIN_GT?: InputMaybe<Scalars['DateTime']['input']>;
-  updatedAt_MIN_GTE?: InputMaybe<Scalars['DateTime']['input']>;
-  updatedAt_MIN_LT?: InputMaybe<Scalars['DateTime']['input']>;
-  updatedAt_MIN_LTE?: InputMaybe<Scalars['DateTime']['input']>;
-};
-
-export type CommentRelatedIssuesRelationship = {
-  __typename?: 'CommentRelatedIssuesRelationship';
-  cursor: Scalars['String']['output'];
-  node: Issue;
-};
-
-export type CommentRelatedIssuesUpdateConnectionInput = {
-  node?: InputMaybe<IssueUpdateInput>;
-};
-
-export type CommentRelatedIssuesUpdateFieldInput = {
-  connect?: InputMaybe<Array<CommentRelatedIssuesConnectFieldInput>>;
-  create?: InputMaybe<Array<CommentRelatedIssuesCreateFieldInput>>;
-  delete?: InputMaybe<Array<CommentRelatedIssuesDeleteFieldInput>>;
-  disconnect?: InputMaybe<Array<CommentRelatedIssuesDisconnectFieldInput>>;
-  update?: InputMaybe<CommentRelatedIssuesUpdateConnectionInput>;
-  where?: InputMaybe<CommentRelatedIssuesConnectionWhere>;
-};
-
 export type CommentRelationInput = {
   Channel?: InputMaybe<CommentChannelCreateFieldInput>;
   ChildComments?: InputMaybe<Array<CommentChildCommentsCreateFieldInput>>;
@@ -5244,7 +5034,6 @@ export type CommentRelationInput = {
   GivesFeedbackOnEvent?: InputMaybe<CommentGivesFeedbackOnEventCreateFieldInput>;
   Issue?: InputMaybe<CommentIssueCreateFieldInput>;
   ParentComment?: InputMaybe<CommentParentCommentCreateFieldInput>;
-  RelatedIssues?: InputMaybe<Array<CommentRelatedIssuesCreateFieldInput>>;
   Tags?: InputMaybe<Array<CommentTagsCreateFieldInput>>;
   UpvotedByUsers?: InputMaybe<Array<CommentUpvotedByUsersCreateFieldInput>>;
 };
@@ -5496,7 +5285,6 @@ export type CommentUpdateInput = {
   GivesFeedbackOnEvent?: InputMaybe<CommentGivesFeedbackOnEventUpdateFieldInput>;
   Issue?: InputMaybe<CommentIssueUpdateFieldInput>;
   ParentComment?: InputMaybe<CommentParentCommentUpdateFieldInput>;
-  RelatedIssues?: InputMaybe<Array<CommentRelatedIssuesUpdateFieldInput>>;
   Tags?: InputMaybe<Array<CommentTagsUpdateFieldInput>>;
   UpvotedByUsers?: InputMaybe<Array<CommentUpvotedByUsersUpdateFieldInput>>;
   createdAt?: InputMaybe<Scalars['DateTime']['input']>;
@@ -5907,23 +5695,6 @@ export type CommentWhere = {
   ParentCommentConnection?: InputMaybe<CommentParentCommentConnectionWhere>;
   ParentCommentConnection_NOT?: InputMaybe<CommentParentCommentConnectionWhere>;
   ParentComment_NOT?: InputMaybe<CommentWhere>;
-  RelatedIssuesAggregate?: InputMaybe<CommentRelatedIssuesAggregateInput>;
-  /** Return Comments where all of the related CommentRelatedIssuesConnections match this filter */
-  RelatedIssuesConnection_ALL?: InputMaybe<CommentRelatedIssuesConnectionWhere>;
-  /** Return Comments where none of the related CommentRelatedIssuesConnections match this filter */
-  RelatedIssuesConnection_NONE?: InputMaybe<CommentRelatedIssuesConnectionWhere>;
-  /** Return Comments where one of the related CommentRelatedIssuesConnections match this filter */
-  RelatedIssuesConnection_SINGLE?: InputMaybe<CommentRelatedIssuesConnectionWhere>;
-  /** Return Comments where some of the related CommentRelatedIssuesConnections match this filter */
-  RelatedIssuesConnection_SOME?: InputMaybe<CommentRelatedIssuesConnectionWhere>;
-  /** Return Comments where all of the related Issues match this filter */
-  RelatedIssues_ALL?: InputMaybe<IssueWhere>;
-  /** Return Comments where none of the related Issues match this filter */
-  RelatedIssues_NONE?: InputMaybe<IssueWhere>;
-  /** Return Comments where one of the related Issues match this filter */
-  RelatedIssues_SINGLE?: InputMaybe<IssueWhere>;
-  /** Return Comments where some of the related Issues match this filter */
-  RelatedIssues_SOME?: InputMaybe<IssueWhere>;
   TagsAggregate?: InputMaybe<CommentTagsAggregateInput>;
   /** Return Comments where all of the related CommentTagsConnections match this filter */
   TagsConnection_ALL?: InputMaybe<CommentTagsConnectionWhere>;
@@ -12900,9 +12671,6 @@ export type Issue = {
   Channel?: Maybe<Channel>;
   ChannelAggregate?: Maybe<IssueChannelChannelAggregationSelection>;
   ChannelConnection: IssueChannelConnection;
-  Comments: Array<Comment>;
-  CommentsAggregate?: Maybe<IssueCommentCommentsAggregationSelection>;
-  CommentsConnection: IssueCommentsConnection;
   authorName?: Maybe<Scalars['String']['output']>;
   body?: Maybe<Scalars['String']['output']>;
   channelUniqueName?: Maybe<Scalars['String']['output']>;
@@ -12973,28 +12741,6 @@ export type IssueChannelConnectionArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<Array<IssueChannelConnectionSort>>;
   where?: InputMaybe<IssueChannelConnectionWhere>;
-};
-
-
-export type IssueCommentsArgs = {
-  directed?: InputMaybe<Scalars['Boolean']['input']>;
-  options?: InputMaybe<CommentOptions>;
-  where?: InputMaybe<CommentWhere>;
-};
-
-
-export type IssueCommentsAggregateArgs = {
-  directed?: InputMaybe<Scalars['Boolean']['input']>;
-  where?: InputMaybe<CommentWhere>;
-};
-
-
-export type IssueCommentsConnectionArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  directed?: InputMaybe<Scalars['Boolean']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  sort?: InputMaybe<Array<IssueCommentsConnectionSort>>;
-  where?: InputMaybe<IssueCommentsConnectionWhere>;
 };
 
 export type IssueActivityFeedAggregateInput = {
@@ -13496,162 +13242,10 @@ export type IssueChannelUpdateFieldInput = {
   where?: InputMaybe<IssueChannelConnectionWhere>;
 };
 
-export type IssueCommentCommentsAggregationSelection = {
-  __typename?: 'IssueCommentCommentsAggregationSelection';
-  count: Scalars['Int']['output'];
-  node?: Maybe<IssueCommentCommentsNodeAggregateSelection>;
-};
-
-export type IssueCommentCommentsNodeAggregateSelection = {
-  __typename?: 'IssueCommentCommentsNodeAggregateSelection';
-  createdAt: DateTimeAggregateSelectionNonNullable;
-  id: IdAggregateSelectionNonNullable;
-  text: StringAggregateSelectionNullable;
-  updatedAt: DateTimeAggregateSelectionNullable;
-  weightedVotesCount: FloatAggregateSelectionNullable;
-};
-
-export type IssueCommentsAggregateInput = {
-  AND?: InputMaybe<Array<IssueCommentsAggregateInput>>;
-  NOT?: InputMaybe<IssueCommentsAggregateInput>;
-  OR?: InputMaybe<Array<IssueCommentsAggregateInput>>;
-  count?: InputMaybe<Scalars['Int']['input']>;
-  count_GT?: InputMaybe<Scalars['Int']['input']>;
-  count_GTE?: InputMaybe<Scalars['Int']['input']>;
-  count_LT?: InputMaybe<Scalars['Int']['input']>;
-  count_LTE?: InputMaybe<Scalars['Int']['input']>;
-  node?: InputMaybe<IssueCommentsNodeAggregationWhereInput>;
-};
-
-export type IssueCommentsConnectFieldInput = {
-  connect?: InputMaybe<Array<CommentConnectInput>>;
-  /** Whether or not to overwrite any matching relationship with the new properties. */
-  overwrite?: Scalars['Boolean']['input'];
-  where?: InputMaybe<CommentConnectWhere>;
-};
-
-export type IssueCommentsConnection = {
-  __typename?: 'IssueCommentsConnection';
-  edges: Array<IssueCommentsRelationship>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int']['output'];
-};
-
-export type IssueCommentsConnectionSort = {
-  node?: InputMaybe<CommentSort>;
-};
-
-export type IssueCommentsConnectionWhere = {
-  AND?: InputMaybe<Array<IssueCommentsConnectionWhere>>;
-  NOT?: InputMaybe<IssueCommentsConnectionWhere>;
-  OR?: InputMaybe<Array<IssueCommentsConnectionWhere>>;
-  node?: InputMaybe<CommentWhere>;
-};
-
-export type IssueCommentsCreateFieldInput = {
-  node: CommentCreateInput;
-};
-
-export type IssueCommentsDeleteFieldInput = {
-  delete?: InputMaybe<CommentDeleteInput>;
-  where?: InputMaybe<IssueCommentsConnectionWhere>;
-};
-
-export type IssueCommentsDisconnectFieldInput = {
-  disconnect?: InputMaybe<CommentDisconnectInput>;
-  where?: InputMaybe<IssueCommentsConnectionWhere>;
-};
-
-export type IssueCommentsFieldInput = {
-  connect?: InputMaybe<Array<IssueCommentsConnectFieldInput>>;
-  create?: InputMaybe<Array<IssueCommentsCreateFieldInput>>;
-};
-
-export type IssueCommentsNodeAggregationWhereInput = {
-  AND?: InputMaybe<Array<IssueCommentsNodeAggregationWhereInput>>;
-  NOT?: InputMaybe<IssueCommentsNodeAggregationWhereInput>;
-  OR?: InputMaybe<Array<IssueCommentsNodeAggregationWhereInput>>;
-  createdAt_MAX_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MAX_GT?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MAX_GTE?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MAX_LT?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MAX_LTE?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MIN_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MIN_GT?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MIN_GTE?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MIN_LT?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MIN_LTE?: InputMaybe<Scalars['DateTime']['input']>;
-  text_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
-  text_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
-  text_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
-  text_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
-  text_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
-  text_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  text_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
-  text_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
-  text_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
-  text_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
-  text_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  text_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
-  text_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
-  text_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
-  text_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
-  updatedAt_MAX_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
-  updatedAt_MAX_GT?: InputMaybe<Scalars['DateTime']['input']>;
-  updatedAt_MAX_GTE?: InputMaybe<Scalars['DateTime']['input']>;
-  updatedAt_MAX_LT?: InputMaybe<Scalars['DateTime']['input']>;
-  updatedAt_MAX_LTE?: InputMaybe<Scalars['DateTime']['input']>;
-  updatedAt_MIN_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
-  updatedAt_MIN_GT?: InputMaybe<Scalars['DateTime']['input']>;
-  updatedAt_MIN_GTE?: InputMaybe<Scalars['DateTime']['input']>;
-  updatedAt_MIN_LT?: InputMaybe<Scalars['DateTime']['input']>;
-  updatedAt_MIN_LTE?: InputMaybe<Scalars['DateTime']['input']>;
-  weightedVotesCount_AVERAGE_EQUAL?: InputMaybe<Scalars['Float']['input']>;
-  weightedVotesCount_AVERAGE_GT?: InputMaybe<Scalars['Float']['input']>;
-  weightedVotesCount_AVERAGE_GTE?: InputMaybe<Scalars['Float']['input']>;
-  weightedVotesCount_AVERAGE_LT?: InputMaybe<Scalars['Float']['input']>;
-  weightedVotesCount_AVERAGE_LTE?: InputMaybe<Scalars['Float']['input']>;
-  weightedVotesCount_MAX_EQUAL?: InputMaybe<Scalars['Float']['input']>;
-  weightedVotesCount_MAX_GT?: InputMaybe<Scalars['Float']['input']>;
-  weightedVotesCount_MAX_GTE?: InputMaybe<Scalars['Float']['input']>;
-  weightedVotesCount_MAX_LT?: InputMaybe<Scalars['Float']['input']>;
-  weightedVotesCount_MAX_LTE?: InputMaybe<Scalars['Float']['input']>;
-  weightedVotesCount_MIN_EQUAL?: InputMaybe<Scalars['Float']['input']>;
-  weightedVotesCount_MIN_GT?: InputMaybe<Scalars['Float']['input']>;
-  weightedVotesCount_MIN_GTE?: InputMaybe<Scalars['Float']['input']>;
-  weightedVotesCount_MIN_LT?: InputMaybe<Scalars['Float']['input']>;
-  weightedVotesCount_MIN_LTE?: InputMaybe<Scalars['Float']['input']>;
-  weightedVotesCount_SUM_EQUAL?: InputMaybe<Scalars['Float']['input']>;
-  weightedVotesCount_SUM_GT?: InputMaybe<Scalars['Float']['input']>;
-  weightedVotesCount_SUM_GTE?: InputMaybe<Scalars['Float']['input']>;
-  weightedVotesCount_SUM_LT?: InputMaybe<Scalars['Float']['input']>;
-  weightedVotesCount_SUM_LTE?: InputMaybe<Scalars['Float']['input']>;
-};
-
-export type IssueCommentsRelationship = {
-  __typename?: 'IssueCommentsRelationship';
-  cursor: Scalars['String']['output'];
-  node: Comment;
-};
-
-export type IssueCommentsUpdateConnectionInput = {
-  node?: InputMaybe<CommentUpdateInput>;
-};
-
-export type IssueCommentsUpdateFieldInput = {
-  connect?: InputMaybe<Array<IssueCommentsConnectFieldInput>>;
-  create?: InputMaybe<Array<IssueCommentsCreateFieldInput>>;
-  delete?: InputMaybe<Array<IssueCommentsDeleteFieldInput>>;
-  disconnect?: InputMaybe<Array<IssueCommentsDisconnectFieldInput>>;
-  update?: InputMaybe<IssueCommentsUpdateConnectionInput>;
-  where?: InputMaybe<IssueCommentsConnectionWhere>;
-};
-
 export type IssueConnectInput = {
   ActivityFeed?: InputMaybe<Array<IssueActivityFeedConnectFieldInput>>;
   Author?: InputMaybe<IssueAuthorConnectInput>;
   Channel?: InputMaybe<IssueChannelConnectFieldInput>;
-  Comments?: InputMaybe<Array<IssueCommentsConnectFieldInput>>;
 };
 
 export type IssueConnectOrCreateInput = {
@@ -13667,7 +13261,6 @@ export type IssueCreateInput = {
   ActivityFeed?: InputMaybe<IssueActivityFeedFieldInput>;
   Author?: InputMaybe<IssueAuthorCreateInput>;
   Channel?: InputMaybe<IssueChannelFieldInput>;
-  Comments?: InputMaybe<IssueCommentsFieldInput>;
   authorName?: InputMaybe<Scalars['String']['input']>;
   body?: InputMaybe<Scalars['String']['input']>;
   channelUniqueName?: InputMaybe<Scalars['String']['input']>;
@@ -13683,14 +13276,12 @@ export type IssueDeleteInput = {
   ActivityFeed?: InputMaybe<Array<IssueActivityFeedDeleteFieldInput>>;
   Author?: InputMaybe<IssueAuthorDeleteInput>;
   Channel?: InputMaybe<IssueChannelDeleteFieldInput>;
-  Comments?: InputMaybe<Array<IssueCommentsDeleteFieldInput>>;
 };
 
 export type IssueDisconnectInput = {
   ActivityFeed?: InputMaybe<Array<IssueActivityFeedDisconnectFieldInput>>;
   Author?: InputMaybe<IssueAuthorDisconnectInput>;
   Channel?: InputMaybe<IssueChannelDisconnectFieldInput>;
-  Comments?: InputMaybe<Array<IssueCommentsDisconnectFieldInput>>;
 };
 
 export type IssueEdge = {
@@ -13724,7 +13315,6 @@ export type IssueRelationInput = {
   ActivityFeed?: InputMaybe<Array<IssueActivityFeedCreateFieldInput>>;
   Author?: InputMaybe<IssueAuthorCreateFieldInput>;
   Channel?: InputMaybe<IssueChannelCreateFieldInput>;
-  Comments?: InputMaybe<Array<IssueCommentsCreateFieldInput>>;
 };
 
 /** Fields to sort Issues by. The order in which sorts are applied is not guaranteed when specifying many fields in one IssueSort object. */
@@ -13746,7 +13336,6 @@ export type IssueUpdateInput = {
   ActivityFeed?: InputMaybe<Array<IssueActivityFeedUpdateFieldInput>>;
   Author?: InputMaybe<IssueAuthorUpdateInput>;
   Channel?: InputMaybe<IssueChannelUpdateFieldInput>;
-  Comments?: InputMaybe<Array<IssueCommentsUpdateFieldInput>>;
   authorName?: InputMaybe<Scalars['String']['input']>;
   body?: InputMaybe<Scalars['String']['input']>;
   channelUniqueName?: InputMaybe<Scalars['String']['input']>;
@@ -13784,23 +13373,6 @@ export type IssueWhere = {
   ChannelConnection?: InputMaybe<IssueChannelConnectionWhere>;
   ChannelConnection_NOT?: InputMaybe<IssueChannelConnectionWhere>;
   Channel_NOT?: InputMaybe<ChannelWhere>;
-  CommentsAggregate?: InputMaybe<IssueCommentsAggregateInput>;
-  /** Return Issues where all of the related IssueCommentsConnections match this filter */
-  CommentsConnection_ALL?: InputMaybe<IssueCommentsConnectionWhere>;
-  /** Return Issues where none of the related IssueCommentsConnections match this filter */
-  CommentsConnection_NONE?: InputMaybe<IssueCommentsConnectionWhere>;
-  /** Return Issues where one of the related IssueCommentsConnections match this filter */
-  CommentsConnection_SINGLE?: InputMaybe<IssueCommentsConnectionWhere>;
-  /** Return Issues where some of the related IssueCommentsConnections match this filter */
-  CommentsConnection_SOME?: InputMaybe<IssueCommentsConnectionWhere>;
-  /** Return Issues where all of the related Comments match this filter */
-  Comments_ALL?: InputMaybe<CommentWhere>;
-  /** Return Issues where none of the related Comments match this filter */
-  Comments_NONE?: InputMaybe<CommentWhere>;
-  /** Return Issues where one of the related Comments match this filter */
-  Comments_SINGLE?: InputMaybe<CommentWhere>;
-  /** Return Issues where some of the related Comments match this filter */
-  Comments_SOME?: InputMaybe<CommentWhere>;
   NOT?: InputMaybe<IssueWhere>;
   OR?: InputMaybe<Array<IssueWhere>>;
   authorName?: InputMaybe<Scalars['String']['input']>;
@@ -25864,8 +25436,6 @@ export type ResolversTypes = {
   CommentIssueIssueAggregationSelection: ResolverTypeWrapper<CommentIssueIssueAggregationSelection>;
   CommentIssueIssueNodeAggregateSelection: ResolverTypeWrapper<CommentIssueIssueNodeAggregateSelection>;
   CommentIssueNodeAggregationWhereInput: CommentIssueNodeAggregationWhereInput;
-  CommentIssueRelatedIssuesAggregationSelection: ResolverTypeWrapper<CommentIssueRelatedIssuesAggregationSelection>;
-  CommentIssueRelatedIssuesNodeAggregateSelection: ResolverTypeWrapper<CommentIssueRelatedIssuesNodeAggregateSelection>;
   CommentIssueRelationship: ResolverTypeWrapper<CommentIssueRelationship>;
   CommentIssueUpdateConnectionInput: CommentIssueUpdateConnectionInput;
   CommentIssueUpdateFieldInput: CommentIssueUpdateFieldInput;
@@ -25885,19 +25455,6 @@ export type ResolversTypes = {
   CommentParentCommentRelationship: ResolverTypeWrapper<CommentParentCommentRelationship>;
   CommentParentCommentUpdateConnectionInput: CommentParentCommentUpdateConnectionInput;
   CommentParentCommentUpdateFieldInput: CommentParentCommentUpdateFieldInput;
-  CommentRelatedIssuesAggregateInput: CommentRelatedIssuesAggregateInput;
-  CommentRelatedIssuesConnectFieldInput: CommentRelatedIssuesConnectFieldInput;
-  CommentRelatedIssuesConnection: ResolverTypeWrapper<CommentRelatedIssuesConnection>;
-  CommentRelatedIssuesConnectionSort: CommentRelatedIssuesConnectionSort;
-  CommentRelatedIssuesConnectionWhere: CommentRelatedIssuesConnectionWhere;
-  CommentRelatedIssuesCreateFieldInput: CommentRelatedIssuesCreateFieldInput;
-  CommentRelatedIssuesDeleteFieldInput: CommentRelatedIssuesDeleteFieldInput;
-  CommentRelatedIssuesDisconnectFieldInput: CommentRelatedIssuesDisconnectFieldInput;
-  CommentRelatedIssuesFieldInput: CommentRelatedIssuesFieldInput;
-  CommentRelatedIssuesNodeAggregationWhereInput: CommentRelatedIssuesNodeAggregationWhereInput;
-  CommentRelatedIssuesRelationship: ResolverTypeWrapper<CommentRelatedIssuesRelationship>;
-  CommentRelatedIssuesUpdateConnectionInput: CommentRelatedIssuesUpdateConnectionInput;
-  CommentRelatedIssuesUpdateFieldInput: CommentRelatedIssuesUpdateFieldInput;
   CommentRelationInput: CommentRelationInput;
   CommentRepliesFormat: ResolverTypeWrapper<CommentRepliesFormat>;
   CommentRepliesFormatAggregateSelection: ResolverTypeWrapper<CommentRepliesFormatAggregateSelection>;
@@ -26571,21 +26128,6 @@ export type ResolversTypes = {
   IssueChannelRelationship: ResolverTypeWrapper<IssueChannelRelationship>;
   IssueChannelUpdateConnectionInput: IssueChannelUpdateConnectionInput;
   IssueChannelUpdateFieldInput: IssueChannelUpdateFieldInput;
-  IssueCommentCommentsAggregationSelection: ResolverTypeWrapper<IssueCommentCommentsAggregationSelection>;
-  IssueCommentCommentsNodeAggregateSelection: ResolverTypeWrapper<IssueCommentCommentsNodeAggregateSelection>;
-  IssueCommentsAggregateInput: IssueCommentsAggregateInput;
-  IssueCommentsConnectFieldInput: IssueCommentsConnectFieldInput;
-  IssueCommentsConnection: ResolverTypeWrapper<IssueCommentsConnection>;
-  IssueCommentsConnectionSort: IssueCommentsConnectionSort;
-  IssueCommentsConnectionWhere: IssueCommentsConnectionWhere;
-  IssueCommentsCreateFieldInput: IssueCommentsCreateFieldInput;
-  IssueCommentsDeleteFieldInput: IssueCommentsDeleteFieldInput;
-  IssueCommentsDisconnectFieldInput: IssueCommentsDisconnectFieldInput;
-  IssueCommentsFieldInput: IssueCommentsFieldInput;
-  IssueCommentsNodeAggregationWhereInput: IssueCommentsNodeAggregationWhereInput;
-  IssueCommentsRelationship: ResolverTypeWrapper<IssueCommentsRelationship>;
-  IssueCommentsUpdateConnectionInput: IssueCommentsUpdateConnectionInput;
-  IssueCommentsUpdateFieldInput: IssueCommentsUpdateFieldInput;
   IssueConnectInput: IssueConnectInput;
   IssueConnectOrCreateInput: IssueConnectOrCreateInput;
   IssueConnectWhere: IssueConnectWhere;
@@ -27825,8 +27367,6 @@ export type ResolversParentTypes = {
   CommentIssueIssueAggregationSelection: CommentIssueIssueAggregationSelection;
   CommentIssueIssueNodeAggregateSelection: CommentIssueIssueNodeAggregateSelection;
   CommentIssueNodeAggregationWhereInput: CommentIssueNodeAggregationWhereInput;
-  CommentIssueRelatedIssuesAggregationSelection: CommentIssueRelatedIssuesAggregationSelection;
-  CommentIssueRelatedIssuesNodeAggregateSelection: CommentIssueRelatedIssuesNodeAggregateSelection;
   CommentIssueRelationship: CommentIssueRelationship;
   CommentIssueUpdateConnectionInput: CommentIssueUpdateConnectionInput;
   CommentIssueUpdateFieldInput: CommentIssueUpdateFieldInput;
@@ -27846,19 +27386,6 @@ export type ResolversParentTypes = {
   CommentParentCommentRelationship: CommentParentCommentRelationship;
   CommentParentCommentUpdateConnectionInput: CommentParentCommentUpdateConnectionInput;
   CommentParentCommentUpdateFieldInput: CommentParentCommentUpdateFieldInput;
-  CommentRelatedIssuesAggregateInput: CommentRelatedIssuesAggregateInput;
-  CommentRelatedIssuesConnectFieldInput: CommentRelatedIssuesConnectFieldInput;
-  CommentRelatedIssuesConnection: CommentRelatedIssuesConnection;
-  CommentRelatedIssuesConnectionSort: CommentRelatedIssuesConnectionSort;
-  CommentRelatedIssuesConnectionWhere: CommentRelatedIssuesConnectionWhere;
-  CommentRelatedIssuesCreateFieldInput: CommentRelatedIssuesCreateFieldInput;
-  CommentRelatedIssuesDeleteFieldInput: CommentRelatedIssuesDeleteFieldInput;
-  CommentRelatedIssuesDisconnectFieldInput: CommentRelatedIssuesDisconnectFieldInput;
-  CommentRelatedIssuesFieldInput: CommentRelatedIssuesFieldInput;
-  CommentRelatedIssuesNodeAggregationWhereInput: CommentRelatedIssuesNodeAggregationWhereInput;
-  CommentRelatedIssuesRelationship: CommentRelatedIssuesRelationship;
-  CommentRelatedIssuesUpdateConnectionInput: CommentRelatedIssuesUpdateConnectionInput;
-  CommentRelatedIssuesUpdateFieldInput: CommentRelatedIssuesUpdateFieldInput;
   CommentRelationInput: CommentRelationInput;
   CommentRepliesFormat: CommentRepliesFormat;
   CommentRepliesFormatAggregateSelection: CommentRepliesFormatAggregateSelection;
@@ -28532,21 +28059,6 @@ export type ResolversParentTypes = {
   IssueChannelRelationship: IssueChannelRelationship;
   IssueChannelUpdateConnectionInput: IssueChannelUpdateConnectionInput;
   IssueChannelUpdateFieldInput: IssueChannelUpdateFieldInput;
-  IssueCommentCommentsAggregationSelection: IssueCommentCommentsAggregationSelection;
-  IssueCommentCommentsNodeAggregateSelection: IssueCommentCommentsNodeAggregateSelection;
-  IssueCommentsAggregateInput: IssueCommentsAggregateInput;
-  IssueCommentsConnectFieldInput: IssueCommentsConnectFieldInput;
-  IssueCommentsConnection: IssueCommentsConnection;
-  IssueCommentsConnectionSort: IssueCommentsConnectionSort;
-  IssueCommentsConnectionWhere: IssueCommentsConnectionWhere;
-  IssueCommentsCreateFieldInput: IssueCommentsCreateFieldInput;
-  IssueCommentsDeleteFieldInput: IssueCommentsDeleteFieldInput;
-  IssueCommentsDisconnectFieldInput: IssueCommentsDisconnectFieldInput;
-  IssueCommentsFieldInput: IssueCommentsFieldInput;
-  IssueCommentsNodeAggregationWhereInput: IssueCommentsNodeAggregationWhereInput;
-  IssueCommentsRelationship: IssueCommentsRelationship;
-  IssueCommentsUpdateConnectionInput: IssueCommentsUpdateConnectionInput;
-  IssueCommentsUpdateFieldInput: IssueCommentsUpdateFieldInput;
   IssueConnectInput: IssueConnectInput;
   IssueConnectOrCreateInput: IssueConnectOrCreateInput;
   IssueConnectWhere: IssueConnectWhere;
@@ -29814,9 +29326,6 @@ export type CommentResolvers<ContextType = any, ParentType extends ResolversPare
   ParentComment?: Resolver<Maybe<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<CommentParentCommentArgs, 'directed'>>;
   ParentCommentAggregate?: Resolver<Maybe<ResolversTypes['CommentCommentParentCommentAggregationSelection']>, ParentType, ContextType, RequireFields<CommentParentCommentAggregateArgs, 'directed'>>;
   ParentCommentConnection?: Resolver<ResolversTypes['CommentParentCommentConnection'], ParentType, ContextType, RequireFields<CommentParentCommentConnectionArgs, 'directed'>>;
-  RelatedIssues?: Resolver<Array<ResolversTypes['Issue']>, ParentType, ContextType, RequireFields<CommentRelatedIssuesArgs, 'directed'>>;
-  RelatedIssuesAggregate?: Resolver<Maybe<ResolversTypes['CommentIssueRelatedIssuesAggregationSelection']>, ParentType, ContextType, RequireFields<CommentRelatedIssuesAggregateArgs, 'directed'>>;
-  RelatedIssuesConnection?: Resolver<ResolversTypes['CommentRelatedIssuesConnection'], ParentType, ContextType, RequireFields<CommentRelatedIssuesConnectionArgs, 'directed'>>;
   Tags?: Resolver<Array<ResolversTypes['Tag']>, ParentType, ContextType, RequireFields<CommentTagsArgs, 'directed'>>;
   TagsAggregate?: Resolver<Maybe<ResolversTypes['CommentTagTagsAggregationSelection']>, ParentType, ContextType, RequireFields<CommentTagsAggregateArgs, 'directed'>>;
   TagsConnection?: Resolver<ResolversTypes['CommentTagsConnection'], ParentType, ContextType, RequireFields<CommentTagsConnectionArgs, 'directed'>>;
@@ -30167,26 +29676,6 @@ export type CommentIssueIssueNodeAggregateSelectionResolvers<ContextType = any, 
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type CommentIssueRelatedIssuesAggregationSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['CommentIssueRelatedIssuesAggregationSelection'] = ResolversParentTypes['CommentIssueRelatedIssuesAggregationSelection']> = {
-  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  node?: Resolver<Maybe<ResolversTypes['CommentIssueRelatedIssuesNodeAggregateSelection']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type CommentIssueRelatedIssuesNodeAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['CommentIssueRelatedIssuesNodeAggregateSelection'] = ResolversParentTypes['CommentIssueRelatedIssuesNodeAggregateSelection']> = {
-  authorName?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
-  body?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
-  channelUniqueName?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
-  createdAt?: Resolver<ResolversTypes['DateTimeAggregateSelectionNonNullable'], ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['IDAggregateSelectionNonNullable'], ParentType, ContextType>;
-  relatedCommentId?: Resolver<ResolversTypes['IDAggregateSelectionNullable'], ParentType, ContextType>;
-  relatedDiscussionId?: Resolver<ResolversTypes['IDAggregateSelectionNullable'], ParentType, ContextType>;
-  relatedEventId?: Resolver<ResolversTypes['IDAggregateSelectionNullable'], ParentType, ContextType>;
-  title?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
-  updatedAt?: Resolver<ResolversTypes['DateTimeAggregateSelectionNullable'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
 export type CommentIssueRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['CommentIssueRelationship'] = ResolversParentTypes['CommentIssueRelationship']> = {
   cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   node?: Resolver<ResolversTypes['Issue'], ParentType, ContextType>;
@@ -30215,19 +29704,6 @@ export type CommentParentCommentConnectionResolvers<ContextType = any, ParentTyp
 export type CommentParentCommentRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['CommentParentCommentRelationship'] = ResolversParentTypes['CommentParentCommentRelationship']> = {
   cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   node?: Resolver<ResolversTypes['Comment'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type CommentRelatedIssuesConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['CommentRelatedIssuesConnection'] = ResolversParentTypes['CommentRelatedIssuesConnection']> = {
-  edges?: Resolver<Array<ResolversTypes['CommentRelatedIssuesRelationship']>, ParentType, ContextType>;
-  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
-  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type CommentRelatedIssuesRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['CommentRelatedIssuesRelationship'] = ResolversParentTypes['CommentRelatedIssuesRelationship']> = {
-  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  node?: Resolver<ResolversTypes['Issue'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -31683,9 +31159,6 @@ export type IssueResolvers<ContextType = any, ParentType extends ResolversParent
   Channel?: Resolver<Maybe<ResolversTypes['Channel']>, ParentType, ContextType, RequireFields<IssueChannelArgs, 'directed'>>;
   ChannelAggregate?: Resolver<Maybe<ResolversTypes['IssueChannelChannelAggregationSelection']>, ParentType, ContextType, RequireFields<IssueChannelAggregateArgs, 'directed'>>;
   ChannelConnection?: Resolver<ResolversTypes['IssueChannelConnection'], ParentType, ContextType, RequireFields<IssueChannelConnectionArgs, 'directed'>>;
-  Comments?: Resolver<Array<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<IssueCommentsArgs, 'directed'>>;
-  CommentsAggregate?: Resolver<Maybe<ResolversTypes['IssueCommentCommentsAggregationSelection']>, ParentType, ContextType, RequireFields<IssueCommentsAggregateArgs, 'directed'>>;
-  CommentsConnection?: Resolver<ResolversTypes['IssueCommentsConnection'], ParentType, ContextType, RequireFields<IssueCommentsConnectionArgs, 'directed'>>;
   authorName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   body?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   channelUniqueName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -31771,34 +31244,6 @@ export type IssueChannelConnectionResolvers<ContextType = any, ParentType extend
 export type IssueChannelRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['IssueChannelRelationship'] = ResolversParentTypes['IssueChannelRelationship']> = {
   cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   node?: Resolver<ResolversTypes['Channel'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type IssueCommentCommentsAggregationSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['IssueCommentCommentsAggregationSelection'] = ResolversParentTypes['IssueCommentCommentsAggregationSelection']> = {
-  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  node?: Resolver<Maybe<ResolversTypes['IssueCommentCommentsNodeAggregateSelection']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type IssueCommentCommentsNodeAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['IssueCommentCommentsNodeAggregateSelection'] = ResolversParentTypes['IssueCommentCommentsNodeAggregateSelection']> = {
-  createdAt?: Resolver<ResolversTypes['DateTimeAggregateSelectionNonNullable'], ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['IDAggregateSelectionNonNullable'], ParentType, ContextType>;
-  text?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
-  updatedAt?: Resolver<ResolversTypes['DateTimeAggregateSelectionNullable'], ParentType, ContextType>;
-  weightedVotesCount?: Resolver<ResolversTypes['FloatAggregateSelectionNullable'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type IssueCommentsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['IssueCommentsConnection'] = ResolversParentTypes['IssueCommentsConnection']> = {
-  edges?: Resolver<Array<ResolversTypes['IssueCommentsRelationship']>, ParentType, ContextType>;
-  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
-  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type IssueCommentsRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['IssueCommentsRelationship'] = ResolversParentTypes['IssueCommentsRelationship']> = {
-  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  node?: Resolver<ResolversTypes['Comment'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -34024,15 +33469,11 @@ export type Resolvers<ContextType = any> = {
   CommentIssueConnection?: CommentIssueConnectionResolvers<ContextType>;
   CommentIssueIssueAggregationSelection?: CommentIssueIssueAggregationSelectionResolvers<ContextType>;
   CommentIssueIssueNodeAggregateSelection?: CommentIssueIssueNodeAggregateSelectionResolvers<ContextType>;
-  CommentIssueRelatedIssuesAggregationSelection?: CommentIssueRelatedIssuesAggregationSelectionResolvers<ContextType>;
-  CommentIssueRelatedIssuesNodeAggregateSelection?: CommentIssueRelatedIssuesNodeAggregateSelectionResolvers<ContextType>;
   CommentIssueRelationship?: CommentIssueRelationshipResolvers<ContextType>;
   CommentModerationProfileDownvotedByModeratorsAggregationSelection?: CommentModerationProfileDownvotedByModeratorsAggregationSelectionResolvers<ContextType>;
   CommentModerationProfileDownvotedByModeratorsNodeAggregateSelection?: CommentModerationProfileDownvotedByModeratorsNodeAggregateSelectionResolvers<ContextType>;
   CommentParentCommentConnection?: CommentParentCommentConnectionResolvers<ContextType>;
   CommentParentCommentRelationship?: CommentParentCommentRelationshipResolvers<ContextType>;
-  CommentRelatedIssuesConnection?: CommentRelatedIssuesConnectionResolvers<ContextType>;
-  CommentRelatedIssuesRelationship?: CommentRelatedIssuesRelationshipResolvers<ContextType>;
   CommentRepliesFormat?: CommentRepliesFormatResolvers<ContextType>;
   CommentRepliesFormatAggregateSelection?: CommentRepliesFormatAggregateSelectionResolvers<ContextType>;
   CommentRepliesFormatEdge?: CommentRepliesFormatEdgeResolvers<ContextType>;
@@ -34234,10 +33675,6 @@ export type Resolvers<ContextType = any> = {
   IssueChannelChannelNodeAggregateSelection?: IssueChannelChannelNodeAggregateSelectionResolvers<ContextType>;
   IssueChannelConnection?: IssueChannelConnectionResolvers<ContextType>;
   IssueChannelRelationship?: IssueChannelRelationshipResolvers<ContextType>;
-  IssueCommentCommentsAggregationSelection?: IssueCommentCommentsAggregationSelectionResolvers<ContextType>;
-  IssueCommentCommentsNodeAggregateSelection?: IssueCommentCommentsNodeAggregateSelectionResolvers<ContextType>;
-  IssueCommentsConnection?: IssueCommentsConnectionResolvers<ContextType>;
-  IssueCommentsRelationship?: IssueCommentsRelationshipResolvers<ContextType>;
   IssueEdge?: IssueEdgeResolvers<ContextType>;
   IssueModerationActionActivityFeedAggregationSelection?: IssueModerationActionActivityFeedAggregationSelectionResolvers<ContextType>;
   IssueModerationActionActivityFeedNodeAggregateSelection?: IssueModerationActionActivityFeedNodeAggregateSelectionResolvers<ContextType>;
