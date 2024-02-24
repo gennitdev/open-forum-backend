@@ -1,35 +1,17 @@
-import snoowrap from 'snoowrap';
+import snoowrap, { Submission } from 'snoowrap';
 
 type Args = {
   subredditName: string;
   options?: {
-    offset?: number;
     limit?: number;
-    sort?: string;
+    sort?: 'hot' | 'new' | 'top' | 'rising';
+    after?: string; // Add after for pagination support
   };
-}
-
-type PostFromAPI = {
-  subreddit: {
-    display_name: string;
-  };
-  title: string;
-  created_utc: number;
-  author: {
-    name: string;
-  }
-  num_comments: number;
-  selftext: string;
-  media_metadata: any;
-  permalink: string;
-  thumbnail: string;
-  upvoteCount: number;
-  url: string;
-  preview: any;
-  ups: number;
 }
 
 type PostOutput = {
+  id: string; // Include ID for pagination
+  name: string; // used for pagination
   subreddit: string;
   title: string;
   createdUTC: number;
@@ -47,7 +29,7 @@ type PostOutput = {
 const getSubredditResolver = () => {
   return async (parent: any, args: Args, context: any, info: any) => {
     const { subredditName, options } = args;
-    const { offset, limit, sort } = options || {};
+    const { limit = 25, sort = 'hot', after } = options || {};
 
     const r = new snoowrap({
         userAgent: 'web:Listical:v1.0 (by /u/gennitdev)',
@@ -55,9 +37,10 @@ const getSubredditResolver = () => {
         clientSecret: process.env.REDDIT_CLIENT_SECRET,
         refreshToken: process.env.REDDIT_REFRESH_TOKEN
     })
-
-    // @ts-ignore
-    const subreddit = await r.getSubreddit(subredditName);
+    const fetchOptions = {
+      limit,
+      after // Use the after parameter for pagination
+    };
 
     // output format:
     // type RedditSubmission {
@@ -72,26 +55,52 @@ const getSubredditResolver = () => {
     //     thumbnail: String!
     //     upvoteCount: Int!
     //   }
-    const posts = await subreddit.getHot({ time: 'month' });
+    // Dynamically choosing the sort method based on the input
+    console.log('using fetch options', fetchOptions)
+    let posts;
+    switch(sort) {
+      case 'hot':
+        posts = await r.getSubreddit(subredditName).getHot(fetchOptions);
+        break;
+      case 'new':
+        posts = await r.getSubreddit(subredditName).getNew(fetchOptions);
+        break;
+      case 'top':
+        posts = await r.getSubreddit(subredditName).getTop(fetchOptions);
+        break;
+      case 'rising':
+        posts = await r.getSubreddit(subredditName).getRising(fetchOptions);
+        break;
+      default:
+        posts = await r.getSubreddit(subredditName).getHot(fetchOptions);
+    }
 
-    const result: PostOutput[] = posts.map((post: PostFromAPI) => {
+    const result: PostOutput[] = posts.map((post: Submission) => {
+
       return {
-        subreddit: post.subreddit.display_name,
-        title: post.title,
+        id: post.id,
+        name: post.name,
+        subreddit: post.subreddit.display_name || subredditName,
+        title: post.title || '',
         createdUTC: post.created_utc,
         author: post.author?.name || '[deleted]',
         commentCount: post.num_comments,
         text: post.selftext,
-        mediaMetadata: post.media_metadata,
+        mediaMetadata: post.media,
         permalink: post.permalink,
         thumbnail: post.thumbnail,
         upvoteCount: post.ups,
         url: post.url,
-        preview: post.preview
+        preview: post.preview,
       }
     });
 
-    return result;
+    const nextPage = result.length > 0 ? result[result.length - 1].name : null;
+
+    return{
+      posts: result,
+      after: nextPage
+    }
   };
 };
 

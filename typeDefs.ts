@@ -415,6 +415,7 @@ const typeDefinitions = gql`
   }
 
   type RedditSubmission {
+    id: ID!
     subreddit: String!
     title: String!
     createdUTC: Int!
@@ -498,6 +499,17 @@ const typeDefinitions = gql`
     DefaultModRole: ModServerRole @relationship(type: "HAS_DEFAULT_MOD_ROLE", direction: OUT)
   }
 
+  input RedditPostOptions {
+    limit: Int
+    sort: String
+    after: String
+  }
+
+  type GetSubredditResponse {
+    posts: [RedditSubmission]
+    after: String
+  }
+
   type Query {
     getDiscussionsInChannel(
       channelUniqueName: String!
@@ -530,7 +542,7 @@ const typeDefinitions = gql`
       limit: Int
       sort: SortType
     ): CommentRepliesFormat
-    getSubreddit(subredditName: String!, options: JSON): [RedditSubmission]
+    getSubreddit(subredditName: String!, options: RedditPostOptions): GetSubredditResponse
     getSubredditSidebar(subredditName: String!, options: JSON): SubredditSidebar
   }
 `;

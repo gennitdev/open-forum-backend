@@ -5855,6 +5855,12 @@ export type CreateFeedsMutationResponse = {
   info: CreateInfo;
 };
 
+export type CreateGetSubredditResponsesMutationResponse = {
+  __typename?: 'CreateGetSubredditResponsesMutationResponse';
+  getSubredditResponses: Array<GetSubredditResponse>;
+  info: CreateInfo;
+};
+
 /** Information about the number of nodes and relationships created during a create mutation */
 export type CreateInfo = {
   __typename?: 'CreateInfo';
@@ -12633,6 +12639,63 @@ export type FloatAggregateSelectionNullable = {
   sum?: Maybe<Scalars['Float']['output']>;
 };
 
+export type GetSubredditResponse = {
+  __typename?: 'GetSubredditResponse';
+  after?: Maybe<Scalars['String']['output']>;
+  posts?: Maybe<Array<Maybe<RedditSubmission>>>;
+};
+
+export type GetSubredditResponseAggregateSelection = {
+  __typename?: 'GetSubredditResponseAggregateSelection';
+  after: StringAggregateSelectionNullable;
+  count: Scalars['Int']['output'];
+};
+
+export type GetSubredditResponseCreateInput = {
+  after?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type GetSubredditResponseEdge = {
+  __typename?: 'GetSubredditResponseEdge';
+  cursor: Scalars['String']['output'];
+  node: GetSubredditResponse;
+};
+
+export type GetSubredditResponseOptions = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  /** Specify one or more GetSubredditResponseSort objects to sort GetSubredditResponses by. The sorts will be applied in the order in which they are arranged in the array. */
+  sort?: InputMaybe<Array<GetSubredditResponseSort>>;
+};
+
+/** Fields to sort GetSubredditResponses by. The order in which sorts are applied is not guaranteed when specifying many fields in one GetSubredditResponseSort object. */
+export type GetSubredditResponseSort = {
+  after?: InputMaybe<SortDirection>;
+};
+
+export type GetSubredditResponseUpdateInput = {
+  after?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type GetSubredditResponseWhere = {
+  AND?: InputMaybe<Array<GetSubredditResponseWhere>>;
+  NOT?: InputMaybe<GetSubredditResponseWhere>;
+  OR?: InputMaybe<Array<GetSubredditResponseWhere>>;
+  after?: InputMaybe<Scalars['String']['input']>;
+  after_CONTAINS?: InputMaybe<Scalars['String']['input']>;
+  after_ENDS_WITH?: InputMaybe<Scalars['String']['input']>;
+  after_IN?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  after_MATCHES?: InputMaybe<Scalars['String']['input']>;
+  after_STARTS_WITH?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type GetSubredditResponsesConnection = {
+  __typename?: 'GetSubredditResponsesConnection';
+  edges: Array<GetSubredditResponseEdge>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
 export type IdAggregateSelectionNonNullable = {
   __typename?: 'IDAggregateSelectionNonNullable';
   longest: Scalars['ID']['output'];
@@ -15761,6 +15824,7 @@ export type Mutation = {
   createEventWithChannelConnections?: Maybe<Event>;
   createEvents: CreateEventsMutationResponse;
   createFeeds: CreateFeedsMutationResponse;
+  createGetSubredditResponses: CreateGetSubredditResponsesMutationResponse;
   createIssues: CreateIssuesMutationResponse;
   createModChannelRoles: CreateModChannelRolesMutationResponse;
   createModServerRoles: CreateModServerRolesMutationResponse;
@@ -15793,6 +15857,7 @@ export type Mutation = {
   deleteEventCommentsFormats: DeleteInfo;
   deleteEvents: DeleteInfo;
   deleteFeeds: DeleteInfo;
+  deleteGetSubredditResponses: DeleteInfo;
   deleteIssues: DeleteInfo;
   deleteModChannelRoles: DeleteInfo;
   deleteModServerRoles: DeleteInfo;
@@ -15830,6 +15895,7 @@ export type Mutation = {
   updateEventWithChannelConnections?: Maybe<Event>;
   updateEvents: UpdateEventsMutationResponse;
   updateFeeds: UpdateFeedsMutationResponse;
+  updateGetSubredditResponses: UpdateGetSubredditResponsesMutationResponse;
   updateIssues: UpdateIssuesMutationResponse;
   updateModChannelRoles: UpdateModChannelRolesMutationResponse;
   updateModServerRoles: UpdateModServerRolesMutationResponse;
@@ -15947,6 +16013,11 @@ export type MutationCreateEventsArgs = {
 
 export type MutationCreateFeedsArgs = {
   input: Array<FeedCreateInput>;
+};
+
+
+export type MutationCreateGetSubredditResponsesArgs = {
+  input: Array<GetSubredditResponseCreateInput>;
 };
 
 
@@ -16117,6 +16188,11 @@ export type MutationDeleteEventsArgs = {
 export type MutationDeleteFeedsArgs = {
   delete?: InputMaybe<FeedDeleteInput>;
   where?: InputMaybe<FeedWhere>;
+};
+
+
+export type MutationDeleteGetSubredditResponsesArgs = {
+  where?: InputMaybe<GetSubredditResponseWhere>;
 };
 
 
@@ -16383,6 +16459,12 @@ export type MutationUpdateFeedsArgs = {
 };
 
 
+export type MutationUpdateGetSubredditResponsesArgs = {
+  update?: InputMaybe<GetSubredditResponseUpdateInput>;
+  where?: InputMaybe<GetSubredditResponseWhere>;
+};
+
+
 export type MutationUpdateIssuesArgs = {
   connect?: InputMaybe<IssueConnectInput>;
   connectOrCreate?: InputMaybe<IssueConnectOrCreateInput>;
@@ -16612,7 +16694,10 @@ export type Query = {
   getDiscussionsInChannel?: Maybe<DiscussionChannelListFormat>;
   getEventComments?: Maybe<EventCommentsFormat>;
   getSiteWideDiscussionList?: Maybe<SiteWideDiscussionListFormat>;
-  getSubreddit?: Maybe<Array<Maybe<RedditSubmission>>>;
+  getSubreddit?: Maybe<GetSubredditResponse>;
+  getSubredditResponses: Array<GetSubredditResponse>;
+  getSubredditResponsesAggregate: GetSubredditResponseAggregateSelection;
+  getSubredditResponsesConnection: GetSubredditResponsesConnection;
   getSubredditSidebar?: Maybe<SubredditSidebar>;
   issues: Array<Issue>;
   issuesAggregate: IssueAggregateSelection;
@@ -16974,8 +17059,27 @@ export type QueryGetSiteWideDiscussionListArgs = {
 
 
 export type QueryGetSubredditArgs = {
-  options?: InputMaybe<Scalars['JSON']['input']>;
+  options?: InputMaybe<RedditPostOptions>;
   subredditName: Scalars['String']['input'];
+};
+
+
+export type QueryGetSubredditResponsesArgs = {
+  options?: InputMaybe<GetSubredditResponseOptions>;
+  where?: InputMaybe<GetSubredditResponseWhere>;
+};
+
+
+export type QueryGetSubredditResponsesAggregateArgs = {
+  where?: InputMaybe<GetSubredditResponseWhere>;
+};
+
+
+export type QueryGetSubredditResponsesConnectionArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<GetSubredditResponseSort>>>;
+  where?: InputMaybe<GetSubredditResponseWhere>;
 };
 
 
@@ -17733,11 +17837,18 @@ export type RecurringEventsConnection = {
   totalCount: Scalars['Int']['output'];
 };
 
+export type RedditPostOptions = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type RedditSubmission = {
   __typename?: 'RedditSubmission';
   author: Scalars['String']['output'];
   commentCount: Scalars['Int']['output'];
   createdUTC: Scalars['Int']['output'];
+  id: Scalars['ID']['output'];
   mediaMetadata?: Maybe<Scalars['JSON']['output']>;
   permalink: Scalars['String']['output'];
   preview?: Maybe<Scalars['JSON']['output']>;
@@ -17755,6 +17866,7 @@ export type RedditSubmissionAggregateSelection = {
   commentCount: IntAggregateSelectionNonNullable;
   count: Scalars['Int']['output'];
   createdUTC: IntAggregateSelectionNonNullable;
+  id: IdAggregateSelectionNonNullable;
   permalink: StringAggregateSelectionNonNullable;
   subreddit: StringAggregateSelectionNonNullable;
   text: StringAggregateSelectionNonNullable;
@@ -17768,6 +17880,7 @@ export type RedditSubmissionCreateInput = {
   author: Scalars['String']['input'];
   commentCount: Scalars['Int']['input'];
   createdUTC: Scalars['Int']['input'];
+  id: Scalars['ID']['input'];
   mediaMetadata?: InputMaybe<Scalars['JSON']['input']>;
   permalink: Scalars['String']['input'];
   preview?: InputMaybe<Scalars['JSON']['input']>;
@@ -17797,6 +17910,7 @@ export type RedditSubmissionSort = {
   author?: InputMaybe<SortDirection>;
   commentCount?: InputMaybe<SortDirection>;
   createdUTC?: InputMaybe<SortDirection>;
+  id?: InputMaybe<SortDirection>;
   mediaMetadata?: InputMaybe<SortDirection>;
   permalink?: InputMaybe<SortDirection>;
   preview?: InputMaybe<SortDirection>;
@@ -17816,6 +17930,7 @@ export type RedditSubmissionUpdateInput = {
   createdUTC?: InputMaybe<Scalars['Int']['input']>;
   createdUTC_DECREMENT?: InputMaybe<Scalars['Int']['input']>;
   createdUTC_INCREMENT?: InputMaybe<Scalars['Int']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
   mediaMetadata?: InputMaybe<Scalars['JSON']['input']>;
   permalink?: InputMaybe<Scalars['String']['input']>;
   preview?: InputMaybe<Scalars['JSON']['input']>;
@@ -17851,6 +17966,11 @@ export type RedditSubmissionWhere = {
   createdUTC_IN?: InputMaybe<Array<Scalars['Int']['input']>>;
   createdUTC_LT?: InputMaybe<Scalars['Int']['input']>;
   createdUTC_LTE?: InputMaybe<Scalars['Int']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  id_CONTAINS?: InputMaybe<Scalars['ID']['input']>;
+  id_ENDS_WITH?: InputMaybe<Scalars['ID']['input']>;
+  id_IN?: InputMaybe<Array<Scalars['ID']['input']>>;
+  id_STARTS_WITH?: InputMaybe<Scalars['ID']['input']>;
   mediaMetadata?: InputMaybe<Scalars['JSON']['input']>;
   mediaMetadata_IN?: InputMaybe<Array<InputMaybe<Scalars['JSON']['input']>>>;
   permalink?: InputMaybe<Scalars['String']['input']>;
@@ -20476,6 +20596,12 @@ export type UpdateEventsMutationResponse = {
 export type UpdateFeedsMutationResponse = {
   __typename?: 'UpdateFeedsMutationResponse';
   feeds: Array<Feed>;
+  info: UpdateInfo;
+};
+
+export type UpdateGetSubredditResponsesMutationResponse = {
+  __typename?: 'UpdateGetSubredditResponsesMutationResponse';
+  getSubredditResponses: Array<GetSubredditResponse>;
   info: UpdateInfo;
 };
 
@@ -25525,6 +25651,7 @@ export type ResolversTypes = {
   CreateEventCommentsFormatsMutationResponse: ResolverTypeWrapper<CreateEventCommentsFormatsMutationResponse>;
   CreateEventsMutationResponse: ResolverTypeWrapper<CreateEventsMutationResponse>;
   CreateFeedsMutationResponse: ResolverTypeWrapper<CreateFeedsMutationResponse>;
+  CreateGetSubredditResponsesMutationResponse: ResolverTypeWrapper<CreateGetSubredditResponsesMutationResponse>;
   CreateInfo: ResolverTypeWrapper<CreateInfo>;
   CreateIssuesMutationResponse: ResolverTypeWrapper<CreateIssuesMutationResponse>;
   CreateModChannelRolesMutationResponse: ResolverTypeWrapper<CreateModChannelRolesMutationResponse>;
@@ -26058,6 +26185,15 @@ export type ResolversTypes = {
   FeedsConnection: ResolverTypeWrapper<FeedsConnection>;
   Float: ResolverTypeWrapper<Scalars['Float']['output']>;
   FloatAggregateSelectionNullable: ResolverTypeWrapper<FloatAggregateSelectionNullable>;
+  GetSubredditResponse: ResolverTypeWrapper<GetSubredditResponse>;
+  GetSubredditResponseAggregateSelection: ResolverTypeWrapper<GetSubredditResponseAggregateSelection>;
+  GetSubredditResponseCreateInput: GetSubredditResponseCreateInput;
+  GetSubredditResponseEdge: ResolverTypeWrapper<GetSubredditResponseEdge>;
+  GetSubredditResponseOptions: GetSubredditResponseOptions;
+  GetSubredditResponseSort: GetSubredditResponseSort;
+  GetSubredditResponseUpdateInput: GetSubredditResponseUpdateInput;
+  GetSubredditResponseWhere: GetSubredditResponseWhere;
+  GetSubredditResponsesConnection: ResolverTypeWrapper<GetSubredditResponsesConnection>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   IDAggregateSelectionNonNullable: ResolverTypeWrapper<IdAggregateSelectionNonNullable>;
   IDAggregateSelectionNullable: ResolverTypeWrapper<IdAggregateSelectionNullable>;
@@ -26382,6 +26518,7 @@ export type ResolversTypes = {
   RecurringEventUpdateInput: RecurringEventUpdateInput;
   RecurringEventWhere: RecurringEventWhere;
   RecurringEventsConnection: ResolverTypeWrapper<RecurringEventsConnection>;
+  RedditPostOptions: RedditPostOptions;
   RedditSubmission: ResolverTypeWrapper<RedditSubmission>;
   RedditSubmissionAggregateSelection: ResolverTypeWrapper<RedditSubmissionAggregateSelection>;
   RedditSubmissionCreateInput: RedditSubmissionCreateInput;
@@ -26640,6 +26777,7 @@ export type ResolversTypes = {
   UpdateEventCommentsFormatsMutationResponse: ResolverTypeWrapper<UpdateEventCommentsFormatsMutationResponse>;
   UpdateEventsMutationResponse: ResolverTypeWrapper<UpdateEventsMutationResponse>;
   UpdateFeedsMutationResponse: ResolverTypeWrapper<UpdateFeedsMutationResponse>;
+  UpdateGetSubredditResponsesMutationResponse: ResolverTypeWrapper<UpdateGetSubredditResponsesMutationResponse>;
   UpdateInfo: ResolverTypeWrapper<UpdateInfo>;
   UpdateIssuesMutationResponse: ResolverTypeWrapper<UpdateIssuesMutationResponse>;
   UpdateModChannelRolesMutationResponse: ResolverTypeWrapper<UpdateModChannelRolesMutationResponse>;
@@ -27456,6 +27594,7 @@ export type ResolversParentTypes = {
   CreateEventCommentsFormatsMutationResponse: CreateEventCommentsFormatsMutationResponse;
   CreateEventsMutationResponse: CreateEventsMutationResponse;
   CreateFeedsMutationResponse: CreateFeedsMutationResponse;
+  CreateGetSubredditResponsesMutationResponse: CreateGetSubredditResponsesMutationResponse;
   CreateInfo: CreateInfo;
   CreateIssuesMutationResponse: CreateIssuesMutationResponse;
   CreateModChannelRolesMutationResponse: CreateModChannelRolesMutationResponse;
@@ -27989,6 +28128,15 @@ export type ResolversParentTypes = {
   FeedsConnection: FeedsConnection;
   Float: Scalars['Float']['output'];
   FloatAggregateSelectionNullable: FloatAggregateSelectionNullable;
+  GetSubredditResponse: GetSubredditResponse;
+  GetSubredditResponseAggregateSelection: GetSubredditResponseAggregateSelection;
+  GetSubredditResponseCreateInput: GetSubredditResponseCreateInput;
+  GetSubredditResponseEdge: GetSubredditResponseEdge;
+  GetSubredditResponseOptions: GetSubredditResponseOptions;
+  GetSubredditResponseSort: GetSubredditResponseSort;
+  GetSubredditResponseUpdateInput: GetSubredditResponseUpdateInput;
+  GetSubredditResponseWhere: GetSubredditResponseWhere;
+  GetSubredditResponsesConnection: GetSubredditResponsesConnection;
   ID: Scalars['ID']['output'];
   IDAggregateSelectionNonNullable: IdAggregateSelectionNonNullable;
   IDAggregateSelectionNullable: IdAggregateSelectionNullable;
@@ -28313,6 +28461,7 @@ export type ResolversParentTypes = {
   RecurringEventUpdateInput: RecurringEventUpdateInput;
   RecurringEventWhere: RecurringEventWhere;
   RecurringEventsConnection: RecurringEventsConnection;
+  RedditPostOptions: RedditPostOptions;
   RedditSubmission: RedditSubmission;
   RedditSubmissionAggregateSelection: RedditSubmissionAggregateSelection;
   RedditSubmissionCreateInput: RedditSubmissionCreateInput;
@@ -28567,6 +28716,7 @@ export type ResolversParentTypes = {
   UpdateEventCommentsFormatsMutationResponse: UpdateEventCommentsFormatsMutationResponse;
   UpdateEventsMutationResponse: UpdateEventsMutationResponse;
   UpdateFeedsMutationResponse: UpdateFeedsMutationResponse;
+  UpdateGetSubredditResponsesMutationResponse: UpdateGetSubredditResponsesMutationResponse;
   UpdateInfo: UpdateInfo;
   UpdateIssuesMutationResponse: UpdateIssuesMutationResponse;
   UpdateModChannelRolesMutationResponse: UpdateModChannelRolesMutationResponse;
@@ -29906,6 +30056,12 @@ export type CreateFeedsMutationResponseResolvers<ContextType = any, ParentType e
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type CreateGetSubredditResponsesMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateGetSubredditResponsesMutationResponse'] = ResolversParentTypes['CreateGetSubredditResponsesMutationResponse']> = {
+  getSubredditResponses?: Resolver<Array<ResolversTypes['GetSubredditResponse']>, ParentType, ContextType>;
+  info?: Resolver<ResolversTypes['CreateInfo'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type CreateInfoResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateInfo'] = ResolversParentTypes['CreateInfo']> = {
   bookmark?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   nodesCreated?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
@@ -31122,6 +31278,31 @@ export type FloatAggregateSelectionNullableResolvers<ContextType = any, ParentTy
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type GetSubredditResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['GetSubredditResponse'] = ResolversParentTypes['GetSubredditResponse']> = {
+  after?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  posts?: Resolver<Maybe<Array<Maybe<ResolversTypes['RedditSubmission']>>>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type GetSubredditResponseAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['GetSubredditResponseAggregateSelection'] = ResolversParentTypes['GetSubredditResponseAggregateSelection']> = {
+  after?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type GetSubredditResponseEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['GetSubredditResponseEdge'] = ResolversParentTypes['GetSubredditResponseEdge']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['GetSubredditResponse'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type GetSubredditResponsesConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['GetSubredditResponsesConnection'] = ResolversParentTypes['GetSubredditResponsesConnection']> = {
+  edges?: Resolver<Array<ResolversTypes['GetSubredditResponseEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type IdAggregateSelectionNonNullableResolvers<ContextType = any, ParentType extends ResolversParentTypes['IDAggregateSelectionNonNullable'] = ResolversParentTypes['IDAggregateSelectionNonNullable']> = {
   longest?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   shortest?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
@@ -31698,6 +31879,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createEventWithChannelConnections?: Resolver<Maybe<ResolversTypes['Event']>, ParentType, ContextType, Partial<MutationCreateEventWithChannelConnectionsArgs>>;
   createEvents?: Resolver<ResolversTypes['CreateEventsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateEventsArgs, 'input'>>;
   createFeeds?: Resolver<ResolversTypes['CreateFeedsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateFeedsArgs, 'input'>>;
+  createGetSubredditResponses?: Resolver<ResolversTypes['CreateGetSubredditResponsesMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateGetSubredditResponsesArgs, 'input'>>;
   createIssues?: Resolver<ResolversTypes['CreateIssuesMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateIssuesArgs, 'input'>>;
   createModChannelRoles?: Resolver<ResolversTypes['CreateModChannelRolesMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateModChannelRolesArgs, 'input'>>;
   createModServerRoles?: Resolver<ResolversTypes['CreateModServerRolesMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateModServerRolesArgs, 'input'>>;
@@ -31730,6 +31912,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteEventCommentsFormats?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteEventCommentsFormatsArgs>>;
   deleteEvents?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteEventsArgs>>;
   deleteFeeds?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteFeedsArgs>>;
+  deleteGetSubredditResponses?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteGetSubredditResponsesArgs>>;
   deleteIssues?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteIssuesArgs>>;
   deleteModChannelRoles?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteModChannelRolesArgs>>;
   deleteModServerRoles?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteModServerRolesArgs>>;
@@ -31767,6 +31950,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   updateEventWithChannelConnections?: Resolver<Maybe<ResolversTypes['Event']>, ParentType, ContextType, RequireFields<MutationUpdateEventWithChannelConnectionsArgs, 'channelConnections' | 'channelDisconnections' | 'eventUpdateInput' | 'eventWhere'>>;
   updateEvents?: Resolver<ResolversTypes['UpdateEventsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateEventsArgs>>;
   updateFeeds?: Resolver<ResolversTypes['UpdateFeedsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateFeedsArgs>>;
+  updateGetSubredditResponses?: Resolver<ResolversTypes['UpdateGetSubredditResponsesMutationResponse'], ParentType, ContextType, Partial<MutationUpdateGetSubredditResponsesArgs>>;
   updateIssues?: Resolver<ResolversTypes['UpdateIssuesMutationResponse'], ParentType, ContextType, Partial<MutationUpdateIssuesArgs>>;
   updateModChannelRoles?: Resolver<ResolversTypes['UpdateModChannelRolesMutationResponse'], ParentType, ContextType, Partial<MutationUpdateModChannelRolesArgs>>;
   updateModServerRoles?: Resolver<ResolversTypes['UpdateModServerRolesMutationResponse'], ParentType, ContextType, Partial<MutationUpdateModServerRolesArgs>>;
@@ -31853,7 +32037,10 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   getDiscussionsInChannel?: Resolver<Maybe<ResolversTypes['DiscussionChannelListFormat']>, ParentType, ContextType, RequireFields<QueryGetDiscussionsInChannelArgs, 'channelUniqueName'>>;
   getEventComments?: Resolver<Maybe<ResolversTypes['EventCommentsFormat']>, ParentType, ContextType, RequireFields<QueryGetEventCommentsArgs, 'eventId'>>;
   getSiteWideDiscussionList?: Resolver<Maybe<ResolversTypes['SiteWideDiscussionListFormat']>, ParentType, ContextType, Partial<QueryGetSiteWideDiscussionListArgs>>;
-  getSubreddit?: Resolver<Maybe<Array<Maybe<ResolversTypes['RedditSubmission']>>>, ParentType, ContextType, RequireFields<QueryGetSubredditArgs, 'subredditName'>>;
+  getSubreddit?: Resolver<Maybe<ResolversTypes['GetSubredditResponse']>, ParentType, ContextType, RequireFields<QueryGetSubredditArgs, 'subredditName'>>;
+  getSubredditResponses?: Resolver<Array<ResolversTypes['GetSubredditResponse']>, ParentType, ContextType, Partial<QueryGetSubredditResponsesArgs>>;
+  getSubredditResponsesAggregate?: Resolver<ResolversTypes['GetSubredditResponseAggregateSelection'], ParentType, ContextType, Partial<QueryGetSubredditResponsesAggregateArgs>>;
+  getSubredditResponsesConnection?: Resolver<ResolversTypes['GetSubredditResponsesConnection'], ParentType, ContextType, Partial<QueryGetSubredditResponsesConnectionArgs>>;
   getSubredditSidebar?: Resolver<Maybe<ResolversTypes['SubredditSidebar']>, ParentType, ContextType, RequireFields<QueryGetSubredditSidebarArgs, 'subredditName'>>;
   issues?: Resolver<Array<ResolversTypes['Issue']>, ParentType, ContextType, Partial<QueryIssuesArgs>>;
   issuesAggregate?: Resolver<ResolversTypes['IssueAggregateSelection'], ParentType, ContextType, Partial<QueryIssuesAggregateArgs>>;
@@ -31979,6 +32166,7 @@ export type RedditSubmissionResolvers<ContextType = any, ParentType extends Reso
   author?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   commentCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   createdUTC?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   mediaMetadata?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   permalink?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   preview?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
@@ -31996,6 +32184,7 @@ export type RedditSubmissionAggregateSelectionResolvers<ContextType = any, Paren
   commentCount?: Resolver<ResolversTypes['IntAggregateSelectionNonNullable'], ParentType, ContextType>;
   count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   createdUTC?: Resolver<ResolversTypes['IntAggregateSelectionNonNullable'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['IDAggregateSelectionNonNullable'], ParentType, ContextType>;
   permalink?: Resolver<ResolversTypes['StringAggregateSelectionNonNullable'], ParentType, ContextType>;
   subreddit?: Resolver<ResolversTypes['StringAggregateSelectionNonNullable'], ParentType, ContextType>;
   text?: Resolver<ResolversTypes['StringAggregateSelectionNonNullable'], ParentType, ContextType>;
@@ -32610,6 +32799,12 @@ export type UpdateEventsMutationResponseResolvers<ContextType = any, ParentType 
 
 export type UpdateFeedsMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateFeedsMutationResponse'] = ResolversParentTypes['UpdateFeedsMutationResponse']> = {
   feeds?: Resolver<Array<ResolversTypes['Feed']>, ParentType, ContextType>;
+  info?: Resolver<ResolversTypes['UpdateInfo'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type UpdateGetSubredditResponsesMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateGetSubredditResponsesMutationResponse'] = ResolversParentTypes['UpdateGetSubredditResponsesMutationResponse']> = {
+  getSubredditResponses?: Resolver<Array<ResolversTypes['GetSubredditResponse']>, ParentType, ContextType>;
   info?: Resolver<ResolversTypes['UpdateInfo'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -33505,6 +33700,7 @@ export type Resolvers<ContextType = any> = {
   CreateEventCommentsFormatsMutationResponse?: CreateEventCommentsFormatsMutationResponseResolvers<ContextType>;
   CreateEventsMutationResponse?: CreateEventsMutationResponseResolvers<ContextType>;
   CreateFeedsMutationResponse?: CreateFeedsMutationResponseResolvers<ContextType>;
+  CreateGetSubredditResponsesMutationResponse?: CreateGetSubredditResponsesMutationResponseResolvers<ContextType>;
   CreateInfo?: CreateInfoResolvers<ContextType>;
   CreateIssuesMutationResponse?: CreateIssuesMutationResponseResolvers<ContextType>;
   CreateModChannelRolesMutationResponse?: CreateModChannelRolesMutationResponseResolvers<ContextType>;
@@ -33660,6 +33856,10 @@ export type Resolvers<ContextType = any> = {
   FeedUserOwnerNodeAggregateSelection?: FeedUserOwnerNodeAggregateSelectionResolvers<ContextType>;
   FeedsConnection?: FeedsConnectionResolvers<ContextType>;
   FloatAggregateSelectionNullable?: FloatAggregateSelectionNullableResolvers<ContextType>;
+  GetSubredditResponse?: GetSubredditResponseResolvers<ContextType>;
+  GetSubredditResponseAggregateSelection?: GetSubredditResponseAggregateSelectionResolvers<ContextType>;
+  GetSubredditResponseEdge?: GetSubredditResponseEdgeResolvers<ContextType>;
+  GetSubredditResponsesConnection?: GetSubredditResponsesConnectionResolvers<ContextType>;
   IDAggregateSelectionNonNullable?: IdAggregateSelectionNonNullableResolvers<ContextType>;
   IDAggregateSelectionNullable?: IdAggregateSelectionNullableResolvers<ContextType>;
   IntAggregateSelectionNonNullable?: IntAggregateSelectionNonNullableResolvers<ContextType>;
@@ -33832,6 +34032,7 @@ export type Resolvers<ContextType = any> = {
   UpdateEventCommentsFormatsMutationResponse?: UpdateEventCommentsFormatsMutationResponseResolvers<ContextType>;
   UpdateEventsMutationResponse?: UpdateEventsMutationResponseResolvers<ContextType>;
   UpdateFeedsMutationResponse?: UpdateFeedsMutationResponseResolvers<ContextType>;
+  UpdateGetSubredditResponsesMutationResponse?: UpdateGetSubredditResponsesMutationResponseResolvers<ContextType>;
   UpdateInfo?: UpdateInfoResolvers<ContextType>;
   UpdateIssuesMutationResponse?: UpdateIssuesMutationResponseResolvers<ContextType>;
   UpdateModChannelRolesMutationResponse?: UpdateModChannelRolesMutationResponseResolvers<ContextType>;
