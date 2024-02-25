@@ -414,6 +414,7 @@ const typeDefinitions = gql`
     aggregateChildCommentCount: Int!
   }
 
+
   type RedditSubmission {
     id: ID!
     subreddit: String!
@@ -422,12 +423,15 @@ const typeDefinitions = gql`
     author: String!
     commentCount: Int!
     text: String!
-    mediaMetadata: JSON
+    media: JSON
+    flair: JSON
+    numCrossposts: Int!
     permalink: String!
     thumbnail: String!
     upvoteCount: Int!
     url: String
     preview: JSON
+    stickied: Boolean!
   }
 
   type SubredditSidebar {

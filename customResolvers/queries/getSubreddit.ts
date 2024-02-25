@@ -18,12 +18,15 @@ type PostOutput = {
   author: string;
   commentCount: number;
   text: string;
-  mediaMetadata: any;
+  media?: any;
+  flair?: any;
+  numCrossposts: number;
   permalink: string;
   thumbnail: string;
   upvoteCount: number;
   url: string;
   preview: any;
+  stickied: boolean;
 }
 
 const getSubredditResolver = () => {
@@ -74,6 +77,7 @@ const getSubredditResolver = () => {
       default:
         posts = await r.getSubreddit(subredditName).getHot(fetchOptions);
     }
+console.log('posts', posts[0])
 
     const result: PostOutput[] = posts.map((post: Submission) => {
 
@@ -86,12 +90,26 @@ const getSubredditResolver = () => {
         author: post.author?.name || '[deleted]',
         commentCount: post.num_comments,
         text: post.selftext,
-        mediaMetadata: post.media,
+        media: {
+          media: post.media,
+          secureMediaEmbed: post.secure_media_embed,
+          secureMedia: post.secure_media,
+          mediaEmbed: post.media_embed,
+          // @ts-ignore
+          mediaMetadata: post.media_metadata || {},
+        },
+        flair: {
+          linkFlairBackgroundColor: post.link_flair_background_color,
+          linkFlairTextColor: post.link_flair_text_color,
+          linkFlairRichText: post.link_flair_richtext,
+        },      
+        numCrossposts: post.num_crossposts,
         permalink: post.permalink,
         thumbnail: post.thumbnail,
         upvoteCount: post.ups,
         url: post.url,
         preview: post.preview,
+        stickied: post.stickied,
       }
     });
 

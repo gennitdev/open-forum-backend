@@ -45,24 +45,9 @@ const getSubredditResolver = () => {
             default:
                 posts = await r.getSubreddit(subredditName).getHot(fetchOptions);
         }
-        // console.log('posts', posts[0])
+        console.log('posts', posts[0]);
         const result = posts.map((post) => {
             var _a;
-            // console.log('got data',{
-            //   id: post.id,
-            //   subreddit: post.subreddit.display_name || subredditName,
-            //   title: post.title,
-            //   createdUTC: post.created_utc,
-            //   author: post.author?.name || '[deleted]',
-            //   commentCount: post.num_comments,
-            //   text: post.selftext,
-            //   mediaMetadata: post.media,
-            //   permalink: post.permalink,
-            //   thumbnail: post.thumbnail,
-            //   upvoteCount: post.ups,
-            //   url: post.url,
-            //   preview: post.preview,
-            // })
             return {
                 id: post.id,
                 name: post.name,
@@ -72,12 +57,26 @@ const getSubredditResolver = () => {
                 author: ((_a = post.author) === null || _a === void 0 ? void 0 : _a.name) || '[deleted]',
                 commentCount: post.num_comments,
                 text: post.selftext,
-                mediaMetadata: post.media,
+                media: {
+                    media: post.media,
+                    secureMediaEmbed: post.secure_media_embed,
+                    secureMedia: post.secure_media,
+                    mediaEmbed: post.media_embed,
+                    // @ts-ignore
+                    mediaMetadata: post.media_metadata || {},
+                },
+                flair: {
+                    linkFlairBackgroundColor: post.link_flair_background_color,
+                    linkFlairTextColor: post.link_flair_text_color,
+                    linkFlairRichText: post.link_flair_richtext,
+                },
+                numCrossposts: post.num_crossposts,
                 permalink: post.permalink,
                 thumbnail: post.thumbnail,
                 upvoteCount: post.ups,
                 url: post.url,
                 preview: post.preview,
+                stickied: post.stickied,
             };
         });
         const nextPage = result.length > 0 ? result[result.length - 1].name : null;
