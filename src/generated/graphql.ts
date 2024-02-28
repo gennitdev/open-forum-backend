@@ -5876,6 +5876,12 @@ export type CreateIssuesMutationResponse = {
   issues: Array<Issue>;
 };
 
+export type CreateLinkFlairsMutationResponse = {
+  __typename?: 'CreateLinkFlairsMutationResponse';
+  info: CreateInfo;
+  linkFlairs: Array<LinkFlair>;
+};
+
 export type CreateModChannelRolesMutationResponse = {
   __typename?: 'CreateModChannelRolesMutationResponse';
   info: CreateInfo;
@@ -13504,6 +13510,84 @@ export type IssuesConnection = {
   totalCount: Scalars['Int']['output'];
 };
 
+export type LinkFlair = {
+  __typename?: 'LinkFlair';
+  cssClass?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['String']['output']>;
+  text?: Maybe<Scalars['String']['output']>;
+};
+
+export type LinkFlairAggregateSelection = {
+  __typename?: 'LinkFlairAggregateSelection';
+  count: Scalars['Int']['output'];
+  cssClass: StringAggregateSelectionNullable;
+  id: StringAggregateSelectionNullable;
+  text: StringAggregateSelectionNullable;
+};
+
+export type LinkFlairCreateInput = {
+  cssClass?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['String']['input']>;
+  text?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type LinkFlairEdge = {
+  __typename?: 'LinkFlairEdge';
+  cursor: Scalars['String']['output'];
+  node: LinkFlair;
+};
+
+export type LinkFlairOptions = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  /** Specify one or more LinkFlairSort objects to sort LinkFlairs by. The sorts will be applied in the order in which they are arranged in the array. */
+  sort?: InputMaybe<Array<LinkFlairSort>>;
+};
+
+/** Fields to sort LinkFlairs by. The order in which sorts are applied is not guaranteed when specifying many fields in one LinkFlairSort object. */
+export type LinkFlairSort = {
+  cssClass?: InputMaybe<SortDirection>;
+  id?: InputMaybe<SortDirection>;
+  text?: InputMaybe<SortDirection>;
+};
+
+export type LinkFlairUpdateInput = {
+  cssClass?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['String']['input']>;
+  text?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type LinkFlairWhere = {
+  AND?: InputMaybe<Array<LinkFlairWhere>>;
+  NOT?: InputMaybe<LinkFlairWhere>;
+  OR?: InputMaybe<Array<LinkFlairWhere>>;
+  cssClass?: InputMaybe<Scalars['String']['input']>;
+  cssClass_CONTAINS?: InputMaybe<Scalars['String']['input']>;
+  cssClass_ENDS_WITH?: InputMaybe<Scalars['String']['input']>;
+  cssClass_IN?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  cssClass_MATCHES?: InputMaybe<Scalars['String']['input']>;
+  cssClass_STARTS_WITH?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['String']['input']>;
+  id_CONTAINS?: InputMaybe<Scalars['String']['input']>;
+  id_ENDS_WITH?: InputMaybe<Scalars['String']['input']>;
+  id_IN?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  id_MATCHES?: InputMaybe<Scalars['String']['input']>;
+  id_STARTS_WITH?: InputMaybe<Scalars['String']['input']>;
+  text?: InputMaybe<Scalars['String']['input']>;
+  text_CONTAINS?: InputMaybe<Scalars['String']['input']>;
+  text_ENDS_WITH?: InputMaybe<Scalars['String']['input']>;
+  text_IN?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  text_MATCHES?: InputMaybe<Scalars['String']['input']>;
+  text_STARTS_WITH?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type LinkFlairsConnection = {
+  __typename?: 'LinkFlairsConnection';
+  edges: Array<LinkFlairEdge>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
 export type ModChannelRole = {
   __typename?: 'ModChannelRole';
   canCloseSupportTickets?: Maybe<Scalars['Boolean']['output']>;
@@ -15826,6 +15910,7 @@ export type Mutation = {
   createFeeds: CreateFeedsMutationResponse;
   createGetSubredditResponses: CreateGetSubredditResponsesMutationResponse;
   createIssues: CreateIssuesMutationResponse;
+  createLinkFlairs: CreateLinkFlairsMutationResponse;
   createModChannelRoles: CreateModChannelRolesMutationResponse;
   createModServerRoles: CreateModServerRolesMutationResponse;
   createModerationActions: CreateModerationActionsMutationResponse;
@@ -15859,6 +15944,7 @@ export type Mutation = {
   deleteFeeds: DeleteInfo;
   deleteGetSubredditResponses: DeleteInfo;
   deleteIssues: DeleteInfo;
+  deleteLinkFlairs: DeleteInfo;
   deleteModChannelRoles: DeleteInfo;
   deleteModServerRoles: DeleteInfo;
   deleteModerationActions: DeleteInfo;
@@ -15897,6 +15983,7 @@ export type Mutation = {
   updateFeeds: UpdateFeedsMutationResponse;
   updateGetSubredditResponses: UpdateGetSubredditResponsesMutationResponse;
   updateIssues: UpdateIssuesMutationResponse;
+  updateLinkFlairs: UpdateLinkFlairsMutationResponse;
   updateModChannelRoles: UpdateModChannelRolesMutationResponse;
   updateModServerRoles: UpdateModServerRolesMutationResponse;
   updateModerationActions: UpdateModerationActionsMutationResponse;
@@ -16023,6 +16110,11 @@ export type MutationCreateGetSubredditResponsesArgs = {
 
 export type MutationCreateIssuesArgs = {
   input: Array<IssueCreateInput>;
+};
+
+
+export type MutationCreateLinkFlairsArgs = {
+  input: Array<LinkFlairCreateInput>;
 };
 
 
@@ -16199,6 +16291,11 @@ export type MutationDeleteGetSubredditResponsesArgs = {
 export type MutationDeleteIssuesArgs = {
   delete?: InputMaybe<IssueDeleteInput>;
   where?: InputMaybe<IssueWhere>;
+};
+
+
+export type MutationDeleteLinkFlairsArgs = {
+  where?: InputMaybe<LinkFlairWhere>;
 };
 
 
@@ -16476,6 +16573,12 @@ export type MutationUpdateIssuesArgs = {
 };
 
 
+export type MutationUpdateLinkFlairsArgs = {
+  update?: InputMaybe<LinkFlairUpdateInput>;
+  where?: InputMaybe<LinkFlairWhere>;
+};
+
+
 export type MutationUpdateModChannelRolesArgs = {
   update?: InputMaybe<ModChannelRoleUpdateInput>;
   where?: InputMaybe<ModChannelRoleWhere>;
@@ -16702,6 +16805,9 @@ export type Query = {
   issues: Array<Issue>;
   issuesAggregate: IssueAggregateSelection;
   issuesConnection: IssuesConnection;
+  linkFlairs: Array<LinkFlair>;
+  linkFlairsAggregate: LinkFlairAggregateSelection;
+  linkFlairsConnection: LinkFlairsConnection;
   modChannelRoles: Array<ModChannelRole>;
   modChannelRolesAggregate: ModChannelRoleAggregateSelection;
   modChannelRolesConnection: ModChannelRolesConnection;
@@ -17059,6 +17165,7 @@ export type QueryGetSiteWideDiscussionListArgs = {
 
 
 export type QueryGetSubredditArgs = {
+  flair?: InputMaybe<Scalars['String']['input']>;
   options?: InputMaybe<RedditPostOptions>;
   subredditName: Scalars['String']['input'];
 };
@@ -17105,6 +17212,25 @@ export type QueryIssuesConnectionArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<Array<InputMaybe<IssueSort>>>;
   where?: InputMaybe<IssueWhere>;
+};
+
+
+export type QueryLinkFlairsArgs = {
+  options?: InputMaybe<LinkFlairOptions>;
+  where?: InputMaybe<LinkFlairWhere>;
+};
+
+
+export type QueryLinkFlairsAggregateArgs = {
+  where?: InputMaybe<LinkFlairWhere>;
+};
+
+
+export type QueryLinkFlairsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<LinkFlairSort>>>;
+  where?: InputMaybe<LinkFlairWhere>;
 };
 
 
@@ -19169,6 +19295,7 @@ export type SubredditSidebar = {
   bannerImg?: Maybe<Scalars['String']['output']>;
   communityIcon?: Maybe<Scalars['String']['output']>;
   displayName: Scalars['String']['output'];
+  linkFlairs?: Maybe<Array<Maybe<LinkFlair>>>;
   longDescription?: Maybe<Scalars['String']['output']>;
   shortDescription?: Maybe<Scalars['String']['output']>;
   showMediaPreview?: Maybe<Scalars['Boolean']['output']>;
@@ -20644,6 +20771,12 @@ export type UpdateIssuesMutationResponse = {
   __typename?: 'UpdateIssuesMutationResponse';
   info: UpdateInfo;
   issues: Array<Issue>;
+};
+
+export type UpdateLinkFlairsMutationResponse = {
+  __typename?: 'UpdateLinkFlairsMutationResponse';
+  info: UpdateInfo;
+  linkFlairs: Array<LinkFlair>;
 };
 
 export type UpdateModChannelRolesMutationResponse = {
@@ -25678,6 +25811,7 @@ export type ResolversTypes = {
   CreateGetSubredditResponsesMutationResponse: ResolverTypeWrapper<CreateGetSubredditResponsesMutationResponse>;
   CreateInfo: ResolverTypeWrapper<CreateInfo>;
   CreateIssuesMutationResponse: ResolverTypeWrapper<CreateIssuesMutationResponse>;
+  CreateLinkFlairsMutationResponse: ResolverTypeWrapper<CreateLinkFlairsMutationResponse>;
   CreateModChannelRolesMutationResponse: ResolverTypeWrapper<CreateModChannelRolesMutationResponse>;
   CreateModServerRolesMutationResponse: ResolverTypeWrapper<CreateModServerRolesMutationResponse>;
   CreateModerationActionsMutationResponse: ResolverTypeWrapper<CreateModerationActionsMutationResponse>;
@@ -26304,6 +26438,15 @@ export type ResolversTypes = {
   IssueWhere: IssueWhere;
   IssuesConnection: ResolverTypeWrapper<IssuesConnection>;
   JSON: ResolverTypeWrapper<Scalars['JSON']['output']>;
+  LinkFlair: ResolverTypeWrapper<LinkFlair>;
+  LinkFlairAggregateSelection: ResolverTypeWrapper<LinkFlairAggregateSelection>;
+  LinkFlairCreateInput: LinkFlairCreateInput;
+  LinkFlairEdge: ResolverTypeWrapper<LinkFlairEdge>;
+  LinkFlairOptions: LinkFlairOptions;
+  LinkFlairSort: LinkFlairSort;
+  LinkFlairUpdateInput: LinkFlairUpdateInput;
+  LinkFlairWhere: LinkFlairWhere;
+  LinkFlairsConnection: ResolverTypeWrapper<LinkFlairsConnection>;
   ModChannelRole: ResolverTypeWrapper<ModChannelRole>;
   ModChannelRoleAggregateSelection: ResolverTypeWrapper<ModChannelRoleAggregateSelection>;
   ModChannelRoleConnectOrCreateWhere: ModChannelRoleConnectOrCreateWhere;
@@ -26804,6 +26947,7 @@ export type ResolversTypes = {
   UpdateGetSubredditResponsesMutationResponse: ResolverTypeWrapper<UpdateGetSubredditResponsesMutationResponse>;
   UpdateInfo: ResolverTypeWrapper<UpdateInfo>;
   UpdateIssuesMutationResponse: ResolverTypeWrapper<UpdateIssuesMutationResponse>;
+  UpdateLinkFlairsMutationResponse: ResolverTypeWrapper<UpdateLinkFlairsMutationResponse>;
   UpdateModChannelRolesMutationResponse: ResolverTypeWrapper<UpdateModChannelRolesMutationResponse>;
   UpdateModServerRolesMutationResponse: ResolverTypeWrapper<UpdateModServerRolesMutationResponse>;
   UpdateModerationActionsMutationResponse: ResolverTypeWrapper<UpdateModerationActionsMutationResponse>;
@@ -27621,6 +27765,7 @@ export type ResolversParentTypes = {
   CreateGetSubredditResponsesMutationResponse: CreateGetSubredditResponsesMutationResponse;
   CreateInfo: CreateInfo;
   CreateIssuesMutationResponse: CreateIssuesMutationResponse;
+  CreateLinkFlairsMutationResponse: CreateLinkFlairsMutationResponse;
   CreateModChannelRolesMutationResponse: CreateModChannelRolesMutationResponse;
   CreateModServerRolesMutationResponse: CreateModServerRolesMutationResponse;
   CreateModerationActionsMutationResponse: CreateModerationActionsMutationResponse;
@@ -28247,6 +28392,15 @@ export type ResolversParentTypes = {
   IssueWhere: IssueWhere;
   IssuesConnection: IssuesConnection;
   JSON: Scalars['JSON']['output'];
+  LinkFlair: LinkFlair;
+  LinkFlairAggregateSelection: LinkFlairAggregateSelection;
+  LinkFlairCreateInput: LinkFlairCreateInput;
+  LinkFlairEdge: LinkFlairEdge;
+  LinkFlairOptions: LinkFlairOptions;
+  LinkFlairSort: LinkFlairSort;
+  LinkFlairUpdateInput: LinkFlairUpdateInput;
+  LinkFlairWhere: LinkFlairWhere;
+  LinkFlairsConnection: LinkFlairsConnection;
   ModChannelRole: ModChannelRole;
   ModChannelRoleAggregateSelection: ModChannelRoleAggregateSelection;
   ModChannelRoleConnectOrCreateWhere: ModChannelRoleConnectOrCreateWhere;
@@ -28743,6 +28897,7 @@ export type ResolversParentTypes = {
   UpdateGetSubredditResponsesMutationResponse: UpdateGetSubredditResponsesMutationResponse;
   UpdateInfo: UpdateInfo;
   UpdateIssuesMutationResponse: UpdateIssuesMutationResponse;
+  UpdateLinkFlairsMutationResponse: UpdateLinkFlairsMutationResponse;
   UpdateModChannelRolesMutationResponse: UpdateModChannelRolesMutationResponse;
   UpdateModServerRolesMutationResponse: UpdateModServerRolesMutationResponse;
   UpdateModerationActionsMutationResponse: UpdateModerationActionsMutationResponse;
@@ -30096,6 +30251,12 @@ export type CreateInfoResolvers<ContextType = any, ParentType extends ResolversP
 export type CreateIssuesMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateIssuesMutationResponse'] = ResolversParentTypes['CreateIssuesMutationResponse']> = {
   info?: Resolver<ResolversTypes['CreateInfo'], ParentType, ContextType>;
   issues?: Resolver<Array<ResolversTypes['Issue']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CreateLinkFlairsMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateLinkFlairsMutationResponse'] = ResolversParentTypes['CreateLinkFlairsMutationResponse']> = {
+  info?: Resolver<ResolversTypes['CreateInfo'], ParentType, ContextType>;
+  linkFlairs?: Resolver<Array<ResolversTypes['LinkFlair']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -31483,6 +31644,34 @@ export interface JsonScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes
   name: 'JSON';
 }
 
+export type LinkFlairResolvers<ContextType = any, ParentType extends ResolversParentTypes['LinkFlair'] = ResolversParentTypes['LinkFlair']> = {
+  cssClass?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  text?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type LinkFlairAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['LinkFlairAggregateSelection'] = ResolversParentTypes['LinkFlairAggregateSelection']> = {
+  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  cssClass?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  text?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type LinkFlairEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['LinkFlairEdge'] = ResolversParentTypes['LinkFlairEdge']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['LinkFlair'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type LinkFlairsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['LinkFlairsConnection'] = ResolversParentTypes['LinkFlairsConnection']> = {
+  edges?: Resolver<Array<ResolversTypes['LinkFlairEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type ModChannelRoleResolvers<ContextType = any, ParentType extends ResolversParentTypes['ModChannelRole'] = ResolversParentTypes['ModChannelRole']> = {
   canCloseSupportTickets?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   canGiveFeedback?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
@@ -31905,6 +32094,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createFeeds?: Resolver<ResolversTypes['CreateFeedsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateFeedsArgs, 'input'>>;
   createGetSubredditResponses?: Resolver<ResolversTypes['CreateGetSubredditResponsesMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateGetSubredditResponsesArgs, 'input'>>;
   createIssues?: Resolver<ResolversTypes['CreateIssuesMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateIssuesArgs, 'input'>>;
+  createLinkFlairs?: Resolver<ResolversTypes['CreateLinkFlairsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateLinkFlairsArgs, 'input'>>;
   createModChannelRoles?: Resolver<ResolversTypes['CreateModChannelRolesMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateModChannelRolesArgs, 'input'>>;
   createModServerRoles?: Resolver<ResolversTypes['CreateModServerRolesMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateModServerRolesArgs, 'input'>>;
   createModerationActions?: Resolver<ResolversTypes['CreateModerationActionsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateModerationActionsArgs, 'input'>>;
@@ -31938,6 +32128,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteFeeds?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteFeedsArgs>>;
   deleteGetSubredditResponses?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteGetSubredditResponsesArgs>>;
   deleteIssues?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteIssuesArgs>>;
+  deleteLinkFlairs?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteLinkFlairsArgs>>;
   deleteModChannelRoles?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteModChannelRolesArgs>>;
   deleteModServerRoles?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteModServerRolesArgs>>;
   deleteModerationActions?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteModerationActionsArgs>>;
@@ -31976,6 +32167,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   updateFeeds?: Resolver<ResolversTypes['UpdateFeedsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateFeedsArgs>>;
   updateGetSubredditResponses?: Resolver<ResolversTypes['UpdateGetSubredditResponsesMutationResponse'], ParentType, ContextType, Partial<MutationUpdateGetSubredditResponsesArgs>>;
   updateIssues?: Resolver<ResolversTypes['UpdateIssuesMutationResponse'], ParentType, ContextType, Partial<MutationUpdateIssuesArgs>>;
+  updateLinkFlairs?: Resolver<ResolversTypes['UpdateLinkFlairsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateLinkFlairsArgs>>;
   updateModChannelRoles?: Resolver<ResolversTypes['UpdateModChannelRolesMutationResponse'], ParentType, ContextType, Partial<MutationUpdateModChannelRolesArgs>>;
   updateModServerRoles?: Resolver<ResolversTypes['UpdateModServerRolesMutationResponse'], ParentType, ContextType, Partial<MutationUpdateModServerRolesArgs>>;
   updateModerationActions?: Resolver<ResolversTypes['UpdateModerationActionsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateModerationActionsArgs>>;
@@ -32069,6 +32261,9 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   issues?: Resolver<Array<ResolversTypes['Issue']>, ParentType, ContextType, Partial<QueryIssuesArgs>>;
   issuesAggregate?: Resolver<ResolversTypes['IssueAggregateSelection'], ParentType, ContextType, Partial<QueryIssuesAggregateArgs>>;
   issuesConnection?: Resolver<ResolversTypes['IssuesConnection'], ParentType, ContextType, Partial<QueryIssuesConnectionArgs>>;
+  linkFlairs?: Resolver<Array<ResolversTypes['LinkFlair']>, ParentType, ContextType, Partial<QueryLinkFlairsArgs>>;
+  linkFlairsAggregate?: Resolver<ResolversTypes['LinkFlairAggregateSelection'], ParentType, ContextType, Partial<QueryLinkFlairsAggregateArgs>>;
+  linkFlairsConnection?: Resolver<ResolversTypes['LinkFlairsConnection'], ParentType, ContextType, Partial<QueryLinkFlairsConnectionArgs>>;
   modChannelRoles?: Resolver<Array<ResolversTypes['ModChannelRole']>, ParentType, ContextType, Partial<QueryModChannelRolesArgs>>;
   modChannelRolesAggregate?: Resolver<ResolversTypes['ModChannelRoleAggregateSelection'], ParentType, ContextType, Partial<QueryModChannelRolesAggregateArgs>>;
   modChannelRolesConnection?: Resolver<ResolversTypes['ModChannelRolesConnection'], ParentType, ContextType, Partial<QueryModChannelRolesConnectionArgs>>;
@@ -32528,6 +32723,7 @@ export type SubredditSidebarResolvers<ContextType = any, ParentType extends Reso
   bannerImg?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   communityIcon?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   displayName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  linkFlairs?: Resolver<Maybe<Array<Maybe<ResolversTypes['LinkFlair']>>>, ParentType, ContextType>;
   longDescription?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   shortDescription?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   showMediaPreview?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
@@ -32849,6 +33045,12 @@ export type UpdateInfoResolvers<ContextType = any, ParentType extends ResolversP
 export type UpdateIssuesMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateIssuesMutationResponse'] = ResolversParentTypes['UpdateIssuesMutationResponse']> = {
   info?: Resolver<ResolversTypes['UpdateInfo'], ParentType, ContextType>;
   issues?: Resolver<Array<ResolversTypes['Issue']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type UpdateLinkFlairsMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateLinkFlairsMutationResponse'] = ResolversParentTypes['UpdateLinkFlairsMutationResponse']> = {
+  info?: Resolver<ResolversTypes['UpdateInfo'], ParentType, ContextType>;
+  linkFlairs?: Resolver<Array<ResolversTypes['LinkFlair']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -33731,6 +33933,7 @@ export type Resolvers<ContextType = any> = {
   CreateGetSubredditResponsesMutationResponse?: CreateGetSubredditResponsesMutationResponseResolvers<ContextType>;
   CreateInfo?: CreateInfoResolvers<ContextType>;
   CreateIssuesMutationResponse?: CreateIssuesMutationResponseResolvers<ContextType>;
+  CreateLinkFlairsMutationResponse?: CreateLinkFlairsMutationResponseResolvers<ContextType>;
   CreateModChannelRolesMutationResponse?: CreateModChannelRolesMutationResponseResolvers<ContextType>;
   CreateModServerRolesMutationResponse?: CreateModServerRolesMutationResponseResolvers<ContextType>;
   CreateModerationActionsMutationResponse?: CreateModerationActionsMutationResponseResolvers<ContextType>;
@@ -33908,6 +34111,10 @@ export type Resolvers<ContextType = any> = {
   IssueModerationActionActivityFeedNodeAggregateSelection?: IssueModerationActionActivityFeedNodeAggregateSelectionResolvers<ContextType>;
   IssuesConnection?: IssuesConnectionResolvers<ContextType>;
   JSON?: GraphQLScalarType;
+  LinkFlair?: LinkFlairResolvers<ContextType>;
+  LinkFlairAggregateSelection?: LinkFlairAggregateSelectionResolvers<ContextType>;
+  LinkFlairEdge?: LinkFlairEdgeResolvers<ContextType>;
+  LinkFlairsConnection?: LinkFlairsConnectionResolvers<ContextType>;
   ModChannelRole?: ModChannelRoleResolvers<ContextType>;
   ModChannelRoleAggregateSelection?: ModChannelRoleAggregateSelectionResolvers<ContextType>;
   ModChannelRoleEdge?: ModChannelRoleEdgeResolvers<ContextType>;
@@ -34063,6 +34270,7 @@ export type Resolvers<ContextType = any> = {
   UpdateGetSubredditResponsesMutationResponse?: UpdateGetSubredditResponsesMutationResponseResolvers<ContextType>;
   UpdateInfo?: UpdateInfoResolvers<ContextType>;
   UpdateIssuesMutationResponse?: UpdateIssuesMutationResponseResolvers<ContextType>;
+  UpdateLinkFlairsMutationResponse?: UpdateLinkFlairsMutationResponseResolvers<ContextType>;
   UpdateModChannelRolesMutationResponse?: UpdateModChannelRolesMutationResponseResolvers<ContextType>;
   UpdateModServerRolesMutationResponse?: UpdateModServerRolesMutationResponseResolvers<ContextType>;
   UpdateModerationActionsMutationResponse?: UpdateModerationActionsMutationResponseResolvers<ContextType>;

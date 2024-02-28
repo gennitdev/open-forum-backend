@@ -1,13 +1,14 @@
-import snoowrap, { Submission } from 'snoowrap';
+import snoowrap, { Submission } from "snoowrap";
 
 type Args = {
   subredditName: string;
+  flair?: string;
   options?: {
     limit?: number;
-    sort?: 'hot' | 'new' | 'top' | 'rising';
+    sort?: "hot" | "new" | "top" | "relevance" | "comments";
     after?: string; // Add after for pagination support
   };
-}
+};
 
 type PostOutput = {
   id: string; // Include ID for pagination
@@ -27,67 +28,59 @@ type PostOutput = {
   url: string;
   preview: any;
   stickied: boolean;
-}
+};
 
 const getSubredditResolver = () => {
   return async (parent: any, args: Args, context: any, info: any) => {
-    const { subredditName, options } = args;
-    const { limit = 25, sort = 'hot', after } = options || {};
+    const { subredditName, options, flair } = args;
+    const { limit = 25, sort = "hot", after } = options || {};
 
     const r = new snoowrap({
-        userAgent: 'web:Listical:v1.0 (by /u/gennitdev)',
-        clientId: process.env.REDDIT_CLIENT_ID,
-        clientSecret: process.env.REDDIT_CLIENT_SECRET,
-        refreshToken: process.env.REDDIT_REFRESH_TOKEN
-    })
+      userAgent: "web:Listical:v1.0 (by /u/gennitdev)",
+      clientId: process.env.REDDIT_CLIENT_ID,
+      clientSecret: process.env.REDDIT_CLIENT_SECRET,
+      refreshToken: process.env.REDDIT_REFRESH_TOKEN,
+    });
     const fetchOptions = {
       limit,
-      after // Use the after parameter for pagination
+      after, // Use the after parameter for pagination
     };
 
-    // output format:
-    // type RedditSubmission {
-    //     subreddit: String!
-    //     title: String!
-    //     createdUTC: Int!
-    //     author: String!
-    //     commentCount: Int!
-    //     text: String!
-    //     mediaMetadata: JSON
-    //     permalink: String!
-    //     thumbnail: String!
-    //     upvoteCount: Int!
-    //   }
-    // Dynamically choosing the sort method based on the input
-    console.log('using fetch options', fetchOptions)
     let posts;
-    switch(sort) {
-      case 'hot':
-        posts = await r.getSubreddit(subredditName).getHot(fetchOptions);
-        break;
-      case 'new':
-        posts = await r.getSubreddit(subredditName).getNew(fetchOptions);
-        break;
-      case 'top':
-        posts = await r.getSubreddit(subredditName).getTop(fetchOptions);
-        break;
-      case 'rising':
-        posts = await r.getSubreddit(subredditName).getRising(fetchOptions);
-        break;
-      default:
-        posts = await r.getSubreddit(subredditName).getHot(fetchOptions);
+    if (flair) {
+      // Constructing the search query for flair
+      const flairQuery = `flair:"${flair}"`;
+      posts = await r.getSubreddit(subredditName).search({
+        query: flairQuery,
+        sort: sort,
+        time: "all",
+        ...fetchOptions,
+      });
+    } else {
+      switch (sort) {
+        case "hot":
+          posts = await r.getSubreddit(subredditName).getHot(fetchOptions);
+          break;
+        case "new":
+          posts = await r.getSubreddit(subredditName).getNew(fetchOptions);
+          break;
+        case "top":
+          posts = await r.getSubreddit(subredditName).getTop(fetchOptions);
+          break;
+        default:
+          posts = await r.getSubreddit(subredditName).getHot(fetchOptions);
+      }
     }
-console.log('posts', posts[0])
+    // console.log('posts', posts[0])
 
     const result: PostOutput[] = posts.map((post: Submission) => {
-
       return {
         id: post.id,
         name: post.name,
         subreddit: post.subreddit.display_name || subredditName,
-        title: post.title || '',
+        title: post.title || "",
         createdUTC: post.created_utc,
-        author: post.author?.name || '[deleted]',
+        author: post.author?.name || "[deleted]",
         commentCount: post.num_comments,
         text: post.selftext,
         media: {
@@ -102,7 +95,8 @@ console.log('posts', posts[0])
           linkFlairBackgroundColor: post.link_flair_background_color,
           linkFlairTextColor: post.link_flair_text_color,
           linkFlairRichText: post.link_flair_richtext,
-        },      
+          linkFlairText: post.link_flair_text,
+        },
         numCrossposts: post.num_crossposts,
         permalink: post.permalink,
         thumbnail: post.thumbnail,
@@ -110,15 +104,15 @@ console.log('posts', posts[0])
         url: post.url,
         preview: post.preview,
         stickied: post.stickied,
-      }
+      };
     });
 
     const nextPage = result.length > 0 ? result[result.length - 1].name : null;
 
-    return{
+    return {
       posts: result,
-      after: nextPage
-    }
+      after: nextPage,
+    };
   };
 };
 

@@ -434,6 +434,12 @@ const typeDefinitions = gql`
     stickied: Boolean!
   }
 
+  type LinkFlair {
+    id: String
+    text: String
+    cssClass: String
+  }
+
   type SubredditSidebar {
     title: String!
     displayName: String!
@@ -444,6 +450,7 @@ const typeDefinitions = gql`
     showMediaPreview: Boolean
     bannerImg: String
     allowImages: Boolean
+    linkFlairs: [LinkFlair]
   }
 
   type ServerRole {
@@ -546,7 +553,11 @@ const typeDefinitions = gql`
       limit: Int
       sort: SortType
     ): CommentRepliesFormat
-    getSubreddit(subredditName: String!, options: RedditPostOptions): GetSubredditResponse
+    getSubreddit(
+      subredditName: String!, 
+      options: RedditPostOptions,
+      flair: String
+    ): GetSubredditResponse
     getSubredditSidebar(subredditName: String!, options: JSON): SubredditSidebar
   }
 `;
