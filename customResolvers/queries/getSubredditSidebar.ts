@@ -26,10 +26,18 @@ const getSubredditResolver = () => {
 
     // Fetch link flairs for the subreddit
     // @ts-ignore
-    const linkFlairs = await r.oauthRequest({
-      uri: `/r/${subredditName}/api/link_flair_v2.json`,
-      method: 'GET'
-    });
+    let linkFlairs = [];
+    try {
+      // Fetch link flairs for the subreddit
+      // @ts-ignore
+      linkFlairs = await r.oauthRequest({
+        uri: `/r/${subredditName}/api/link_flair_v2.json`,
+        method: 'GET'
+      });
+    } catch (error) {
+      console.error(`Failed to fetch link flairs for subreddit ${subredditName}: ${error}`);
+      // If there's an error (e.g., no permission), linkFlairs will remain an empty array
+    }
 
     const result = {
         title: metadata.title,

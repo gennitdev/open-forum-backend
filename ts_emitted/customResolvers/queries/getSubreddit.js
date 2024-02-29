@@ -13,14 +13,10 @@ const getSubredditResolver = () => {
             limit,
             after, // Use the after parameter for pagination
         };
-        // Dynamically choosing the sort method based on the input
-        console.log("using fetch options", fetchOptions);
-        console.log("flair", flair);
         let posts;
         if (flair) {
             // Constructing the search query for flair
             const flairQuery = `flair:"${flair}"`;
-            console.log("flairQuery", flairQuery);
             posts = await r.getSubreddit(subredditName).search({
                 query: flairQuery,
                 sort: sort,

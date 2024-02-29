@@ -13,14 +13,19 @@ const getSubredditResolver = () => {
         const metadata = await r.getSubreddit(subredditName).fetch();
         // Fetch link flairs for the subreddit
         // @ts-ignore
-        const linkFlairs = await r.oauthRequest({
-            uri: `/r/${subredditName}/api/link_flair_v2.json`,
-            method: 'GET'
-        });
-        // Format link flairs for output
-        const formattedLinkFlairs = linkFlairs.map((flair) => {
-            return flair;
-        });
+        let linkFlairs = [];
+        try {
+            // Fetch link flairs for the subreddit
+            // @ts-ignore
+            linkFlairs = await r.oauthRequest({
+                uri: `/r/${subredditName}/api/link_flair_v2.json`,
+                method: 'GET'
+            });
+        }
+        catch (error) {
+            console.error(`Failed to fetch link flairs for subreddit ${subredditName}: ${error}`);
+            // If there's an error (e.g., no permission), linkFlairs will remain an empty array
+        }
         const result = {
             title: metadata.title,
             displayName: metadata.display_name,
@@ -31,7 +36,7 @@ const getSubredditResolver = () => {
             showMediaPreview: metadata.show_media_preview,
             bannerImg: metadata.banner_background_image,
             allowImages: metadata.allow_images,
-            linkFlairs: formattedLinkFlairs, // Include link flairs in the result
+            linkFlairs: linkFlairs, // Include link flairs in the result
         };
         return result;
     };
