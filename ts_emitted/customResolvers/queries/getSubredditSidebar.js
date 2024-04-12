@@ -11,14 +11,21 @@ const getSubredditResolver = () => {
         // Fetch subreddit metadata
         // @ts-ignore
         const metadata = await r.getSubreddit(subredditName).fetch();
-        // Fetch link flairs for the subreddit
         // @ts-ignore
         let linkFlairs = [];
+        // @ts-ignore
+        let rules = [];
         try {
             // Fetch link flairs for the subreddit
             // @ts-ignore
             linkFlairs = await r.oauthRequest({
                 uri: `/r/${subredditName}/api/link_flair_v2.json`,
+                method: 'GET'
+            });
+            // Fetch the rules of the subreddit
+            // @ts-ignore
+            rules = await r.oauthRequest({
+                uri: `/r/${subredditName}/about/rules.json`,
                 method: 'GET'
             });
         }
@@ -36,7 +43,8 @@ const getSubredditResolver = () => {
             showMediaPreview: metadata.show_media_preview,
             bannerImg: metadata.banner_background_image,
             allowImages: metadata.allow_images,
-            linkFlairs: linkFlairs, // Include link flairs in the result
+            linkFlairs: linkFlairs,
+            rules: rules
         };
         return result;
     };

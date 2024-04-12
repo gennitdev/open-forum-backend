@@ -34,12 +34,6 @@ const commentSelectionSet = `
         UpvotedByUsersAggregate {
             count
         }
-        DownvotedByModerators {
-            displayName
-        }
-        DownvotedByModeratorsAggregate {
-            count
-        }
     }
  }
 `;

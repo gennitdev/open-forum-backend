@@ -45,8 +45,6 @@ const typeDefinitions = gql`
     Channel: Channel @relationship(type: "POSTED_IN_CHANNEL", direction: OUT)
     UpvotedByUsers: [User!]!
       @relationship(type: "UPVOTED_DISCUSSION", direction: OUT)
-    DownvotedByModerators: [ModerationProfile!]!
-      @relationship(type: "DOWNVOTED_DISCUSSION", direction: OUT)
     Comments: [Comment!]!
       @relationship(type: "CONTAINS_COMMENT", direction: OUT)
     emoji: JSON
@@ -169,8 +167,6 @@ const typeDefinitions = gql`
     weightedVotesCount: Float
     UpvotedByUsers: [User!]!
       @relationship(type: "UPVOTED_COMMENT", direction: IN)
-    DownvotedByModerators: [ModerationProfile!]!
-      @relationship(type: "DOWNVOTED_COMMENT", direction: IN)
     # PastVersions:            [CommentVersion]        @relationship(type: "HAS_VERSION", direction: OUT)
     emoji: JSON
     GivesFeedbackOnDiscussion: Discussion @relationship(type: "HAS_FEEDBACK_COMMENT", direction: OUT)
@@ -250,10 +246,6 @@ const typeDefinitions = gql`
     createdAt: DateTime! @timestamp(operations: [CREATE])
     displayName: String @unique
     User: User @relationship(type: "MODERATION_PROFILE", direction: IN)
-    DownvotedComments: [Comment!]!
-      @relationship(type: "DOWNVOTED_COMMENT", direction: OUT)
-    DownvotedDiscussionChannels: [DiscussionChannel!]!
-      @relationship(type: "DOWNVOTED_COMMENT_SECTION", direction: OUT)
     AuthoredIssues: [Issue!]!
       @relationship(type: "AUTHORED_ISSUE", direction: IN)
     AuthoredComments: [Comment!]!
@@ -261,6 +253,8 @@ const typeDefinitions = gql`
     ModChannelRoles: [ModChannelRole!]!
       @relationship(type: "HAS_MOD_ROLE", direction: OUT)
     ModServerRoles: [ModServerRole!]! @relationship(type: "HAS_MOD_ROLE", direction: OUT)
+    ActivityFeed: [ModerationAction!]!
+      @relationship(type: "ACTIVITY_ON_ISSUE", direction: OUT)
   }
 
   type ModerationAction {
@@ -451,6 +445,7 @@ const typeDefinitions = gql`
     bannerImg: String
     allowImages: Boolean
     linkFlairs: [LinkFlair]
+    rules: JSON
   }
 
   type ServerRole {

@@ -56,12 +56,6 @@ const commentSelectionSet = `
                   UpvotedByUsersAggregate {
                       count
                   }
-                  DownvotedByModerators {
-                      displayName
-                  }
-                  DownvotedByModeratorsAggregate {
-                      count
-                  }
                   ChildComments {
                       id
                       text
@@ -89,12 +83,6 @@ const commentSelectionSet = `
                           username
                       }
                       UpvotedByUsersAggregate {
-                          count
-                      }
-                      DownvotedByModerators {
-                          displayName
-                      }
-                      DownvotedByModeratorsAggregate {
                           count
                       }
                   }

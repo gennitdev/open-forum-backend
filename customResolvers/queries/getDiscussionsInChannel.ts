@@ -44,12 +44,6 @@ const discussionChannelSelectionSet = `
       UpvotedByUsersAggregate {
           count
       }
-      DownvotedByModerators {
-          displayName
-      }
-      DownvotedByModeratorsAggregate {
-          count
-      }
   }
   `;
 

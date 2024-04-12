@@ -2405,9 +2405,6 @@ export type Comment = {
   DiscussionChannel?: Maybe<DiscussionChannel>;
   DiscussionChannelAggregate?: Maybe<CommentDiscussionChannelDiscussionChannelAggregationSelection>;
   DiscussionChannelConnection: CommentDiscussionChannelConnection;
-  DownvotedByModerators: Array<ModerationProfile>;
-  DownvotedByModeratorsAggregate?: Maybe<CommentModerationProfileDownvotedByModeratorsAggregationSelection>;
-  DownvotedByModeratorsConnection: CommentDownvotedByModeratorsConnection;
   Event?: Maybe<Event>;
   EventAggregate?: Maybe<CommentEventEventAggregationSelection>;
   EventConnection: CommentEventConnection;
@@ -2524,28 +2521,6 @@ export type CommentDiscussionChannelConnectionArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<Array<CommentDiscussionChannelConnectionSort>>;
   where?: InputMaybe<CommentDiscussionChannelConnectionWhere>;
-};
-
-
-export type CommentDownvotedByModeratorsArgs = {
-  directed?: InputMaybe<Scalars['Boolean']['input']>;
-  options?: InputMaybe<ModerationProfileOptions>;
-  where?: InputMaybe<ModerationProfileWhere>;
-};
-
-
-export type CommentDownvotedByModeratorsAggregateArgs = {
-  directed?: InputMaybe<Scalars['Boolean']['input']>;
-  where?: InputMaybe<ModerationProfileWhere>;
-};
-
-
-export type CommentDownvotedByModeratorsConnectionArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  directed?: InputMaybe<Scalars['Boolean']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  sort?: InputMaybe<Array<CommentDownvotedByModeratorsConnectionSort>>;
-  where?: InputMaybe<CommentDownvotedByModeratorsConnectionWhere>;
 };
 
 
@@ -3320,7 +3295,6 @@ export type CommentConnectInput = {
   ChildComments?: InputMaybe<Array<CommentChildCommentsConnectFieldInput>>;
   CommentAuthor?: InputMaybe<CommentCommentAuthorConnectInput>;
   DiscussionChannel?: InputMaybe<CommentDiscussionChannelConnectFieldInput>;
-  DownvotedByModerators?: InputMaybe<Array<CommentDownvotedByModeratorsConnectFieldInput>>;
   Event?: InputMaybe<CommentEventConnectFieldInput>;
   FeedbackComments?: InputMaybe<Array<CommentFeedbackCommentsConnectFieldInput>>;
   GivesFeedbackOnComment?: InputMaybe<CommentGivesFeedbackOnCommentConnectFieldInput>;
@@ -3335,7 +3309,6 @@ export type CommentConnectInput = {
 export type CommentConnectOrCreateInput = {
   Channel?: InputMaybe<CommentChannelConnectOrCreateFieldInput>;
   CommentAuthor?: InputMaybe<CommentCommentAuthorConnectOrCreateInput>;
-  DownvotedByModerators?: InputMaybe<Array<CommentDownvotedByModeratorsConnectOrCreateFieldInput>>;
   Tags?: InputMaybe<Array<CommentTagsConnectOrCreateFieldInput>>;
   UpvotedByUsers?: InputMaybe<Array<CommentUpvotedByUsersConnectOrCreateFieldInput>>;
 };
@@ -3349,7 +3322,6 @@ export type CommentCreateInput = {
   ChildComments?: InputMaybe<CommentChildCommentsFieldInput>;
   CommentAuthor?: InputMaybe<CommentCommentAuthorCreateInput>;
   DiscussionChannel?: InputMaybe<CommentDiscussionChannelFieldInput>;
-  DownvotedByModerators?: InputMaybe<CommentDownvotedByModeratorsFieldInput>;
   Event?: InputMaybe<CommentEventFieldInput>;
   FeedbackComments?: InputMaybe<CommentFeedbackCommentsFieldInput>;
   GivesFeedbackOnComment?: InputMaybe<CommentGivesFeedbackOnCommentFieldInput>;
@@ -3372,7 +3344,6 @@ export type CommentDeleteInput = {
   ChildComments?: InputMaybe<Array<CommentChildCommentsDeleteFieldInput>>;
   CommentAuthor?: InputMaybe<CommentCommentAuthorDeleteInput>;
   DiscussionChannel?: InputMaybe<CommentDiscussionChannelDeleteFieldInput>;
-  DownvotedByModerators?: InputMaybe<Array<CommentDownvotedByModeratorsDeleteFieldInput>>;
   Event?: InputMaybe<CommentEventDeleteFieldInput>;
   FeedbackComments?: InputMaybe<Array<CommentFeedbackCommentsDeleteFieldInput>>;
   GivesFeedbackOnComment?: InputMaybe<CommentGivesFeedbackOnCommentDeleteFieldInput>;
@@ -3389,7 +3360,6 @@ export type CommentDisconnectInput = {
   ChildComments?: InputMaybe<Array<CommentChildCommentsDisconnectFieldInput>>;
   CommentAuthor?: InputMaybe<CommentCommentAuthorDisconnectInput>;
   DiscussionChannel?: InputMaybe<CommentDiscussionChannelDisconnectFieldInput>;
-  DownvotedByModerators?: InputMaybe<Array<CommentDownvotedByModeratorsDisconnectFieldInput>>;
   Event?: InputMaybe<CommentEventDisconnectFieldInput>;
   FeedbackComments?: InputMaybe<Array<CommentFeedbackCommentsDisconnectFieldInput>>;
   GivesFeedbackOnComment?: InputMaybe<CommentGivesFeedbackOnCommentDisconnectFieldInput>;
@@ -3555,123 +3525,6 @@ export type CommentDiscussionGivesFeedbackOnDiscussionNodeAggregateSelection = {
   id: IdAggregateSelectionNonNullable;
   title: StringAggregateSelectionNonNullable;
   updatedAt: DateTimeAggregateSelectionNullable;
-};
-
-export type CommentDownvotedByModeratorsAggregateInput = {
-  AND?: InputMaybe<Array<CommentDownvotedByModeratorsAggregateInput>>;
-  NOT?: InputMaybe<CommentDownvotedByModeratorsAggregateInput>;
-  OR?: InputMaybe<Array<CommentDownvotedByModeratorsAggregateInput>>;
-  count?: InputMaybe<Scalars['Int']['input']>;
-  count_GT?: InputMaybe<Scalars['Int']['input']>;
-  count_GTE?: InputMaybe<Scalars['Int']['input']>;
-  count_LT?: InputMaybe<Scalars['Int']['input']>;
-  count_LTE?: InputMaybe<Scalars['Int']['input']>;
-  node?: InputMaybe<CommentDownvotedByModeratorsNodeAggregationWhereInput>;
-};
-
-export type CommentDownvotedByModeratorsConnectFieldInput = {
-  connect?: InputMaybe<Array<ModerationProfileConnectInput>>;
-  /** Whether or not to overwrite any matching relationship with the new properties. */
-  overwrite?: Scalars['Boolean']['input'];
-  where?: InputMaybe<ModerationProfileConnectWhere>;
-};
-
-export type CommentDownvotedByModeratorsConnectOrCreateFieldInput = {
-  onCreate: CommentDownvotedByModeratorsConnectOrCreateFieldInputOnCreate;
-  where: ModerationProfileConnectOrCreateWhere;
-};
-
-export type CommentDownvotedByModeratorsConnectOrCreateFieldInputOnCreate = {
-  node: ModerationProfileOnCreateInput;
-};
-
-export type CommentDownvotedByModeratorsConnection = {
-  __typename?: 'CommentDownvotedByModeratorsConnection';
-  edges: Array<CommentDownvotedByModeratorsRelationship>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int']['output'];
-};
-
-export type CommentDownvotedByModeratorsConnectionSort = {
-  node?: InputMaybe<ModerationProfileSort>;
-};
-
-export type CommentDownvotedByModeratorsConnectionWhere = {
-  AND?: InputMaybe<Array<CommentDownvotedByModeratorsConnectionWhere>>;
-  NOT?: InputMaybe<CommentDownvotedByModeratorsConnectionWhere>;
-  OR?: InputMaybe<Array<CommentDownvotedByModeratorsConnectionWhere>>;
-  node?: InputMaybe<ModerationProfileWhere>;
-};
-
-export type CommentDownvotedByModeratorsCreateFieldInput = {
-  node: ModerationProfileCreateInput;
-};
-
-export type CommentDownvotedByModeratorsDeleteFieldInput = {
-  delete?: InputMaybe<ModerationProfileDeleteInput>;
-  where?: InputMaybe<CommentDownvotedByModeratorsConnectionWhere>;
-};
-
-export type CommentDownvotedByModeratorsDisconnectFieldInput = {
-  disconnect?: InputMaybe<ModerationProfileDisconnectInput>;
-  where?: InputMaybe<CommentDownvotedByModeratorsConnectionWhere>;
-};
-
-export type CommentDownvotedByModeratorsFieldInput = {
-  connect?: InputMaybe<Array<CommentDownvotedByModeratorsConnectFieldInput>>;
-  connectOrCreate?: InputMaybe<Array<CommentDownvotedByModeratorsConnectOrCreateFieldInput>>;
-  create?: InputMaybe<Array<CommentDownvotedByModeratorsCreateFieldInput>>;
-};
-
-export type CommentDownvotedByModeratorsNodeAggregationWhereInput = {
-  AND?: InputMaybe<Array<CommentDownvotedByModeratorsNodeAggregationWhereInput>>;
-  NOT?: InputMaybe<CommentDownvotedByModeratorsNodeAggregationWhereInput>;
-  OR?: InputMaybe<Array<CommentDownvotedByModeratorsNodeAggregationWhereInput>>;
-  createdAt_MAX_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MAX_GT?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MAX_GTE?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MAX_LT?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MAX_LTE?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MIN_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MIN_GT?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MIN_GTE?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MIN_LT?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MIN_LTE?: InputMaybe<Scalars['DateTime']['input']>;
-  displayName_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
-  displayName_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
-  displayName_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
-  displayName_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
-  displayName_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
-  displayName_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  displayName_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
-  displayName_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
-  displayName_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
-  displayName_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
-  displayName_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  displayName_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
-  displayName_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
-  displayName_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
-  displayName_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
-};
-
-export type CommentDownvotedByModeratorsRelationship = {
-  __typename?: 'CommentDownvotedByModeratorsRelationship';
-  cursor: Scalars['String']['output'];
-  node: ModerationProfile;
-};
-
-export type CommentDownvotedByModeratorsUpdateConnectionInput = {
-  node?: InputMaybe<ModerationProfileUpdateInput>;
-};
-
-export type CommentDownvotedByModeratorsUpdateFieldInput = {
-  connect?: InputMaybe<Array<CommentDownvotedByModeratorsConnectFieldInput>>;
-  connectOrCreate?: InputMaybe<Array<CommentDownvotedByModeratorsConnectOrCreateFieldInput>>;
-  create?: InputMaybe<Array<CommentDownvotedByModeratorsCreateFieldInput>>;
-  delete?: InputMaybe<Array<CommentDownvotedByModeratorsDeleteFieldInput>>;
-  disconnect?: InputMaybe<Array<CommentDownvotedByModeratorsDisconnectFieldInput>>;
-  update?: InputMaybe<CommentDownvotedByModeratorsUpdateConnectionInput>;
-  where?: InputMaybe<CommentDownvotedByModeratorsConnectionWhere>;
 };
 
 export type CommentEdge = {
@@ -4866,18 +4719,6 @@ export type CommentIssueUpdateFieldInput = {
   where?: InputMaybe<CommentIssueConnectionWhere>;
 };
 
-export type CommentModerationProfileDownvotedByModeratorsAggregationSelection = {
-  __typename?: 'CommentModerationProfileDownvotedByModeratorsAggregationSelection';
-  count: Scalars['Int']['output'];
-  node?: Maybe<CommentModerationProfileDownvotedByModeratorsNodeAggregateSelection>;
-};
-
-export type CommentModerationProfileDownvotedByModeratorsNodeAggregateSelection = {
-  __typename?: 'CommentModerationProfileDownvotedByModeratorsNodeAggregateSelection';
-  createdAt: DateTimeAggregateSelectionNonNullable;
-  displayName: StringAggregateSelectionNullable;
-};
-
 export type CommentOptions = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -5026,7 +4867,6 @@ export type CommentRelationInput = {
   ChildComments?: InputMaybe<Array<CommentChildCommentsCreateFieldInput>>;
   CommentAuthor?: InputMaybe<CommentCommentAuthorCreateFieldInput>;
   DiscussionChannel?: InputMaybe<CommentDiscussionChannelCreateFieldInput>;
-  DownvotedByModerators?: InputMaybe<Array<CommentDownvotedByModeratorsCreateFieldInput>>;
   Event?: InputMaybe<CommentEventCreateFieldInput>;
   FeedbackComments?: InputMaybe<Array<CommentFeedbackCommentsCreateFieldInput>>;
   GivesFeedbackOnComment?: InputMaybe<CommentGivesFeedbackOnCommentCreateFieldInput>;
@@ -5277,7 +5117,6 @@ export type CommentUpdateInput = {
   ChildComments?: InputMaybe<Array<CommentChildCommentsUpdateFieldInput>>;
   CommentAuthor?: InputMaybe<CommentCommentAuthorUpdateInput>;
   DiscussionChannel?: InputMaybe<CommentDiscussionChannelUpdateFieldInput>;
-  DownvotedByModerators?: InputMaybe<Array<CommentDownvotedByModeratorsUpdateFieldInput>>;
   Event?: InputMaybe<CommentEventUpdateFieldInput>;
   FeedbackComments?: InputMaybe<Array<CommentFeedbackCommentsUpdateFieldInput>>;
   GivesFeedbackOnComment?: InputMaybe<CommentGivesFeedbackOnCommentUpdateFieldInput>;
@@ -5629,23 +5468,6 @@ export type CommentWhere = {
   DiscussionChannelConnection?: InputMaybe<CommentDiscussionChannelConnectionWhere>;
   DiscussionChannelConnection_NOT?: InputMaybe<CommentDiscussionChannelConnectionWhere>;
   DiscussionChannel_NOT?: InputMaybe<DiscussionChannelWhere>;
-  DownvotedByModeratorsAggregate?: InputMaybe<CommentDownvotedByModeratorsAggregateInput>;
-  /** Return Comments where all of the related CommentDownvotedByModeratorsConnections match this filter */
-  DownvotedByModeratorsConnection_ALL?: InputMaybe<CommentDownvotedByModeratorsConnectionWhere>;
-  /** Return Comments where none of the related CommentDownvotedByModeratorsConnections match this filter */
-  DownvotedByModeratorsConnection_NONE?: InputMaybe<CommentDownvotedByModeratorsConnectionWhere>;
-  /** Return Comments where one of the related CommentDownvotedByModeratorsConnections match this filter */
-  DownvotedByModeratorsConnection_SINGLE?: InputMaybe<CommentDownvotedByModeratorsConnectionWhere>;
-  /** Return Comments where some of the related CommentDownvotedByModeratorsConnections match this filter */
-  DownvotedByModeratorsConnection_SOME?: InputMaybe<CommentDownvotedByModeratorsConnectionWhere>;
-  /** Return Comments where all of the related ModerationProfiles match this filter */
-  DownvotedByModerators_ALL?: InputMaybe<ModerationProfileWhere>;
-  /** Return Comments where none of the related ModerationProfiles match this filter */
-  DownvotedByModerators_NONE?: InputMaybe<ModerationProfileWhere>;
-  /** Return Comments where one of the related ModerationProfiles match this filter */
-  DownvotedByModerators_SINGLE?: InputMaybe<ModerationProfileWhere>;
-  /** Return Comments where some of the related ModerationProfiles match this filter */
-  DownvotedByModerators_SOME?: InputMaybe<ModerationProfileWhere>;
   Event?: InputMaybe<EventWhere>;
   EventAggregate?: InputMaybe<CommentEventAggregateInput>;
   EventConnection?: InputMaybe<CommentEventConnectionWhere>;
@@ -6432,9 +6254,6 @@ export type DiscussionChannel = {
   Discussion?: Maybe<Discussion>;
   DiscussionAggregate?: Maybe<DiscussionChannelDiscussionDiscussionAggregationSelection>;
   DiscussionConnection: DiscussionChannelDiscussionConnection;
-  DownvotedByModerators: Array<ModerationProfile>;
-  DownvotedByModeratorsAggregate?: Maybe<DiscussionChannelModerationProfileDownvotedByModeratorsAggregationSelection>;
-  DownvotedByModeratorsConnection: DiscussionChannelDownvotedByModeratorsConnection;
   UpvotedByUsers: Array<User>;
   UpvotedByUsersAggregate?: Maybe<DiscussionChannelUserUpvotedByUsersAggregationSelection>;
   UpvotedByUsersConnection: DiscussionChannelUpvotedByUsersConnection;
@@ -6511,28 +6330,6 @@ export type DiscussionChannelDiscussionConnectionArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<Array<DiscussionChannelDiscussionConnectionSort>>;
   where?: InputMaybe<DiscussionChannelDiscussionConnectionWhere>;
-};
-
-
-export type DiscussionChannelDownvotedByModeratorsArgs = {
-  directed?: InputMaybe<Scalars['Boolean']['input']>;
-  options?: InputMaybe<ModerationProfileOptions>;
-  where?: InputMaybe<ModerationProfileWhere>;
-};
-
-
-export type DiscussionChannelDownvotedByModeratorsAggregateArgs = {
-  directed?: InputMaybe<Scalars['Boolean']['input']>;
-  where?: InputMaybe<ModerationProfileWhere>;
-};
-
-
-export type DiscussionChannelDownvotedByModeratorsConnectionArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  directed?: InputMaybe<Scalars['Boolean']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  sort?: InputMaybe<Array<DiscussionChannelDownvotedByModeratorsConnectionSort>>;
-  where?: InputMaybe<DiscussionChannelDownvotedByModeratorsConnectionWhere>;
 };
 
 
@@ -6915,13 +6712,11 @@ export type DiscussionChannelConnectInput = {
   Channel?: InputMaybe<DiscussionChannelChannelConnectFieldInput>;
   Comments?: InputMaybe<Array<DiscussionChannelCommentsConnectFieldInput>>;
   Discussion?: InputMaybe<DiscussionChannelDiscussionConnectFieldInput>;
-  DownvotedByModerators?: InputMaybe<Array<DiscussionChannelDownvotedByModeratorsConnectFieldInput>>;
   UpvotedByUsers?: InputMaybe<Array<DiscussionChannelUpvotedByUsersConnectFieldInput>>;
 };
 
 export type DiscussionChannelConnectOrCreateInput = {
   Channel?: InputMaybe<DiscussionChannelChannelConnectOrCreateFieldInput>;
-  DownvotedByModerators?: InputMaybe<Array<DiscussionChannelDownvotedByModeratorsConnectOrCreateFieldInput>>;
   UpvotedByUsers?: InputMaybe<Array<DiscussionChannelUpvotedByUsersConnectOrCreateFieldInput>>;
 };
 
@@ -6933,7 +6728,6 @@ export type DiscussionChannelCreateInput = {
   Channel?: InputMaybe<DiscussionChannelChannelFieldInput>;
   Comments?: InputMaybe<DiscussionChannelCommentsFieldInput>;
   Discussion?: InputMaybe<DiscussionChannelDiscussionFieldInput>;
-  DownvotedByModerators?: InputMaybe<DiscussionChannelDownvotedByModeratorsFieldInput>;
   UpvotedByUsers?: InputMaybe<DiscussionChannelUpvotedByUsersFieldInput>;
   channelUniqueName: Scalars['String']['input'];
   discussionId: Scalars['ID']['input'];
@@ -6946,7 +6740,6 @@ export type DiscussionChannelDeleteInput = {
   Channel?: InputMaybe<DiscussionChannelChannelDeleteFieldInput>;
   Comments?: InputMaybe<Array<DiscussionChannelCommentsDeleteFieldInput>>;
   Discussion?: InputMaybe<DiscussionChannelDiscussionDeleteFieldInput>;
-  DownvotedByModerators?: InputMaybe<Array<DiscussionChannelDownvotedByModeratorsDeleteFieldInput>>;
   UpvotedByUsers?: InputMaybe<Array<DiscussionChannelUpvotedByUsersDeleteFieldInput>>;
 };
 
@@ -6954,7 +6747,6 @@ export type DiscussionChannelDisconnectInput = {
   Channel?: InputMaybe<DiscussionChannelChannelDisconnectFieldInput>;
   Comments?: InputMaybe<Array<DiscussionChannelCommentsDisconnectFieldInput>>;
   Discussion?: InputMaybe<DiscussionChannelDiscussionDisconnectFieldInput>;
-  DownvotedByModerators?: InputMaybe<Array<DiscussionChannelDownvotedByModeratorsDisconnectFieldInput>>;
   UpvotedByUsers?: InputMaybe<Array<DiscussionChannelUpvotedByUsersDisconnectFieldInput>>;
 };
 
@@ -7104,123 +6896,6 @@ export type DiscussionChannelDiscussionUpdateFieldInput = {
   where?: InputMaybe<DiscussionChannelDiscussionConnectionWhere>;
 };
 
-export type DiscussionChannelDownvotedByModeratorsAggregateInput = {
-  AND?: InputMaybe<Array<DiscussionChannelDownvotedByModeratorsAggregateInput>>;
-  NOT?: InputMaybe<DiscussionChannelDownvotedByModeratorsAggregateInput>;
-  OR?: InputMaybe<Array<DiscussionChannelDownvotedByModeratorsAggregateInput>>;
-  count?: InputMaybe<Scalars['Int']['input']>;
-  count_GT?: InputMaybe<Scalars['Int']['input']>;
-  count_GTE?: InputMaybe<Scalars['Int']['input']>;
-  count_LT?: InputMaybe<Scalars['Int']['input']>;
-  count_LTE?: InputMaybe<Scalars['Int']['input']>;
-  node?: InputMaybe<DiscussionChannelDownvotedByModeratorsNodeAggregationWhereInput>;
-};
-
-export type DiscussionChannelDownvotedByModeratorsConnectFieldInput = {
-  connect?: InputMaybe<Array<ModerationProfileConnectInput>>;
-  /** Whether or not to overwrite any matching relationship with the new properties. */
-  overwrite?: Scalars['Boolean']['input'];
-  where?: InputMaybe<ModerationProfileConnectWhere>;
-};
-
-export type DiscussionChannelDownvotedByModeratorsConnectOrCreateFieldInput = {
-  onCreate: DiscussionChannelDownvotedByModeratorsConnectOrCreateFieldInputOnCreate;
-  where: ModerationProfileConnectOrCreateWhere;
-};
-
-export type DiscussionChannelDownvotedByModeratorsConnectOrCreateFieldInputOnCreate = {
-  node: ModerationProfileOnCreateInput;
-};
-
-export type DiscussionChannelDownvotedByModeratorsConnection = {
-  __typename?: 'DiscussionChannelDownvotedByModeratorsConnection';
-  edges: Array<DiscussionChannelDownvotedByModeratorsRelationship>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int']['output'];
-};
-
-export type DiscussionChannelDownvotedByModeratorsConnectionSort = {
-  node?: InputMaybe<ModerationProfileSort>;
-};
-
-export type DiscussionChannelDownvotedByModeratorsConnectionWhere = {
-  AND?: InputMaybe<Array<DiscussionChannelDownvotedByModeratorsConnectionWhere>>;
-  NOT?: InputMaybe<DiscussionChannelDownvotedByModeratorsConnectionWhere>;
-  OR?: InputMaybe<Array<DiscussionChannelDownvotedByModeratorsConnectionWhere>>;
-  node?: InputMaybe<ModerationProfileWhere>;
-};
-
-export type DiscussionChannelDownvotedByModeratorsCreateFieldInput = {
-  node: ModerationProfileCreateInput;
-};
-
-export type DiscussionChannelDownvotedByModeratorsDeleteFieldInput = {
-  delete?: InputMaybe<ModerationProfileDeleteInput>;
-  where?: InputMaybe<DiscussionChannelDownvotedByModeratorsConnectionWhere>;
-};
-
-export type DiscussionChannelDownvotedByModeratorsDisconnectFieldInput = {
-  disconnect?: InputMaybe<ModerationProfileDisconnectInput>;
-  where?: InputMaybe<DiscussionChannelDownvotedByModeratorsConnectionWhere>;
-};
-
-export type DiscussionChannelDownvotedByModeratorsFieldInput = {
-  connect?: InputMaybe<Array<DiscussionChannelDownvotedByModeratorsConnectFieldInput>>;
-  connectOrCreate?: InputMaybe<Array<DiscussionChannelDownvotedByModeratorsConnectOrCreateFieldInput>>;
-  create?: InputMaybe<Array<DiscussionChannelDownvotedByModeratorsCreateFieldInput>>;
-};
-
-export type DiscussionChannelDownvotedByModeratorsNodeAggregationWhereInput = {
-  AND?: InputMaybe<Array<DiscussionChannelDownvotedByModeratorsNodeAggregationWhereInput>>;
-  NOT?: InputMaybe<DiscussionChannelDownvotedByModeratorsNodeAggregationWhereInput>;
-  OR?: InputMaybe<Array<DiscussionChannelDownvotedByModeratorsNodeAggregationWhereInput>>;
-  createdAt_MAX_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MAX_GT?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MAX_GTE?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MAX_LT?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MAX_LTE?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MIN_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MIN_GT?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MIN_GTE?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MIN_LT?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MIN_LTE?: InputMaybe<Scalars['DateTime']['input']>;
-  displayName_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
-  displayName_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
-  displayName_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
-  displayName_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
-  displayName_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
-  displayName_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  displayName_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
-  displayName_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
-  displayName_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
-  displayName_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
-  displayName_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  displayName_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
-  displayName_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
-  displayName_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
-  displayName_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
-};
-
-export type DiscussionChannelDownvotedByModeratorsRelationship = {
-  __typename?: 'DiscussionChannelDownvotedByModeratorsRelationship';
-  cursor: Scalars['String']['output'];
-  node: ModerationProfile;
-};
-
-export type DiscussionChannelDownvotedByModeratorsUpdateConnectionInput = {
-  node?: InputMaybe<ModerationProfileUpdateInput>;
-};
-
-export type DiscussionChannelDownvotedByModeratorsUpdateFieldInput = {
-  connect?: InputMaybe<Array<DiscussionChannelDownvotedByModeratorsConnectFieldInput>>;
-  connectOrCreate?: InputMaybe<Array<DiscussionChannelDownvotedByModeratorsConnectOrCreateFieldInput>>;
-  create?: InputMaybe<Array<DiscussionChannelDownvotedByModeratorsCreateFieldInput>>;
-  delete?: InputMaybe<Array<DiscussionChannelDownvotedByModeratorsDeleteFieldInput>>;
-  disconnect?: InputMaybe<Array<DiscussionChannelDownvotedByModeratorsDisconnectFieldInput>>;
-  update?: InputMaybe<DiscussionChannelDownvotedByModeratorsUpdateConnectionInput>;
-  where?: InputMaybe<DiscussionChannelDownvotedByModeratorsConnectionWhere>;
-};
-
 export type DiscussionChannelEdge = {
   __typename?: 'DiscussionChannelEdge';
   cursor: Scalars['String']['output'];
@@ -7286,18 +6961,6 @@ export type DiscussionChannelListFormatsConnection = {
   totalCount: Scalars['Int']['output'];
 };
 
-export type DiscussionChannelModerationProfileDownvotedByModeratorsAggregationSelection = {
-  __typename?: 'DiscussionChannelModerationProfileDownvotedByModeratorsAggregationSelection';
-  count: Scalars['Int']['output'];
-  node?: Maybe<DiscussionChannelModerationProfileDownvotedByModeratorsNodeAggregateSelection>;
-};
-
-export type DiscussionChannelModerationProfileDownvotedByModeratorsNodeAggregateSelection = {
-  __typename?: 'DiscussionChannelModerationProfileDownvotedByModeratorsNodeAggregateSelection';
-  createdAt: DateTimeAggregateSelectionNonNullable;
-  displayName: StringAggregateSelectionNullable;
-};
-
 export type DiscussionChannelOptions = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -7309,7 +6972,6 @@ export type DiscussionChannelRelationInput = {
   Channel?: InputMaybe<DiscussionChannelChannelCreateFieldInput>;
   Comments?: InputMaybe<Array<DiscussionChannelCommentsCreateFieldInput>>;
   Discussion?: InputMaybe<DiscussionChannelDiscussionCreateFieldInput>;
-  DownvotedByModerators?: InputMaybe<Array<DiscussionChannelDownvotedByModeratorsCreateFieldInput>>;
   UpvotedByUsers?: InputMaybe<Array<DiscussionChannelUpvotedByUsersCreateFieldInput>>;
 };
 
@@ -7328,7 +6990,6 @@ export type DiscussionChannelUpdateInput = {
   Channel?: InputMaybe<DiscussionChannelChannelUpdateFieldInput>;
   Comments?: InputMaybe<Array<DiscussionChannelCommentsUpdateFieldInput>>;
   Discussion?: InputMaybe<DiscussionChannelDiscussionUpdateFieldInput>;
-  DownvotedByModerators?: InputMaybe<Array<DiscussionChannelDownvotedByModeratorsUpdateFieldInput>>;
   UpvotedByUsers?: InputMaybe<Array<DiscussionChannelUpvotedByUsersUpdateFieldInput>>;
   channelUniqueName?: InputMaybe<Scalars['String']['input']>;
   createdAt?: InputMaybe<Scalars['DateTime']['input']>;
@@ -7670,23 +7331,6 @@ export type DiscussionChannelWhere = {
   DiscussionConnection?: InputMaybe<DiscussionChannelDiscussionConnectionWhere>;
   DiscussionConnection_NOT?: InputMaybe<DiscussionChannelDiscussionConnectionWhere>;
   Discussion_NOT?: InputMaybe<DiscussionWhere>;
-  DownvotedByModeratorsAggregate?: InputMaybe<DiscussionChannelDownvotedByModeratorsAggregateInput>;
-  /** Return DiscussionChannels where all of the related DiscussionChannelDownvotedByModeratorsConnections match this filter */
-  DownvotedByModeratorsConnection_ALL?: InputMaybe<DiscussionChannelDownvotedByModeratorsConnectionWhere>;
-  /** Return DiscussionChannels where none of the related DiscussionChannelDownvotedByModeratorsConnections match this filter */
-  DownvotedByModeratorsConnection_NONE?: InputMaybe<DiscussionChannelDownvotedByModeratorsConnectionWhere>;
-  /** Return DiscussionChannels where one of the related DiscussionChannelDownvotedByModeratorsConnections match this filter */
-  DownvotedByModeratorsConnection_SINGLE?: InputMaybe<DiscussionChannelDownvotedByModeratorsConnectionWhere>;
-  /** Return DiscussionChannels where some of the related DiscussionChannelDownvotedByModeratorsConnections match this filter */
-  DownvotedByModeratorsConnection_SOME?: InputMaybe<DiscussionChannelDownvotedByModeratorsConnectionWhere>;
-  /** Return DiscussionChannels where all of the related ModerationProfiles match this filter */
-  DownvotedByModerators_ALL?: InputMaybe<ModerationProfileWhere>;
-  /** Return DiscussionChannels where none of the related ModerationProfiles match this filter */
-  DownvotedByModerators_NONE?: InputMaybe<ModerationProfileWhere>;
-  /** Return DiscussionChannels where one of the related ModerationProfiles match this filter */
-  DownvotedByModerators_SINGLE?: InputMaybe<ModerationProfileWhere>;
-  /** Return DiscussionChannels where some of the related ModerationProfiles match this filter */
-  DownvotedByModerators_SOME?: InputMaybe<ModerationProfileWhere>;
   NOT?: InputMaybe<DiscussionChannelWhere>;
   OR?: InputMaybe<Array<DiscussionChannelWhere>>;
   UpvotedByUsersAggregate?: InputMaybe<DiscussionChannelUpvotedByUsersAggregateInput>;
@@ -14281,18 +13925,15 @@ export type ModerationActionsConnection = {
 
 export type ModerationProfile = {
   __typename?: 'ModerationProfile';
+  ActivityFeed: Array<ModerationAction>;
+  ActivityFeedAggregate?: Maybe<ModerationProfileModerationActionActivityFeedAggregationSelection>;
+  ActivityFeedConnection: ModerationProfileActivityFeedConnection;
   AuthoredComments: Array<Comment>;
   AuthoredCommentsAggregate?: Maybe<ModerationProfileCommentAuthoredCommentsAggregationSelection>;
   AuthoredCommentsConnection: ModerationProfileAuthoredCommentsConnection;
   AuthoredIssues: Array<Issue>;
   AuthoredIssuesAggregate?: Maybe<ModerationProfileIssueAuthoredIssuesAggregationSelection>;
   AuthoredIssuesConnection: ModerationProfileAuthoredIssuesConnection;
-  DownvotedComments: Array<Comment>;
-  DownvotedCommentsAggregate?: Maybe<ModerationProfileCommentDownvotedCommentsAggregationSelection>;
-  DownvotedCommentsConnection: ModerationProfileDownvotedCommentsConnection;
-  DownvotedDiscussionChannels: Array<DiscussionChannel>;
-  DownvotedDiscussionChannelsAggregate?: Maybe<ModerationProfileDiscussionChannelDownvotedDiscussionChannelsAggregationSelection>;
-  DownvotedDiscussionChannelsConnection: ModerationProfileDownvotedDiscussionChannelsConnection;
   ModChannelRoles: Array<ModChannelRole>;
   ModChannelRolesAggregate?: Maybe<ModerationProfileModChannelRoleModChannelRolesAggregationSelection>;
   ModChannelRolesConnection: ModerationProfileModChannelRolesConnection;
@@ -14304,6 +13945,28 @@ export type ModerationProfile = {
   UserConnection: ModerationProfileUserConnection;
   createdAt: Scalars['DateTime']['output'];
   displayName?: Maybe<Scalars['String']['output']>;
+};
+
+
+export type ModerationProfileActivityFeedArgs = {
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  options?: InputMaybe<ModerationActionOptions>;
+  where?: InputMaybe<ModerationActionWhere>;
+};
+
+
+export type ModerationProfileActivityFeedAggregateArgs = {
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  where?: InputMaybe<ModerationActionWhere>;
+};
+
+
+export type ModerationProfileActivityFeedConnectionArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<Array<ModerationProfileActivityFeedConnectionSort>>;
+  where?: InputMaybe<ModerationProfileActivityFeedConnectionWhere>;
 };
 
 
@@ -14348,50 +14011,6 @@ export type ModerationProfileAuthoredIssuesConnectionArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<Array<ModerationProfileAuthoredIssuesConnectionSort>>;
   where?: InputMaybe<ModerationProfileAuthoredIssuesConnectionWhere>;
-};
-
-
-export type ModerationProfileDownvotedCommentsArgs = {
-  directed?: InputMaybe<Scalars['Boolean']['input']>;
-  options?: InputMaybe<CommentOptions>;
-  where?: InputMaybe<CommentWhere>;
-};
-
-
-export type ModerationProfileDownvotedCommentsAggregateArgs = {
-  directed?: InputMaybe<Scalars['Boolean']['input']>;
-  where?: InputMaybe<CommentWhere>;
-};
-
-
-export type ModerationProfileDownvotedCommentsConnectionArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  directed?: InputMaybe<Scalars['Boolean']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  sort?: InputMaybe<Array<ModerationProfileDownvotedCommentsConnectionSort>>;
-  where?: InputMaybe<ModerationProfileDownvotedCommentsConnectionWhere>;
-};
-
-
-export type ModerationProfileDownvotedDiscussionChannelsArgs = {
-  directed?: InputMaybe<Scalars['Boolean']['input']>;
-  options?: InputMaybe<DiscussionChannelOptions>;
-  where?: InputMaybe<DiscussionChannelWhere>;
-};
-
-
-export type ModerationProfileDownvotedDiscussionChannelsAggregateArgs = {
-  directed?: InputMaybe<Scalars['Boolean']['input']>;
-  where?: InputMaybe<DiscussionChannelWhere>;
-};
-
-
-export type ModerationProfileDownvotedDiscussionChannelsConnectionArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  directed?: InputMaybe<Scalars['Boolean']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  sort?: InputMaybe<Array<ModerationProfileDownvotedDiscussionChannelsConnectionSort>>;
-  where?: InputMaybe<ModerationProfileDownvotedDiscussionChannelsConnectionWhere>;
 };
 
 
@@ -14458,6 +14077,127 @@ export type ModerationProfileUserConnectionArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<Array<ModerationProfileUserConnectionSort>>;
   where?: InputMaybe<ModerationProfileUserConnectionWhere>;
+};
+
+export type ModerationProfileActivityFeedAggregateInput = {
+  AND?: InputMaybe<Array<ModerationProfileActivityFeedAggregateInput>>;
+  NOT?: InputMaybe<ModerationProfileActivityFeedAggregateInput>;
+  OR?: InputMaybe<Array<ModerationProfileActivityFeedAggregateInput>>;
+  count?: InputMaybe<Scalars['Int']['input']>;
+  count_GT?: InputMaybe<Scalars['Int']['input']>;
+  count_GTE?: InputMaybe<Scalars['Int']['input']>;
+  count_LT?: InputMaybe<Scalars['Int']['input']>;
+  count_LTE?: InputMaybe<Scalars['Int']['input']>;
+  node?: InputMaybe<ModerationProfileActivityFeedNodeAggregationWhereInput>;
+};
+
+export type ModerationProfileActivityFeedConnectFieldInput = {
+  connect?: InputMaybe<Array<ModerationActionConnectInput>>;
+  /** Whether or not to overwrite any matching relationship with the new properties. */
+  overwrite?: Scalars['Boolean']['input'];
+  where?: InputMaybe<ModerationActionConnectWhere>;
+};
+
+export type ModerationProfileActivityFeedConnection = {
+  __typename?: 'ModerationProfileActivityFeedConnection';
+  edges: Array<ModerationProfileActivityFeedRelationship>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type ModerationProfileActivityFeedConnectionSort = {
+  node?: InputMaybe<ModerationActionSort>;
+};
+
+export type ModerationProfileActivityFeedConnectionWhere = {
+  AND?: InputMaybe<Array<ModerationProfileActivityFeedConnectionWhere>>;
+  NOT?: InputMaybe<ModerationProfileActivityFeedConnectionWhere>;
+  OR?: InputMaybe<Array<ModerationProfileActivityFeedConnectionWhere>>;
+  node?: InputMaybe<ModerationActionWhere>;
+};
+
+export type ModerationProfileActivityFeedCreateFieldInput = {
+  node: ModerationActionCreateInput;
+};
+
+export type ModerationProfileActivityFeedDeleteFieldInput = {
+  delete?: InputMaybe<ModerationActionDeleteInput>;
+  where?: InputMaybe<ModerationProfileActivityFeedConnectionWhere>;
+};
+
+export type ModerationProfileActivityFeedDisconnectFieldInput = {
+  disconnect?: InputMaybe<ModerationActionDisconnectInput>;
+  where?: InputMaybe<ModerationProfileActivityFeedConnectionWhere>;
+};
+
+export type ModerationProfileActivityFeedFieldInput = {
+  connect?: InputMaybe<Array<ModerationProfileActivityFeedConnectFieldInput>>;
+  create?: InputMaybe<Array<ModerationProfileActivityFeedCreateFieldInput>>;
+};
+
+export type ModerationProfileActivityFeedNodeAggregationWhereInput = {
+  AND?: InputMaybe<Array<ModerationProfileActivityFeedNodeAggregationWhereInput>>;
+  NOT?: InputMaybe<ModerationProfileActivityFeedNodeAggregationWhereInput>;
+  OR?: InputMaybe<Array<ModerationProfileActivityFeedNodeAggregationWhereInput>>;
+  actionDescription_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  actionDescription_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  actionDescription_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  actionDescription_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  actionDescription_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  actionDescription_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  actionDescription_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  actionDescription_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  actionDescription_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  actionDescription_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  actionDescription_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  actionDescription_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  actionDescription_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  actionDescription_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  actionDescription_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  actionType_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  actionType_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  actionType_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  actionType_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  actionType_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  actionType_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  actionType_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  actionType_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  actionType_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  actionType_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  actionType_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  actionType_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  actionType_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  actionType_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  actionType_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  createdAt_MAX_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+};
+
+export type ModerationProfileActivityFeedRelationship = {
+  __typename?: 'ModerationProfileActivityFeedRelationship';
+  cursor: Scalars['String']['output'];
+  node: ModerationAction;
+};
+
+export type ModerationProfileActivityFeedUpdateConnectionInput = {
+  node?: InputMaybe<ModerationActionUpdateInput>;
+};
+
+export type ModerationProfileActivityFeedUpdateFieldInput = {
+  connect?: InputMaybe<Array<ModerationProfileActivityFeedConnectFieldInput>>;
+  create?: InputMaybe<Array<ModerationProfileActivityFeedCreateFieldInput>>;
+  delete?: InputMaybe<Array<ModerationProfileActivityFeedDeleteFieldInput>>;
+  disconnect?: InputMaybe<Array<ModerationProfileActivityFeedDisconnectFieldInput>>;
+  update?: InputMaybe<ModerationProfileActivityFeedUpdateConnectionInput>;
+  where?: InputMaybe<ModerationProfileActivityFeedConnectionWhere>;
 };
 
 export type ModerationProfileAggregateSelection = {
@@ -14779,26 +14519,10 @@ export type ModerationProfileCommentAuthoredCommentsNodeAggregateSelection = {
   weightedVotesCount: FloatAggregateSelectionNullable;
 };
 
-export type ModerationProfileCommentDownvotedCommentsAggregationSelection = {
-  __typename?: 'ModerationProfileCommentDownvotedCommentsAggregationSelection';
-  count: Scalars['Int']['output'];
-  node?: Maybe<ModerationProfileCommentDownvotedCommentsNodeAggregateSelection>;
-};
-
-export type ModerationProfileCommentDownvotedCommentsNodeAggregateSelection = {
-  __typename?: 'ModerationProfileCommentDownvotedCommentsNodeAggregateSelection';
-  createdAt: DateTimeAggregateSelectionNonNullable;
-  id: IdAggregateSelectionNonNullable;
-  text: StringAggregateSelectionNullable;
-  updatedAt: DateTimeAggregateSelectionNullable;
-  weightedVotesCount: FloatAggregateSelectionNullable;
-};
-
 export type ModerationProfileConnectInput = {
+  ActivityFeed?: InputMaybe<Array<ModerationProfileActivityFeedConnectFieldInput>>;
   AuthoredComments?: InputMaybe<Array<ModerationProfileAuthoredCommentsConnectFieldInput>>;
   AuthoredIssues?: InputMaybe<Array<ModerationProfileAuthoredIssuesConnectFieldInput>>;
-  DownvotedComments?: InputMaybe<Array<ModerationProfileDownvotedCommentsConnectFieldInput>>;
-  DownvotedDiscussionChannels?: InputMaybe<Array<ModerationProfileDownvotedDiscussionChannelsConnectFieldInput>>;
   ModChannelRoles?: InputMaybe<Array<ModerationProfileModChannelRolesConnectFieldInput>>;
   ModServerRoles?: InputMaybe<Array<ModerationProfileModServerRolesConnectFieldInput>>;
   User?: InputMaybe<ModerationProfileUserConnectFieldInput>;
@@ -14819,10 +14543,9 @@ export type ModerationProfileConnectWhere = {
 };
 
 export type ModerationProfileCreateInput = {
+  ActivityFeed?: InputMaybe<ModerationProfileActivityFeedFieldInput>;
   AuthoredComments?: InputMaybe<ModerationProfileAuthoredCommentsFieldInput>;
   AuthoredIssues?: InputMaybe<ModerationProfileAuthoredIssuesFieldInput>;
-  DownvotedComments?: InputMaybe<ModerationProfileDownvotedCommentsFieldInput>;
-  DownvotedDiscussionChannels?: InputMaybe<ModerationProfileDownvotedDiscussionChannelsFieldInput>;
   ModChannelRoles?: InputMaybe<ModerationProfileModChannelRolesFieldInput>;
   ModServerRoles?: InputMaybe<ModerationProfileModServerRolesFieldInput>;
   User?: InputMaybe<ModerationProfileUserFieldInput>;
@@ -14830,300 +14553,21 @@ export type ModerationProfileCreateInput = {
 };
 
 export type ModerationProfileDeleteInput = {
+  ActivityFeed?: InputMaybe<Array<ModerationProfileActivityFeedDeleteFieldInput>>;
   AuthoredComments?: InputMaybe<Array<ModerationProfileAuthoredCommentsDeleteFieldInput>>;
   AuthoredIssues?: InputMaybe<Array<ModerationProfileAuthoredIssuesDeleteFieldInput>>;
-  DownvotedComments?: InputMaybe<Array<ModerationProfileDownvotedCommentsDeleteFieldInput>>;
-  DownvotedDiscussionChannels?: InputMaybe<Array<ModerationProfileDownvotedDiscussionChannelsDeleteFieldInput>>;
   ModChannelRoles?: InputMaybe<Array<ModerationProfileModChannelRolesDeleteFieldInput>>;
   ModServerRoles?: InputMaybe<Array<ModerationProfileModServerRolesDeleteFieldInput>>;
   User?: InputMaybe<ModerationProfileUserDeleteFieldInput>;
 };
 
 export type ModerationProfileDisconnectInput = {
+  ActivityFeed?: InputMaybe<Array<ModerationProfileActivityFeedDisconnectFieldInput>>;
   AuthoredComments?: InputMaybe<Array<ModerationProfileAuthoredCommentsDisconnectFieldInput>>;
   AuthoredIssues?: InputMaybe<Array<ModerationProfileAuthoredIssuesDisconnectFieldInput>>;
-  DownvotedComments?: InputMaybe<Array<ModerationProfileDownvotedCommentsDisconnectFieldInput>>;
-  DownvotedDiscussionChannels?: InputMaybe<Array<ModerationProfileDownvotedDiscussionChannelsDisconnectFieldInput>>;
   ModChannelRoles?: InputMaybe<Array<ModerationProfileModChannelRolesDisconnectFieldInput>>;
   ModServerRoles?: InputMaybe<Array<ModerationProfileModServerRolesDisconnectFieldInput>>;
   User?: InputMaybe<ModerationProfileUserDisconnectFieldInput>;
-};
-
-export type ModerationProfileDiscussionChannelDownvotedDiscussionChannelsAggregationSelection = {
-  __typename?: 'ModerationProfileDiscussionChannelDownvotedDiscussionChannelsAggregationSelection';
-  count: Scalars['Int']['output'];
-  node?: Maybe<ModerationProfileDiscussionChannelDownvotedDiscussionChannelsNodeAggregateSelection>;
-};
-
-export type ModerationProfileDiscussionChannelDownvotedDiscussionChannelsNodeAggregateSelection = {
-  __typename?: 'ModerationProfileDiscussionChannelDownvotedDiscussionChannelsNodeAggregateSelection';
-  channelUniqueName: StringAggregateSelectionNonNullable;
-  createdAt: DateTimeAggregateSelectionNonNullable;
-  discussionId: IdAggregateSelectionNonNullable;
-  id: IdAggregateSelectionNonNullable;
-  weightedVotesCount: FloatAggregateSelectionNullable;
-};
-
-export type ModerationProfileDownvotedCommentsAggregateInput = {
-  AND?: InputMaybe<Array<ModerationProfileDownvotedCommentsAggregateInput>>;
-  NOT?: InputMaybe<ModerationProfileDownvotedCommentsAggregateInput>;
-  OR?: InputMaybe<Array<ModerationProfileDownvotedCommentsAggregateInput>>;
-  count?: InputMaybe<Scalars['Int']['input']>;
-  count_GT?: InputMaybe<Scalars['Int']['input']>;
-  count_GTE?: InputMaybe<Scalars['Int']['input']>;
-  count_LT?: InputMaybe<Scalars['Int']['input']>;
-  count_LTE?: InputMaybe<Scalars['Int']['input']>;
-  node?: InputMaybe<ModerationProfileDownvotedCommentsNodeAggregationWhereInput>;
-};
-
-export type ModerationProfileDownvotedCommentsConnectFieldInput = {
-  connect?: InputMaybe<Array<CommentConnectInput>>;
-  /** Whether or not to overwrite any matching relationship with the new properties. */
-  overwrite?: Scalars['Boolean']['input'];
-  where?: InputMaybe<CommentConnectWhere>;
-};
-
-export type ModerationProfileDownvotedCommentsConnection = {
-  __typename?: 'ModerationProfileDownvotedCommentsConnection';
-  edges: Array<ModerationProfileDownvotedCommentsRelationship>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int']['output'];
-};
-
-export type ModerationProfileDownvotedCommentsConnectionSort = {
-  node?: InputMaybe<CommentSort>;
-};
-
-export type ModerationProfileDownvotedCommentsConnectionWhere = {
-  AND?: InputMaybe<Array<ModerationProfileDownvotedCommentsConnectionWhere>>;
-  NOT?: InputMaybe<ModerationProfileDownvotedCommentsConnectionWhere>;
-  OR?: InputMaybe<Array<ModerationProfileDownvotedCommentsConnectionWhere>>;
-  node?: InputMaybe<CommentWhere>;
-};
-
-export type ModerationProfileDownvotedCommentsCreateFieldInput = {
-  node: CommentCreateInput;
-};
-
-export type ModerationProfileDownvotedCommentsDeleteFieldInput = {
-  delete?: InputMaybe<CommentDeleteInput>;
-  where?: InputMaybe<ModerationProfileDownvotedCommentsConnectionWhere>;
-};
-
-export type ModerationProfileDownvotedCommentsDisconnectFieldInput = {
-  disconnect?: InputMaybe<CommentDisconnectInput>;
-  where?: InputMaybe<ModerationProfileDownvotedCommentsConnectionWhere>;
-};
-
-export type ModerationProfileDownvotedCommentsFieldInput = {
-  connect?: InputMaybe<Array<ModerationProfileDownvotedCommentsConnectFieldInput>>;
-  create?: InputMaybe<Array<ModerationProfileDownvotedCommentsCreateFieldInput>>;
-};
-
-export type ModerationProfileDownvotedCommentsNodeAggregationWhereInput = {
-  AND?: InputMaybe<Array<ModerationProfileDownvotedCommentsNodeAggregationWhereInput>>;
-  NOT?: InputMaybe<ModerationProfileDownvotedCommentsNodeAggregationWhereInput>;
-  OR?: InputMaybe<Array<ModerationProfileDownvotedCommentsNodeAggregationWhereInput>>;
-  createdAt_MAX_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MAX_GT?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MAX_GTE?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MAX_LT?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MAX_LTE?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MIN_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MIN_GT?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MIN_GTE?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MIN_LT?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MIN_LTE?: InputMaybe<Scalars['DateTime']['input']>;
-  text_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
-  text_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
-  text_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
-  text_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
-  text_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
-  text_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  text_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
-  text_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
-  text_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
-  text_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
-  text_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  text_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
-  text_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
-  text_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
-  text_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
-  updatedAt_MAX_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
-  updatedAt_MAX_GT?: InputMaybe<Scalars['DateTime']['input']>;
-  updatedAt_MAX_GTE?: InputMaybe<Scalars['DateTime']['input']>;
-  updatedAt_MAX_LT?: InputMaybe<Scalars['DateTime']['input']>;
-  updatedAt_MAX_LTE?: InputMaybe<Scalars['DateTime']['input']>;
-  updatedAt_MIN_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
-  updatedAt_MIN_GT?: InputMaybe<Scalars['DateTime']['input']>;
-  updatedAt_MIN_GTE?: InputMaybe<Scalars['DateTime']['input']>;
-  updatedAt_MIN_LT?: InputMaybe<Scalars['DateTime']['input']>;
-  updatedAt_MIN_LTE?: InputMaybe<Scalars['DateTime']['input']>;
-  weightedVotesCount_AVERAGE_EQUAL?: InputMaybe<Scalars['Float']['input']>;
-  weightedVotesCount_AVERAGE_GT?: InputMaybe<Scalars['Float']['input']>;
-  weightedVotesCount_AVERAGE_GTE?: InputMaybe<Scalars['Float']['input']>;
-  weightedVotesCount_AVERAGE_LT?: InputMaybe<Scalars['Float']['input']>;
-  weightedVotesCount_AVERAGE_LTE?: InputMaybe<Scalars['Float']['input']>;
-  weightedVotesCount_MAX_EQUAL?: InputMaybe<Scalars['Float']['input']>;
-  weightedVotesCount_MAX_GT?: InputMaybe<Scalars['Float']['input']>;
-  weightedVotesCount_MAX_GTE?: InputMaybe<Scalars['Float']['input']>;
-  weightedVotesCount_MAX_LT?: InputMaybe<Scalars['Float']['input']>;
-  weightedVotesCount_MAX_LTE?: InputMaybe<Scalars['Float']['input']>;
-  weightedVotesCount_MIN_EQUAL?: InputMaybe<Scalars['Float']['input']>;
-  weightedVotesCount_MIN_GT?: InputMaybe<Scalars['Float']['input']>;
-  weightedVotesCount_MIN_GTE?: InputMaybe<Scalars['Float']['input']>;
-  weightedVotesCount_MIN_LT?: InputMaybe<Scalars['Float']['input']>;
-  weightedVotesCount_MIN_LTE?: InputMaybe<Scalars['Float']['input']>;
-  weightedVotesCount_SUM_EQUAL?: InputMaybe<Scalars['Float']['input']>;
-  weightedVotesCount_SUM_GT?: InputMaybe<Scalars['Float']['input']>;
-  weightedVotesCount_SUM_GTE?: InputMaybe<Scalars['Float']['input']>;
-  weightedVotesCount_SUM_LT?: InputMaybe<Scalars['Float']['input']>;
-  weightedVotesCount_SUM_LTE?: InputMaybe<Scalars['Float']['input']>;
-};
-
-export type ModerationProfileDownvotedCommentsRelationship = {
-  __typename?: 'ModerationProfileDownvotedCommentsRelationship';
-  cursor: Scalars['String']['output'];
-  node: Comment;
-};
-
-export type ModerationProfileDownvotedCommentsUpdateConnectionInput = {
-  node?: InputMaybe<CommentUpdateInput>;
-};
-
-export type ModerationProfileDownvotedCommentsUpdateFieldInput = {
-  connect?: InputMaybe<Array<ModerationProfileDownvotedCommentsConnectFieldInput>>;
-  create?: InputMaybe<Array<ModerationProfileDownvotedCommentsCreateFieldInput>>;
-  delete?: InputMaybe<Array<ModerationProfileDownvotedCommentsDeleteFieldInput>>;
-  disconnect?: InputMaybe<Array<ModerationProfileDownvotedCommentsDisconnectFieldInput>>;
-  update?: InputMaybe<ModerationProfileDownvotedCommentsUpdateConnectionInput>;
-  where?: InputMaybe<ModerationProfileDownvotedCommentsConnectionWhere>;
-};
-
-export type ModerationProfileDownvotedDiscussionChannelsAggregateInput = {
-  AND?: InputMaybe<Array<ModerationProfileDownvotedDiscussionChannelsAggregateInput>>;
-  NOT?: InputMaybe<ModerationProfileDownvotedDiscussionChannelsAggregateInput>;
-  OR?: InputMaybe<Array<ModerationProfileDownvotedDiscussionChannelsAggregateInput>>;
-  count?: InputMaybe<Scalars['Int']['input']>;
-  count_GT?: InputMaybe<Scalars['Int']['input']>;
-  count_GTE?: InputMaybe<Scalars['Int']['input']>;
-  count_LT?: InputMaybe<Scalars['Int']['input']>;
-  count_LTE?: InputMaybe<Scalars['Int']['input']>;
-  node?: InputMaybe<ModerationProfileDownvotedDiscussionChannelsNodeAggregationWhereInput>;
-};
-
-export type ModerationProfileDownvotedDiscussionChannelsConnectFieldInput = {
-  connect?: InputMaybe<Array<DiscussionChannelConnectInput>>;
-  /** Whether or not to overwrite any matching relationship with the new properties. */
-  overwrite?: Scalars['Boolean']['input'];
-  where?: InputMaybe<DiscussionChannelConnectWhere>;
-};
-
-export type ModerationProfileDownvotedDiscussionChannelsConnection = {
-  __typename?: 'ModerationProfileDownvotedDiscussionChannelsConnection';
-  edges: Array<ModerationProfileDownvotedDiscussionChannelsRelationship>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int']['output'];
-};
-
-export type ModerationProfileDownvotedDiscussionChannelsConnectionSort = {
-  node?: InputMaybe<DiscussionChannelSort>;
-};
-
-export type ModerationProfileDownvotedDiscussionChannelsConnectionWhere = {
-  AND?: InputMaybe<Array<ModerationProfileDownvotedDiscussionChannelsConnectionWhere>>;
-  NOT?: InputMaybe<ModerationProfileDownvotedDiscussionChannelsConnectionWhere>;
-  OR?: InputMaybe<Array<ModerationProfileDownvotedDiscussionChannelsConnectionWhere>>;
-  node?: InputMaybe<DiscussionChannelWhere>;
-};
-
-export type ModerationProfileDownvotedDiscussionChannelsCreateFieldInput = {
-  node: DiscussionChannelCreateInput;
-};
-
-export type ModerationProfileDownvotedDiscussionChannelsDeleteFieldInput = {
-  delete?: InputMaybe<DiscussionChannelDeleteInput>;
-  where?: InputMaybe<ModerationProfileDownvotedDiscussionChannelsConnectionWhere>;
-};
-
-export type ModerationProfileDownvotedDiscussionChannelsDisconnectFieldInput = {
-  disconnect?: InputMaybe<DiscussionChannelDisconnectInput>;
-  where?: InputMaybe<ModerationProfileDownvotedDiscussionChannelsConnectionWhere>;
-};
-
-export type ModerationProfileDownvotedDiscussionChannelsFieldInput = {
-  connect?: InputMaybe<Array<ModerationProfileDownvotedDiscussionChannelsConnectFieldInput>>;
-  create?: InputMaybe<Array<ModerationProfileDownvotedDiscussionChannelsCreateFieldInput>>;
-};
-
-export type ModerationProfileDownvotedDiscussionChannelsNodeAggregationWhereInput = {
-  AND?: InputMaybe<Array<ModerationProfileDownvotedDiscussionChannelsNodeAggregationWhereInput>>;
-  NOT?: InputMaybe<ModerationProfileDownvotedDiscussionChannelsNodeAggregationWhereInput>;
-  OR?: InputMaybe<Array<ModerationProfileDownvotedDiscussionChannelsNodeAggregationWhereInput>>;
-  channelUniqueName_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
-  channelUniqueName_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
-  channelUniqueName_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
-  channelUniqueName_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
-  channelUniqueName_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
-  channelUniqueName_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  channelUniqueName_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
-  channelUniqueName_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
-  channelUniqueName_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
-  channelUniqueName_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
-  channelUniqueName_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  channelUniqueName_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
-  channelUniqueName_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
-  channelUniqueName_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
-  channelUniqueName_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
-  createdAt_MAX_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MAX_GT?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MAX_GTE?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MAX_LT?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MAX_LTE?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MIN_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MIN_GT?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MIN_GTE?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MIN_LT?: InputMaybe<Scalars['DateTime']['input']>;
-  createdAt_MIN_LTE?: InputMaybe<Scalars['DateTime']['input']>;
-  weightedVotesCount_AVERAGE_EQUAL?: InputMaybe<Scalars['Float']['input']>;
-  weightedVotesCount_AVERAGE_GT?: InputMaybe<Scalars['Float']['input']>;
-  weightedVotesCount_AVERAGE_GTE?: InputMaybe<Scalars['Float']['input']>;
-  weightedVotesCount_AVERAGE_LT?: InputMaybe<Scalars['Float']['input']>;
-  weightedVotesCount_AVERAGE_LTE?: InputMaybe<Scalars['Float']['input']>;
-  weightedVotesCount_MAX_EQUAL?: InputMaybe<Scalars['Float']['input']>;
-  weightedVotesCount_MAX_GT?: InputMaybe<Scalars['Float']['input']>;
-  weightedVotesCount_MAX_GTE?: InputMaybe<Scalars['Float']['input']>;
-  weightedVotesCount_MAX_LT?: InputMaybe<Scalars['Float']['input']>;
-  weightedVotesCount_MAX_LTE?: InputMaybe<Scalars['Float']['input']>;
-  weightedVotesCount_MIN_EQUAL?: InputMaybe<Scalars['Float']['input']>;
-  weightedVotesCount_MIN_GT?: InputMaybe<Scalars['Float']['input']>;
-  weightedVotesCount_MIN_GTE?: InputMaybe<Scalars['Float']['input']>;
-  weightedVotesCount_MIN_LT?: InputMaybe<Scalars['Float']['input']>;
-  weightedVotesCount_MIN_LTE?: InputMaybe<Scalars['Float']['input']>;
-  weightedVotesCount_SUM_EQUAL?: InputMaybe<Scalars['Float']['input']>;
-  weightedVotesCount_SUM_GT?: InputMaybe<Scalars['Float']['input']>;
-  weightedVotesCount_SUM_GTE?: InputMaybe<Scalars['Float']['input']>;
-  weightedVotesCount_SUM_LT?: InputMaybe<Scalars['Float']['input']>;
-  weightedVotesCount_SUM_LTE?: InputMaybe<Scalars['Float']['input']>;
-};
-
-export type ModerationProfileDownvotedDiscussionChannelsRelationship = {
-  __typename?: 'ModerationProfileDownvotedDiscussionChannelsRelationship';
-  cursor: Scalars['String']['output'];
-  node: DiscussionChannel;
-};
-
-export type ModerationProfileDownvotedDiscussionChannelsUpdateConnectionInput = {
-  node?: InputMaybe<DiscussionChannelUpdateInput>;
-};
-
-export type ModerationProfileDownvotedDiscussionChannelsUpdateFieldInput = {
-  connect?: InputMaybe<Array<ModerationProfileDownvotedDiscussionChannelsConnectFieldInput>>;
-  create?: InputMaybe<Array<ModerationProfileDownvotedDiscussionChannelsCreateFieldInput>>;
-  delete?: InputMaybe<Array<ModerationProfileDownvotedDiscussionChannelsDeleteFieldInput>>;
-  disconnect?: InputMaybe<Array<ModerationProfileDownvotedDiscussionChannelsDisconnectFieldInput>>;
-  update?: InputMaybe<ModerationProfileDownvotedDiscussionChannelsUpdateConnectionInput>;
-  where?: InputMaybe<ModerationProfileDownvotedDiscussionChannelsConnectionWhere>;
 };
 
 export type ModerationProfileEdge = {
@@ -15414,6 +14858,20 @@ export type ModerationProfileModServerRolesUpdateFieldInput = {
   where?: InputMaybe<ModerationProfileModServerRolesConnectionWhere>;
 };
 
+export type ModerationProfileModerationActionActivityFeedAggregationSelection = {
+  __typename?: 'ModerationProfileModerationActionActivityFeedAggregationSelection';
+  count: Scalars['Int']['output'];
+  node?: Maybe<ModerationProfileModerationActionActivityFeedNodeAggregateSelection>;
+};
+
+export type ModerationProfileModerationActionActivityFeedNodeAggregateSelection = {
+  __typename?: 'ModerationProfileModerationActionActivityFeedNodeAggregateSelection';
+  actionDescription: StringAggregateSelectionNullable;
+  actionType: StringAggregateSelectionNullable;
+  createdAt: DateTimeAggregateSelectionNonNullable;
+  id: IdAggregateSelectionNonNullable;
+};
+
 export type ModerationProfileOnCreateInput = {
   displayName?: InputMaybe<Scalars['String']['input']>;
 };
@@ -15426,10 +14884,9 @@ export type ModerationProfileOptions = {
 };
 
 export type ModerationProfileRelationInput = {
+  ActivityFeed?: InputMaybe<Array<ModerationProfileActivityFeedCreateFieldInput>>;
   AuthoredComments?: InputMaybe<Array<ModerationProfileAuthoredCommentsCreateFieldInput>>;
   AuthoredIssues?: InputMaybe<Array<ModerationProfileAuthoredIssuesCreateFieldInput>>;
-  DownvotedComments?: InputMaybe<Array<ModerationProfileDownvotedCommentsCreateFieldInput>>;
-  DownvotedDiscussionChannels?: InputMaybe<Array<ModerationProfileDownvotedDiscussionChannelsCreateFieldInput>>;
   ModChannelRoles?: InputMaybe<Array<ModerationProfileModChannelRolesCreateFieldInput>>;
   ModServerRoles?: InputMaybe<Array<ModerationProfileModServerRolesCreateFieldInput>>;
   User?: InputMaybe<ModerationProfileUserCreateFieldInput>;
@@ -15446,10 +14903,9 @@ export type ModerationProfileUniqueWhere = {
 };
 
 export type ModerationProfileUpdateInput = {
+  ActivityFeed?: InputMaybe<Array<ModerationProfileActivityFeedUpdateFieldInput>>;
   AuthoredComments?: InputMaybe<Array<ModerationProfileAuthoredCommentsUpdateFieldInput>>;
   AuthoredIssues?: InputMaybe<Array<ModerationProfileAuthoredIssuesUpdateFieldInput>>;
-  DownvotedComments?: InputMaybe<Array<ModerationProfileDownvotedCommentsUpdateFieldInput>>;
-  DownvotedDiscussionChannels?: InputMaybe<Array<ModerationProfileDownvotedDiscussionChannelsUpdateFieldInput>>;
   ModChannelRoles?: InputMaybe<Array<ModerationProfileModChannelRolesUpdateFieldInput>>;
   ModServerRoles?: InputMaybe<Array<ModerationProfileModServerRolesUpdateFieldInput>>;
   User?: InputMaybe<ModerationProfileUserUpdateFieldInput>;
@@ -15758,6 +15214,23 @@ export type ModerationProfileUserUserNodeAggregateSelection = {
 
 export type ModerationProfileWhere = {
   AND?: InputMaybe<Array<ModerationProfileWhere>>;
+  ActivityFeedAggregate?: InputMaybe<ModerationProfileActivityFeedAggregateInput>;
+  /** Return ModerationProfiles where all of the related ModerationProfileActivityFeedConnections match this filter */
+  ActivityFeedConnection_ALL?: InputMaybe<ModerationProfileActivityFeedConnectionWhere>;
+  /** Return ModerationProfiles where none of the related ModerationProfileActivityFeedConnections match this filter */
+  ActivityFeedConnection_NONE?: InputMaybe<ModerationProfileActivityFeedConnectionWhere>;
+  /** Return ModerationProfiles where one of the related ModerationProfileActivityFeedConnections match this filter */
+  ActivityFeedConnection_SINGLE?: InputMaybe<ModerationProfileActivityFeedConnectionWhere>;
+  /** Return ModerationProfiles where some of the related ModerationProfileActivityFeedConnections match this filter */
+  ActivityFeedConnection_SOME?: InputMaybe<ModerationProfileActivityFeedConnectionWhere>;
+  /** Return ModerationProfiles where all of the related ModerationActions match this filter */
+  ActivityFeed_ALL?: InputMaybe<ModerationActionWhere>;
+  /** Return ModerationProfiles where none of the related ModerationActions match this filter */
+  ActivityFeed_NONE?: InputMaybe<ModerationActionWhere>;
+  /** Return ModerationProfiles where one of the related ModerationActions match this filter */
+  ActivityFeed_SINGLE?: InputMaybe<ModerationActionWhere>;
+  /** Return ModerationProfiles where some of the related ModerationActions match this filter */
+  ActivityFeed_SOME?: InputMaybe<ModerationActionWhere>;
   AuthoredCommentsAggregate?: InputMaybe<ModerationProfileAuthoredCommentsAggregateInput>;
   /** Return ModerationProfiles where all of the related ModerationProfileAuthoredCommentsConnections match this filter */
   AuthoredCommentsConnection_ALL?: InputMaybe<ModerationProfileAuthoredCommentsConnectionWhere>;
@@ -15792,40 +15265,6 @@ export type ModerationProfileWhere = {
   AuthoredIssues_SINGLE?: InputMaybe<IssueWhere>;
   /** Return ModerationProfiles where some of the related Issues match this filter */
   AuthoredIssues_SOME?: InputMaybe<IssueWhere>;
-  DownvotedCommentsAggregate?: InputMaybe<ModerationProfileDownvotedCommentsAggregateInput>;
-  /** Return ModerationProfiles where all of the related ModerationProfileDownvotedCommentsConnections match this filter */
-  DownvotedCommentsConnection_ALL?: InputMaybe<ModerationProfileDownvotedCommentsConnectionWhere>;
-  /** Return ModerationProfiles where none of the related ModerationProfileDownvotedCommentsConnections match this filter */
-  DownvotedCommentsConnection_NONE?: InputMaybe<ModerationProfileDownvotedCommentsConnectionWhere>;
-  /** Return ModerationProfiles where one of the related ModerationProfileDownvotedCommentsConnections match this filter */
-  DownvotedCommentsConnection_SINGLE?: InputMaybe<ModerationProfileDownvotedCommentsConnectionWhere>;
-  /** Return ModerationProfiles where some of the related ModerationProfileDownvotedCommentsConnections match this filter */
-  DownvotedCommentsConnection_SOME?: InputMaybe<ModerationProfileDownvotedCommentsConnectionWhere>;
-  /** Return ModerationProfiles where all of the related Comments match this filter */
-  DownvotedComments_ALL?: InputMaybe<CommentWhere>;
-  /** Return ModerationProfiles where none of the related Comments match this filter */
-  DownvotedComments_NONE?: InputMaybe<CommentWhere>;
-  /** Return ModerationProfiles where one of the related Comments match this filter */
-  DownvotedComments_SINGLE?: InputMaybe<CommentWhere>;
-  /** Return ModerationProfiles where some of the related Comments match this filter */
-  DownvotedComments_SOME?: InputMaybe<CommentWhere>;
-  DownvotedDiscussionChannelsAggregate?: InputMaybe<ModerationProfileDownvotedDiscussionChannelsAggregateInput>;
-  /** Return ModerationProfiles where all of the related ModerationProfileDownvotedDiscussionChannelsConnections match this filter */
-  DownvotedDiscussionChannelsConnection_ALL?: InputMaybe<ModerationProfileDownvotedDiscussionChannelsConnectionWhere>;
-  /** Return ModerationProfiles where none of the related ModerationProfileDownvotedDiscussionChannelsConnections match this filter */
-  DownvotedDiscussionChannelsConnection_NONE?: InputMaybe<ModerationProfileDownvotedDiscussionChannelsConnectionWhere>;
-  /** Return ModerationProfiles where one of the related ModerationProfileDownvotedDiscussionChannelsConnections match this filter */
-  DownvotedDiscussionChannelsConnection_SINGLE?: InputMaybe<ModerationProfileDownvotedDiscussionChannelsConnectionWhere>;
-  /** Return ModerationProfiles where some of the related ModerationProfileDownvotedDiscussionChannelsConnections match this filter */
-  DownvotedDiscussionChannelsConnection_SOME?: InputMaybe<ModerationProfileDownvotedDiscussionChannelsConnectionWhere>;
-  /** Return ModerationProfiles where all of the related DiscussionChannels match this filter */
-  DownvotedDiscussionChannels_ALL?: InputMaybe<DiscussionChannelWhere>;
-  /** Return ModerationProfiles where none of the related DiscussionChannels match this filter */
-  DownvotedDiscussionChannels_NONE?: InputMaybe<DiscussionChannelWhere>;
-  /** Return ModerationProfiles where one of the related DiscussionChannels match this filter */
-  DownvotedDiscussionChannels_SINGLE?: InputMaybe<DiscussionChannelWhere>;
-  /** Return ModerationProfiles where some of the related DiscussionChannels match this filter */
-  DownvotedDiscussionChannels_SOME?: InputMaybe<DiscussionChannelWhere>;
   ModChannelRolesAggregate?: InputMaybe<ModerationProfileModChannelRolesAggregateInput>;
   /** Return ModerationProfiles where all of the related ModerationProfileModChannelRolesConnections match this filter */
   ModChannelRolesConnection_ALL?: InputMaybe<ModerationProfileModChannelRolesConnectionWhere>;
@@ -19297,6 +18736,7 @@ export type SubredditSidebar = {
   displayName: Scalars['String']['output'];
   linkFlairs?: Maybe<Array<Maybe<LinkFlair>>>;
   longDescription?: Maybe<Scalars['String']['output']>;
+  rules?: Maybe<Scalars['JSON']['output']>;
   shortDescription?: Maybe<Scalars['String']['output']>;
   showMediaPreview?: Maybe<Scalars['Boolean']['output']>;
   title: Scalars['String']['output'];
@@ -19320,6 +18760,7 @@ export type SubredditSidebarCreateInput = {
   communityIcon?: InputMaybe<Scalars['String']['input']>;
   displayName: Scalars['String']['input'];
   longDescription?: InputMaybe<Scalars['String']['input']>;
+  rules?: InputMaybe<Scalars['JSON']['input']>;
   shortDescription?: InputMaybe<Scalars['String']['input']>;
   showMediaPreview?: InputMaybe<Scalars['Boolean']['input']>;
   title: Scalars['String']['input'];
@@ -19346,6 +18787,7 @@ export type SubredditSidebarSort = {
   communityIcon?: InputMaybe<SortDirection>;
   displayName?: InputMaybe<SortDirection>;
   longDescription?: InputMaybe<SortDirection>;
+  rules?: InputMaybe<SortDirection>;
   shortDescription?: InputMaybe<SortDirection>;
   showMediaPreview?: InputMaybe<SortDirection>;
   title?: InputMaybe<SortDirection>;
@@ -19358,6 +18800,7 @@ export type SubredditSidebarUpdateInput = {
   communityIcon?: InputMaybe<Scalars['String']['input']>;
   displayName?: InputMaybe<Scalars['String']['input']>;
   longDescription?: InputMaybe<Scalars['String']['input']>;
+  rules?: InputMaybe<Scalars['JSON']['input']>;
   shortDescription?: InputMaybe<Scalars['String']['input']>;
   showMediaPreview?: InputMaybe<Scalars['Boolean']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
@@ -19393,6 +18836,8 @@ export type SubredditSidebarWhere = {
   longDescription_IN?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   longDescription_MATCHES?: InputMaybe<Scalars['String']['input']>;
   longDescription_STARTS_WITH?: InputMaybe<Scalars['String']['input']>;
+  rules?: InputMaybe<Scalars['JSON']['input']>;
+  rules_IN?: InputMaybe<Array<InputMaybe<Scalars['JSON']['input']>>>;
   shortDescription?: InputMaybe<Scalars['String']['input']>;
   shortDescription_CONTAINS?: InputMaybe<Scalars['String']['input']>;
   shortDescription_ENDS_WITH?: InputMaybe<Scalars['String']['input']>;
@@ -25622,21 +25067,6 @@ export type ResolversTypes = {
   CommentDiscussionChannelUpdateFieldInput: CommentDiscussionChannelUpdateFieldInput;
   CommentDiscussionGivesFeedbackOnDiscussionAggregationSelection: ResolverTypeWrapper<CommentDiscussionGivesFeedbackOnDiscussionAggregationSelection>;
   CommentDiscussionGivesFeedbackOnDiscussionNodeAggregateSelection: ResolverTypeWrapper<CommentDiscussionGivesFeedbackOnDiscussionNodeAggregateSelection>;
-  CommentDownvotedByModeratorsAggregateInput: CommentDownvotedByModeratorsAggregateInput;
-  CommentDownvotedByModeratorsConnectFieldInput: CommentDownvotedByModeratorsConnectFieldInput;
-  CommentDownvotedByModeratorsConnectOrCreateFieldInput: CommentDownvotedByModeratorsConnectOrCreateFieldInput;
-  CommentDownvotedByModeratorsConnectOrCreateFieldInputOnCreate: CommentDownvotedByModeratorsConnectOrCreateFieldInputOnCreate;
-  CommentDownvotedByModeratorsConnection: ResolverTypeWrapper<CommentDownvotedByModeratorsConnection>;
-  CommentDownvotedByModeratorsConnectionSort: CommentDownvotedByModeratorsConnectionSort;
-  CommentDownvotedByModeratorsConnectionWhere: CommentDownvotedByModeratorsConnectionWhere;
-  CommentDownvotedByModeratorsCreateFieldInput: CommentDownvotedByModeratorsCreateFieldInput;
-  CommentDownvotedByModeratorsDeleteFieldInput: CommentDownvotedByModeratorsDeleteFieldInput;
-  CommentDownvotedByModeratorsDisconnectFieldInput: CommentDownvotedByModeratorsDisconnectFieldInput;
-  CommentDownvotedByModeratorsFieldInput: CommentDownvotedByModeratorsFieldInput;
-  CommentDownvotedByModeratorsNodeAggregationWhereInput: CommentDownvotedByModeratorsNodeAggregationWhereInput;
-  CommentDownvotedByModeratorsRelationship: ResolverTypeWrapper<CommentDownvotedByModeratorsRelationship>;
-  CommentDownvotedByModeratorsUpdateConnectionInput: CommentDownvotedByModeratorsUpdateConnectionInput;
-  CommentDownvotedByModeratorsUpdateFieldInput: CommentDownvotedByModeratorsUpdateFieldInput;
   CommentEdge: ResolverTypeWrapper<CommentEdge>;
   CommentEventAggregateInput: CommentEventAggregateInput;
   CommentEventConnectFieldInput: CommentEventConnectFieldInput;
@@ -25722,8 +25152,6 @@ export type ResolversTypes = {
   CommentIssueRelationship: ResolverTypeWrapper<CommentIssueRelationship>;
   CommentIssueUpdateConnectionInput: CommentIssueUpdateConnectionInput;
   CommentIssueUpdateFieldInput: CommentIssueUpdateFieldInput;
-  CommentModerationProfileDownvotedByModeratorsAggregationSelection: ResolverTypeWrapper<CommentModerationProfileDownvotedByModeratorsAggregationSelection>;
-  CommentModerationProfileDownvotedByModeratorsNodeAggregateSelection: ResolverTypeWrapper<CommentModerationProfileDownvotedByModeratorsNodeAggregateSelection>;
   CommentOptions: CommentOptions;
   CommentParentCommentAggregateInput: CommentParentCommentAggregateInput;
   CommentParentCommentConnectFieldInput: CommentParentCommentConnectFieldInput;
@@ -25904,21 +25332,6 @@ export type ResolversTypes = {
   DiscussionChannelDiscussionRelationship: ResolverTypeWrapper<DiscussionChannelDiscussionRelationship>;
   DiscussionChannelDiscussionUpdateConnectionInput: DiscussionChannelDiscussionUpdateConnectionInput;
   DiscussionChannelDiscussionUpdateFieldInput: DiscussionChannelDiscussionUpdateFieldInput;
-  DiscussionChannelDownvotedByModeratorsAggregateInput: DiscussionChannelDownvotedByModeratorsAggregateInput;
-  DiscussionChannelDownvotedByModeratorsConnectFieldInput: DiscussionChannelDownvotedByModeratorsConnectFieldInput;
-  DiscussionChannelDownvotedByModeratorsConnectOrCreateFieldInput: DiscussionChannelDownvotedByModeratorsConnectOrCreateFieldInput;
-  DiscussionChannelDownvotedByModeratorsConnectOrCreateFieldInputOnCreate: DiscussionChannelDownvotedByModeratorsConnectOrCreateFieldInputOnCreate;
-  DiscussionChannelDownvotedByModeratorsConnection: ResolverTypeWrapper<DiscussionChannelDownvotedByModeratorsConnection>;
-  DiscussionChannelDownvotedByModeratorsConnectionSort: DiscussionChannelDownvotedByModeratorsConnectionSort;
-  DiscussionChannelDownvotedByModeratorsConnectionWhere: DiscussionChannelDownvotedByModeratorsConnectionWhere;
-  DiscussionChannelDownvotedByModeratorsCreateFieldInput: DiscussionChannelDownvotedByModeratorsCreateFieldInput;
-  DiscussionChannelDownvotedByModeratorsDeleteFieldInput: DiscussionChannelDownvotedByModeratorsDeleteFieldInput;
-  DiscussionChannelDownvotedByModeratorsDisconnectFieldInput: DiscussionChannelDownvotedByModeratorsDisconnectFieldInput;
-  DiscussionChannelDownvotedByModeratorsFieldInput: DiscussionChannelDownvotedByModeratorsFieldInput;
-  DiscussionChannelDownvotedByModeratorsNodeAggregationWhereInput: DiscussionChannelDownvotedByModeratorsNodeAggregationWhereInput;
-  DiscussionChannelDownvotedByModeratorsRelationship: ResolverTypeWrapper<DiscussionChannelDownvotedByModeratorsRelationship>;
-  DiscussionChannelDownvotedByModeratorsUpdateConnectionInput: DiscussionChannelDownvotedByModeratorsUpdateConnectionInput;
-  DiscussionChannelDownvotedByModeratorsUpdateFieldInput: DiscussionChannelDownvotedByModeratorsUpdateFieldInput;
   DiscussionChannelEdge: ResolverTypeWrapper<DiscussionChannelEdge>;
   DiscussionChannelListFormat: ResolverTypeWrapper<DiscussionChannelListFormat>;
   DiscussionChannelListFormatAggregateSelection: ResolverTypeWrapper<DiscussionChannelListFormatAggregateSelection>;
@@ -25929,8 +25342,6 @@ export type ResolversTypes = {
   DiscussionChannelListFormatUpdateInput: DiscussionChannelListFormatUpdateInput;
   DiscussionChannelListFormatWhere: DiscussionChannelListFormatWhere;
   DiscussionChannelListFormatsConnection: ResolverTypeWrapper<DiscussionChannelListFormatsConnection>;
-  DiscussionChannelModerationProfileDownvotedByModeratorsAggregationSelection: ResolverTypeWrapper<DiscussionChannelModerationProfileDownvotedByModeratorsAggregationSelection>;
-  DiscussionChannelModerationProfileDownvotedByModeratorsNodeAggregateSelection: ResolverTypeWrapper<DiscussionChannelModerationProfileDownvotedByModeratorsNodeAggregateSelection>;
   DiscussionChannelOptions: DiscussionChannelOptions;
   DiscussionChannelRelationInput: DiscussionChannelRelationInput;
   DiscussionChannelSort: DiscussionChannelSort;
@@ -26521,6 +25932,19 @@ export type ResolversTypes = {
   ModerationActionWhere: ModerationActionWhere;
   ModerationActionsConnection: ResolverTypeWrapper<ModerationActionsConnection>;
   ModerationProfile: ResolverTypeWrapper<ModerationProfile>;
+  ModerationProfileActivityFeedAggregateInput: ModerationProfileActivityFeedAggregateInput;
+  ModerationProfileActivityFeedConnectFieldInput: ModerationProfileActivityFeedConnectFieldInput;
+  ModerationProfileActivityFeedConnection: ResolverTypeWrapper<ModerationProfileActivityFeedConnection>;
+  ModerationProfileActivityFeedConnectionSort: ModerationProfileActivityFeedConnectionSort;
+  ModerationProfileActivityFeedConnectionWhere: ModerationProfileActivityFeedConnectionWhere;
+  ModerationProfileActivityFeedCreateFieldInput: ModerationProfileActivityFeedCreateFieldInput;
+  ModerationProfileActivityFeedDeleteFieldInput: ModerationProfileActivityFeedDeleteFieldInput;
+  ModerationProfileActivityFeedDisconnectFieldInput: ModerationProfileActivityFeedDisconnectFieldInput;
+  ModerationProfileActivityFeedFieldInput: ModerationProfileActivityFeedFieldInput;
+  ModerationProfileActivityFeedNodeAggregationWhereInput: ModerationProfileActivityFeedNodeAggregationWhereInput;
+  ModerationProfileActivityFeedRelationship: ResolverTypeWrapper<ModerationProfileActivityFeedRelationship>;
+  ModerationProfileActivityFeedUpdateConnectionInput: ModerationProfileActivityFeedUpdateConnectionInput;
+  ModerationProfileActivityFeedUpdateFieldInput: ModerationProfileActivityFeedUpdateFieldInput;
   ModerationProfileAggregateSelection: ResolverTypeWrapper<ModerationProfileAggregateSelection>;
   ModerationProfileAuthoredCommentsAggregateInput: ModerationProfileAuthoredCommentsAggregateInput;
   ModerationProfileAuthoredCommentsConnectFieldInput: ModerationProfileAuthoredCommentsConnectFieldInput;
@@ -26550,8 +25974,6 @@ export type ResolversTypes = {
   ModerationProfileAuthoredIssuesUpdateFieldInput: ModerationProfileAuthoredIssuesUpdateFieldInput;
   ModerationProfileCommentAuthoredCommentsAggregationSelection: ResolverTypeWrapper<ModerationProfileCommentAuthoredCommentsAggregationSelection>;
   ModerationProfileCommentAuthoredCommentsNodeAggregateSelection: ResolverTypeWrapper<ModerationProfileCommentAuthoredCommentsNodeAggregateSelection>;
-  ModerationProfileCommentDownvotedCommentsAggregationSelection: ResolverTypeWrapper<ModerationProfileCommentDownvotedCommentsAggregationSelection>;
-  ModerationProfileCommentDownvotedCommentsNodeAggregateSelection: ResolverTypeWrapper<ModerationProfileCommentDownvotedCommentsNodeAggregateSelection>;
   ModerationProfileConnectInput: ModerationProfileConnectInput;
   ModerationProfileConnectOrCreateInput: ModerationProfileConnectOrCreateInput;
   ModerationProfileConnectOrCreateWhere: ModerationProfileConnectOrCreateWhere;
@@ -26559,34 +25981,6 @@ export type ResolversTypes = {
   ModerationProfileCreateInput: ModerationProfileCreateInput;
   ModerationProfileDeleteInput: ModerationProfileDeleteInput;
   ModerationProfileDisconnectInput: ModerationProfileDisconnectInput;
-  ModerationProfileDiscussionChannelDownvotedDiscussionChannelsAggregationSelection: ResolverTypeWrapper<ModerationProfileDiscussionChannelDownvotedDiscussionChannelsAggregationSelection>;
-  ModerationProfileDiscussionChannelDownvotedDiscussionChannelsNodeAggregateSelection: ResolverTypeWrapper<ModerationProfileDiscussionChannelDownvotedDiscussionChannelsNodeAggregateSelection>;
-  ModerationProfileDownvotedCommentsAggregateInput: ModerationProfileDownvotedCommentsAggregateInput;
-  ModerationProfileDownvotedCommentsConnectFieldInput: ModerationProfileDownvotedCommentsConnectFieldInput;
-  ModerationProfileDownvotedCommentsConnection: ResolverTypeWrapper<ModerationProfileDownvotedCommentsConnection>;
-  ModerationProfileDownvotedCommentsConnectionSort: ModerationProfileDownvotedCommentsConnectionSort;
-  ModerationProfileDownvotedCommentsConnectionWhere: ModerationProfileDownvotedCommentsConnectionWhere;
-  ModerationProfileDownvotedCommentsCreateFieldInput: ModerationProfileDownvotedCommentsCreateFieldInput;
-  ModerationProfileDownvotedCommentsDeleteFieldInput: ModerationProfileDownvotedCommentsDeleteFieldInput;
-  ModerationProfileDownvotedCommentsDisconnectFieldInput: ModerationProfileDownvotedCommentsDisconnectFieldInput;
-  ModerationProfileDownvotedCommentsFieldInput: ModerationProfileDownvotedCommentsFieldInput;
-  ModerationProfileDownvotedCommentsNodeAggregationWhereInput: ModerationProfileDownvotedCommentsNodeAggregationWhereInput;
-  ModerationProfileDownvotedCommentsRelationship: ResolverTypeWrapper<ModerationProfileDownvotedCommentsRelationship>;
-  ModerationProfileDownvotedCommentsUpdateConnectionInput: ModerationProfileDownvotedCommentsUpdateConnectionInput;
-  ModerationProfileDownvotedCommentsUpdateFieldInput: ModerationProfileDownvotedCommentsUpdateFieldInput;
-  ModerationProfileDownvotedDiscussionChannelsAggregateInput: ModerationProfileDownvotedDiscussionChannelsAggregateInput;
-  ModerationProfileDownvotedDiscussionChannelsConnectFieldInput: ModerationProfileDownvotedDiscussionChannelsConnectFieldInput;
-  ModerationProfileDownvotedDiscussionChannelsConnection: ResolverTypeWrapper<ModerationProfileDownvotedDiscussionChannelsConnection>;
-  ModerationProfileDownvotedDiscussionChannelsConnectionSort: ModerationProfileDownvotedDiscussionChannelsConnectionSort;
-  ModerationProfileDownvotedDiscussionChannelsConnectionWhere: ModerationProfileDownvotedDiscussionChannelsConnectionWhere;
-  ModerationProfileDownvotedDiscussionChannelsCreateFieldInput: ModerationProfileDownvotedDiscussionChannelsCreateFieldInput;
-  ModerationProfileDownvotedDiscussionChannelsDeleteFieldInput: ModerationProfileDownvotedDiscussionChannelsDeleteFieldInput;
-  ModerationProfileDownvotedDiscussionChannelsDisconnectFieldInput: ModerationProfileDownvotedDiscussionChannelsDisconnectFieldInput;
-  ModerationProfileDownvotedDiscussionChannelsFieldInput: ModerationProfileDownvotedDiscussionChannelsFieldInput;
-  ModerationProfileDownvotedDiscussionChannelsNodeAggregationWhereInput: ModerationProfileDownvotedDiscussionChannelsNodeAggregationWhereInput;
-  ModerationProfileDownvotedDiscussionChannelsRelationship: ResolverTypeWrapper<ModerationProfileDownvotedDiscussionChannelsRelationship>;
-  ModerationProfileDownvotedDiscussionChannelsUpdateConnectionInput: ModerationProfileDownvotedDiscussionChannelsUpdateConnectionInput;
-  ModerationProfileDownvotedDiscussionChannelsUpdateFieldInput: ModerationProfileDownvotedDiscussionChannelsUpdateFieldInput;
   ModerationProfileEdge: ResolverTypeWrapper<ModerationProfileEdge>;
   ModerationProfileIssueAuthoredIssuesAggregationSelection: ResolverTypeWrapper<ModerationProfileIssueAuthoredIssuesAggregationSelection>;
   ModerationProfileIssueAuthoredIssuesNodeAggregateSelection: ResolverTypeWrapper<ModerationProfileIssueAuthoredIssuesNodeAggregateSelection>;
@@ -26624,6 +26018,8 @@ export type ResolversTypes = {
   ModerationProfileModServerRolesRelationship: ResolverTypeWrapper<ModerationProfileModServerRolesRelationship>;
   ModerationProfileModServerRolesUpdateConnectionInput: ModerationProfileModServerRolesUpdateConnectionInput;
   ModerationProfileModServerRolesUpdateFieldInput: ModerationProfileModServerRolesUpdateFieldInput;
+  ModerationProfileModerationActionActivityFeedAggregationSelection: ResolverTypeWrapper<ModerationProfileModerationActionActivityFeedAggregationSelection>;
+  ModerationProfileModerationActionActivityFeedNodeAggregateSelection: ResolverTypeWrapper<ModerationProfileModerationActionActivityFeedNodeAggregateSelection>;
   ModerationProfileOnCreateInput: ModerationProfileOnCreateInput;
   ModerationProfileOptions: ModerationProfileOptions;
   ModerationProfileRelationInput: ModerationProfileRelationInput;
@@ -27576,21 +26972,6 @@ export type ResolversParentTypes = {
   CommentDiscussionChannelUpdateFieldInput: CommentDiscussionChannelUpdateFieldInput;
   CommentDiscussionGivesFeedbackOnDiscussionAggregationSelection: CommentDiscussionGivesFeedbackOnDiscussionAggregationSelection;
   CommentDiscussionGivesFeedbackOnDiscussionNodeAggregateSelection: CommentDiscussionGivesFeedbackOnDiscussionNodeAggregateSelection;
-  CommentDownvotedByModeratorsAggregateInput: CommentDownvotedByModeratorsAggregateInput;
-  CommentDownvotedByModeratorsConnectFieldInput: CommentDownvotedByModeratorsConnectFieldInput;
-  CommentDownvotedByModeratorsConnectOrCreateFieldInput: CommentDownvotedByModeratorsConnectOrCreateFieldInput;
-  CommentDownvotedByModeratorsConnectOrCreateFieldInputOnCreate: CommentDownvotedByModeratorsConnectOrCreateFieldInputOnCreate;
-  CommentDownvotedByModeratorsConnection: CommentDownvotedByModeratorsConnection;
-  CommentDownvotedByModeratorsConnectionSort: CommentDownvotedByModeratorsConnectionSort;
-  CommentDownvotedByModeratorsConnectionWhere: CommentDownvotedByModeratorsConnectionWhere;
-  CommentDownvotedByModeratorsCreateFieldInput: CommentDownvotedByModeratorsCreateFieldInput;
-  CommentDownvotedByModeratorsDeleteFieldInput: CommentDownvotedByModeratorsDeleteFieldInput;
-  CommentDownvotedByModeratorsDisconnectFieldInput: CommentDownvotedByModeratorsDisconnectFieldInput;
-  CommentDownvotedByModeratorsFieldInput: CommentDownvotedByModeratorsFieldInput;
-  CommentDownvotedByModeratorsNodeAggregationWhereInput: CommentDownvotedByModeratorsNodeAggregationWhereInput;
-  CommentDownvotedByModeratorsRelationship: CommentDownvotedByModeratorsRelationship;
-  CommentDownvotedByModeratorsUpdateConnectionInput: CommentDownvotedByModeratorsUpdateConnectionInput;
-  CommentDownvotedByModeratorsUpdateFieldInput: CommentDownvotedByModeratorsUpdateFieldInput;
   CommentEdge: CommentEdge;
   CommentEventAggregateInput: CommentEventAggregateInput;
   CommentEventConnectFieldInput: CommentEventConnectFieldInput;
@@ -27676,8 +27057,6 @@ export type ResolversParentTypes = {
   CommentIssueRelationship: CommentIssueRelationship;
   CommentIssueUpdateConnectionInput: CommentIssueUpdateConnectionInput;
   CommentIssueUpdateFieldInput: CommentIssueUpdateFieldInput;
-  CommentModerationProfileDownvotedByModeratorsAggregationSelection: CommentModerationProfileDownvotedByModeratorsAggregationSelection;
-  CommentModerationProfileDownvotedByModeratorsNodeAggregateSelection: CommentModerationProfileDownvotedByModeratorsNodeAggregateSelection;
   CommentOptions: CommentOptions;
   CommentParentCommentAggregateInput: CommentParentCommentAggregateInput;
   CommentParentCommentConnectFieldInput: CommentParentCommentConnectFieldInput;
@@ -27858,21 +27237,6 @@ export type ResolversParentTypes = {
   DiscussionChannelDiscussionRelationship: DiscussionChannelDiscussionRelationship;
   DiscussionChannelDiscussionUpdateConnectionInput: DiscussionChannelDiscussionUpdateConnectionInput;
   DiscussionChannelDiscussionUpdateFieldInput: DiscussionChannelDiscussionUpdateFieldInput;
-  DiscussionChannelDownvotedByModeratorsAggregateInput: DiscussionChannelDownvotedByModeratorsAggregateInput;
-  DiscussionChannelDownvotedByModeratorsConnectFieldInput: DiscussionChannelDownvotedByModeratorsConnectFieldInput;
-  DiscussionChannelDownvotedByModeratorsConnectOrCreateFieldInput: DiscussionChannelDownvotedByModeratorsConnectOrCreateFieldInput;
-  DiscussionChannelDownvotedByModeratorsConnectOrCreateFieldInputOnCreate: DiscussionChannelDownvotedByModeratorsConnectOrCreateFieldInputOnCreate;
-  DiscussionChannelDownvotedByModeratorsConnection: DiscussionChannelDownvotedByModeratorsConnection;
-  DiscussionChannelDownvotedByModeratorsConnectionSort: DiscussionChannelDownvotedByModeratorsConnectionSort;
-  DiscussionChannelDownvotedByModeratorsConnectionWhere: DiscussionChannelDownvotedByModeratorsConnectionWhere;
-  DiscussionChannelDownvotedByModeratorsCreateFieldInput: DiscussionChannelDownvotedByModeratorsCreateFieldInput;
-  DiscussionChannelDownvotedByModeratorsDeleteFieldInput: DiscussionChannelDownvotedByModeratorsDeleteFieldInput;
-  DiscussionChannelDownvotedByModeratorsDisconnectFieldInput: DiscussionChannelDownvotedByModeratorsDisconnectFieldInput;
-  DiscussionChannelDownvotedByModeratorsFieldInput: DiscussionChannelDownvotedByModeratorsFieldInput;
-  DiscussionChannelDownvotedByModeratorsNodeAggregationWhereInput: DiscussionChannelDownvotedByModeratorsNodeAggregationWhereInput;
-  DiscussionChannelDownvotedByModeratorsRelationship: DiscussionChannelDownvotedByModeratorsRelationship;
-  DiscussionChannelDownvotedByModeratorsUpdateConnectionInput: DiscussionChannelDownvotedByModeratorsUpdateConnectionInput;
-  DiscussionChannelDownvotedByModeratorsUpdateFieldInput: DiscussionChannelDownvotedByModeratorsUpdateFieldInput;
   DiscussionChannelEdge: DiscussionChannelEdge;
   DiscussionChannelListFormat: DiscussionChannelListFormat;
   DiscussionChannelListFormatAggregateSelection: DiscussionChannelListFormatAggregateSelection;
@@ -27883,8 +27247,6 @@ export type ResolversParentTypes = {
   DiscussionChannelListFormatUpdateInput: DiscussionChannelListFormatUpdateInput;
   DiscussionChannelListFormatWhere: DiscussionChannelListFormatWhere;
   DiscussionChannelListFormatsConnection: DiscussionChannelListFormatsConnection;
-  DiscussionChannelModerationProfileDownvotedByModeratorsAggregationSelection: DiscussionChannelModerationProfileDownvotedByModeratorsAggregationSelection;
-  DiscussionChannelModerationProfileDownvotedByModeratorsNodeAggregateSelection: DiscussionChannelModerationProfileDownvotedByModeratorsNodeAggregateSelection;
   DiscussionChannelOptions: DiscussionChannelOptions;
   DiscussionChannelRelationInput: DiscussionChannelRelationInput;
   DiscussionChannelSort: DiscussionChannelSort;
@@ -28475,6 +27837,19 @@ export type ResolversParentTypes = {
   ModerationActionWhere: ModerationActionWhere;
   ModerationActionsConnection: ModerationActionsConnection;
   ModerationProfile: ModerationProfile;
+  ModerationProfileActivityFeedAggregateInput: ModerationProfileActivityFeedAggregateInput;
+  ModerationProfileActivityFeedConnectFieldInput: ModerationProfileActivityFeedConnectFieldInput;
+  ModerationProfileActivityFeedConnection: ModerationProfileActivityFeedConnection;
+  ModerationProfileActivityFeedConnectionSort: ModerationProfileActivityFeedConnectionSort;
+  ModerationProfileActivityFeedConnectionWhere: ModerationProfileActivityFeedConnectionWhere;
+  ModerationProfileActivityFeedCreateFieldInput: ModerationProfileActivityFeedCreateFieldInput;
+  ModerationProfileActivityFeedDeleteFieldInput: ModerationProfileActivityFeedDeleteFieldInput;
+  ModerationProfileActivityFeedDisconnectFieldInput: ModerationProfileActivityFeedDisconnectFieldInput;
+  ModerationProfileActivityFeedFieldInput: ModerationProfileActivityFeedFieldInput;
+  ModerationProfileActivityFeedNodeAggregationWhereInput: ModerationProfileActivityFeedNodeAggregationWhereInput;
+  ModerationProfileActivityFeedRelationship: ModerationProfileActivityFeedRelationship;
+  ModerationProfileActivityFeedUpdateConnectionInput: ModerationProfileActivityFeedUpdateConnectionInput;
+  ModerationProfileActivityFeedUpdateFieldInput: ModerationProfileActivityFeedUpdateFieldInput;
   ModerationProfileAggregateSelection: ModerationProfileAggregateSelection;
   ModerationProfileAuthoredCommentsAggregateInput: ModerationProfileAuthoredCommentsAggregateInput;
   ModerationProfileAuthoredCommentsConnectFieldInput: ModerationProfileAuthoredCommentsConnectFieldInput;
@@ -28504,8 +27879,6 @@ export type ResolversParentTypes = {
   ModerationProfileAuthoredIssuesUpdateFieldInput: ModerationProfileAuthoredIssuesUpdateFieldInput;
   ModerationProfileCommentAuthoredCommentsAggregationSelection: ModerationProfileCommentAuthoredCommentsAggregationSelection;
   ModerationProfileCommentAuthoredCommentsNodeAggregateSelection: ModerationProfileCommentAuthoredCommentsNodeAggregateSelection;
-  ModerationProfileCommentDownvotedCommentsAggregationSelection: ModerationProfileCommentDownvotedCommentsAggregationSelection;
-  ModerationProfileCommentDownvotedCommentsNodeAggregateSelection: ModerationProfileCommentDownvotedCommentsNodeAggregateSelection;
   ModerationProfileConnectInput: ModerationProfileConnectInput;
   ModerationProfileConnectOrCreateInput: ModerationProfileConnectOrCreateInput;
   ModerationProfileConnectOrCreateWhere: ModerationProfileConnectOrCreateWhere;
@@ -28513,34 +27886,6 @@ export type ResolversParentTypes = {
   ModerationProfileCreateInput: ModerationProfileCreateInput;
   ModerationProfileDeleteInput: ModerationProfileDeleteInput;
   ModerationProfileDisconnectInput: ModerationProfileDisconnectInput;
-  ModerationProfileDiscussionChannelDownvotedDiscussionChannelsAggregationSelection: ModerationProfileDiscussionChannelDownvotedDiscussionChannelsAggregationSelection;
-  ModerationProfileDiscussionChannelDownvotedDiscussionChannelsNodeAggregateSelection: ModerationProfileDiscussionChannelDownvotedDiscussionChannelsNodeAggregateSelection;
-  ModerationProfileDownvotedCommentsAggregateInput: ModerationProfileDownvotedCommentsAggregateInput;
-  ModerationProfileDownvotedCommentsConnectFieldInput: ModerationProfileDownvotedCommentsConnectFieldInput;
-  ModerationProfileDownvotedCommentsConnection: ModerationProfileDownvotedCommentsConnection;
-  ModerationProfileDownvotedCommentsConnectionSort: ModerationProfileDownvotedCommentsConnectionSort;
-  ModerationProfileDownvotedCommentsConnectionWhere: ModerationProfileDownvotedCommentsConnectionWhere;
-  ModerationProfileDownvotedCommentsCreateFieldInput: ModerationProfileDownvotedCommentsCreateFieldInput;
-  ModerationProfileDownvotedCommentsDeleteFieldInput: ModerationProfileDownvotedCommentsDeleteFieldInput;
-  ModerationProfileDownvotedCommentsDisconnectFieldInput: ModerationProfileDownvotedCommentsDisconnectFieldInput;
-  ModerationProfileDownvotedCommentsFieldInput: ModerationProfileDownvotedCommentsFieldInput;
-  ModerationProfileDownvotedCommentsNodeAggregationWhereInput: ModerationProfileDownvotedCommentsNodeAggregationWhereInput;
-  ModerationProfileDownvotedCommentsRelationship: ModerationProfileDownvotedCommentsRelationship;
-  ModerationProfileDownvotedCommentsUpdateConnectionInput: ModerationProfileDownvotedCommentsUpdateConnectionInput;
-  ModerationProfileDownvotedCommentsUpdateFieldInput: ModerationProfileDownvotedCommentsUpdateFieldInput;
-  ModerationProfileDownvotedDiscussionChannelsAggregateInput: ModerationProfileDownvotedDiscussionChannelsAggregateInput;
-  ModerationProfileDownvotedDiscussionChannelsConnectFieldInput: ModerationProfileDownvotedDiscussionChannelsConnectFieldInput;
-  ModerationProfileDownvotedDiscussionChannelsConnection: ModerationProfileDownvotedDiscussionChannelsConnection;
-  ModerationProfileDownvotedDiscussionChannelsConnectionSort: ModerationProfileDownvotedDiscussionChannelsConnectionSort;
-  ModerationProfileDownvotedDiscussionChannelsConnectionWhere: ModerationProfileDownvotedDiscussionChannelsConnectionWhere;
-  ModerationProfileDownvotedDiscussionChannelsCreateFieldInput: ModerationProfileDownvotedDiscussionChannelsCreateFieldInput;
-  ModerationProfileDownvotedDiscussionChannelsDeleteFieldInput: ModerationProfileDownvotedDiscussionChannelsDeleteFieldInput;
-  ModerationProfileDownvotedDiscussionChannelsDisconnectFieldInput: ModerationProfileDownvotedDiscussionChannelsDisconnectFieldInput;
-  ModerationProfileDownvotedDiscussionChannelsFieldInput: ModerationProfileDownvotedDiscussionChannelsFieldInput;
-  ModerationProfileDownvotedDiscussionChannelsNodeAggregationWhereInput: ModerationProfileDownvotedDiscussionChannelsNodeAggregationWhereInput;
-  ModerationProfileDownvotedDiscussionChannelsRelationship: ModerationProfileDownvotedDiscussionChannelsRelationship;
-  ModerationProfileDownvotedDiscussionChannelsUpdateConnectionInput: ModerationProfileDownvotedDiscussionChannelsUpdateConnectionInput;
-  ModerationProfileDownvotedDiscussionChannelsUpdateFieldInput: ModerationProfileDownvotedDiscussionChannelsUpdateFieldInput;
   ModerationProfileEdge: ModerationProfileEdge;
   ModerationProfileIssueAuthoredIssuesAggregationSelection: ModerationProfileIssueAuthoredIssuesAggregationSelection;
   ModerationProfileIssueAuthoredIssuesNodeAggregateSelection: ModerationProfileIssueAuthoredIssuesNodeAggregateSelection;
@@ -28578,6 +27923,8 @@ export type ResolversParentTypes = {
   ModerationProfileModServerRolesRelationship: ModerationProfileModServerRolesRelationship;
   ModerationProfileModServerRolesUpdateConnectionInput: ModerationProfileModServerRolesUpdateConnectionInput;
   ModerationProfileModServerRolesUpdateFieldInput: ModerationProfileModServerRolesUpdateFieldInput;
+  ModerationProfileModerationActionActivityFeedAggregationSelection: ModerationProfileModerationActionActivityFeedAggregationSelection;
+  ModerationProfileModerationActionActivityFeedNodeAggregateSelection: ModerationProfileModerationActionActivityFeedNodeAggregateSelection;
   ModerationProfileOnCreateInput: ModerationProfileOnCreateInput;
   ModerationProfileOptions: ModerationProfileOptions;
   ModerationProfileRelationInput: ModerationProfileRelationInput;
@@ -29631,9 +28978,6 @@ export type CommentResolvers<ContextType = any, ParentType extends ResolversPare
   DiscussionChannel?: Resolver<Maybe<ResolversTypes['DiscussionChannel']>, ParentType, ContextType, RequireFields<CommentDiscussionChannelArgs, 'directed'>>;
   DiscussionChannelAggregate?: Resolver<Maybe<ResolversTypes['CommentDiscussionChannelDiscussionChannelAggregationSelection']>, ParentType, ContextType, RequireFields<CommentDiscussionChannelAggregateArgs, 'directed'>>;
   DiscussionChannelConnection?: Resolver<ResolversTypes['CommentDiscussionChannelConnection'], ParentType, ContextType, RequireFields<CommentDiscussionChannelConnectionArgs, 'directed'>>;
-  DownvotedByModerators?: Resolver<Array<ResolversTypes['ModerationProfile']>, ParentType, ContextType, RequireFields<CommentDownvotedByModeratorsArgs, 'directed'>>;
-  DownvotedByModeratorsAggregate?: Resolver<Maybe<ResolversTypes['CommentModerationProfileDownvotedByModeratorsAggregationSelection']>, ParentType, ContextType, RequireFields<CommentDownvotedByModeratorsAggregateArgs, 'directed'>>;
-  DownvotedByModeratorsConnection?: Resolver<ResolversTypes['CommentDownvotedByModeratorsConnection'], ParentType, ContextType, RequireFields<CommentDownvotedByModeratorsConnectionArgs, 'directed'>>;
   Event?: Resolver<Maybe<ResolversTypes['Event']>, ParentType, ContextType, RequireFields<CommentEventArgs, 'directed'>>;
   EventAggregate?: Resolver<Maybe<ResolversTypes['CommentEventEventAggregationSelection']>, ParentType, ContextType, RequireFields<CommentEventAggregateArgs, 'directed'>>;
   EventConnection?: Resolver<ResolversTypes['CommentEventConnection'], ParentType, ContextType, RequireFields<CommentEventConnectionArgs, 'directed'>>;
@@ -29844,19 +29188,6 @@ export type CommentDiscussionGivesFeedbackOnDiscussionNodeAggregateSelectionReso
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type CommentDownvotedByModeratorsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['CommentDownvotedByModeratorsConnection'] = ResolversParentTypes['CommentDownvotedByModeratorsConnection']> = {
-  edges?: Resolver<Array<ResolversTypes['CommentDownvotedByModeratorsRelationship']>, ParentType, ContextType>;
-  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
-  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type CommentDownvotedByModeratorsRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['CommentDownvotedByModeratorsRelationship'] = ResolversParentTypes['CommentDownvotedByModeratorsRelationship']> = {
-  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  node?: Resolver<ResolversTypes['ModerationProfile'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
 export type CommentEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['CommentEdge'] = ResolversParentTypes['CommentEdge']> = {
   cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   node?: Resolver<ResolversTypes['Comment'], ParentType, ContextType>;
@@ -30008,18 +29339,6 @@ export type CommentIssueIssueNodeAggregateSelectionResolvers<ContextType = any, 
 export type CommentIssueRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['CommentIssueRelationship'] = ResolversParentTypes['CommentIssueRelationship']> = {
   cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   node?: Resolver<ResolversTypes['Issue'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type CommentModerationProfileDownvotedByModeratorsAggregationSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['CommentModerationProfileDownvotedByModeratorsAggregationSelection'] = ResolversParentTypes['CommentModerationProfileDownvotedByModeratorsAggregationSelection']> = {
-  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  node?: Resolver<Maybe<ResolversTypes['CommentModerationProfileDownvotedByModeratorsNodeAggregateSelection']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type CommentModerationProfileDownvotedByModeratorsNodeAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['CommentModerationProfileDownvotedByModeratorsNodeAggregateSelection'] = ResolversParentTypes['CommentModerationProfileDownvotedByModeratorsNodeAggregateSelection']> = {
-  createdAt?: Resolver<ResolversTypes['DateTimeAggregateSelectionNonNullable'], ParentType, ContextType>;
-  displayName?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -30437,9 +29756,6 @@ export type DiscussionChannelResolvers<ContextType = any, ParentType extends Res
   Discussion?: Resolver<Maybe<ResolversTypes['Discussion']>, ParentType, ContextType, RequireFields<DiscussionChannelDiscussionArgs, 'directed'>>;
   DiscussionAggregate?: Resolver<Maybe<ResolversTypes['DiscussionChannelDiscussionDiscussionAggregationSelection']>, ParentType, ContextType, RequireFields<DiscussionChannelDiscussionAggregateArgs, 'directed'>>;
   DiscussionConnection?: Resolver<ResolversTypes['DiscussionChannelDiscussionConnection'], ParentType, ContextType, RequireFields<DiscussionChannelDiscussionConnectionArgs, 'directed'>>;
-  DownvotedByModerators?: Resolver<Array<ResolversTypes['ModerationProfile']>, ParentType, ContextType, RequireFields<DiscussionChannelDownvotedByModeratorsArgs, 'directed'>>;
-  DownvotedByModeratorsAggregate?: Resolver<Maybe<ResolversTypes['DiscussionChannelModerationProfileDownvotedByModeratorsAggregationSelection']>, ParentType, ContextType, RequireFields<DiscussionChannelDownvotedByModeratorsAggregateArgs, 'directed'>>;
-  DownvotedByModeratorsConnection?: Resolver<ResolversTypes['DiscussionChannelDownvotedByModeratorsConnection'], ParentType, ContextType, RequireFields<DiscussionChannelDownvotedByModeratorsConnectionArgs, 'directed'>>;
   UpvotedByUsers?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, RequireFields<DiscussionChannelUpvotedByUsersArgs, 'directed'>>;
   UpvotedByUsersAggregate?: Resolver<Maybe<ResolversTypes['DiscussionChannelUserUpvotedByUsersAggregationSelection']>, ParentType, ContextType, RequireFields<DiscussionChannelUpvotedByUsersAggregateArgs, 'directed'>>;
   UpvotedByUsersConnection?: Resolver<ResolversTypes['DiscussionChannelUpvotedByUsersConnection'], ParentType, ContextType, RequireFields<DiscussionChannelUpvotedByUsersConnectionArgs, 'directed'>>;
@@ -30548,19 +29864,6 @@ export type DiscussionChannelDiscussionRelationshipResolvers<ContextType = any, 
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type DiscussionChannelDownvotedByModeratorsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscussionChannelDownvotedByModeratorsConnection'] = ResolversParentTypes['DiscussionChannelDownvotedByModeratorsConnection']> = {
-  edges?: Resolver<Array<ResolversTypes['DiscussionChannelDownvotedByModeratorsRelationship']>, ParentType, ContextType>;
-  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
-  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type DiscussionChannelDownvotedByModeratorsRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscussionChannelDownvotedByModeratorsRelationship'] = ResolversParentTypes['DiscussionChannelDownvotedByModeratorsRelationship']> = {
-  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  node?: Resolver<ResolversTypes['ModerationProfile'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
 export type DiscussionChannelEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscussionChannelEdge'] = ResolversParentTypes['DiscussionChannelEdge']> = {
   cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   node?: Resolver<ResolversTypes['DiscussionChannel'], ParentType, ContextType>;
@@ -30589,18 +29892,6 @@ export type DiscussionChannelListFormatsConnectionResolvers<ContextType = any, P
   edges?: Resolver<Array<ResolversTypes['DiscussionChannelListFormatEdge']>, ParentType, ContextType>;
   pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
   totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type DiscussionChannelModerationProfileDownvotedByModeratorsAggregationSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscussionChannelModerationProfileDownvotedByModeratorsAggregationSelection'] = ResolversParentTypes['DiscussionChannelModerationProfileDownvotedByModeratorsAggregationSelection']> = {
-  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  node?: Resolver<Maybe<ResolversTypes['DiscussionChannelModerationProfileDownvotedByModeratorsNodeAggregateSelection']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type DiscussionChannelModerationProfileDownvotedByModeratorsNodeAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscussionChannelModerationProfileDownvotedByModeratorsNodeAggregateSelection'] = ResolversParentTypes['DiscussionChannelModerationProfileDownvotedByModeratorsNodeAggregateSelection']> = {
-  createdAt?: Resolver<ResolversTypes['DateTimeAggregateSelectionNonNullable'], ParentType, ContextType>;
-  displayName?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -31825,18 +31116,15 @@ export type ModerationActionsConnectionResolvers<ContextType = any, ParentType e
 };
 
 export type ModerationProfileResolvers<ContextType = any, ParentType extends ResolversParentTypes['ModerationProfile'] = ResolversParentTypes['ModerationProfile']> = {
+  ActivityFeed?: Resolver<Array<ResolversTypes['ModerationAction']>, ParentType, ContextType, RequireFields<ModerationProfileActivityFeedArgs, 'directed'>>;
+  ActivityFeedAggregate?: Resolver<Maybe<ResolversTypes['ModerationProfileModerationActionActivityFeedAggregationSelection']>, ParentType, ContextType, RequireFields<ModerationProfileActivityFeedAggregateArgs, 'directed'>>;
+  ActivityFeedConnection?: Resolver<ResolversTypes['ModerationProfileActivityFeedConnection'], ParentType, ContextType, RequireFields<ModerationProfileActivityFeedConnectionArgs, 'directed'>>;
   AuthoredComments?: Resolver<Array<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<ModerationProfileAuthoredCommentsArgs, 'directed'>>;
   AuthoredCommentsAggregate?: Resolver<Maybe<ResolversTypes['ModerationProfileCommentAuthoredCommentsAggregationSelection']>, ParentType, ContextType, RequireFields<ModerationProfileAuthoredCommentsAggregateArgs, 'directed'>>;
   AuthoredCommentsConnection?: Resolver<ResolversTypes['ModerationProfileAuthoredCommentsConnection'], ParentType, ContextType, RequireFields<ModerationProfileAuthoredCommentsConnectionArgs, 'directed'>>;
   AuthoredIssues?: Resolver<Array<ResolversTypes['Issue']>, ParentType, ContextType, RequireFields<ModerationProfileAuthoredIssuesArgs, 'directed'>>;
   AuthoredIssuesAggregate?: Resolver<Maybe<ResolversTypes['ModerationProfileIssueAuthoredIssuesAggregationSelection']>, ParentType, ContextType, RequireFields<ModerationProfileAuthoredIssuesAggregateArgs, 'directed'>>;
   AuthoredIssuesConnection?: Resolver<ResolversTypes['ModerationProfileAuthoredIssuesConnection'], ParentType, ContextType, RequireFields<ModerationProfileAuthoredIssuesConnectionArgs, 'directed'>>;
-  DownvotedComments?: Resolver<Array<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<ModerationProfileDownvotedCommentsArgs, 'directed'>>;
-  DownvotedCommentsAggregate?: Resolver<Maybe<ResolversTypes['ModerationProfileCommentDownvotedCommentsAggregationSelection']>, ParentType, ContextType, RequireFields<ModerationProfileDownvotedCommentsAggregateArgs, 'directed'>>;
-  DownvotedCommentsConnection?: Resolver<ResolversTypes['ModerationProfileDownvotedCommentsConnection'], ParentType, ContextType, RequireFields<ModerationProfileDownvotedCommentsConnectionArgs, 'directed'>>;
-  DownvotedDiscussionChannels?: Resolver<Array<ResolversTypes['DiscussionChannel']>, ParentType, ContextType, RequireFields<ModerationProfileDownvotedDiscussionChannelsArgs, 'directed'>>;
-  DownvotedDiscussionChannelsAggregate?: Resolver<Maybe<ResolversTypes['ModerationProfileDiscussionChannelDownvotedDiscussionChannelsAggregationSelection']>, ParentType, ContextType, RequireFields<ModerationProfileDownvotedDiscussionChannelsAggregateArgs, 'directed'>>;
-  DownvotedDiscussionChannelsConnection?: Resolver<ResolversTypes['ModerationProfileDownvotedDiscussionChannelsConnection'], ParentType, ContextType, RequireFields<ModerationProfileDownvotedDiscussionChannelsConnectionArgs, 'directed'>>;
   ModChannelRoles?: Resolver<Array<ResolversTypes['ModChannelRole']>, ParentType, ContextType, RequireFields<ModerationProfileModChannelRolesArgs, 'directed'>>;
   ModChannelRolesAggregate?: Resolver<Maybe<ResolversTypes['ModerationProfileModChannelRoleModChannelRolesAggregationSelection']>, ParentType, ContextType, RequireFields<ModerationProfileModChannelRolesAggregateArgs, 'directed'>>;
   ModChannelRolesConnection?: Resolver<ResolversTypes['ModerationProfileModChannelRolesConnection'], ParentType, ContextType, RequireFields<ModerationProfileModChannelRolesConnectionArgs, 'directed'>>;
@@ -31848,6 +31136,19 @@ export type ModerationProfileResolvers<ContextType = any, ParentType extends Res
   UserConnection?: Resolver<ResolversTypes['ModerationProfileUserConnection'], ParentType, ContextType, RequireFields<ModerationProfileUserConnectionArgs, 'directed'>>;
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   displayName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ModerationProfileActivityFeedConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ModerationProfileActivityFeedConnection'] = ResolversParentTypes['ModerationProfileActivityFeedConnection']> = {
+  edges?: Resolver<Array<ResolversTypes['ModerationProfileActivityFeedRelationship']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ModerationProfileActivityFeedRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['ModerationProfileActivityFeedRelationship'] = ResolversParentTypes['ModerationProfileActivityFeedRelationship']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['ModerationAction'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -31896,62 +31197,6 @@ export type ModerationProfileCommentAuthoredCommentsNodeAggregateSelectionResolv
   text?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
   updatedAt?: Resolver<ResolversTypes['DateTimeAggregateSelectionNullable'], ParentType, ContextType>;
   weightedVotesCount?: Resolver<ResolversTypes['FloatAggregateSelectionNullable'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ModerationProfileCommentDownvotedCommentsAggregationSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ModerationProfileCommentDownvotedCommentsAggregationSelection'] = ResolversParentTypes['ModerationProfileCommentDownvotedCommentsAggregationSelection']> = {
-  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  node?: Resolver<Maybe<ResolversTypes['ModerationProfileCommentDownvotedCommentsNodeAggregateSelection']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ModerationProfileCommentDownvotedCommentsNodeAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ModerationProfileCommentDownvotedCommentsNodeAggregateSelection'] = ResolversParentTypes['ModerationProfileCommentDownvotedCommentsNodeAggregateSelection']> = {
-  createdAt?: Resolver<ResolversTypes['DateTimeAggregateSelectionNonNullable'], ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['IDAggregateSelectionNonNullable'], ParentType, ContextType>;
-  text?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
-  updatedAt?: Resolver<ResolversTypes['DateTimeAggregateSelectionNullable'], ParentType, ContextType>;
-  weightedVotesCount?: Resolver<ResolversTypes['FloatAggregateSelectionNullable'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ModerationProfileDiscussionChannelDownvotedDiscussionChannelsAggregationSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ModerationProfileDiscussionChannelDownvotedDiscussionChannelsAggregationSelection'] = ResolversParentTypes['ModerationProfileDiscussionChannelDownvotedDiscussionChannelsAggregationSelection']> = {
-  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  node?: Resolver<Maybe<ResolversTypes['ModerationProfileDiscussionChannelDownvotedDiscussionChannelsNodeAggregateSelection']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ModerationProfileDiscussionChannelDownvotedDiscussionChannelsNodeAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ModerationProfileDiscussionChannelDownvotedDiscussionChannelsNodeAggregateSelection'] = ResolversParentTypes['ModerationProfileDiscussionChannelDownvotedDiscussionChannelsNodeAggregateSelection']> = {
-  channelUniqueName?: Resolver<ResolversTypes['StringAggregateSelectionNonNullable'], ParentType, ContextType>;
-  createdAt?: Resolver<ResolversTypes['DateTimeAggregateSelectionNonNullable'], ParentType, ContextType>;
-  discussionId?: Resolver<ResolversTypes['IDAggregateSelectionNonNullable'], ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['IDAggregateSelectionNonNullable'], ParentType, ContextType>;
-  weightedVotesCount?: Resolver<ResolversTypes['FloatAggregateSelectionNullable'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ModerationProfileDownvotedCommentsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ModerationProfileDownvotedCommentsConnection'] = ResolversParentTypes['ModerationProfileDownvotedCommentsConnection']> = {
-  edges?: Resolver<Array<ResolversTypes['ModerationProfileDownvotedCommentsRelationship']>, ParentType, ContextType>;
-  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
-  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ModerationProfileDownvotedCommentsRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['ModerationProfileDownvotedCommentsRelationship'] = ResolversParentTypes['ModerationProfileDownvotedCommentsRelationship']> = {
-  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  node?: Resolver<ResolversTypes['Comment'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ModerationProfileDownvotedDiscussionChannelsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ModerationProfileDownvotedDiscussionChannelsConnection'] = ResolversParentTypes['ModerationProfileDownvotedDiscussionChannelsConnection']> = {
-  edges?: Resolver<Array<ResolversTypes['ModerationProfileDownvotedDiscussionChannelsRelationship']>, ParentType, ContextType>;
-  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
-  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ModerationProfileDownvotedDiscussionChannelsRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['ModerationProfileDownvotedDiscussionChannelsRelationship'] = ResolversParentTypes['ModerationProfileDownvotedDiscussionChannelsRelationship']> = {
-  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  node?: Resolver<ResolversTypes['DiscussionChannel'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -32028,6 +31273,20 @@ export type ModerationProfileModServerRolesConnectionResolvers<ContextType = any
 export type ModerationProfileModServerRolesRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['ModerationProfileModServerRolesRelationship'] = ResolversParentTypes['ModerationProfileModServerRolesRelationship']> = {
   cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   node?: Resolver<ResolversTypes['ModServerRole'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ModerationProfileModerationActionActivityFeedAggregationSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ModerationProfileModerationActionActivityFeedAggregationSelection'] = ResolversParentTypes['ModerationProfileModerationActionActivityFeedAggregationSelection']> = {
+  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['ModerationProfileModerationActionActivityFeedNodeAggregateSelection']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ModerationProfileModerationActionActivityFeedNodeAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ModerationProfileModerationActionActivityFeedNodeAggregateSelection'] = ResolversParentTypes['ModerationProfileModerationActionActivityFeedNodeAggregateSelection']> = {
+  actionDescription?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  actionType?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['DateTimeAggregateSelectionNonNullable'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['IDAggregateSelectionNonNullable'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -32725,6 +31984,7 @@ export type SubredditSidebarResolvers<ContextType = any, ParentType extends Reso
   displayName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   linkFlairs?: Resolver<Maybe<Array<Maybe<ResolversTypes['LinkFlair']>>>, ParentType, ContextType>;
   longDescription?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  rules?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   shortDescription?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   showMediaPreview?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -33874,8 +33134,6 @@ export type Resolvers<ContextType = any> = {
   CommentDiscussionChannelRelationship?: CommentDiscussionChannelRelationshipResolvers<ContextType>;
   CommentDiscussionGivesFeedbackOnDiscussionAggregationSelection?: CommentDiscussionGivesFeedbackOnDiscussionAggregationSelectionResolvers<ContextType>;
   CommentDiscussionGivesFeedbackOnDiscussionNodeAggregateSelection?: CommentDiscussionGivesFeedbackOnDiscussionNodeAggregateSelectionResolvers<ContextType>;
-  CommentDownvotedByModeratorsConnection?: CommentDownvotedByModeratorsConnectionResolvers<ContextType>;
-  CommentDownvotedByModeratorsRelationship?: CommentDownvotedByModeratorsRelationshipResolvers<ContextType>;
   CommentEdge?: CommentEdgeResolvers<ContextType>;
   CommentEventConnection?: CommentEventConnectionResolvers<ContextType>;
   CommentEventEventAggregationSelection?: CommentEventEventAggregationSelectionResolvers<ContextType>;
@@ -33895,8 +33153,6 @@ export type Resolvers<ContextType = any> = {
   CommentIssueIssueAggregationSelection?: CommentIssueIssueAggregationSelectionResolvers<ContextType>;
   CommentIssueIssueNodeAggregateSelection?: CommentIssueIssueNodeAggregateSelectionResolvers<ContextType>;
   CommentIssueRelationship?: CommentIssueRelationshipResolvers<ContextType>;
-  CommentModerationProfileDownvotedByModeratorsAggregationSelection?: CommentModerationProfileDownvotedByModeratorsAggregationSelectionResolvers<ContextType>;
-  CommentModerationProfileDownvotedByModeratorsNodeAggregateSelection?: CommentModerationProfileDownvotedByModeratorsNodeAggregateSelectionResolvers<ContextType>;
   CommentParentCommentConnection?: CommentParentCommentConnectionResolvers<ContextType>;
   CommentParentCommentRelationship?: CommentParentCommentRelationshipResolvers<ContextType>;
   CommentRepliesFormat?: CommentRepliesFormatResolvers<ContextType>;
@@ -33972,15 +33228,11 @@ export type Resolvers<ContextType = any> = {
   DiscussionChannelDiscussionDiscussionAggregationSelection?: DiscussionChannelDiscussionDiscussionAggregationSelectionResolvers<ContextType>;
   DiscussionChannelDiscussionDiscussionNodeAggregateSelection?: DiscussionChannelDiscussionDiscussionNodeAggregateSelectionResolvers<ContextType>;
   DiscussionChannelDiscussionRelationship?: DiscussionChannelDiscussionRelationshipResolvers<ContextType>;
-  DiscussionChannelDownvotedByModeratorsConnection?: DiscussionChannelDownvotedByModeratorsConnectionResolvers<ContextType>;
-  DiscussionChannelDownvotedByModeratorsRelationship?: DiscussionChannelDownvotedByModeratorsRelationshipResolvers<ContextType>;
   DiscussionChannelEdge?: DiscussionChannelEdgeResolvers<ContextType>;
   DiscussionChannelListFormat?: DiscussionChannelListFormatResolvers<ContextType>;
   DiscussionChannelListFormatAggregateSelection?: DiscussionChannelListFormatAggregateSelectionResolvers<ContextType>;
   DiscussionChannelListFormatEdge?: DiscussionChannelListFormatEdgeResolvers<ContextType>;
   DiscussionChannelListFormatsConnection?: DiscussionChannelListFormatsConnectionResolvers<ContextType>;
-  DiscussionChannelModerationProfileDownvotedByModeratorsAggregationSelection?: DiscussionChannelModerationProfileDownvotedByModeratorsAggregationSelectionResolvers<ContextType>;
-  DiscussionChannelModerationProfileDownvotedByModeratorsNodeAggregateSelection?: DiscussionChannelModerationProfileDownvotedByModeratorsNodeAggregateSelectionResolvers<ContextType>;
   DiscussionChannelUpvotedByUsersConnection?: DiscussionChannelUpvotedByUsersConnectionResolvers<ContextType>;
   DiscussionChannelUpvotedByUsersRelationship?: DiscussionChannelUpvotedByUsersRelationshipResolvers<ContextType>;
   DiscussionChannelUserUpvotedByUsersAggregationSelection?: DiscussionChannelUserUpvotedByUsersAggregationSelectionResolvers<ContextType>;
@@ -34136,6 +33388,8 @@ export type Resolvers<ContextType = any> = {
   ModerationActionModerationProfileRelationship?: ModerationActionModerationProfileRelationshipResolvers<ContextType>;
   ModerationActionsConnection?: ModerationActionsConnectionResolvers<ContextType>;
   ModerationProfile?: ModerationProfileResolvers<ContextType>;
+  ModerationProfileActivityFeedConnection?: ModerationProfileActivityFeedConnectionResolvers<ContextType>;
+  ModerationProfileActivityFeedRelationship?: ModerationProfileActivityFeedRelationshipResolvers<ContextType>;
   ModerationProfileAggregateSelection?: ModerationProfileAggregateSelectionResolvers<ContextType>;
   ModerationProfileAuthoredCommentsConnection?: ModerationProfileAuthoredCommentsConnectionResolvers<ContextType>;
   ModerationProfileAuthoredCommentsRelationship?: ModerationProfileAuthoredCommentsRelationshipResolvers<ContextType>;
@@ -34143,14 +33397,6 @@ export type Resolvers<ContextType = any> = {
   ModerationProfileAuthoredIssuesRelationship?: ModerationProfileAuthoredIssuesRelationshipResolvers<ContextType>;
   ModerationProfileCommentAuthoredCommentsAggregationSelection?: ModerationProfileCommentAuthoredCommentsAggregationSelectionResolvers<ContextType>;
   ModerationProfileCommentAuthoredCommentsNodeAggregateSelection?: ModerationProfileCommentAuthoredCommentsNodeAggregateSelectionResolvers<ContextType>;
-  ModerationProfileCommentDownvotedCommentsAggregationSelection?: ModerationProfileCommentDownvotedCommentsAggregationSelectionResolvers<ContextType>;
-  ModerationProfileCommentDownvotedCommentsNodeAggregateSelection?: ModerationProfileCommentDownvotedCommentsNodeAggregateSelectionResolvers<ContextType>;
-  ModerationProfileDiscussionChannelDownvotedDiscussionChannelsAggregationSelection?: ModerationProfileDiscussionChannelDownvotedDiscussionChannelsAggregationSelectionResolvers<ContextType>;
-  ModerationProfileDiscussionChannelDownvotedDiscussionChannelsNodeAggregateSelection?: ModerationProfileDiscussionChannelDownvotedDiscussionChannelsNodeAggregateSelectionResolvers<ContextType>;
-  ModerationProfileDownvotedCommentsConnection?: ModerationProfileDownvotedCommentsConnectionResolvers<ContextType>;
-  ModerationProfileDownvotedCommentsRelationship?: ModerationProfileDownvotedCommentsRelationshipResolvers<ContextType>;
-  ModerationProfileDownvotedDiscussionChannelsConnection?: ModerationProfileDownvotedDiscussionChannelsConnectionResolvers<ContextType>;
-  ModerationProfileDownvotedDiscussionChannelsRelationship?: ModerationProfileDownvotedDiscussionChannelsRelationshipResolvers<ContextType>;
   ModerationProfileEdge?: ModerationProfileEdgeResolvers<ContextType>;
   ModerationProfileIssueAuthoredIssuesAggregationSelection?: ModerationProfileIssueAuthoredIssuesAggregationSelectionResolvers<ContextType>;
   ModerationProfileIssueAuthoredIssuesNodeAggregateSelection?: ModerationProfileIssueAuthoredIssuesNodeAggregateSelectionResolvers<ContextType>;
@@ -34162,6 +33408,8 @@ export type Resolvers<ContextType = any> = {
   ModerationProfileModServerRoleModServerRolesNodeAggregateSelection?: ModerationProfileModServerRoleModServerRolesNodeAggregateSelectionResolvers<ContextType>;
   ModerationProfileModServerRolesConnection?: ModerationProfileModServerRolesConnectionResolvers<ContextType>;
   ModerationProfileModServerRolesRelationship?: ModerationProfileModServerRolesRelationshipResolvers<ContextType>;
+  ModerationProfileModerationActionActivityFeedAggregationSelection?: ModerationProfileModerationActionActivityFeedAggregationSelectionResolvers<ContextType>;
+  ModerationProfileModerationActionActivityFeedNodeAggregateSelection?: ModerationProfileModerationActionActivityFeedNodeAggregateSelectionResolvers<ContextType>;
   ModerationProfileUserConnection?: ModerationProfileUserConnectionResolvers<ContextType>;
   ModerationProfileUserRelationship?: ModerationProfileUserRelationshipResolvers<ContextType>;
   ModerationProfileUserUserAggregationSelection?: ModerationProfileUserUserAggregationSelectionResolvers<ContextType>;
