@@ -68,6 +68,7 @@ export const setUserDataOnContext = async (input: SetUserDataInput) => {
         where: { username },
         selectionSet: `{ 
             ModerationProfile {
+              displayName
               ModServerRoles {
                 canGiveFeedback
               }
