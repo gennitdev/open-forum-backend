@@ -532,6 +532,7 @@ const typeDefinitions = gql`
     getCommentSection(
       channelUniqueName: String!
       discussionId: ID!
+      modName: String
       offset: Int
       limit: Int
       sort: String

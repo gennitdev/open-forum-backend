@@ -108,6 +108,7 @@ type Input = {
 type Args = {
   channelUniqueName: string;
   discussionId: string;
+  modName: string;
   offset: string;
   limit: string;
   sort: string;
@@ -116,7 +117,8 @@ type Args = {
 const getResolver = (input: Input) => {
   const { driver, DiscussionChannel, Comment } = input;
   return async (parent: any, args: Args, context: any, info: any) => {
-    const { channelUniqueName, discussionId, offset, limit, sort } = args;
+    const { channelUniqueName, discussionId, modName, offset, limit, sort } = args;
+    console.log('mod name is ', modName)
 
     const session = driver.session();
 
@@ -164,6 +166,7 @@ const getResolver = (input: Input) => {
         // Treat a null weightedVotesCount as 0.
         commentsResult = await session.run(getCommentsQuery, {
           discussionChannelId,
+          modName,
           offset: parseInt(offset, 10),
           limit: parseInt(limit, 10),
           sortOption: "top"
@@ -177,6 +180,7 @@ const getResolver = (input: Input) => {
         // which takes into account both weightedVotesCount and createdAt.
         commentsResult = await session.run(getCommentsQuery, {
           discussionChannelId,
+          modName,
           offset: parseInt(offset, 10),
           limit: parseInt(limit, 10),
           sortOption: "hot"
@@ -185,6 +189,8 @@ const getResolver = (input: Input) => {
         commentsResult = commentsResult.records.map((record: any) => {
           return record.get("comment");
         });
+
+        console.log('comments result is ', commentsResult[0])
       }
 
       return {

@@ -16574,6 +16574,7 @@ export type QueryGetCommentSectionArgs = {
   channelUniqueName: Scalars['String']['input'];
   discussionId: Scalars['ID']['input'];
   limit?: InputMaybe<Scalars['Int']['input']>;
+  modName?: InputMaybe<Scalars['String']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<Scalars['String']['input']>;
 };
