@@ -5,12 +5,19 @@ OPTIONAL MATCH (c)<-[:AUTHORED_COMMENT]-(author:User)
 OPTIONAL MATCH (c)-[:IS_REPLY_TO]->(parent:Comment)
 OPTIONAL MATCH (c)<-[:IS_REPLY_TO]-(child:Comment)
 OPTIONAL MATCH (c)<-[:UPVOTED_COMMENT]-(upvoter:User)
-OPTIONAL MATCH (c)<-[:HAS_FEEDBACK_COMMENT]-(feedbackComment:Comment)
+
+WITH c, author, parent, child, upvoter, $modName AS modName
+
+OPTIONAL MATCH (c)<-[:HAS_FEEDBACK_COMMENT]-(feedbackComment:Comment)<-[:AUTHORED_COMMENT]-(feedbackAuthor:ModerationProfile)
+
+WITH c, author, parent, child, upvoter, modName, feedbackComment, feedbackAuthor,
+     CASE WHEN modName IS NOT NULL AND feedbackAuthor.displayName = modName THEN feedbackComment
+          ELSE NULL END AS filteredFeedbackComment
 
 WITH c, author, parent,
      COLLECT(DISTINCT upvoter{.*, createdAt: toString(upvoter.createdAt)}) AS UpvotedByUsers, 
      COLLECT(DISTINCT parent.id) AS parentIds,
-     COLLECT(DISTINCT feedbackComment {id: feedbackComment.id}) AS FeedbackComments,
+     COLLECT(DISTINCT filteredFeedbackComment {id: feedbackComment.id}) AS FeedbackComments,
      COLLECT(DISTINCT CASE WHEN child IS NOT NULL THEN {id: child.id, text: child.text} ELSE null END) AS NonFilteredChildComments,
      // Compute the age in months from the createdAt timestamp.
      duration.between(c.createdAt, datetime()).months + 
