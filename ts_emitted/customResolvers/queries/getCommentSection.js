@@ -99,7 +99,6 @@ const getResolver = (input) => {
     const { driver, DiscussionChannel, Comment } = input;
     return async (parent, args, context, info) => {
         const { channelUniqueName, discussionId, modName, offset, limit, sort } = args;
-        console.log('mod name is ', modName);
         const session = driver.session();
         try {
             const result = await DiscussionChannel.find({

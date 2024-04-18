@@ -118,7 +118,6 @@ const getResolver = (input: Input) => {
   const { driver, DiscussionChannel, Comment } = input;
   return async (parent: any, args: Args, context: any, info: any) => {
     const { channelUniqueName, discussionId, modName, offset, limit, sort } = args;
-    console.log('mod name is ', modName)
 
     const session = driver.session();
 
@@ -189,8 +188,6 @@ const getResolver = (input: Input) => {
         commentsResult = commentsResult.records.map((record: any) => {
           return record.get("comment");
         });
-
-        console.log('comments result is ', commentsResult[0])
       }
 
       return {

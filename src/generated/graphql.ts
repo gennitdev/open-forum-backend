@@ -16565,6 +16565,7 @@ export type QueryFeedsConnectionArgs = {
 export type QueryGetCommentRepliesArgs = {
   commentId: Scalars['ID']['input'];
   limit?: InputMaybe<Scalars['Int']['input']>;
+  modName?: InputMaybe<Scalars['String']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<SortType>;
 };

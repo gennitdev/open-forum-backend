@@ -545,6 +545,7 @@ const typeDefinitions = gql`
     ): EventCommentsFormat
     getCommentReplies(
       commentId: ID!
+      modName: String
       offset: Int
       limit: Int
       sort: SortType

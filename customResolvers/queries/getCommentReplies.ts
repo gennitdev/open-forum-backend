@@ -45,6 +45,7 @@ type Input = {
 
 type Args = {
   commentId: string;
+  modName: string;
   offset: string;
   limit: string;
   sort: string;
@@ -53,7 +54,7 @@ type Args = {
 const getResolver = (input: Input) => {
   const { driver, Comment } = input;
   return async (parent: any, args: Args, context: any, info: any) => {
-    const { commentId, offset, limit, sort } = args;
+    const { commentId, modName, offset, limit, sort } = args;
 
     const session = driver.session();
 
@@ -90,6 +91,7 @@ const getResolver = (input: Input) => {
         // Treat a null weightedVotesCount as 0.
         const topCommentsResult = await session.run(getCommentRepliesQuery, {
           commentId,
+          modName,
           offset: parseInt(offset, 10),
           limit: parseInt(limit, 10),
           sortOption: "top",
@@ -121,6 +123,7 @@ const getResolver = (input: Input) => {
         // which takes into account both weightedVotesCount and createdAt.
         const hotCommentsResult = await session.run(getCommentRepliesQuery, {
           commentId,
+          modName,
           offset: parseInt(offset, 10),
           limit: parseInt(limit, 10),
           sortOption: "hot",

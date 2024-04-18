@@ -9,15 +9,24 @@ OPTIONAL MATCH (child)<-[:UPVOTED_COMMENT]-(upvoter:User)
 OPTIONAL MATCH (child)<-[:IS_REPLY_TO]-(grandchild:Comment)
 WITH child, author, upvoter, COLLECT(DISTINCT grandchild) AS GrandchildComments
 
+WITH child, author, upvoter, GrandchildComments, $modName AS modName
+
+OPTIONAL MATCH (child)<-[:HAS_FEEDBACK_COMMENT]-(feedbackComment:Comment)<-[:AUTHORED_COMMENT]-(feedbackAuthor:ModerationProfile)
+
+WITH child, author, upvoter, GrandchildComments, feedbackComment, feedbackAuthor, modName,
+    CASE WHEN modName IS NOT NULL AND feedbackAuthor.displayName = modName THEN feedbackComment
+        ELSE NULL END AS potentialFeedbackComment
+
 // Calculations for the sorting formulae
-WITH child, author, GrandchildComments,
+WITH child, author, GrandchildComments, potentialFeedbackComment,
      COLLECT(DISTINCT upvoter) AS UpvotedByUsers,
+     COLLECT(DISTINCT CASE WHEN potentialFeedbackComment IS NOT NULL THEN {id: potentialFeedbackComment.id} END) AS FeedbackComments,
      duration.between(child.createdAt, datetime()).months + 
      duration.between(child.createdAt, datetime()).days / 30.0 AS ageInMonths,
      CASE WHEN coalesce(child.weightedVotesCount, 0) < 0 THEN 0 ELSE coalesce(child.weightedVotesCount, 0) END AS weightedVotesCount
 
 WITH child, author, UpvotedByUsers, ageInMonths, weightedVotesCount,
-     GrandchildComments,
+     GrandchildComments, FeedbackComments,
      10000 * log10(weightedVotesCount + 1) / ((ageInMonths + 2) ^ 1.8) AS hotRank
 
 
@@ -43,7 +52,9 @@ RETURN {
     },
     ChildCommentsAggregate: {
         count: SIZE(GrandchildComments)
-    }
+    },
+    // Return empty array if no feedback comment
+    FeedbackComments: [comment IN FeedbackComments WHERE comment IS NOT NULL | comment]
 } AS ChildComments, weightedVotesCount, hotRank
 
 ORDER BY 
