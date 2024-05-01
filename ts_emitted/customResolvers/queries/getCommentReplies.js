@@ -24,6 +24,9 @@ const commentSelectionSet = `
         ChildCommentsAggregate {
             count
         }
+        FeedbackComments {
+          id
+        }
         ParentComment {
             id
         }
@@ -40,7 +43,6 @@ const getResolver = (input) => {
     const { driver, Comment } = input;
     return async (parent, args, context, info) => {
         const { commentId, modName, offset, limit, sort } = args;
-        console.log('mod name is ', modName);
         const session = driver.session();
         try {
             let commentsResult = [];

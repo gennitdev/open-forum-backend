@@ -1,5 +1,6 @@
 import {
   getCommentsQuery,
+  getNewCommentsQuery,
 } from "../cypher/cypherQueries.js";
 
 const discussionChannelSelectionSet = `
@@ -37,68 +38,6 @@ const discussionChannelSelectionSet = `
 }
 `;
 
-const commentSelectionSet = `
-            {
-                id
-                text
-                emoji
-                weightedVotesCount
-                CommentAuthor {
-                    ... on User {
-                        username
-                        displayName
-                        profilePicURL
-                        commentKarma
-                        createdAt
-                        discussionKarma
-                    }
-                }
-                createdAt
-                updatedAt
-                ChildCommentsAggregate {
-                    count
-                }
-                ParentComment {
-                    id
-                }
-                UpvotedByUsers {
-                    username
-                }
-                UpvotedByUsersAggregate {
-                    count
-                }
-                ChildComments {
-                    id
-                    text
-                    emoji
-                    weightedVotesCount
-                    CommentAuthor {
-                        ... on User {
-                            username
-                            displayName
-                            profilePicURL
-                            commentKarma
-                            createdAt
-                            discussionKarma
-                        }
-                    }
-                    createdAt
-                    updatedAt
-                    ChildCommentsAggregate {
-                        count
-                    }
-                    ParentComment {
-                        id
-                    }
-                    UpvotedByUsers {
-                        username
-                    }
-                    UpvotedByUsersAggregate {
-                        count
-                    }
-                }
-            }
-        `;
 type Input = {
   driver: any;
   DiscussionChannel: any;
@@ -117,7 +56,8 @@ type Args = {
 const getResolver = (input: Input) => {
   const { driver, DiscussionChannel, Comment } = input;
   return async (parent: any, args: Args, context: any, info: any) => {
-    const { channelUniqueName, discussionId, modName, offset, limit, sort } = args;
+    const { channelUniqueName, discussionId, modName, offset, limit, sort } =
+      args;
 
     const session = driver.session();
 
@@ -143,23 +83,16 @@ const getResolver = (input: Input) => {
 
       if (sort === "new") {
         // if sort is "new", get the comments sorted by createdAt.
-        commentsResult = await Comment.find({
-          where: {
-            isRootComment: true,
-            DiscussionChannel: {
-              id: discussionChannelId,
-            },
-          },
-          selectionSet: commentSelectionSet,
-          options: {
-            offset,
-            limit,
-            sort: {
-              createdAt: "DESC",
-            },
-          },
+        commentsResult = await session.run(getNewCommentsQuery, {
+          discussionChannelId,
+          modName,
+          offset: parseInt(offset, 10),
+          limit: parseInt(limit, 10),
         });
-        
+
+        commentsResult = commentsResult.records.map((record: any) => {
+          return record.get("comment");
+        });
       } else if (sort === "top") {
         // if sort is "top", get the comments sorted by weightedVotesCount.
         // Treat a null weightedVotesCount as 0.
@@ -168,7 +101,7 @@ const getResolver = (input: Input) => {
           modName,
           offset: parseInt(offset, 10),
           limit: parseInt(limit, 10),
-          sortOption: "top"
+          sortOption: "top",
         });
 
         commentsResult = commentsResult.records.map((record: any) => {
@@ -182,7 +115,7 @@ const getResolver = (input: Input) => {
           modName,
           offset: parseInt(offset, 10),
           limit: parseInt(limit, 10),
-          sortOption: "hot"
+          sortOption: "hot",
         });
 
         commentsResult = commentsResult.records.map((record: any) => {

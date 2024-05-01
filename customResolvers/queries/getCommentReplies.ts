@@ -25,6 +25,9 @@ const commentSelectionSet = `
         ChildCommentsAggregate {
             count
         }
+        FeedbackComments {
+          id
+        }
         ParentComment {
             id
         }

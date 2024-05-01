@@ -14,6 +14,7 @@ export const severConnectionBetweenDiscussionAndChannelQuery = fs.readFileSync(p
 export const commentIsUpvotedByUserQuery = fs.readFileSync(path.resolve(__dirname, './commentIsUpvotedByUserQuery.cypher'), 'utf8');
 export const discussionChannelIsUpvotedByUserQuery = fs.readFileSync(path.resolve(__dirname, './discussionChannelIsUpvotedByUserQuery.cypher'), 'utf8');
 export const getCommentsQuery = fs.readFileSync(path.resolve(__dirname, './getCommentsQuery.cypher'), 'utf8');
+export const getNewCommentsQuery = fs.readFileSync(path.resolve(__dirname, './getNewCommentsQuery.cypher'), 'utf8');
 export const getDiscussionChannelsQuery = fs.readFileSync(path.resolve(__dirname, './getDiscussionChannelsQuery.cypher'), 'utf8');
 export const getSiteWideDiscussionsQuery = fs.readFileSync(path.resolve(__dirname, './getSiteWideDiscussionsQuery.cypher'), 'utf8');
 export const getCommentRepliesQuery = fs.readFileSync(path.resolve(__dirname, './getCommentRepliesQuery.cypher'), 'utf8');
