@@ -6,6 +6,11 @@ const typeDefinitions = gql `
   union CommentAuthor = User | ModerationProfile
   union IssueAuthor = User | ModerationProfile
 
+  input RuleInput {
+    summary: String!
+    detail: String!
+  }
+
   type Channel {
     description: String
     displayName: String
@@ -17,7 +22,7 @@ const typeDefinitions = gql `
     channelBannerURL: String
     Tags: [Tag!]! @relationship(type: "HAS_TAG", direction: OUT)
     # WikiPages:                [WikiPage]             @relationship(type: "HAS_WIKI_PAGE", direction: OUT)
-    Rules: [Rule!]! @relationship(type: "HAS_RULE", direction: OUT)
+    rules: JSON
     Admins: [User!]! @relationship(type: "ADMIN_OF_CHANNEL", direction: IN)
     Moderators: [ModerationProfile!]!
       @relationship(type: "MODERATOR_OF_CHANNEL", direction: IN)
@@ -179,11 +184,6 @@ const typeDefinitions = gql `
     name: String! @unique
     PostedByUser: User @relationship(type: "POSTED_EMOJI", direction: IN)
     createdAt: DateTime! @timestamp(operations: [CREATE])
-  }
-
-  type Rule {
-    summary: String
-    description: String
   }
 
   type Email {
@@ -355,6 +355,7 @@ const typeDefinitions = gql `
     upvoteDiscussionChannel(discussionChannelId: ID!, username: String!): DiscussionChannel
     undoUpvoteDiscussionChannel(discussionChannelId: ID!, username: String!): DiscussionChannel
     createSignedStorageURL(filename: String!, contentType: String!): SignedURL
+    updateChannelRules(channelUniqueName: String!, rules: [RuleInput!]!): Channel
   }
 
   input SiteWideDiscussionSortOrder {

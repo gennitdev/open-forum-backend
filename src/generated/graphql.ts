@@ -45,9 +45,6 @@ export type Channel = {
   RelatedChannels: Array<Channel>;
   RelatedChannelsAggregate?: Maybe<ChannelChannelRelatedChannelsAggregationSelection>;
   RelatedChannelsConnection: ChannelRelatedChannelsConnection;
-  Rules: Array<Rule>;
-  RulesAggregate?: Maybe<ChannelRuleRulesAggregationSelection>;
-  RulesConnection: ChannelRulesConnection;
   Tags: Array<Tag>;
   TagsAggregate?: Maybe<ChannelTagTagsAggregationSelection>;
   TagsConnection: ChannelTagsConnection;
@@ -58,6 +55,7 @@ export type Channel = {
   description?: Maybe<Scalars['String']['output']>;
   displayName?: Maybe<Scalars['String']['output']>;
   locked?: Maybe<Scalars['Boolean']['output']>;
+  rules?: Maybe<Scalars['JSON']['output']>;
   uniqueName: Scalars['String']['output'];
 };
 
@@ -235,28 +233,6 @@ export type ChannelRelatedChannelsConnectionArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<Array<ChannelRelatedChannelsConnectionSort>>;
   where?: InputMaybe<ChannelRelatedChannelsConnectionWhere>;
-};
-
-
-export type ChannelRulesArgs = {
-  directed?: InputMaybe<Scalars['Boolean']['input']>;
-  options?: InputMaybe<RuleOptions>;
-  where?: InputMaybe<RuleWhere>;
-};
-
-
-export type ChannelRulesAggregateArgs = {
-  directed?: InputMaybe<Scalars['Boolean']['input']>;
-  where?: InputMaybe<RuleWhere>;
-};
-
-
-export type ChannelRulesConnectionArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  directed?: InputMaybe<Scalars['Boolean']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  sort?: InputMaybe<Array<ChannelRulesConnectionSort>>;
-  where?: InputMaybe<ChannelRulesConnectionWhere>;
 };
 
 
@@ -758,7 +734,6 @@ export type ChannelConnectInput = {
   Issues?: InputMaybe<Array<ChannelIssuesConnectFieldInput>>;
   Moderators?: InputMaybe<Array<ChannelModeratorsConnectFieldInput>>;
   RelatedChannels?: InputMaybe<Array<ChannelRelatedChannelsConnectFieldInput>>;
-  Rules?: InputMaybe<Array<ChannelRulesConnectFieldInput>>;
   Tags?: InputMaybe<Array<ChannelTagsConnectFieldInput>>;
 };
 
@@ -787,7 +762,6 @@ export type ChannelCreateInput = {
   Issues?: InputMaybe<ChannelIssuesFieldInput>;
   Moderators?: InputMaybe<ChannelModeratorsFieldInput>;
   RelatedChannels?: InputMaybe<ChannelRelatedChannelsFieldInput>;
-  Rules?: InputMaybe<ChannelRulesFieldInput>;
   Tags?: InputMaybe<ChannelTagsFieldInput>;
   channelBannerURL?: InputMaybe<Scalars['String']['input']>;
   channelIconURL?: InputMaybe<Scalars['String']['input']>;
@@ -795,6 +769,7 @@ export type ChannelCreateInput = {
   description?: InputMaybe<Scalars['String']['input']>;
   displayName?: InputMaybe<Scalars['String']['input']>;
   locked?: InputMaybe<Scalars['Boolean']['input']>;
+  rules?: InputMaybe<Scalars['JSON']['input']>;
   uniqueName: Scalars['String']['input'];
 };
 
@@ -941,7 +916,6 @@ export type ChannelDeleteInput = {
   Issues?: InputMaybe<Array<ChannelIssuesDeleteFieldInput>>;
   Moderators?: InputMaybe<Array<ChannelModeratorsDeleteFieldInput>>;
   RelatedChannels?: InputMaybe<Array<ChannelRelatedChannelsDeleteFieldInput>>;
-  Rules?: InputMaybe<Array<ChannelRulesDeleteFieldInput>>;
   Tags?: InputMaybe<Array<ChannelTagsDeleteFieldInput>>;
 };
 
@@ -954,7 +928,6 @@ export type ChannelDisconnectInput = {
   Issues?: InputMaybe<Array<ChannelIssuesDisconnectFieldInput>>;
   Moderators?: InputMaybe<Array<ChannelModeratorsDisconnectFieldInput>>;
   RelatedChannels?: InputMaybe<Array<ChannelRelatedChannelsDisconnectFieldInput>>;
-  Rules?: InputMaybe<Array<ChannelRulesDisconnectFieldInput>>;
   Tags?: InputMaybe<Array<ChannelTagsDisconnectFieldInput>>;
 };
 
@@ -1542,6 +1515,7 @@ export type ChannelOnCreateInput = {
   description?: InputMaybe<Scalars['String']['input']>;
   displayName?: InputMaybe<Scalars['String']['input']>;
   locked?: InputMaybe<Scalars['Boolean']['input']>;
+  rules?: InputMaybe<Scalars['JSON']['input']>;
   uniqueName: Scalars['String']['input'];
 };
 
@@ -1738,7 +1712,6 @@ export type ChannelRelationInput = {
   Issues?: InputMaybe<Array<ChannelIssuesCreateFieldInput>>;
   Moderators?: InputMaybe<Array<ChannelModeratorsCreateFieldInput>>;
   RelatedChannels?: InputMaybe<Array<ChannelRelatedChannelsCreateFieldInput>>;
-  Rules?: InputMaybe<Array<ChannelRulesCreateFieldInput>>;
   Tags?: InputMaybe<Array<ChannelTagsCreateFieldInput>>;
 };
 
@@ -1886,126 +1859,6 @@ export type ChannelRolesConnection = {
   totalCount: Scalars['Int']['output'];
 };
 
-export type ChannelRuleRulesAggregationSelection = {
-  __typename?: 'ChannelRuleRulesAggregationSelection';
-  count: Scalars['Int']['output'];
-  node?: Maybe<ChannelRuleRulesNodeAggregateSelection>;
-};
-
-export type ChannelRuleRulesNodeAggregateSelection = {
-  __typename?: 'ChannelRuleRulesNodeAggregateSelection';
-  description: StringAggregateSelectionNullable;
-  summary: StringAggregateSelectionNullable;
-};
-
-export type ChannelRulesAggregateInput = {
-  AND?: InputMaybe<Array<ChannelRulesAggregateInput>>;
-  NOT?: InputMaybe<ChannelRulesAggregateInput>;
-  OR?: InputMaybe<Array<ChannelRulesAggregateInput>>;
-  count?: InputMaybe<Scalars['Int']['input']>;
-  count_GT?: InputMaybe<Scalars['Int']['input']>;
-  count_GTE?: InputMaybe<Scalars['Int']['input']>;
-  count_LT?: InputMaybe<Scalars['Int']['input']>;
-  count_LTE?: InputMaybe<Scalars['Int']['input']>;
-  node?: InputMaybe<ChannelRulesNodeAggregationWhereInput>;
-};
-
-export type ChannelRulesConnectFieldInput = {
-  /** Whether or not to overwrite any matching relationship with the new properties. */
-  overwrite?: Scalars['Boolean']['input'];
-  where?: InputMaybe<RuleConnectWhere>;
-};
-
-export type ChannelRulesConnection = {
-  __typename?: 'ChannelRulesConnection';
-  edges: Array<ChannelRulesRelationship>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int']['output'];
-};
-
-export type ChannelRulesConnectionSort = {
-  node?: InputMaybe<RuleSort>;
-};
-
-export type ChannelRulesConnectionWhere = {
-  AND?: InputMaybe<Array<ChannelRulesConnectionWhere>>;
-  NOT?: InputMaybe<ChannelRulesConnectionWhere>;
-  OR?: InputMaybe<Array<ChannelRulesConnectionWhere>>;
-  node?: InputMaybe<RuleWhere>;
-};
-
-export type ChannelRulesCreateFieldInput = {
-  node: RuleCreateInput;
-};
-
-export type ChannelRulesDeleteFieldInput = {
-  where?: InputMaybe<ChannelRulesConnectionWhere>;
-};
-
-export type ChannelRulesDisconnectFieldInput = {
-  where?: InputMaybe<ChannelRulesConnectionWhere>;
-};
-
-export type ChannelRulesFieldInput = {
-  connect?: InputMaybe<Array<ChannelRulesConnectFieldInput>>;
-  create?: InputMaybe<Array<ChannelRulesCreateFieldInput>>;
-};
-
-export type ChannelRulesNodeAggregationWhereInput = {
-  AND?: InputMaybe<Array<ChannelRulesNodeAggregationWhereInput>>;
-  NOT?: InputMaybe<ChannelRulesNodeAggregationWhereInput>;
-  OR?: InputMaybe<Array<ChannelRulesNodeAggregationWhereInput>>;
-  description_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
-  description_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
-  description_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
-  description_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
-  description_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
-  description_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  description_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
-  description_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
-  description_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
-  description_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
-  description_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  description_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
-  description_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
-  description_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
-  description_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
-  summary_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
-  summary_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
-  summary_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
-  summary_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
-  summary_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
-  summary_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  summary_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
-  summary_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
-  summary_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
-  summary_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
-  summary_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  summary_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
-  summary_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
-  summary_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
-  summary_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
-};
-
-export type ChannelRulesRelationship = {
-  __typename?: 'ChannelRulesRelationship';
-  cursor: Scalars['String']['output'];
-  node: Rule;
-};
-
-export type ChannelRulesUpdateConnectionInput = {
-  node?: InputMaybe<RuleUpdateInput>;
-};
-
-export type ChannelRulesUpdateFieldInput = {
-  connect?: InputMaybe<Array<ChannelRulesConnectFieldInput>>;
-  create?: InputMaybe<Array<ChannelRulesCreateFieldInput>>;
-  delete?: InputMaybe<Array<ChannelRulesDeleteFieldInput>>;
-  disconnect?: InputMaybe<Array<ChannelRulesDisconnectFieldInput>>;
-  update?: InputMaybe<ChannelRulesUpdateConnectionInput>;
-  where?: InputMaybe<ChannelRulesConnectionWhere>;
-};
-
 /** Fields to sort Channels by. The order in which sorts are applied is not guaranteed when specifying many fields in one ChannelSort object. */
 export type ChannelSort = {
   channelBannerURL?: InputMaybe<SortDirection>;
@@ -2015,6 +1868,7 @@ export type ChannelSort = {
   description?: InputMaybe<SortDirection>;
   displayName?: InputMaybe<SortDirection>;
   locked?: InputMaybe<SortDirection>;
+  rules?: InputMaybe<SortDirection>;
   uniqueName?: InputMaybe<SortDirection>;
 };
 
@@ -2149,7 +2003,6 @@ export type ChannelUpdateInput = {
   Issues?: InputMaybe<Array<ChannelIssuesUpdateFieldInput>>;
   Moderators?: InputMaybe<Array<ChannelModeratorsUpdateFieldInput>>;
   RelatedChannels?: InputMaybe<Array<ChannelRelatedChannelsUpdateFieldInput>>;
-  Rules?: InputMaybe<Array<ChannelRulesUpdateFieldInput>>;
   Tags?: InputMaybe<Array<ChannelTagsUpdateFieldInput>>;
   channelBannerURL?: InputMaybe<Scalars['String']['input']>;
   channelIconURL?: InputMaybe<Scalars['String']['input']>;
@@ -2158,6 +2011,7 @@ export type ChannelUpdateInput = {
   description?: InputMaybe<Scalars['String']['input']>;
   displayName?: InputMaybe<Scalars['String']['input']>;
   locked?: InputMaybe<Scalars['Boolean']['input']>;
+  rules?: InputMaybe<Scalars['JSON']['input']>;
   uniqueName?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -2311,23 +2165,6 @@ export type ChannelWhere = {
   RelatedChannels_SINGLE?: InputMaybe<ChannelWhere>;
   /** Return Channels where some of the related Channels match this filter */
   RelatedChannels_SOME?: InputMaybe<ChannelWhere>;
-  RulesAggregate?: InputMaybe<ChannelRulesAggregateInput>;
-  /** Return Channels where all of the related ChannelRulesConnections match this filter */
-  RulesConnection_ALL?: InputMaybe<ChannelRulesConnectionWhere>;
-  /** Return Channels where none of the related ChannelRulesConnections match this filter */
-  RulesConnection_NONE?: InputMaybe<ChannelRulesConnectionWhere>;
-  /** Return Channels where one of the related ChannelRulesConnections match this filter */
-  RulesConnection_SINGLE?: InputMaybe<ChannelRulesConnectionWhere>;
-  /** Return Channels where some of the related ChannelRulesConnections match this filter */
-  RulesConnection_SOME?: InputMaybe<ChannelRulesConnectionWhere>;
-  /** Return Channels where all of the related Rules match this filter */
-  Rules_ALL?: InputMaybe<RuleWhere>;
-  /** Return Channels where none of the related Rules match this filter */
-  Rules_NONE?: InputMaybe<RuleWhere>;
-  /** Return Channels where one of the related Rules match this filter */
-  Rules_SINGLE?: InputMaybe<RuleWhere>;
-  /** Return Channels where some of the related Rules match this filter */
-  Rules_SOME?: InputMaybe<RuleWhere>;
   TagsAggregate?: InputMaybe<ChannelTagsAggregateInput>;
   /** Return Channels where all of the related ChannelTagsConnections match this filter */
   TagsConnection_ALL?: InputMaybe<ChannelTagsConnectionWhere>;
@@ -2377,6 +2214,8 @@ export type ChannelWhere = {
   displayName_MATCHES?: InputMaybe<Scalars['String']['input']>;
   displayName_STARTS_WITH?: InputMaybe<Scalars['String']['input']>;
   locked?: InputMaybe<Scalars['Boolean']['input']>;
+  rules?: InputMaybe<Scalars['JSON']['input']>;
+  rules_IN?: InputMaybe<Array<InputMaybe<Scalars['JSON']['input']>>>;
   uniqueName?: InputMaybe<Scalars['String']['input']>;
   uniqueName_CONTAINS?: InputMaybe<Scalars['String']['input']>;
   uniqueName_ENDS_WITH?: InputMaybe<Scalars['String']['input']>;
@@ -5750,12 +5589,6 @@ export type CreateRepeatEveriesMutationResponse = {
   __typename?: 'CreateRepeatEveriesMutationResponse';
   info: CreateInfo;
   repeatEveries: Array<RepeatEvery>;
-};
-
-export type CreateRulesMutationResponse = {
-  __typename?: 'CreateRulesMutationResponse';
-  info: CreateInfo;
-  rules: Array<Rule>;
 };
 
 export type CreateServerConfigsMutationResponse = {
@@ -15358,7 +15191,6 @@ export type Mutation = {
   createRedditSubmissions: CreateRedditSubmissionsMutationResponse;
   createRepeatEnds: CreateRepeatEndsMutationResponse;
   createRepeatEveries: CreateRepeatEveriesMutationResponse;
-  createRules: CreateRulesMutationResponse;
   createServerConfigs: CreateServerConfigsMutationResponse;
   createServerRoles: CreateServerRolesMutationResponse;
   createSignedStorageURL?: Maybe<SignedUrl>;
@@ -15392,7 +15224,6 @@ export type Mutation = {
   deleteRedditSubmissions: DeleteInfo;
   deleteRepeatEnds: DeleteInfo;
   deleteRepeatEveries: DeleteInfo;
-  deleteRules: DeleteInfo;
   deleteServerConfigs: DeleteInfo;
   deleteServerRoles: DeleteInfo;
   deleteSignedUrls: DeleteInfo;
@@ -15431,7 +15262,6 @@ export type Mutation = {
   updateRedditSubmissions: UpdateRedditSubmissionsMutationResponse;
   updateRepeatEnds: UpdateRepeatEndsMutationResponse;
   updateRepeatEveries: UpdateRepeatEveriesMutationResponse;
-  updateRules: UpdateRulesMutationResponse;
   updateServerConfigs: UpdateServerConfigsMutationResponse;
   updateServerRoles: UpdateServerRolesMutationResponse;
   updateSignedUrls: UpdateSignedUrlsMutationResponse;
@@ -15594,11 +15424,6 @@ export type MutationCreateRepeatEndsArgs = {
 
 export type MutationCreateRepeatEveriesArgs = {
   input: Array<RepeatEveryCreateInput>;
-};
-
-
-export type MutationCreateRulesArgs = {
-  input: Array<RuleCreateInput>;
 };
 
 
@@ -15778,11 +15603,6 @@ export type MutationDeleteRepeatEndsArgs = {
 
 export type MutationDeleteRepeatEveriesArgs = {
   where?: InputMaybe<RepeatEveryWhere>;
-};
-
-
-export type MutationDeleteRulesArgs = {
-  where?: InputMaybe<RuleWhere>;
 };
 
 
@@ -16080,12 +15900,6 @@ export type MutationUpdateRepeatEveriesArgs = {
 };
 
 
-export type MutationUpdateRulesArgs = {
-  update?: InputMaybe<RuleUpdateInput>;
-  where?: InputMaybe<RuleWhere>;
-};
-
-
 export type MutationUpdateServerConfigsArgs = {
   connect?: InputMaybe<ServerConfigConnectInput>;
   connectOrCreate?: InputMaybe<ServerConfigConnectOrCreateInput>;
@@ -16271,9 +16085,6 @@ export type Query = {
   repeatEveries: Array<RepeatEvery>;
   repeatEveriesAggregate: RepeatEveryAggregateSelection;
   repeatEveriesConnection: RepeatEveriesConnection;
-  rules: Array<Rule>;
-  rulesAggregate: RuleAggregateSelection;
-  rulesConnection: RulesConnection;
   serverConfigs: Array<ServerConfig>;
   serverConfigsAggregate: ServerConfigAggregateSelection;
   serverConfigsConnection: ServerConfigsConnection;
@@ -16824,25 +16635,6 @@ export type QueryRepeatEveriesConnectionArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<Array<InputMaybe<RepeatEverySort>>>;
   where?: InputMaybe<RepeatEveryWhere>;
-};
-
-
-export type QueryRulesArgs = {
-  options?: InputMaybe<RuleOptions>;
-  where?: InputMaybe<RuleWhere>;
-};
-
-
-export type QueryRulesAggregateArgs = {
-  where?: InputMaybe<RuleWhere>;
-};
-
-
-export type QueryRulesConnectionArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  sort?: InputMaybe<Array<InputMaybe<RuleSort>>>;
-  where?: InputMaybe<RuleWhere>;
 };
 
 
@@ -17771,77 +17563,6 @@ export enum RepeatUnit {
   Week = 'WEEK',
   Year = 'YEAR'
 }
-
-export type Rule = {
-  __typename?: 'Rule';
-  description?: Maybe<Scalars['String']['output']>;
-  summary?: Maybe<Scalars['String']['output']>;
-};
-
-export type RuleAggregateSelection = {
-  __typename?: 'RuleAggregateSelection';
-  count: Scalars['Int']['output'];
-  description: StringAggregateSelectionNullable;
-  summary: StringAggregateSelectionNullable;
-};
-
-export type RuleConnectWhere = {
-  node: RuleWhere;
-};
-
-export type RuleCreateInput = {
-  description?: InputMaybe<Scalars['String']['input']>;
-  summary?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type RuleEdge = {
-  __typename?: 'RuleEdge';
-  cursor: Scalars['String']['output'];
-  node: Rule;
-};
-
-export type RuleOptions = {
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  /** Specify one or more RuleSort objects to sort Rules by. The sorts will be applied in the order in which they are arranged in the array. */
-  sort?: InputMaybe<Array<RuleSort>>;
-};
-
-/** Fields to sort Rules by. The order in which sorts are applied is not guaranteed when specifying many fields in one RuleSort object. */
-export type RuleSort = {
-  description?: InputMaybe<SortDirection>;
-  summary?: InputMaybe<SortDirection>;
-};
-
-export type RuleUpdateInput = {
-  description?: InputMaybe<Scalars['String']['input']>;
-  summary?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type RuleWhere = {
-  AND?: InputMaybe<Array<RuleWhere>>;
-  NOT?: InputMaybe<RuleWhere>;
-  OR?: InputMaybe<Array<RuleWhere>>;
-  description?: InputMaybe<Scalars['String']['input']>;
-  description_CONTAINS?: InputMaybe<Scalars['String']['input']>;
-  description_ENDS_WITH?: InputMaybe<Scalars['String']['input']>;
-  description_IN?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  description_MATCHES?: InputMaybe<Scalars['String']['input']>;
-  description_STARTS_WITH?: InputMaybe<Scalars['String']['input']>;
-  summary?: InputMaybe<Scalars['String']['input']>;
-  summary_CONTAINS?: InputMaybe<Scalars['String']['input']>;
-  summary_ENDS_WITH?: InputMaybe<Scalars['String']['input']>;
-  summary_IN?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  summary_MATCHES?: InputMaybe<Scalars['String']['input']>;
-  summary_STARTS_WITH?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type RulesConnection = {
-  __typename?: 'RulesConnection';
-  edges: Array<RuleEdge>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int']['output'];
-};
 
 export type ServerConfig = {
   __typename?: 'ServerConfig';
@@ -20272,12 +19993,6 @@ export type UpdateRepeatEveriesMutationResponse = {
   __typename?: 'UpdateRepeatEveriesMutationResponse';
   info: UpdateInfo;
   repeatEveries: Array<RepeatEvery>;
-};
-
-export type UpdateRulesMutationResponse = {
-  __typename?: 'UpdateRulesMutationResponse';
-  info: UpdateInfo;
-  rules: Array<Rule>;
 };
 
 export type UpdateServerConfigsMutationResponse = {
@@ -24935,21 +24650,6 @@ export type ResolversTypes = {
   ChannelRoleUpdateInput: ChannelRoleUpdateInput;
   ChannelRoleWhere: ChannelRoleWhere;
   ChannelRolesConnection: ResolverTypeWrapper<ChannelRolesConnection>;
-  ChannelRuleRulesAggregationSelection: ResolverTypeWrapper<ChannelRuleRulesAggregationSelection>;
-  ChannelRuleRulesNodeAggregateSelection: ResolverTypeWrapper<ChannelRuleRulesNodeAggregateSelection>;
-  ChannelRulesAggregateInput: ChannelRulesAggregateInput;
-  ChannelRulesConnectFieldInput: ChannelRulesConnectFieldInput;
-  ChannelRulesConnection: ResolverTypeWrapper<ChannelRulesConnection>;
-  ChannelRulesConnectionSort: ChannelRulesConnectionSort;
-  ChannelRulesConnectionWhere: ChannelRulesConnectionWhere;
-  ChannelRulesCreateFieldInput: ChannelRulesCreateFieldInput;
-  ChannelRulesDeleteFieldInput: ChannelRulesDeleteFieldInput;
-  ChannelRulesDisconnectFieldInput: ChannelRulesDisconnectFieldInput;
-  ChannelRulesFieldInput: ChannelRulesFieldInput;
-  ChannelRulesNodeAggregationWhereInput: ChannelRulesNodeAggregationWhereInput;
-  ChannelRulesRelationship: ResolverTypeWrapper<ChannelRulesRelationship>;
-  ChannelRulesUpdateConnectionInput: ChannelRulesUpdateConnectionInput;
-  ChannelRulesUpdateFieldInput: ChannelRulesUpdateFieldInput;
   ChannelSort: ChannelSort;
   ChannelTagTagsAggregationSelection: ResolverTypeWrapper<ChannelTagTagsAggregationSelection>;
   ChannelTagTagsNodeAggregateSelection: ResolverTypeWrapper<ChannelTagTagsNodeAggregateSelection>;
@@ -25250,7 +24950,6 @@ export type ResolversTypes = {
   CreateRedditSubmissionsMutationResponse: ResolverTypeWrapper<CreateRedditSubmissionsMutationResponse>;
   CreateRepeatEndsMutationResponse: ResolverTypeWrapper<CreateRepeatEndsMutationResponse>;
   CreateRepeatEveriesMutationResponse: ResolverTypeWrapper<CreateRepeatEveriesMutationResponse>;
-  CreateRulesMutationResponse: ResolverTypeWrapper<CreateRulesMutationResponse>;
   CreateServerConfigsMutationResponse: ResolverTypeWrapper<CreateServerConfigsMutationResponse>;
   CreateServerRolesMutationResponse: ResolverTypeWrapper<CreateServerRolesMutationResponse>;
   CreateSignedUrlsMutationResponse: ResolverTypeWrapper<CreateSignedUrlsMutationResponse>;
@@ -26112,16 +25811,6 @@ export type ResolversTypes = {
   RepeatEveryUpdateInput: RepeatEveryUpdateInput;
   RepeatEveryWhere: RepeatEveryWhere;
   RepeatUnit: RepeatUnit;
-  Rule: ResolverTypeWrapper<Rule>;
-  RuleAggregateSelection: ResolverTypeWrapper<RuleAggregateSelection>;
-  RuleConnectWhere: RuleConnectWhere;
-  RuleCreateInput: RuleCreateInput;
-  RuleEdge: ResolverTypeWrapper<RuleEdge>;
-  RuleOptions: RuleOptions;
-  RuleSort: RuleSort;
-  RuleUpdateInput: RuleUpdateInput;
-  RuleWhere: RuleWhere;
-  RulesConnection: ResolverTypeWrapper<RulesConnection>;
   ServerConfig: ResolverTypeWrapper<ServerConfig>;
   ServerConfigAggregateSelection: ResolverTypeWrapper<ServerConfigAggregateSelection>;
   ServerConfigChannelRoleDefaultChannelRoleAggregationSelection: ResolverTypeWrapper<ServerConfigChannelRoleDefaultChannelRoleAggregationSelection>;
@@ -26354,7 +26043,6 @@ export type ResolversTypes = {
   UpdateRedditSubmissionsMutationResponse: ResolverTypeWrapper<UpdateRedditSubmissionsMutationResponse>;
   UpdateRepeatEndsMutationResponse: ResolverTypeWrapper<UpdateRepeatEndsMutationResponse>;
   UpdateRepeatEveriesMutationResponse: ResolverTypeWrapper<UpdateRepeatEveriesMutationResponse>;
-  UpdateRulesMutationResponse: ResolverTypeWrapper<UpdateRulesMutationResponse>;
   UpdateServerConfigsMutationResponse: ResolverTypeWrapper<UpdateServerConfigsMutationResponse>;
   UpdateServerRolesMutationResponse: ResolverTypeWrapper<UpdateServerRolesMutationResponse>;
   UpdateSignedUrlsMutationResponse: ResolverTypeWrapper<UpdateSignedUrlsMutationResponse>;
@@ -26840,21 +26528,6 @@ export type ResolversParentTypes = {
   ChannelRoleUpdateInput: ChannelRoleUpdateInput;
   ChannelRoleWhere: ChannelRoleWhere;
   ChannelRolesConnection: ChannelRolesConnection;
-  ChannelRuleRulesAggregationSelection: ChannelRuleRulesAggregationSelection;
-  ChannelRuleRulesNodeAggregateSelection: ChannelRuleRulesNodeAggregateSelection;
-  ChannelRulesAggregateInput: ChannelRulesAggregateInput;
-  ChannelRulesConnectFieldInput: ChannelRulesConnectFieldInput;
-  ChannelRulesConnection: ChannelRulesConnection;
-  ChannelRulesConnectionSort: ChannelRulesConnectionSort;
-  ChannelRulesConnectionWhere: ChannelRulesConnectionWhere;
-  ChannelRulesCreateFieldInput: ChannelRulesCreateFieldInput;
-  ChannelRulesDeleteFieldInput: ChannelRulesDeleteFieldInput;
-  ChannelRulesDisconnectFieldInput: ChannelRulesDisconnectFieldInput;
-  ChannelRulesFieldInput: ChannelRulesFieldInput;
-  ChannelRulesNodeAggregationWhereInput: ChannelRulesNodeAggregationWhereInput;
-  ChannelRulesRelationship: ChannelRulesRelationship;
-  ChannelRulesUpdateConnectionInput: ChannelRulesUpdateConnectionInput;
-  ChannelRulesUpdateFieldInput: ChannelRulesUpdateFieldInput;
   ChannelSort: ChannelSort;
   ChannelTagTagsAggregationSelection: ChannelTagTagsAggregationSelection;
   ChannelTagTagsNodeAggregateSelection: ChannelTagTagsNodeAggregateSelection;
@@ -27155,7 +26828,6 @@ export type ResolversParentTypes = {
   CreateRedditSubmissionsMutationResponse: CreateRedditSubmissionsMutationResponse;
   CreateRepeatEndsMutationResponse: CreateRepeatEndsMutationResponse;
   CreateRepeatEveriesMutationResponse: CreateRepeatEveriesMutationResponse;
-  CreateRulesMutationResponse: CreateRulesMutationResponse;
   CreateServerConfigsMutationResponse: CreateServerConfigsMutationResponse;
   CreateServerRolesMutationResponse: CreateServerRolesMutationResponse;
   CreateSignedUrlsMutationResponse: CreateSignedUrlsMutationResponse;
@@ -28016,16 +27688,6 @@ export type ResolversParentTypes = {
   RepeatEverySort: RepeatEverySort;
   RepeatEveryUpdateInput: RepeatEveryUpdateInput;
   RepeatEveryWhere: RepeatEveryWhere;
-  Rule: Rule;
-  RuleAggregateSelection: RuleAggregateSelection;
-  RuleConnectWhere: RuleConnectWhere;
-  RuleCreateInput: RuleCreateInput;
-  RuleEdge: RuleEdge;
-  RuleOptions: RuleOptions;
-  RuleSort: RuleSort;
-  RuleUpdateInput: RuleUpdateInput;
-  RuleWhere: RuleWhere;
-  RulesConnection: RulesConnection;
   ServerConfig: ServerConfig;
   ServerConfigAggregateSelection: ServerConfigAggregateSelection;
   ServerConfigChannelRoleDefaultChannelRoleAggregationSelection: ServerConfigChannelRoleDefaultChannelRoleAggregationSelection;
@@ -28255,7 +27917,6 @@ export type ResolversParentTypes = {
   UpdateRedditSubmissionsMutationResponse: UpdateRedditSubmissionsMutationResponse;
   UpdateRepeatEndsMutationResponse: UpdateRepeatEndsMutationResponse;
   UpdateRepeatEveriesMutationResponse: UpdateRepeatEveriesMutationResponse;
-  UpdateRulesMutationResponse: UpdateRulesMutationResponse;
   UpdateServerConfigsMutationResponse: UpdateServerConfigsMutationResponse;
   UpdateServerRolesMutationResponse: UpdateServerRolesMutationResponse;
   UpdateSignedUrlsMutationResponse: UpdateSignedUrlsMutationResponse;
@@ -28611,9 +28272,6 @@ export type ChannelResolvers<ContextType = any, ParentType extends ResolversPare
   RelatedChannels?: Resolver<Array<ResolversTypes['Channel']>, ParentType, ContextType, RequireFields<ChannelRelatedChannelsArgs, 'directed'>>;
   RelatedChannelsAggregate?: Resolver<Maybe<ResolversTypes['ChannelChannelRelatedChannelsAggregationSelection']>, ParentType, ContextType, RequireFields<ChannelRelatedChannelsAggregateArgs, 'directed'>>;
   RelatedChannelsConnection?: Resolver<ResolversTypes['ChannelRelatedChannelsConnection'], ParentType, ContextType, RequireFields<ChannelRelatedChannelsConnectionArgs, 'directed'>>;
-  Rules?: Resolver<Array<ResolversTypes['Rule']>, ParentType, ContextType, RequireFields<ChannelRulesArgs, 'directed'>>;
-  RulesAggregate?: Resolver<Maybe<ResolversTypes['ChannelRuleRulesAggregationSelection']>, ParentType, ContextType, RequireFields<ChannelRulesAggregateArgs, 'directed'>>;
-  RulesConnection?: Resolver<ResolversTypes['ChannelRulesConnection'], ParentType, ContextType, RequireFields<ChannelRulesConnectionArgs, 'directed'>>;
   Tags?: Resolver<Array<ResolversTypes['Tag']>, ParentType, ContextType, RequireFields<ChannelTagsArgs, 'directed'>>;
   TagsAggregate?: Resolver<Maybe<ResolversTypes['ChannelTagTagsAggregationSelection']>, ParentType, ContextType, RequireFields<ChannelTagsAggregateArgs, 'directed'>>;
   TagsConnection?: Resolver<ResolversTypes['ChannelTagsConnection'], ParentType, ContextType, RequireFields<ChannelTagsConnectionArgs, 'directed'>>;
@@ -28624,6 +28282,7 @@ export type ChannelResolvers<ContextType = any, ParentType extends ResolversPare
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   displayName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   locked?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  rules?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   uniqueName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -28887,31 +28546,6 @@ export type ChannelRolesConnectionResolvers<ContextType = any, ParentType extend
   edges?: Resolver<Array<ResolversTypes['ChannelRoleEdge']>, ParentType, ContextType>;
   pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
   totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ChannelRuleRulesAggregationSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ChannelRuleRulesAggregationSelection'] = ResolversParentTypes['ChannelRuleRulesAggregationSelection']> = {
-  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  node?: Resolver<Maybe<ResolversTypes['ChannelRuleRulesNodeAggregateSelection']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ChannelRuleRulesNodeAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ChannelRuleRulesNodeAggregateSelection'] = ResolversParentTypes['ChannelRuleRulesNodeAggregateSelection']> = {
-  description?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
-  summary?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ChannelRulesConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ChannelRulesConnection'] = ResolversParentTypes['ChannelRulesConnection']> = {
-  edges?: Resolver<Array<ResolversTypes['ChannelRulesRelationship']>, ParentType, ContextType>;
-  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
-  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ChannelRulesRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['ChannelRulesRelationship'] = ResolversParentTypes['ChannelRulesRelationship']> = {
-  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  node?: Resolver<ResolversTypes['Rule'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -29626,12 +29260,6 @@ export type CreateRepeatEndsMutationResponseResolvers<ContextType = any, ParentT
 export type CreateRepeatEveriesMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateRepeatEveriesMutationResponse'] = ResolversParentTypes['CreateRepeatEveriesMutationResponse']> = {
   info?: Resolver<ResolversTypes['CreateInfo'], ParentType, ContextType>;
   repeatEveries?: Resolver<Array<ResolversTypes['RepeatEvery']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type CreateRulesMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateRulesMutationResponse'] = ResolversParentTypes['CreateRulesMutationResponse']> = {
-  info?: Resolver<ResolversTypes['CreateInfo'], ParentType, ContextType>;
-  rules?: Resolver<Array<ResolversTypes['Rule']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -31364,7 +30992,6 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createRedditSubmissions?: Resolver<ResolversTypes['CreateRedditSubmissionsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateRedditSubmissionsArgs, 'input'>>;
   createRepeatEnds?: Resolver<ResolversTypes['CreateRepeatEndsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateRepeatEndsArgs, 'input'>>;
   createRepeatEveries?: Resolver<ResolversTypes['CreateRepeatEveriesMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateRepeatEveriesArgs, 'input'>>;
-  createRules?: Resolver<ResolversTypes['CreateRulesMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateRulesArgs, 'input'>>;
   createServerConfigs?: Resolver<ResolversTypes['CreateServerConfigsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateServerConfigsArgs, 'input'>>;
   createServerRoles?: Resolver<ResolversTypes['CreateServerRolesMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateServerRolesArgs, 'input'>>;
   createSignedStorageURL?: Resolver<Maybe<ResolversTypes['SignedURL']>, ParentType, ContextType, RequireFields<MutationCreateSignedStorageUrlArgs, 'contentType' | 'filename'>>;
@@ -31398,7 +31025,6 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteRedditSubmissions?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteRedditSubmissionsArgs>>;
   deleteRepeatEnds?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteRepeatEndsArgs>>;
   deleteRepeatEveries?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteRepeatEveriesArgs>>;
-  deleteRules?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteRulesArgs>>;
   deleteServerConfigs?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteServerConfigsArgs>>;
   deleteServerRoles?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteServerRolesArgs>>;
   deleteSignedUrls?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteSignedUrlsArgs>>;
@@ -31437,7 +31063,6 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   updateRedditSubmissions?: Resolver<ResolversTypes['UpdateRedditSubmissionsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateRedditSubmissionsArgs>>;
   updateRepeatEnds?: Resolver<ResolversTypes['UpdateRepeatEndsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateRepeatEndsArgs>>;
   updateRepeatEveries?: Resolver<ResolversTypes['UpdateRepeatEveriesMutationResponse'], ParentType, ContextType, Partial<MutationUpdateRepeatEveriesArgs>>;
-  updateRules?: Resolver<ResolversTypes['UpdateRulesMutationResponse'], ParentType, ContextType, Partial<MutationUpdateRulesArgs>>;
   updateServerConfigs?: Resolver<ResolversTypes['UpdateServerConfigsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateServerConfigsArgs>>;
   updateServerRoles?: Resolver<ResolversTypes['UpdateServerRolesMutationResponse'], ParentType, ContextType, Partial<MutationUpdateServerRolesArgs>>;
   updateSignedUrls?: Resolver<ResolversTypes['UpdateSignedUrlsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateSignedUrlsArgs>>;
@@ -31549,9 +31174,6 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   repeatEveries?: Resolver<Array<ResolversTypes['RepeatEvery']>, ParentType, ContextType, Partial<QueryRepeatEveriesArgs>>;
   repeatEveriesAggregate?: Resolver<ResolversTypes['RepeatEveryAggregateSelection'], ParentType, ContextType, Partial<QueryRepeatEveriesAggregateArgs>>;
   repeatEveriesConnection?: Resolver<ResolversTypes['RepeatEveriesConnection'], ParentType, ContextType, Partial<QueryRepeatEveriesConnectionArgs>>;
-  rules?: Resolver<Array<ResolversTypes['Rule']>, ParentType, ContextType, Partial<QueryRulesArgs>>;
-  rulesAggregate?: Resolver<ResolversTypes['RuleAggregateSelection'], ParentType, ContextType, Partial<QueryRulesAggregateArgs>>;
-  rulesConnection?: Resolver<ResolversTypes['RulesConnection'], ParentType, ContextType, Partial<QueryRulesConnectionArgs>>;
   serverConfigs?: Resolver<Array<ResolversTypes['ServerConfig']>, ParentType, ContextType, Partial<QueryServerConfigsArgs>>;
   serverConfigsAggregate?: Resolver<ResolversTypes['ServerConfigAggregateSelection'], ParentType, ContextType, Partial<QueryServerConfigsAggregateArgs>>;
   serverConfigsConnection?: Resolver<ResolversTypes['ServerConfigsConnection'], ParentType, ContextType, Partial<QueryServerConfigsConnectionArgs>>;
@@ -31741,32 +31363,6 @@ export type RepeatEveryAggregateSelectionResolvers<ContextType = any, ParentType
 export type RepeatEveryEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['RepeatEveryEdge'] = ResolversParentTypes['RepeatEveryEdge']> = {
   cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   node?: Resolver<ResolversTypes['RepeatEvery'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type RuleResolvers<ContextType = any, ParentType extends ResolversParentTypes['Rule'] = ResolversParentTypes['Rule']> = {
-  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  summary?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type RuleAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['RuleAggregateSelection'] = ResolversParentTypes['RuleAggregateSelection']> = {
-  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  description?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
-  summary?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type RuleEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['RuleEdge'] = ResolversParentTypes['RuleEdge']> = {
-  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  node?: Resolver<ResolversTypes['Rule'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type RulesConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['RulesConnection'] = ResolversParentTypes['RulesConnection']> = {
-  edges?: Resolver<Array<ResolversTypes['RuleEdge']>, ParentType, ContextType>;
-  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
-  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -32361,12 +31957,6 @@ export type UpdateRepeatEndsMutationResponseResolvers<ContextType = any, ParentT
 export type UpdateRepeatEveriesMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateRepeatEveriesMutationResponse'] = ResolversParentTypes['UpdateRepeatEveriesMutationResponse']> = {
   info?: Resolver<ResolversTypes['UpdateInfo'], ParentType, ContextType>;
   repeatEveries?: Resolver<Array<ResolversTypes['RepeatEvery']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type UpdateRulesMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateRulesMutationResponse'] = ResolversParentTypes['UpdateRulesMutationResponse']> = {
-  info?: Resolver<ResolversTypes['UpdateInfo'], ParentType, ContextType>;
-  rules?: Resolver<Array<ResolversTypes['Rule']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -33100,10 +32690,6 @@ export type Resolvers<ContextType = any> = {
   ChannelRoleAggregateSelection?: ChannelRoleAggregateSelectionResolvers<ContextType>;
   ChannelRoleEdge?: ChannelRoleEdgeResolvers<ContextType>;
   ChannelRolesConnection?: ChannelRolesConnectionResolvers<ContextType>;
-  ChannelRuleRulesAggregationSelection?: ChannelRuleRulesAggregationSelectionResolvers<ContextType>;
-  ChannelRuleRulesNodeAggregateSelection?: ChannelRuleRulesNodeAggregateSelectionResolvers<ContextType>;
-  ChannelRulesConnection?: ChannelRulesConnectionResolvers<ContextType>;
-  ChannelRulesRelationship?: ChannelRulesRelationshipResolvers<ContextType>;
   ChannelTagTagsAggregationSelection?: ChannelTagTagsAggregationSelectionResolvers<ContextType>;
   ChannelTagTagsNodeAggregateSelection?: ChannelTagTagsNodeAggregateSelectionResolvers<ContextType>;
   ChannelTagsConnection?: ChannelTagsConnectionResolvers<ContextType>;
@@ -33200,7 +32786,6 @@ export type Resolvers<ContextType = any> = {
   CreateRedditSubmissionsMutationResponse?: CreateRedditSubmissionsMutationResponseResolvers<ContextType>;
   CreateRepeatEndsMutationResponse?: CreateRepeatEndsMutationResponseResolvers<ContextType>;
   CreateRepeatEveriesMutationResponse?: CreateRepeatEveriesMutationResponseResolvers<ContextType>;
-  CreateRulesMutationResponse?: CreateRulesMutationResponseResolvers<ContextType>;
   CreateServerConfigsMutationResponse?: CreateServerConfigsMutationResponseResolvers<ContextType>;
   CreateServerRolesMutationResponse?: CreateServerRolesMutationResponseResolvers<ContextType>;
   CreateSignedUrlsMutationResponse?: CreateSignedUrlsMutationResponseResolvers<ContextType>;
@@ -33441,10 +33026,6 @@ export type Resolvers<ContextType = any> = {
   RepeatEvery?: RepeatEveryResolvers<ContextType>;
   RepeatEveryAggregateSelection?: RepeatEveryAggregateSelectionResolvers<ContextType>;
   RepeatEveryEdge?: RepeatEveryEdgeResolvers<ContextType>;
-  Rule?: RuleResolvers<ContextType>;
-  RuleAggregateSelection?: RuleAggregateSelectionResolvers<ContextType>;
-  RuleEdge?: RuleEdgeResolvers<ContextType>;
-  RulesConnection?: RulesConnectionResolvers<ContextType>;
   ServerConfig?: ServerConfigResolvers<ContextType>;
   ServerConfigAggregateSelection?: ServerConfigAggregateSelectionResolvers<ContextType>;
   ServerConfigChannelRoleDefaultChannelRoleAggregationSelection?: ServerConfigChannelRoleDefaultChannelRoleAggregationSelectionResolvers<ContextType>;
@@ -33529,7 +33110,6 @@ export type Resolvers<ContextType = any> = {
   UpdateRedditSubmissionsMutationResponse?: UpdateRedditSubmissionsMutationResponseResolvers<ContextType>;
   UpdateRepeatEndsMutationResponse?: UpdateRepeatEndsMutationResponseResolvers<ContextType>;
   UpdateRepeatEveriesMutationResponse?: UpdateRepeatEveriesMutationResponseResolvers<ContextType>;
-  UpdateRulesMutationResponse?: UpdateRulesMutationResponseResolvers<ContextType>;
   UpdateServerConfigsMutationResponse?: UpdateServerConfigsMutationResponseResolvers<ContextType>;
   UpdateServerRolesMutationResponse?: UpdateServerRolesMutationResponseResolvers<ContextType>;
   UpdateSignedUrlsMutationResponse?: UpdateSignedUrlsMutationResponseResolvers<ContextType>;
