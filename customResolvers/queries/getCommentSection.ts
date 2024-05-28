@@ -24,6 +24,11 @@ const discussionChannelSelectionSet = `
             commentKarma
             createdAt
             discussionKarma
+            ... on User {
+                ServerRoles {
+                  showAdminTag
+                }
+              }
         }
     }
     CommentsAggregate {

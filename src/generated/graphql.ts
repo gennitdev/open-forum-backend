@@ -2006,7 +2006,6 @@ export type ChannelUpdateInput = {
   Tags?: InputMaybe<Array<ChannelTagsUpdateFieldInput>>;
   channelBannerURL?: InputMaybe<Scalars['String']['input']>;
   channelIconURL?: InputMaybe<Scalars['String']['input']>;
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   deleted?: InputMaybe<Scalars['Boolean']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   displayName?: InputMaybe<Scalars['String']['input']>;
@@ -3174,7 +3173,6 @@ export type CommentCreateInput = {
   emoji?: InputMaybe<Scalars['JSON']['input']>;
   isRootComment: Scalars['Boolean']['input'];
   text?: InputMaybe<Scalars['String']['input']>;
-  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
   weightedVotesCount?: InputMaybe<Scalars['Float']['input']>;
 };
 
@@ -4965,7 +4963,6 @@ export type CommentUpdateInput = {
   ParentComment?: InputMaybe<CommentParentCommentUpdateFieldInput>;
   Tags?: InputMaybe<Array<CommentTagsUpdateFieldInput>>;
   UpvotedByUsers?: InputMaybe<Array<CommentUpvotedByUsersUpdateFieldInput>>;
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   deleted?: InputMaybe<Scalars['Boolean']['input']>;
   emoji?: InputMaybe<Scalars['JSON']['input']>;
   isRootComment?: InputMaybe<Scalars['Boolean']['input']>;
@@ -6825,7 +6822,6 @@ export type DiscussionChannelUpdateInput = {
   Discussion?: InputMaybe<DiscussionChannelDiscussionUpdateFieldInput>;
   UpvotedByUsers?: InputMaybe<Array<DiscussionChannelUpvotedByUsersUpdateFieldInput>>;
   channelUniqueName?: InputMaybe<Scalars['String']['input']>;
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   discussionId?: InputMaybe<Scalars['ID']['input']>;
   emoji?: InputMaybe<Scalars['JSON']['input']>;
   locked?: InputMaybe<Scalars['Boolean']['input']>;
@@ -7264,7 +7260,6 @@ export type DiscussionCreateInput = {
   body?: InputMaybe<Scalars['String']['input']>;
   deleted?: InputMaybe<Scalars['Boolean']['input']>;
   title: Scalars['String']['input'];
-  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
 };
 
 export type DiscussionDeleteInput = {
@@ -7904,7 +7899,6 @@ export type DiscussionUpdateInput = {
   RelatedIssues?: InputMaybe<Array<DiscussionRelatedIssuesUpdateFieldInput>>;
   Tags?: InputMaybe<Array<DiscussionTagsUpdateFieldInput>>;
   body?: InputMaybe<Scalars['String']['input']>;
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   deleted?: InputMaybe<Scalars['Boolean']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
 };
@@ -8834,7 +8828,6 @@ export type EmojiSort = {
 
 export type EmojiUpdateInput = {
   PostedByUser?: InputMaybe<EmojiPostedByUserUpdateFieldInput>;
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -9923,7 +9916,6 @@ export type EventChannelUpdateInput = {
   Comments?: InputMaybe<Array<EventChannelCommentsUpdateFieldInput>>;
   Event?: InputMaybe<EventChannelEventUpdateFieldInput>;
   channelUniqueName?: InputMaybe<Scalars['String']['input']>;
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   eventId?: InputMaybe<Scalars['ID']['input']>;
   locked?: InputMaybe<Scalars['Boolean']['input']>;
 };
@@ -10248,7 +10240,6 @@ export type EventCreateInput = {
   startTimeDayOfWeek?: InputMaybe<Scalars['String']['input']>;
   startTimeHourOfDay?: InputMaybe<Scalars['Int']['input']>;
   title: Scalars['String']['input'];
-  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
   virtualEventUrl?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -11258,7 +11249,6 @@ export type EventUpdateInput = {
   canceled?: InputMaybe<Scalars['Boolean']['input']>;
   cost?: InputMaybe<Scalars['String']['input']>;
   coverImageURL?: InputMaybe<Scalars['String']['input']>;
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   deleted?: InputMaybe<Scalars['Boolean']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   endTime?: InputMaybe<Scalars['DateTime']['input']>;
@@ -12815,7 +12805,6 @@ export type IssueCreateInput = {
   relatedDiscussionId?: InputMaybe<Scalars['ID']['input']>;
   relatedEventId?: InputMaybe<Scalars['ID']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
-  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
 };
 
 export type IssueDeleteInput = {
@@ -12885,7 +12874,6 @@ export type IssueUpdateInput = {
   authorName?: InputMaybe<Scalars['String']['input']>;
   body?: InputMaybe<Scalars['String']['input']>;
   channelUniqueName?: InputMaybe<Scalars['String']['input']>;
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   isOpen?: InputMaybe<Scalars['Boolean']['input']>;
   relatedCommentId?: InputMaybe<Scalars['ID']['input']>;
   relatedDiscussionId?: InputMaybe<Scalars['ID']['input']>;
@@ -13707,7 +13695,6 @@ export type ModerationActionUpdateInput = {
   ModerationProfile?: InputMaybe<ModerationActionModerationProfileUpdateFieldInput>;
   actionDescription?: InputMaybe<Scalars['String']['input']>;
   actionType?: InputMaybe<Scalars['String']['input']>;
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
 };
 
 export type ModerationActionWhere = {
@@ -14742,7 +14729,6 @@ export type ModerationProfileUpdateInput = {
   ModChannelRoles?: InputMaybe<Array<ModerationProfileModChannelRolesUpdateFieldInput>>;
   ModServerRoles?: InputMaybe<Array<ModerationProfileModServerRolesUpdateFieldInput>>;
   User?: InputMaybe<ModerationProfileUserUpdateFieldInput>;
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   displayName?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -18189,6 +18175,7 @@ export type ServerRole = {
   canUpvoteDiscussion?: Maybe<Scalars['Boolean']['output']>;
   description?: Maybe<Scalars['String']['output']>;
   name?: Maybe<Scalars['String']['output']>;
+  showAdminTag?: Maybe<Scalars['Boolean']['output']>;
 };
 
 export type ServerRoleAggregateSelection = {
@@ -18217,6 +18204,7 @@ export type ServerRoleCreateInput = {
   canUpvoteDiscussion?: InputMaybe<Scalars['Boolean']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
+  showAdminTag?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type ServerRoleEdge = {
@@ -18236,6 +18224,7 @@ export type ServerRoleOnCreateInput = {
   canUpvoteDiscussion?: InputMaybe<Scalars['Boolean']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
+  showAdminTag?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type ServerRoleOptions = {
@@ -18257,6 +18246,7 @@ export type ServerRoleSort = {
   canUpvoteDiscussion?: InputMaybe<SortDirection>;
   description?: InputMaybe<SortDirection>;
   name?: InputMaybe<SortDirection>;
+  showAdminTag?: InputMaybe<SortDirection>;
 };
 
 export type ServerRoleUniqueWhere = {
@@ -18274,6 +18264,7 @@ export type ServerRoleUpdateInput = {
   canUpvoteDiscussion?: InputMaybe<Scalars['Boolean']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
+  showAdminTag?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type ServerRoleWhere = {
@@ -18300,6 +18291,7 @@ export type ServerRoleWhere = {
   name_IN?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   name_MATCHES?: InputMaybe<Scalars['String']['input']>;
   name_STARTS_WITH?: InputMaybe<Scalars['String']['input']>;
+  showAdminTag?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type ServerRolesConnection = {
@@ -23754,7 +23746,6 @@ export type UserUpdateInput = {
   commentKarma?: InputMaybe<Scalars['Int']['input']>;
   commentKarma_DECREMENT?: InputMaybe<Scalars['Int']['input']>;
   commentKarma_INCREMENT?: InputMaybe<Scalars['Int']['input']>;
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   deleted?: InputMaybe<Scalars['Boolean']['input']>;
   discussionKarma?: InputMaybe<Scalars['Int']['input']>;
   discussionKarma_DECREMENT?: InputMaybe<Scalars['Int']['input']>;
@@ -31490,6 +31481,7 @@ export type ServerRoleResolvers<ContextType = any, ParentType extends ResolversP
   canUpvoteDiscussion?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  showAdminTag?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
