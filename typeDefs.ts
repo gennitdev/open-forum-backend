@@ -356,7 +356,6 @@ const typeDefinitions = gql`
     upvoteDiscussionChannel(discussionChannelId: ID!, username: String!): DiscussionChannel
     undoUpvoteDiscussionChannel(discussionChannelId: ID!, username: String!): DiscussionChannel
     createSignedStorageURL(filename: String!, contentType: String!): SignedURL
-    updateChannelRules(channelUniqueName: String!, rules: [RuleInput!]!): Channel
   }
 
   input SiteWideDiscussionSortOrder {
