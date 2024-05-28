@@ -459,6 +459,7 @@ const typeDefinitions = gql`
     canUpvoteComment: Boolean
     canUploadFile: Boolean
     canGiveFeedback: Boolean
+    showAdminTag: Boolean
   }
 
   type ChannelRole {
