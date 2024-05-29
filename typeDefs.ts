@@ -472,8 +472,8 @@ const typeDefinitions = gql`
     canUpvoteDiscussion: Boolean
     canUpvoteComment: Boolean
     canUploadFile: Boolean
-    canGiveFeedback: Boolean
     canUpdateChannel: Boolean
+    showModTag: Boolean
   }
 
   type ModChannelRole {

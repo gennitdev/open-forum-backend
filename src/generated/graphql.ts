@@ -1720,7 +1720,6 @@ export type ChannelRole = {
   canCreateComment?: Maybe<Scalars['Boolean']['output']>;
   canCreateDiscussion?: Maybe<Scalars['Boolean']['output']>;
   canCreateEvent?: Maybe<Scalars['Boolean']['output']>;
-  canGiveFeedback?: Maybe<Scalars['Boolean']['output']>;
   canUpdateChannel?: Maybe<Scalars['Boolean']['output']>;
   canUploadFile?: Maybe<Scalars['Boolean']['output']>;
   canUpvoteComment?: Maybe<Scalars['Boolean']['output']>;
@@ -1728,6 +1727,7 @@ export type ChannelRole = {
   channelUniqueName?: Maybe<Scalars['String']['output']>;
   description?: Maybe<Scalars['String']['output']>;
   name?: Maybe<Scalars['String']['output']>;
+  showModTag?: Maybe<Scalars['Boolean']['output']>;
 };
 
 export type ChannelRoleAggregateSelection = {
@@ -1750,7 +1750,6 @@ export type ChannelRoleCreateInput = {
   canCreateComment?: InputMaybe<Scalars['Boolean']['input']>;
   canCreateDiscussion?: InputMaybe<Scalars['Boolean']['input']>;
   canCreateEvent?: InputMaybe<Scalars['Boolean']['input']>;
-  canGiveFeedback?: InputMaybe<Scalars['Boolean']['input']>;
   canUpdateChannel?: InputMaybe<Scalars['Boolean']['input']>;
   canUploadFile?: InputMaybe<Scalars['Boolean']['input']>;
   canUpvoteComment?: InputMaybe<Scalars['Boolean']['input']>;
@@ -1758,6 +1757,7 @@ export type ChannelRoleCreateInput = {
   channelUniqueName?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
+  showModTag?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type ChannelRoleEdge = {
@@ -1770,7 +1770,6 @@ export type ChannelRoleOnCreateInput = {
   canCreateComment?: InputMaybe<Scalars['Boolean']['input']>;
   canCreateDiscussion?: InputMaybe<Scalars['Boolean']['input']>;
   canCreateEvent?: InputMaybe<Scalars['Boolean']['input']>;
-  canGiveFeedback?: InputMaybe<Scalars['Boolean']['input']>;
   canUpdateChannel?: InputMaybe<Scalars['Boolean']['input']>;
   canUploadFile?: InputMaybe<Scalars['Boolean']['input']>;
   canUpvoteComment?: InputMaybe<Scalars['Boolean']['input']>;
@@ -1778,6 +1777,7 @@ export type ChannelRoleOnCreateInput = {
   channelUniqueName?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
+  showModTag?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type ChannelRoleOptions = {
@@ -1792,7 +1792,6 @@ export type ChannelRoleSort = {
   canCreateComment?: InputMaybe<SortDirection>;
   canCreateDiscussion?: InputMaybe<SortDirection>;
   canCreateEvent?: InputMaybe<SortDirection>;
-  canGiveFeedback?: InputMaybe<SortDirection>;
   canUpdateChannel?: InputMaybe<SortDirection>;
   canUploadFile?: InputMaybe<SortDirection>;
   canUpvoteComment?: InputMaybe<SortDirection>;
@@ -1800,6 +1799,7 @@ export type ChannelRoleSort = {
   channelUniqueName?: InputMaybe<SortDirection>;
   description?: InputMaybe<SortDirection>;
   name?: InputMaybe<SortDirection>;
+  showModTag?: InputMaybe<SortDirection>;
 };
 
 export type ChannelRoleUniqueWhere = {
@@ -1810,7 +1810,6 @@ export type ChannelRoleUpdateInput = {
   canCreateComment?: InputMaybe<Scalars['Boolean']['input']>;
   canCreateDiscussion?: InputMaybe<Scalars['Boolean']['input']>;
   canCreateEvent?: InputMaybe<Scalars['Boolean']['input']>;
-  canGiveFeedback?: InputMaybe<Scalars['Boolean']['input']>;
   canUpdateChannel?: InputMaybe<Scalars['Boolean']['input']>;
   canUploadFile?: InputMaybe<Scalars['Boolean']['input']>;
   canUpvoteComment?: InputMaybe<Scalars['Boolean']['input']>;
@@ -1818,6 +1817,7 @@ export type ChannelRoleUpdateInput = {
   channelUniqueName?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
+  showModTag?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type ChannelRoleWhere = {
@@ -1827,7 +1827,6 @@ export type ChannelRoleWhere = {
   canCreateComment?: InputMaybe<Scalars['Boolean']['input']>;
   canCreateDiscussion?: InputMaybe<Scalars['Boolean']['input']>;
   canCreateEvent?: InputMaybe<Scalars['Boolean']['input']>;
-  canGiveFeedback?: InputMaybe<Scalars['Boolean']['input']>;
   canUpdateChannel?: InputMaybe<Scalars['Boolean']['input']>;
   canUploadFile?: InputMaybe<Scalars['Boolean']['input']>;
   canUpvoteComment?: InputMaybe<Scalars['Boolean']['input']>;
@@ -1850,6 +1849,7 @@ export type ChannelRoleWhere = {
   name_IN?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   name_MATCHES?: InputMaybe<Scalars['String']['input']>;
   name_STARTS_WITH?: InputMaybe<Scalars['String']['input']>;
+  showModTag?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type ChannelRolesConnection = {
@@ -28508,7 +28508,6 @@ export type ChannelRoleResolvers<ContextType = any, ParentType extends Resolvers
   canCreateComment?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   canCreateDiscussion?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   canCreateEvent?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
-  canGiveFeedback?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   canUpdateChannel?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   canUploadFile?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   canUpvoteComment?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
@@ -28516,6 +28515,7 @@ export type ChannelRoleResolvers<ContextType = any, ParentType extends Resolvers
   channelUniqueName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  showModTag?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
