@@ -19,18 +19,25 @@ OPTIONAL MATCH (d)-[:HAS_TAG]->(tag:Tag)
 WITH dc, d, COLLECT(DISTINCT tag.text) AS tagsText
 
 OPTIONAL MATCH (d)<-[:POSTED_DISCUSSION]-(author:User)
+OPTIONAL MATCH (author)-[:HAS_SERVER_ROLE]->(serverRole:ServerRole)
 OPTIONAL MATCH (dc)-[:UPVOTED_DISCUSSION]->(upvoter:User)
-WITH dc, d, author, tagsText, COLLECT(DISTINCT upvoter) AS UpvotedByUsers,
+WITH dc, d, author, serverRole, tagsText, COLLECT(DISTINCT upvoter) AS UpvotedByUsers,
   CASE WHEN coalesce(dc.weightedVotesCount, 0.0) < 0 THEN 0.0 ELSE coalesce(dc.weightedVotesCount, 0.0) END AS weightedVotesCount
 
 OPTIONAL MATCH (dc)-[:CONTAINS_COMMENT]->(c:Comment)
-WITH dc, d, author, COLLECT(c) AS comments, tagsText, UpvotedByUsers, 
+WITH dc, d, author, serverRole, COLLECT(c) AS comments, tagsText, UpvotedByUsers, 
      CASE WHEN coalesce(dc.weightedVotesCount, 0.0) < 0 THEN 0 ELSE coalesce(dc.weightedVotesCount, 0.0) END AS weightedVotesCount,
      duration.between(dc.createdAt, datetime()).months + 
      duration.between(dc.createdAt, datetime()).days / 30.0 AS ageInMonths
 
-WITH dc, d, author, tagsText, UpvotedByUsers, weightedVotesCount, comments,
+WITH dc, d, author, serverRole, tagsText, UpvotedByUsers, weightedVotesCount, comments,
      10000 * log10(weightedVotesCount + 1) / ((ageInMonths + 2) ^ 1.8) AS hotRank
+
+WITH dc, d, author, tagsText, UpvotedByUsers, weightedVotesCount, comments, hotRank,
+     COLLECT(DISTINCT serverRole) AS serverRoles
+
+WITH dc, d, author, tagsText, UpvotedByUsers, weightedVotesCount, comments, hotRank,
+     [role in serverRoles | {showAdminTag: role.showAdminTag}] AS serverRoles
      
 RETURN {
     id: dc.id,
@@ -59,7 +66,8 @@ RETURN {
                       profilePicURL: author.profilePicURL,
                       createdAt: author.createdAt,
                       discussionKarma: author.discussionKarma,
-                      commentKarma: author.commentKarma
+                      commentKarma: author.commentKarma,
+                      ServerRoles: serverRoles
                   }
                 END,
         Tags: [t IN tagsText | {text: t}]

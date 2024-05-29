@@ -46,12 +46,13 @@ WITH d,
 WHERE SIZE($selectedTags) = 0 OR ANY(t IN tagsText WHERE t IN $selectedTags)
 
 OPTIONAL MATCH (d)<-[:POSTED_DISCUSSION]-(author:User)
-
+OPTIONAL MATCH (author)-[:HAS_SERVER_ROLE]->(serverRole:ServerRole)
 
 // Calculate the discussion's age in months
 WITH d, 
   tagsText, 
   author, 
+  serverRole,
   discussionChannels, 
   score,
   duration.between(d.createdAt, datetime()).months + 
@@ -61,6 +62,7 @@ WITH d,
 WITH d, 
   tagsText, 
   author, 
+  serverRole,
   discussionChannels, 
   score,
   CASE WHEN ageInMonths IS NULL THEN 0 ELSE ageInMonths END AS ageInMonths
@@ -69,9 +71,16 @@ WITH d,
 WITH d,
     tagsText,
     author, 
+    serverRole,
     discussionChannels,
     CASE WHEN score < 0 THEN 0 ELSE score END AS score, 
     CASE WHEN $sortOption = "hot" THEN 10000 * log10(score + 1) / ((ageInMonths + 2) ^ 1.8) ELSE NULL END AS rank
+
+WITH d, tagsText, author, discussionChannels, score, rank,
+    COLLECT(DISTINCT serverRole) AS serverRoles
+
+WITH d, tagsText, author, discussionChannels, score, rank,
+    [role IN serverRoles | {showAdminTag: role.showAdminTag}] AS serverRoles
 
 RETURN
 {
@@ -88,7 +97,8 @@ RETURN
                     profilePicURL: author.profilePicURL,
                     createdAt: author.createdAt,
                     discussionKarma: author.commentKarma,
-                    commentKarma: author.discussionKarma
+                    commentKarma: author.discussionKarma,
+                    ServerRoles: serverRoles
                 }
               END,
     DiscussionChannels: discussionChannels,
