@@ -8,10 +8,12 @@ const permissionList = shield({
     Mutation: {
       "*": deny,
       createServerRoles: allow, // will later restrict to admins
+      createChannelRoles: allow, // will later restrict to admins or channel owners
       createModServerRoles: allow, // will later restrict to admins
       createServerConfigs: allow, // will later restrict to admins
       updateServerConfigs: allow, // will later restrict to admins
-      updateModServerRoles: allow, // will later restrict to admins
+      deleteChannelRoles: allow, // will later restrict to admins or channel owners
+      deleteServerRoles: allow, // will later restrict to admins
 
       createUsers: allow,
 

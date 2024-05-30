@@ -20,25 +20,32 @@ WITH dc, d, COLLECT(DISTINCT tag.text) AS tagsText
 
 OPTIONAL MATCH (d)<-[:POSTED_DISCUSSION]-(author:User)
 OPTIONAL MATCH (author)-[:HAS_SERVER_ROLE]->(serverRole:ServerRole)
+OPTIONAL MATCH (author)-[:HAS_CHANNEL_ROLE]->(channelRole:ChannelRole)
 OPTIONAL MATCH (dc)-[:UPVOTED_DISCUSSION]->(upvoter:User)
-WITH dc, d, author, serverRole, tagsText, COLLECT(DISTINCT upvoter) AS UpvotedByUsers,
+WITH dc, d, author, serverRole, channelRole, tagsText, COLLECT(DISTINCT upvoter) AS UpvotedByUsers,
   CASE WHEN coalesce(dc.weightedVotesCount, 0.0) < 0 THEN 0.0 ELSE coalesce(dc.weightedVotesCount, 0.0) END AS weightedVotesCount
 
 OPTIONAL MATCH (dc)-[:CONTAINS_COMMENT]->(c:Comment)
-WITH dc, d, author, serverRole, COLLECT(c) AS comments, tagsText, UpvotedByUsers, 
+WITH dc, d, author, serverRole, channelRole, COLLECT(c) AS comments, tagsText, UpvotedByUsers, 
      CASE WHEN coalesce(dc.weightedVotesCount, 0.0) < 0 THEN 0 ELSE coalesce(dc.weightedVotesCount, 0.0) END AS weightedVotesCount,
      duration.between(dc.createdAt, datetime()).months + 
      duration.between(dc.createdAt, datetime()).days / 30.0 AS ageInMonths
 
-WITH dc, d, author, serverRole, tagsText, UpvotedByUsers, weightedVotesCount, comments,
+WITH dc, d, author, serverRole, channelRole, tagsText, UpvotedByUsers, weightedVotesCount, comments,
      10000 * log10(weightedVotesCount + 1) / ((ageInMonths + 2) ^ 1.8) AS hotRank
 
 WITH dc, d, author, tagsText, UpvotedByUsers, weightedVotesCount, comments, hotRank,
-     COLLECT(DISTINCT serverRole) AS serverRoles
+     COLLECT(DISTINCT serverRole) AS serverRoles, channelRole
 
 WITH dc, d, author, tagsText, UpvotedByUsers, weightedVotesCount, comments, hotRank,
-     [role in serverRoles | {showAdminTag: role.showAdminTag}] AS serverRoles
-     
+     [role in serverRoles | {showAdminTag: role.showAdminTag}] AS serverRoles, channelRole
+
+WITH dc, d, author, tagsText, UpvotedByUsers, weightedVotesCount, comments, hotRank, serverRoles,
+     COLLECT(DISTINCT channelRole) AS channelRoles
+
+WITH dc, d, author, tagsText, UpvotedByUsers, weightedVotesCount, comments, hotRank, serverRoles,
+     [role in channelRoles | {showModTag: role.showModTag}] AS channelRoles
+
 RETURN {
     id: dc.id,
     discussionId: d.id,
@@ -67,7 +74,8 @@ RETURN {
                       createdAt: author.createdAt,
                       discussionKarma: author.discussionKarma,
                       commentKarma: author.commentKarma,
-                      ServerRoles: serverRoles
+                      ServerRoles: serverRoles,
+                      ChannelRoles: channelRoles
                   }
                 END,
         Tags: [t IN tagsText | {text: t}]

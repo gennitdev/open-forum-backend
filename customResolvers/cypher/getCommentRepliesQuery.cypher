@@ -3,40 +3,45 @@ MATCH (parentComment:Comment { id: $commentId })<-[:IS_REPLY_TO]-(child:Comment)
 // OPTIONAL MATCHES to get related details
 OPTIONAL MATCH (child)<-[:AUTHORED_COMMENT]-(author:User)
 OPTIONAL MATCH (author)-[:HAS_SERVER_ROLE]->(serverRole:ServerRole)
+OPTIONAL MATCH (author)-[:HAS_CHANNEL_ROLE]->(channelRole:ChannelRole)
 OPTIONAL MATCH (child)<-[:UPVOTED_COMMENT]-(upvoter:User)
 
 // We also need to get the aggregate count of replies to the reply (grandchild comments).
 // We do this by matching the grandchild comments and then aggregating them.
 OPTIONAL MATCH (child)<-[:IS_REPLY_TO]-(grandchild:Comment)
-WITH child, author, serverRole, upvoter, COLLECT(DISTINCT grandchild) AS GrandchildComments
+WITH child, author, serverRole, channelRole, upvoter, COLLECT(DISTINCT grandchild) AS GrandchildComments
 
-WITH child, author, serverRole, upvoter, GrandchildComments, $modName AS modName
+WITH child, author, serverRole, channelRole, upvoter, GrandchildComments, $modName AS modName
 
 OPTIONAL MATCH (child)<-[:HAS_FEEDBACK_COMMENT]-(feedbackComment:Comment)<-[:AUTHORED_COMMENT]-(feedbackAuthor:ModerationProfile)
 
-WITH child, author, serverRole, upvoter, GrandchildComments, feedbackComment, feedbackAuthor, modName,
+WITH child, author, serverRole, channelRole, upvoter, GrandchildComments, feedbackComment, feedbackAuthor, modName,
     CASE WHEN modName IS NOT NULL AND feedbackAuthor.displayName = modName THEN feedbackComment
         ELSE NULL END AS potentialFeedbackComment
 
 // Calculations for the sorting formulae
-WITH child, author, serverRole, GrandchildComments, potentialFeedbackComment,
+WITH child, author, serverRole, channelRole, GrandchildComments, potentialFeedbackComment,
      COLLECT(DISTINCT upvoter) AS UpvotedByUsers,
      COLLECT(DISTINCT CASE WHEN potentialFeedbackComment IS NOT NULL THEN {id: potentialFeedbackComment.id} END) AS FeedbackComments,
      duration.between(child.createdAt, datetime()).months + 
      duration.between(child.createdAt, datetime()).days / 30.0 AS ageInMonths,
      CASE WHEN coalesce(child.weightedVotesCount, 0) < 0 THEN 0 ELSE coalesce(child.weightedVotesCount, 0) END AS weightedVotesCount
 
-WITH child, author, serverRole, UpvotedByUsers, ageInMonths, weightedVotesCount,
+WITH child, author, serverRole, channelRole, UpvotedByUsers, ageInMonths, weightedVotesCount,
      GrandchildComments, FeedbackComments,
      10000 * log10(weightedVotesCount + 1) / ((ageInMonths + 2) ^ 1.8) AS hotRank
 
+WITH child, author, UpvotedByUsers, weightedVotesCount, hotRank, GrandchildComments, FeedbackComments,
+     COLLECT(DISTINCT serverRole) AS serverRoles, channelRole
 
 WITH child, author, UpvotedByUsers, weightedVotesCount, hotRank, GrandchildComments, FeedbackComments,
-     COLLECT(DISTINCT serverRole) AS serverRoles
+     [role IN serverRoles | {showAdminTag: role.showAdminTag}] AS serverRoles, channelRole
 
-WITH child, author, UpvotedByUsers, weightedVotesCount, hotRank, GrandchildComments, FeedbackComments,
-     [role IN serverRoles | {showAdminTag: role.showAdminTag}] AS serverRoles
+WITH child, author, UpvotedByUsers, weightedVotesCount, hotRank, GrandchildComments, FeedbackComments, serverRoles,
+     COLLECT(DISTINCT channelRole) AS channelRoles
 
+WITH child, author, UpvotedByUsers, weightedVotesCount, hotRank, GrandchildComments, FeedbackComments, serverRoles,
+     [role IN channelRoles | {showModTag: role.showModTag}] AS channelRoles
 
 // Structure the return data
 RETURN {
@@ -53,7 +58,8 @@ RETURN {
         discussionKarma: author.discussionKarma,
         commentKarma: author.commentKarma,
         createdAt: author.createdAt,
-        ServerRoles: serverRoles
+        ServerRoles: serverRoles,
+        ChannelRoles: channelRoles
     },
     UpvotedByUsers: [user IN UpvotedByUsers | user{.*, createdAt: toString(user.createdAt)}],
     UpvotedByUsersAggregate: {

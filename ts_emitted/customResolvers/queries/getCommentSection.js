@@ -24,6 +24,9 @@ const discussionChannelSelectionSet = `
                 ServerRoles {
                   showAdminTag
                 }
+                ChannelRoles {
+                  showModTag
+                }
               }
         }
     }
