@@ -40,6 +40,12 @@ const commentSelectionSet = `
                           commentKarma
                           createdAt
                           discussionKarma
+                          ServerRoles {
+                            showAdminTag
+                          }
+                          ChannelRoles {
+                            showModTag
+                          }
                       }
                   }
                   createdAt
@@ -69,6 +75,12 @@ const commentSelectionSet = `
                               commentKarma
                               createdAt
                               discussionKarma
+                              ServerRoles {
+                                showAdminTag
+                              }
+                              ChannelRoles {
+                                showModTag
+                              }
                           }
                       }
                       createdAt

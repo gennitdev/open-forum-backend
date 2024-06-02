@@ -34,7 +34,7 @@ WITH c, author, parent, UpvotedByUsers, parentIds, ChildComments, weightedVotesC
     [role in serverRoles | {showAdminTag: role.showAdminTag}] AS serverRoles, channelRoles 
 
 WITH c, author, parent, UpvotedByUsers, parentIds, ChildComments, weightedVotesCount, hotRank,
-    serverRoles, [role in channelRoles | {showChannelTag: role.showChannelTag}] AS channelRoles
+    serverRoles, [role in channelRoles | {showModTag: role.showModTag}] AS channelRoles
 
 RETURN {
     id: c.id,
