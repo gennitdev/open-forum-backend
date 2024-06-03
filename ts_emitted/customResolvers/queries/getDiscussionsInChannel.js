@@ -25,6 +25,12 @@ const discussionChannelSelectionSet = `
               commentKarma
               createdAt
               discussionKarma
+              ServerRoles {
+                showAdminTag
+              }
+              ChannelRoles {
+                showModTag
+              }
           }
           Tags {
             text
