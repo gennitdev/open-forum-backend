@@ -51,6 +51,9 @@ RETURN {
     weightedVotesCount: child.weightedVotesCount,
     createdAt: child.createdAt,
     updatedAt: child.updatedAt,
+    ParentComment: {
+        id: $commentId
+    },
     CommentAuthor: {
         username: author.username,
         displayName: author.displayName,
