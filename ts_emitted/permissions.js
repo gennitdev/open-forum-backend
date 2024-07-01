@@ -14,7 +14,7 @@ const permissionList = shield({
         deleteChannelRoles: allow, // will later restrict to admins or channel owners
         deleteServerRoles: allow, // will later restrict to admins
         createUsers: allow,
-        // // will prevent users from making themselves admins or moderators but allow other fields to be updated by account owner
+        // will prevent users from making themselves admins or moderators but allow other fields to be updated by account owner
         updateUsers: or(rules.isAccountOwner, rules.isAdmin),
         createChannels: rules.canCreateChannel,
         updateChannels: or(rules.isChannelOwner, rules.isAdmin),
@@ -28,7 +28,7 @@ const permissionList = shield({
         createComments: allow, //rules.canCreateComment,
         updateComments: or(rules.isCommentAuthor, rules.isAdmin),
         deleteComments: or(rules.isCommentAuthor, rules.isAdmin),
-        createSignedStorageURL: rules.canUploadFile,
+        createSignedStorageURL: allow, //rules.canUploadFile,
         addEmojiToComment: rules.canUpvoteComment,
         removeEmojiFromComment: rules.canUpvoteComment,
         addEmojiToDiscussionChannel: rules.canUpvoteDiscussion,

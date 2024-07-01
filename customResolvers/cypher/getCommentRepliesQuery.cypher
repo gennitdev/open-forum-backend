@@ -6,41 +6,45 @@ OPTIONAL MATCH (author)-[:HAS_SERVER_ROLE]->(serverRole:ServerRole)
 OPTIONAL MATCH (author)-[:HAS_CHANNEL_ROLE]->(channelRole:ChannelRole)
 OPTIONAL MATCH (child)<-[:UPVOTED_COMMENT]-(upvoter:User)
 
-// We also need to get the aggregate count of replies to the reply (grandchild comments).
-// We do this by matching the grandchild comments and then aggregating them.
+// Collect details for each child comment
+WITH parentComment, child, author,
+     COLLECT(DISTINCT serverRole) AS serverRoles,
+     COLLECT(DISTINCT channelRole) AS channelRoles,
+     COLLECT(DISTINCT upvoter) AS UpvotedByUsers
+
+// Get the count of grandchild comments separately
 OPTIONAL MATCH (child)<-[:IS_REPLY_TO]-(grandchild:Comment)
-WITH child, author, serverRole, channelRole, upvoter, COLLECT(DISTINCT grandchild) AS GrandchildComments
+WITH parentComment, child, author, serverRoles, channelRoles, UpvotedByUsers,
+     COUNT(DISTINCT grandchild) AS GrandchildCommentsCount
 
-WITH child, author, serverRole, channelRole, upvoter, GrandchildComments, $modName AS modName
-
+// Match feedback comments
 OPTIONAL MATCH (child)<-[:HAS_FEEDBACK_COMMENT]-(feedbackComment:Comment)<-[:AUTHORED_COMMENT]-(feedbackAuthor:ModerationProfile)
+WITH parentComment, child, author, serverRoles, channelRoles, UpvotedByUsers, GrandchildCommentsCount,
+     COLLECT(DISTINCT CASE WHEN feedbackComment IS NOT NULL THEN {id: feedbackComment.id} END) AS FeedbackComments,
+     COLLECT(DISTINCT feedbackAuthor) AS FeedbackAuthors
 
-WITH child, author, serverRole, channelRole, upvoter, GrandchildComments, feedbackComment, feedbackAuthor, modName,
-    CASE WHEN modName IS NOT NULL AND feedbackAuthor.displayName = modName THEN feedbackComment
-        ELSE NULL END AS potentialFeedbackComment
+// Filter for specific moderator feedback
+WITH parentComment, child, author, serverRoles, channelRoles, UpvotedByUsers, GrandchildCommentsCount, FeedbackComments, FeedbackAuthors,
+     CASE WHEN $modName IS NOT NULL THEN [comment IN FeedbackComments WHERE ANY(author IN FeedbackAuthors WHERE author.displayName = $modName)] ELSE [] END AS FilteredFeedbackComments
 
 // Calculations for the sorting formulae
-WITH child, author, serverRole, channelRole, GrandchildComments, potentialFeedbackComment,
-     COLLECT(DISTINCT upvoter) AS UpvotedByUsers,
-     COLLECT(DISTINCT CASE WHEN potentialFeedbackComment IS NOT NULL THEN {id: potentialFeedbackComment.id} END) AS FeedbackComments,
+WITH parentComment, child, author, serverRoles, channelRoles, GrandchildCommentsCount, FilteredFeedbackComments,
+     UpvotedByUsers,
      duration.between(child.createdAt, datetime()).months + 
      duration.between(child.createdAt, datetime()).days / 30.0 AS ageInMonths,
      CASE WHEN coalesce(child.weightedVotesCount, 0) < 0 THEN 0 ELSE coalesce(child.weightedVotesCount, 0) END AS weightedVotesCount
 
-WITH child, author, serverRole, channelRole, UpvotedByUsers, ageInMonths, weightedVotesCount,
-     GrandchildComments, FeedbackComments,
+WITH parentComment, child, author, serverRoles, channelRoles, UpvotedByUsers, ageInMonths, weightedVotesCount,
+     GrandchildCommentsCount, FilteredFeedbackComments,
      10000 * log10(weightedVotesCount + 1) / ((ageInMonths + 2) ^ 1.8) AS hotRank
 
-WITH child, author, UpvotedByUsers, weightedVotesCount, hotRank, GrandchildComments, FeedbackComments,
-     COLLECT(DISTINCT serverRole) AS serverRoles, channelRole
+WITH parentComment, child, author, UpvotedByUsers, weightedVotesCount, hotRank, GrandchildCommentsCount, FilteredFeedbackComments,
+     serverRoles, channelRoles
 
-WITH child, author, UpvotedByUsers, weightedVotesCount, hotRank, GrandchildComments, FeedbackComments,
-     [role IN serverRoles | {showAdminTag: role.showAdminTag}] AS serverRoles, channelRole
+WITH parentComment, child, author, UpvotedByUsers, weightedVotesCount, hotRank, GrandchildCommentsCount, FilteredFeedbackComments,
+     [role IN serverRoles | {showAdminTag: role.showAdminTag}] AS serverRoles, channelRoles
 
-WITH child, author, UpvotedByUsers, weightedVotesCount, hotRank, GrandchildComments, FeedbackComments, serverRoles,
-     COLLECT(DISTINCT channelRole) AS channelRoles
-
-WITH child, author, UpvotedByUsers, weightedVotesCount, hotRank, GrandchildComments, FeedbackComments, serverRoles,
+WITH parentComment, child, author, UpvotedByUsers, weightedVotesCount, hotRank, GrandchildCommentsCount, FilteredFeedbackComments, serverRoles,
      [role IN channelRoles | {showModTag: role.showModTag}] AS channelRoles
 
 // Structure the return data
@@ -52,7 +56,7 @@ RETURN {
     createdAt: child.createdAt,
     updatedAt: child.updatedAt,
     ParentComment: {
-        id: $commentId
+        id: parentComment.id
     },
     CommentAuthor: {
         username: author.username,
@@ -69,10 +73,10 @@ RETURN {
         count: SIZE(UpvotedByUsers)
     },
     ChildCommentsAggregate: {
-        count: SIZE(GrandchildComments)
+        count: GrandchildCommentsCount
     },
     // Return empty array if no feedback comment
-    FeedbackComments: [comment IN FeedbackComments WHERE comment IS NOT NULL | comment]
+    FeedbackComments: [comment IN FilteredFeedbackComments WHERE comment IS NOT NULL | comment]
 } AS ChildComments, weightedVotesCount, hotRank
 
 ORDER BY 
