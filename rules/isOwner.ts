@@ -70,7 +70,7 @@ export const isChannelOwner = rule({ cache: "contextual" })(
 );
 
 type IsDiscussionOwnerInput = {
-  discussionWhere: DiscussionWhere;
+  where: DiscussionWhere;
   discussionUpdateInput: DiscussionUpdateInput;
   channelConnections: string[];
   channelDisconnections: string[];
@@ -78,9 +78,14 @@ type IsDiscussionOwnerInput = {
 
 export const isDiscussionOwner = rule({ cache: "contextual" })(
   async (parent: any, args: IsDiscussionOwnerInput, ctx: any, info: any) => {
+    console.log('ARGS', args)
 
-    const { discussionWhere } = args;
-    const { id: discussionId } = discussionWhere;
+    let discussionId;
+
+    const { where } = args;
+    if (where) {
+      discussionId = where.id;
+    }
 
     // set user data
     ctx.user = await setUserDataOnContext({
@@ -128,7 +133,7 @@ export const isDiscussionOwner = rule({ cache: "contextual" })(
 );
 
 type IsEventOwnerInput = {
-  eventWhere: EventWhere;
+  where: EventWhere;
   eventUpdateInput: EventUpdateInput;
   channelConnections: string[];
   channelDisconnections: string[];
@@ -137,8 +142,12 @@ type IsEventOwnerInput = {
 export const isEventOwner = rule({ cache: "contextual" })(
   async (parent: any, args: IsEventOwnerInput, ctx: any, info: any) => {
 
-    const { eventWhere } = args;
-    const { id: eventId } = eventWhere;
+    let eventId;
+
+    const { where } = args;
+    if (where) {
+      eventId = where.id;
+    }
 
     // set user data
     ctx.user = await setUserDataOnContext({
