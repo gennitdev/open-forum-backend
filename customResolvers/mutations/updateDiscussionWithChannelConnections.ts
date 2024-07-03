@@ -7,7 +7,7 @@ type Input = {
 };
 
 type Args = {
-  discussionWhere: DiscussionWhere;
+  where: DiscussionWhere;
   discussionUpdateInput: DiscussionUpdateInput;
   channelConnections: string[];
   channelDisconnections: string[];
@@ -17,7 +17,7 @@ const getResolver = (input: Input) => {
   const { Discussion, driver } = input;
   return async (parent: any, args: Args, context: any, info: any) => {
     const {
-      discussionWhere,
+      where,
       discussionUpdateInput,
       channelConnections,
       channelDisconnections,
@@ -32,10 +32,10 @@ const getResolver = (input: Input) => {
     try {
       // Update the discussion
       await Discussion.update({
-        where: discussionWhere,
+        where: where,
         update: discussionUpdateInput,
       });
-      const updatedDiscussionId = discussionWhere.id;
+      const updatedDiscussionId = where.id;
 
       const session = driver.session();
 

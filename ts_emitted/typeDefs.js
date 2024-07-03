@@ -335,7 +335,7 @@ const typeDefinitions = gql `
       channelConnections: [String]
     ): Discussion
     updateDiscussionWithChannelConnections(
-      discussionWhere: DiscussionWhere!
+      where: DiscussionWhere!
       discussionUpdateInput: DiscussionUpdateInput!
       channelConnections: [String!]!
       channelDisconnections: [String]!

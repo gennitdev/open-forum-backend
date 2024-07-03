@@ -2,17 +2,17 @@ import { updateDiscussionChannelQuery, severConnectionBetweenDiscussionAndChanne
 const getResolver = (input) => {
     const { Discussion, driver } = input;
     return async (parent, args, context, info) => {
-        const { discussionWhere, discussionUpdateInput, channelConnections, channelDisconnections, } = args;
+        const { where, discussionUpdateInput, channelConnections, channelDisconnections, } = args;
         if (!channelConnections || channelConnections.length === 0) {
             throw new Error("At least one channel must be selected. To remove a discussion from all channels, use the deleteDiscussion mutation.");
         }
         try {
             // Update the discussion
             await Discussion.update({
-                where: discussionWhere,
+                where: where,
                 update: discussionUpdateInput,
             });
-            const updatedDiscussionId = discussionWhere.id;
+            const updatedDiscussionId = where.id;
             const session = driver.session();
             // Update the channel connections
             for (let i = 0; i < channelConnections.length; i++) {
