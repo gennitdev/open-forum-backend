@@ -9,8 +9,8 @@ type Input = {
 type Args = {
   where: DiscussionWhere;
   discussionUpdateInput: DiscussionUpdateInput;
-  channelConnections: string[];
-  channelDisconnections: string[];
+  channelConnections?: string[];
+  channelDisconnections?: string[];
 };
 
 const getResolver = (input: Input) => {
@@ -19,16 +19,10 @@ const getResolver = (input: Input) => {
     const {
       where,
       discussionUpdateInput,
-      channelConnections,
-      channelDisconnections,
+      channelConnections = [],
+      channelDisconnections = []
     } = args;
-
-    if (!channelConnections || channelConnections.length === 0) {
-      throw new Error(
-        "At least one channel must be selected. To remove a discussion from all channels, use the deleteDiscussion mutation."
-      );
-    }
-
+    
     try {
       // Update the discussion
       await Discussion.update({

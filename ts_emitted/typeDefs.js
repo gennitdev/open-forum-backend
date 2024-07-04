@@ -337,8 +337,8 @@ const typeDefinitions = gql `
     updateDiscussionWithChannelConnections(
       where: DiscussionWhere!
       discussionUpdateInput: DiscussionUpdateInput!
-      channelConnections: [String!]!
-      channelDisconnections: [String]!
+      channelConnections: [String!]
+      channelDisconnections: [String]
     ): Discussion
     createEventWithChannelConnections(
       eventCreateInput: EventCreateInput
@@ -347,8 +347,8 @@ const typeDefinitions = gql `
     updateEventWithChannelConnections(
       eventWhere: EventWhere!
       eventUpdateInput: EventUpdateInput!
-      channelConnections: [String!]!
-      channelDisconnections: [String]!
+      channelConnections: [String!]
+      channelDisconnections: [String]
     ): Event
     upvoteComment(commentId: ID!, username: String!): Comment
     undoUpvoteComment(commentId: ID!, username: String!): Comment

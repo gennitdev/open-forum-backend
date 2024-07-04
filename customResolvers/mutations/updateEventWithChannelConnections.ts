@@ -23,12 +23,6 @@ const getResolver = (input: Input) => {
       channelDisconnections,
     } = args;
 
-    if (!channelConnections || channelConnections.length === 0) {
-      throw new Error(
-        "At least one channel must be selected. To remove an event from all channels, use the deleteEvent mutation."
-      );
-    }
-
     try {
       // Update the event
       await Event.update({
