@@ -1,5 +1,5 @@
 import { ERROR_MESSAGES } from "./errorMessages.js";
-import { EmailModel } from "../ogm-types.ts";
+import { EmailModel } from "../ogm-types.js";
 import { rule } from "graphql-shield";
 import jwt from "jsonwebtoken";
 
