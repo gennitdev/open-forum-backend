@@ -14,7 +14,7 @@ const { generate } = pkg;
 dotenv.config();
 import neo4j from "neo4j-driver";
 const password = process.env.NEO4J_PASSWORD;
-const driver = neo4j.driver("bolt://localhost:7687", neo4j.auth.basic("neo4j", password));
+const driver = neo4j.driver(process.env.NEO4J_URI || "bolt://localhost:7687", neo4j.auth.basic("neo4j", password));
 const { ogm, resolvers } = getCustomResolvers(driver);
 const features = {
     filters: {
