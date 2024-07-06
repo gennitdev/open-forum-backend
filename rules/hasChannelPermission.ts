@@ -1,6 +1,5 @@
 import { setUserDataOnContext } from "./userDataHelperFunctions.js";
 import { ERROR_MESSAGES } from "./errorMessages.js";
-import { ChannelModel } from "../ogm-types.js";
 
 export const ServerPermissionChecks = {
   CREATE_CHANNEL: "createChannel",
