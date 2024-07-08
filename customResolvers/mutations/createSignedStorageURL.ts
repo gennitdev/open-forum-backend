@@ -21,7 +21,8 @@ const createSignedStorageURL = () => {
     // Replace all types of spaces with underscores or hyphens
     const newFilename = filename.replace(/\s/g, '_');
 
-    console.log('new file name', newFilename)
+    // URL encode the filename
+    const encodedFilename = encodeURIComponent(newFilename);
 
     const options: GetSignedUrlConfig = {
       version: 'v4',
@@ -35,7 +36,7 @@ const createSignedStorageURL = () => {
       // Get a v4 signed URL for reading the file
       const [url] = await storage
         .bucket(bucketName)
-        .file(newFilename)
+        .file(encodedFilename)
         .getSignedUrl(options);
 
       // Return the Signed URL
