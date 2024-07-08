@@ -16,13 +16,8 @@ const createSignedStorageURL = () => {
       throw new Error("GCS_BUCKET_NAME environment variable not set");
     }
 
-    console.log('file name before:', filename)
-
-    // Replace all types of spaces with underscores or hyphens
-    const newFilename = filename.replace(/\s/g, '_');
-
     // URL encode the filename
-    const encodedFilename = encodeURIComponent(newFilename);
+    const encodedFilename = encodeURIComponent(filename);
 
     const options: GetSignedUrlConfig = {
       version: 'v4',
