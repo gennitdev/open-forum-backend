@@ -5,11 +5,11 @@ import typesDefinitions from "./typeDefs.js";
 import permissions from "./permissions.js";
 import path from "path";
 import dotenv from "dotenv";
-import pkg from '@neo4j/graphql-ogm';
+import pkg from "@neo4j/graphql-ogm";
 import getCustomResolvers from "./customResolvers.js";
-import { fileURLToPath } from 'url';
+import { fileURLToPath } from "url";
+import axios from "axios";
 
-// Convert the file URL to a directory path
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const { generate } = pkg;
 
@@ -17,15 +17,32 @@ dotenv.config();
 
 import neo4j from "neo4j-driver";
 
+const sendSlackNotification = async (text: string) => {
+  if (!process.env.SLACK_WEBHOOK_URL) {
+    console.error("SLACK_WEBHOOK_URL environment variable is not set");
+    return;
+  }
+  try {
+    await axios.post(process.env.SLACK_WEBHOOK_URL, {
+      text: text,
+    });
+    console.log("Slack notification sent successfully");
+  } catch (error) {
+    console.error("Error sending Slack notification:", error);
+  }
+};
+
+const extractMutationName = (query: string) => {
+  const match = query.match(/mutation\s+(\w+)/);
+  return match ? match[1] : 'Unknown Mutation';
+};
+
 const uri = process.env.NEO4J_URI || "bolt://localhost:7687";
 const password = process.env.NEO4J_PASSWORD;
-const port = process.env.PORT || 4000; 
+const port = process.env.PORT || 4000;
 const user = process.env.NEO4J_USER || "neo4j";
 
-const driver = neo4j.driver(
-  uri,
-  neo4j.auth.basic(user, password as string)
-);
+const driver = neo4j.driver(uri, neo4j.auth.basic(user, password as string));
 
 const { ogm, resolvers } = getCustomResolvers(driver);
 
@@ -83,7 +100,7 @@ async function initializeServer() {
     await neoSchema.assertIndexesAndConstraints({ options: { create: true } });
 
     const server = new ApolloServer({
-      persistedQueries: false, 
+      persistedQueries: false,
       schema,
       context: async (input: any) => {
         const { req } = input;
@@ -93,6 +110,14 @@ async function initializeServer() {
           console.log(
             `Variables: ${JSON.stringify(req.body.variables, null, 2)}`
           );
+
+          if (req.body.query.trim().startsWith("mutation")) {
+            const mutationName = extractMutationName(req.body.query);
+            const text = `Mutation: ${mutationName}\nVariables: ${JSON.stringify(req.body.variables, null, 2)}`;
+
+            // Send Slack notification
+            await sendSlackNotification(text);
+          }
         }
 
         return {

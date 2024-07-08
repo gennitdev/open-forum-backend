@@ -25,6 +25,7 @@
     "@neo4j/graphql": "^4.4.4",
     "@neo4j/graphql-ogm": "^4.4.4",
     "apollo-server": "^3.13.0",
+    "axios": "^1.7.2",
     "dotenv": "^16.0.0",
     "graphql": "^16.8.1",
     "graphql-middleware": "^6.1.35",
@@ -35,6 +36,7 @@
     "mathjs": "^11.11.0",
     "ncp": "^2.0.0",
     "neo4j-driver": "^5.15.0",
+    "nodemailer": "^6.9.14",
     "snoowrap": "^1.23.0"
   },
   "devDependencies": {
@@ -44,6 +46,7 @@
     "@types/jsonwebtoken": "^9.0.5",
     "@types/luxon": "3.4.1",
     "@types/node": "^20.10.7",
+    "@types/nodemailer": "^6.4.15",
     "concurrently": "^8.2.2",
     "typescript": "^5.3.3"
   }

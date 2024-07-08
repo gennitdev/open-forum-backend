@@ -5,20 +5,38 @@ import typesDefinitions from "./typeDefs.js";
 import permissions from "./permissions.js";
 import path from "path";
 import dotenv from "dotenv";
-import pkg from '@neo4j/graphql-ogm';
+import pkg from "@neo4j/graphql-ogm";
 import getCustomResolvers from "./customResolvers.js";
-import { fileURLToPath } from 'url';
-// Convert the file URL to a directory path
+import { fileURLToPath } from "url";
+import axios from "axios";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const { generate } = pkg;
 dotenv.config();
 import neo4j from "neo4j-driver";
+const sendSlackNotification = async (text) => {
+    if (!process.env.SLACK_WEBHOOK_URL) {
+        console.error("SLACK_WEBHOOK_URL environment variable is not set");
+        return;
+    }
+    try {
+        await axios.post(process.env.SLACK_WEBHOOK_URL, {
+            text: text,
+        });
+        console.log("Slack notification sent successfully");
+    }
+    catch (error) {
+        console.error("Error sending Slack notification:", error);
+    }
+};
+const extractMutationName = (query) => {
+    const match = query.match(/mutation\s+(\w+)/);
+    return match ? match[1] : 'Unknown Mutation';
+};
+const uri = process.env.NEO4J_URI || "bolt://localhost:7687";
 const password = process.env.NEO4J_PASSWORD;
-console.log({
-    uri: process.env.NEO4J_URI,
-    password: password ? "********" : undefined,
-});
-const driver = neo4j.driver(process.env.NEO4J_URI || "bolt://localhost:7687", neo4j.auth.basic("neo4j", password));
+const port = process.env.PORT || 4000;
+const user = process.env.NEO4J_USER || "neo4j";
+const driver = neo4j.driver(uri, neo4j.auth.basic(user, password));
 const { ogm, resolvers } = getCustomResolvers(driver);
 const features = {
     filters: {
@@ -66,6 +84,7 @@ async function initializeServer() {
         await driver.session().run(ensureUniqueEventChannelRelationship);
         await neoSchema.assertIndexesAndConstraints({ options: { create: true } });
         const server = new ApolloServer({
+            persistedQueries: false,
             schema,
             context: async (input) => {
                 const { req } = input;
@@ -73,6 +92,12 @@ async function initializeServer() {
                 if (!queryString.includes("IntrospectionQuery")) {
                     console.log(queryString);
                     console.log(`Variables: ${JSON.stringify(req.body.variables, null, 2)}`);
+                    if (req.body.query.trim().startsWith("mutation")) {
+                        const mutationName = extractMutationName(req.body.query);
+                        const text = `Mutation: ${mutationName}\nVariables: ${JSON.stringify(req.body.variables, null, 2)}`;
+                        // Send Slack notification
+                        await sendSlackNotification(text);
+                    }
                 }
                 return {
                     driver,
@@ -81,7 +106,7 @@ async function initializeServer() {
                 };
             },
         });
-        server.listen().then((input) => {
+        server.listen({ port }).then((input) => {
             const { url } = input;
             console.log(`🚀  Server ready at ${url}`);
         });
