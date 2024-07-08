@@ -9,6 +9,7 @@ import pkg from "@neo4j/graphql-ogm";
 import getCustomResolvers from "./customResolvers.js";
 import { fileURLToPath } from "url";
 import axios from "axios";
+import fs from "fs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const { generate } = pkg;
@@ -16,6 +17,15 @@ const { generate } = pkg;
 dotenv.config();
 
 import neo4j from "neo4j-driver";
+
+
+if (process.env.GOOGLE_CREDENTIALS_BASE64) {
+  const credentials = Buffer.from(process.env.GOOGLE_CREDENTIALS_BASE64, 'base64').toString('utf8');
+  const credentialsPath = path.join(__dirname, 'listical-dev-gcp.json');
+  console.log('Writing Google credentials to', credentialsPath)
+  fs.writeFileSync(credentialsPath, credentials);
+  process.env.GOOGLE_APPLICATION_CREDENTIALS = credentialsPath;
+}
 
 const sendSlackNotification = async (text: string) => {
   if (!process.env.SLACK_WEBHOOK_URL) {

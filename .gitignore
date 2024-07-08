@@ -13,3 +13,4 @@ plugins
 ssl
 config
 ts_emitted
+listical-dev-gcp.json
