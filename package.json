@@ -37,6 +37,7 @@
     "ncp": "^2.0.0",
     "neo4j-driver": "^5.15.0",
     "nodemailer": "^6.9.14",
+    "random-word-slugs": "^0.1.7",
     "snoowrap": "^1.23.0"
   },
   "devDependencies": {

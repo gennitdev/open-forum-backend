@@ -1,5 +1,5 @@
 import { EmailModel, UserModel } from "../../ogm-types";
-import { User } from "../../src/generated/graphql";
+import { generateSlug } from "random-word-slugs";
 
 type Args = {
   emailAddress: string;
@@ -43,27 +43,26 @@ const getCreateEmailAndUserResolver = (input: Input) => {
         throw new Error("Email already taken");
       }
 
-      let user;
       if (existingEmail.length === 0) {
         // Create a new email and user
+
+        const randomWords = generateSlug(4, { format: "camel" });
+
         await User.create({
           input: [
             {
               username,
-            },
-          ],
-        });
-
-        await Email.create({
-          input: [
-            {
-              address: emailAddress,
-              User: {
-                connect: {
-                  where: {
-                    node: {
-                      username: username,
-                    },
+              Email: {
+                create: {
+                  node: {
+                    address: emailAddress,
+                  },
+                },
+              },
+              ModerationProfile: {
+                create: {
+                  node: {
+                    displayName: randomWords,
                   },
                 },
               },
@@ -81,6 +80,9 @@ const getCreateEmailAndUserResolver = (input: Input) => {
             username
             Email {
                 address
+            }
+            ModerationProfile {
+                displayName
             }
         }
         `,
