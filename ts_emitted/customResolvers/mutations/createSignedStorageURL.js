@@ -7,11 +7,6 @@ const createSignedStorageURL = () => {
         if (!bucketName) {
             throw new Error("GCS_BUCKET_NAME environment variable not set");
         }
-        console.log('file name before:', filename);
-        // Replace all types of spaces with underscores or hyphens
-        const newFilename = filename.replace(/\s/g, '_');
-        // URL encode the filename
-        const encodedFilename = encodeURIComponent(newFilename);
         const options = {
             version: 'v4',
             action: 'write',
@@ -23,7 +18,7 @@ const createSignedStorageURL = () => {
             // Get a v4 signed URL for reading the file
             const [url] = await storage
                 .bucket(bucketName)
-                .file(encodedFilename)
+                .file(filename)
                 .getSignedUrl(options);
             // Return the Signed URL
             return {

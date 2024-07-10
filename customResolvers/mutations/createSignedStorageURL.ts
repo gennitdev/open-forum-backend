@@ -5,9 +5,21 @@ type Args = {
   contentType: string;
 };
 
+const isUrlEncoded = (filename: string): boolean => {
+  try {
+    return filename === encodeURIComponent(decodeURIComponent(filename));
+  } catch (e) {
+    return false;
+  }
+};
+
 const createSignedStorageURL = () => {
   return async (parent: any, args: Args) => {
     let { filename, contentType } = args;
+
+    if (!isUrlEncoded(filename)) {
+      throw new Error("Filename is not properly URL encoded");
+    }
 
     const storage = new Storage();
     const bucketName = process.env.GCS_BUCKET_NAME;
@@ -15,9 +27,6 @@ const createSignedStorageURL = () => {
     if (!bucketName) {
       throw new Error("GCS_BUCKET_NAME environment variable not set");
     }
-
-    // URL encode the filename
-    const encodedFilename = encodeURIComponent(filename);
 
     const options: GetSignedUrlConfig = {
       version: 'v4',
@@ -31,7 +40,7 @@ const createSignedStorageURL = () => {
       // Get a v4 signed URL for reading the file
       const [url] = await storage
         .bucket(bucketName)
-        .file(encodedFilename)
+        .file(filename)
         .getSignedUrl(options);
 
       // Return the Signed URL
