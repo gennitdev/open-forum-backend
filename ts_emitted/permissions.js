@@ -14,6 +14,7 @@ const permissionList = shield({
         deleteChannelRoles: allow, // will later restrict to admins or channel owners
         deleteServerRoles: allow, // will later restrict to admins
         createUsers: allow,
+        createEmailAndUser: allow,
         // will prevent users from making themselves admins or moderators but allow other fields to be updated by account owner
         updateUsers: or(rules.isAccountOwner, rules.isAdmin),
         createChannels: rules.canCreateChannel,

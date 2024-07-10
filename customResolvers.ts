@@ -28,6 +28,7 @@ import getSubredditSidebar from "./customResolvers/queries/getSubredditSidebar.j
 import createSignedStorageURL from "./customResolvers/mutations/createSignedStorageURL.js";
 
 import { ModelMap } from "./ogm-types.js";
+import getCreateEmailAndUserResolver from "./customResolvers/mutations/createEmailAndUser.js";
 
 const { OGM } = pkg;
 
@@ -42,7 +43,7 @@ export default function (driver: any) {
   const Event = ogm.model("Event");
   const Comment = ogm.model("Comment");
   const User = ogm.model("User");
-  const Issue = ogm.model("Issue");
+  const Email = ogm.model("Email");
 
   const resolvers = {
     JSON: GraphQLJSON,
@@ -135,6 +136,10 @@ export default function (driver: any) {
         driver,
       }),
       createSignedStorageURL: createSignedStorageURL(),
+      createEmailAndUser: getCreateEmailAndUserResolver({
+        User,
+        Email,
+      }),
     },
   };
   return {

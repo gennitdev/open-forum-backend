@@ -1,7 +1,18 @@
 import { Storage } from "@google-cloud/storage";
+const isUrlEncoded = (filename) => {
+    try {
+        return filename === encodeURIComponent(decodeURIComponent(filename));
+    }
+    catch (e) {
+        return false;
+    }
+};
 const createSignedStorageURL = () => {
     return async (parent, args) => {
         let { filename, contentType } = args;
+        if (!isUrlEncoded(filename)) {
+            throw new Error("Filename is not properly URL encoded");
+        }
         const storage = new Storage();
         const bucketName = process.env.GCS_BUCKET_NAME;
         if (!bucketName) {

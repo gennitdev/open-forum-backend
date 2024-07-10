@@ -21,6 +21,7 @@ import undoUpvoteDiscussionChannel from "./customResolvers/mutations/undoUpvoteD
 import getSubredditResolver from "./customResolvers/queries/getSubreddit.js";
 import getSubredditSidebar from "./customResolvers/queries/getSubredditSidebar.js";
 import createSignedStorageURL from "./customResolvers/mutations/createSignedStorageURL.js";
+import getCreateEmailAndUserResolver from "./customResolvers/mutations/createEmailAndUser.js";
 const { OGM } = pkg;
 export default function (driver) {
     const ogm = new OGM({
@@ -32,7 +33,7 @@ export default function (driver) {
     const Event = ogm.model("Event");
     const Comment = ogm.model("Comment");
     const User = ogm.model("User");
-    const Issue = ogm.model("Issue");
+    const Email = ogm.model("Email");
     const resolvers = {
         JSON: GraphQLJSON,
         CommentAuthor: {
@@ -122,6 +123,10 @@ export default function (driver) {
                 driver,
             }),
             createSignedStorageURL: createSignedStorageURL(),
+            createEmailAndUser: getCreateEmailAndUserResolver({
+                User,
+                Email,
+            }),
         },
     };
     return {

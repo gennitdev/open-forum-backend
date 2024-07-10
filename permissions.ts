@@ -17,6 +17,7 @@ const permissionList = shield({
 
 
       createUsers: allow,
+      createEmailAndUser: allow,
 
       // will prevent users from making themselves admins or moderators but allow other fields to be updated by account owner
       updateUsers: or(rules.isAccountOwner, rules.isAdmin),
