@@ -25,6 +25,9 @@ const permissionList = shield({
       createChannels:rules.canCreateChannel,
       updateChannels: or(rules.isChannelOwner, rules.isAdmin),
       deleteChannels: or(rules.isChannelOwner, rules.isAdmin),
+
+      deleteEmails: allow, // or(rules.isAccountOwner, rules.isAdmin),
+      deleteUsers: allow, // or(rules.isAccountOwner, rules.isAdmin),
     
       createDiscussionWithChannelConnections: or(rules.canCreateDiscussion, rules.isAdmin),
       updateDiscussionWithChannelConnections:  or(rules.isDiscussionOwner, rules.isAdmin),

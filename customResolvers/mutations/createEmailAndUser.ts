@@ -93,10 +93,10 @@ const getCreateEmailAndUserResolver = (input: Input) => {
       const userToReturn = newUserArray[0];
 
       return userToReturn;
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
       throw new Error(
-        "An error occurred while creating the user and linking the email"
+        `An error occurred while creating the user and linking the email: ${e?.message}`
       );
     }
   };
