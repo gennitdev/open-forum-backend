@@ -54,7 +54,8 @@ RETURN {
     weightedVotesCount: c.weightedVotesCount,
     createdAt: c.createdAt,
     updatedAt: c.updatedAt,
-    CommentAuthor: {
+    // If the author is null, return null, otherwise return the author object.
+    CommentAuthor: CASE WHEN author IS NULL THEN null ELSE {
         username: author.username,
         displayName: author.displayName,
         profilePicURL: author.profilePicURL,
@@ -63,7 +64,7 @@ RETURN {
         createdAt: author.createdAt,
         ServerRoles: serverRoles,
         ChannelRoles: channelRoles
-    },
+    } END,
     ParentComment: CASE WHEN SIZE(parentIds) > 0 THEN {id: parentIds[0]} ELSE null END,
     UpvotedByUsers: UpvotedByUsers,
     UpvotedByUsersAggregate: {
