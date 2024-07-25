@@ -4,6 +4,7 @@ import rules from "./rules/rules.js";
 const permissionList = shield({
     Query: {
       "*": allow,
+      emails: rules.isAdmin,
     },
     Mutation: {
       "*": deny,
@@ -15,8 +16,6 @@ const permissionList = shield({
       deleteChannelRoles: allow, // will later restrict to admins or channel owners
       deleteServerRoles: allow, // will later restrict to admins
 
-
-      createUsers: allow,
       createEmailAndUser: allow,
 
       // will prevent users from making themselves admins or moderators but allow other fields to be updated by account owner
@@ -29,9 +28,9 @@ const permissionList = shield({
       deleteEmails: allow, // or(rules.isAccountOwner, rules.isAdmin),
       deleteUsers: allow, // or(rules.isAccountOwner, rules.isAdmin),
     
-      createDiscussionWithChannelConnections: or(rules.canCreateDiscussion, rules.isAdmin),
-      updateDiscussionWithChannelConnections:  or(rules.isDiscussionOwner, rules.isAdmin),
-      deleteDiscussions: or(rules.isDiscussionOwner, rules.isAdmin),
+      createDiscussionWithChannelConnections: allow,//or(rules.canCreateDiscussion, rules.isAdmin),
+      updateDiscussionWithChannelConnections:  allow,//or(rules.isDiscussionOwner, rules.isAdmin),
+      deleteDiscussions: allow,//or(rules.isDiscussionOwner, rules.isAdmin),
       
       createEventWithChannelConnections: rules.canCreateEvent,
       updateEventWithChannelConnections: or(rules.isEventOwner, rules.isAdmin),

@@ -19,13 +19,14 @@ dotenv.config();
 import neo4j from "neo4j-driver";
 
 
-if (process.env.GOOGLE_CREDENTIALS_BASE64) {
-  const credentials = Buffer.from(process.env.GOOGLE_CREDENTIALS_BASE64, 'base64').toString('utf8');
-  const credentialsPath = path.join(__dirname, 'listical-dev-gcp.json');
-  console.log('Writing Google credentials to', credentialsPath)
-  fs.writeFileSync(credentialsPath, credentials);
-  process.env.GOOGLE_APPLICATION_CREDENTIALS = credentialsPath;
-}
+// if (process.env.GOOGLE_CREDENTIALS_BASE64) {
+//   const credentials = Buffer.from(process.env.GOOGLE_CREDENTIALS_BASE64, 'base64').toString('utf8');
+//   const credentialsPath = path.join(__dirname, 'listical-dev-gcp.json');
+//   console.log('Writing Google credentials to', credentialsPath)
+//   fs.writeFileSync(credentialsPath, credentials);
+//   process.env.GOOGLE_APPLICATION_CREDENTIALS = credentialsPath;
+// }
+console.log('GOOGLE_APPLICATION_CREDENTIALS', process.env.GOOGLE_APPLICATION_CREDENTIALS);
 
 const sendSlackNotification = async (text: string) => {
   if (!process.env.SLACK_WEBHOOK_URL) {
