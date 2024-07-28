@@ -1,4 +1,5 @@
 ## Project Intro
+
 An introduction to the project is in the frontend README: https://github.com/gennit-project/multiforum-frontend
 
 ## Technology Stack

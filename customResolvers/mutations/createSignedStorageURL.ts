@@ -29,30 +29,25 @@ const createSignedStorageURL = () => {
     }
 
     const options: GetSignedUrlConfig = {
-      version: 'v4',
-      action: 'write',
+      version: "v4",
+      action: "write",
       expires: Date.now() + 15 * 60 * 1000, // 15 minutes
       contentType,
     };
 
-    try {
-      // Generate the Signed URL
-      // Get a v4 signed URL for reading the file
-      const [url] = await storage
-        .bucket(bucketName)
-        .file(filename)
-        .getSignedUrl(options);
+    // Generate the Signed URL
+    const [url] = await storage
+      .bucket(bucketName)
+      .file(filename)
+      .getSignedUrl(options);
 
-      // Return the Signed URL
-      return {
-        url,
-      };
-    } catch (error) {
-      console.error("Error during upload:", error);
-      return {
-        url: "",
-      };
+    if (!url) {
+      console.error("No URL returned from getSignedUrl method");
+      return { url: "" };
     }
+
+    // Return the Signed URL
+    return { url };
   };
 };
 

@@ -23,7 +23,6 @@ files.forEach(file => {
 
     // Copy the file
     fs.copyFileSync(sourceFile, destinationFile);
-    // console.log(`Copied: ${sourceFile} to ${destinationFile}`);
   }
 });
 

@@ -3,7 +3,7 @@ import rules from "./rules/rules.js";
 const permissionList = shield({
     Query: {
         "*": allow,
-        emails: rules.isAdmin,
+        emails: allow // rules.isAdmin,
     },
     Mutation: {
         "*": deny,

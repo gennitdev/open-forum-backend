@@ -78,8 +78,6 @@ type IsDiscussionOwnerInput = {
 
 export const isDiscussionOwner = rule({ cache: "contextual" })(
   async (parent: any, args: IsDiscussionOwnerInput, ctx: any, info: any) => {
-    console.log('ARGS', args)
-
     let discussionId;
 
     const { where } = args;
