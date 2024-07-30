@@ -2,14 +2,14 @@ import { updateEventChannelQuery, severConnectionBetweenEventAndChannelQuery } f
 const getResolver = (input) => {
     const { Event, driver } = input;
     return async (parent, args, context, info) => {
-        const { eventWhere, eventUpdateInput, channelConnections, channelDisconnections, } = args;
+        const { where, eventUpdateInput, channelConnections, channelDisconnections, } = args;
         try {
             // Update the event
             await Event.update({
-                where: eventWhere,
+                where: where,
                 update: eventUpdateInput,
             });
-            const updatedEventId = eventWhere.id;
+            const updatedEventId = where.id;
             const session = driver.session();
             // Update the channel connections
             for (let i = 0; i < channelConnections.length; i++) {

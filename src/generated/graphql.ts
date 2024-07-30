@@ -15159,6 +15159,7 @@ export type Mutation = {
   createDiscussionChannels: CreateDiscussionChannelsMutationResponse;
   createDiscussionWithChannelConnections?: Maybe<Discussion>;
   createDiscussions: CreateDiscussionsMutationResponse;
+  createEmailAndUser?: Maybe<User>;
   createEmails: CreateEmailsMutationResponse;
   createEmojis: CreateEmojisMutationResponse;
   createEventChannels: CreateEventChannelsMutationResponse;
@@ -15319,6 +15320,12 @@ export type MutationCreateDiscussionWithChannelConnectionsArgs = {
 
 export type MutationCreateDiscussionsArgs = {
   input: Array<DiscussionCreateInput>;
+};
+
+
+export type MutationCreateEmailAndUserArgs = {
+  emailAddress: Scalars['String']['input'];
+  username: Scalars['String']['input'];
 };
 
 
@@ -15714,10 +15721,10 @@ export type MutationUpdateDiscussionChannelsArgs = {
 
 
 export type MutationUpdateDiscussionWithChannelConnectionsArgs = {
-  channelConnections: Array<Scalars['String']['input']>;
-  channelDisconnections: Array<InputMaybe<Scalars['String']['input']>>;
+  channelConnections?: InputMaybe<Array<Scalars['String']['input']>>;
+  channelDisconnections?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   discussionUpdateInput: DiscussionUpdateInput;
-  discussionWhere: DiscussionWhere;
+  where: DiscussionWhere;
 };
 
 
@@ -15772,10 +15779,10 @@ export type MutationUpdateEventCommentsFormatsArgs = {
 
 
 export type MutationUpdateEventWithChannelConnectionsArgs = {
-  channelConnections: Array<Scalars['String']['input']>;
-  channelDisconnections: Array<InputMaybe<Scalars['String']['input']>>;
+  channelConnections?: InputMaybe<Array<Scalars['String']['input']>>;
+  channelDisconnections?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   eventUpdateInput: EventUpdateInput;
-  eventWhere: EventWhere;
+  where: EventWhere;
 };
 
 
@@ -30965,6 +30972,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createDiscussionChannels?: Resolver<ResolversTypes['CreateDiscussionChannelsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateDiscussionChannelsArgs, 'input'>>;
   createDiscussionWithChannelConnections?: Resolver<Maybe<ResolversTypes['Discussion']>, ParentType, ContextType, Partial<MutationCreateDiscussionWithChannelConnectionsArgs>>;
   createDiscussions?: Resolver<ResolversTypes['CreateDiscussionsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateDiscussionsArgs, 'input'>>;
+  createEmailAndUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationCreateEmailAndUserArgs, 'emailAddress' | 'username'>>;
   createEmails?: Resolver<ResolversTypes['CreateEmailsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateEmailsArgs, 'input'>>;
   createEmojis?: Resolver<ResolversTypes['CreateEmojisMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateEmojisArgs, 'input'>>;
   createEventChannels?: Resolver<ResolversTypes['CreateEventChannelsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateEventChannelsArgs, 'input'>>;
@@ -31034,13 +31042,13 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   updateComments?: Resolver<ResolversTypes['UpdateCommentsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateCommentsArgs>>;
   updateDiscussionChannelListFormats?: Resolver<ResolversTypes['UpdateDiscussionChannelListFormatsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateDiscussionChannelListFormatsArgs>>;
   updateDiscussionChannels?: Resolver<ResolversTypes['UpdateDiscussionChannelsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateDiscussionChannelsArgs>>;
-  updateDiscussionWithChannelConnections?: Resolver<Maybe<ResolversTypes['Discussion']>, ParentType, ContextType, RequireFields<MutationUpdateDiscussionWithChannelConnectionsArgs, 'channelConnections' | 'channelDisconnections' | 'discussionUpdateInput' | 'discussionWhere'>>;
+  updateDiscussionWithChannelConnections?: Resolver<Maybe<ResolversTypes['Discussion']>, ParentType, ContextType, RequireFields<MutationUpdateDiscussionWithChannelConnectionsArgs, 'discussionUpdateInput' | 'where'>>;
   updateDiscussions?: Resolver<ResolversTypes['UpdateDiscussionsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateDiscussionsArgs>>;
   updateEmails?: Resolver<ResolversTypes['UpdateEmailsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateEmailsArgs>>;
   updateEmojis?: Resolver<ResolversTypes['UpdateEmojisMutationResponse'], ParentType, ContextType, Partial<MutationUpdateEmojisArgs>>;
   updateEventChannels?: Resolver<ResolversTypes['UpdateEventChannelsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateEventChannelsArgs>>;
   updateEventCommentsFormats?: Resolver<ResolversTypes['UpdateEventCommentsFormatsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateEventCommentsFormatsArgs>>;
-  updateEventWithChannelConnections?: Resolver<Maybe<ResolversTypes['Event']>, ParentType, ContextType, RequireFields<MutationUpdateEventWithChannelConnectionsArgs, 'channelConnections' | 'channelDisconnections' | 'eventUpdateInput' | 'eventWhere'>>;
+  updateEventWithChannelConnections?: Resolver<Maybe<ResolversTypes['Event']>, ParentType, ContextType, RequireFields<MutationUpdateEventWithChannelConnectionsArgs, 'eventUpdateInput' | 'where'>>;
   updateEvents?: Resolver<ResolversTypes['UpdateEventsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateEventsArgs>>;
   updateFeeds?: Resolver<ResolversTypes['UpdateFeedsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateFeedsArgs>>;
   updateGetSubredditResponses?: Resolver<ResolversTypes['UpdateGetSubredditResponsesMutationResponse'], ParentType, ContextType, Partial<MutationUpdateGetSubredditResponsesArgs>>;

@@ -346,7 +346,7 @@ const typeDefinitions = gql`
       channelConnections: [String]
     ): Event
     updateEventWithChannelConnections(
-      eventWhere: EventWhere!
+      where: EventWhere!
       eventUpdateInput: EventUpdateInput!
       channelConnections: [String!]
       channelDisconnections: [String]

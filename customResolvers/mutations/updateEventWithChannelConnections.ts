@@ -7,7 +7,7 @@ type Input = {
 };
 
 type Args = {
-  eventWhere: EventWhere;
+  where: EventWhere;
   eventUpdateInput: EventUpdateInput;
   channelConnections: string[];
   channelDisconnections: string[];
@@ -17,7 +17,7 @@ const getResolver = (input: Input) => {
   const { Event, driver } = input;
   return async (parent: any, args: Args, context: any, info: any) => {
     const {
-      eventWhere,
+      where,
       eventUpdateInput,
       channelConnections,
       channelDisconnections,
@@ -26,10 +26,10 @@ const getResolver = (input: Input) => {
     try {
       // Update the event
       await Event.update({
-        where: eventWhere,
+        where: where,
         update: eventUpdateInput,
       });
-      const updatedEventId = eventWhere.id;
+      const updatedEventId = where.id;
 
       const session = driver.session();
 
