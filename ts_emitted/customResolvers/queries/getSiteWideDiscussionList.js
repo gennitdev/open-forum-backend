@@ -15,6 +15,7 @@ const getResolver = (input) => {
         const session = driver.session();
         let titleRegex = `(?i).*${searchInput}.*`;
         let bodyRegex = `(?i).*${searchInput}.*`;
+        let totalCount = 0;
         try {
             switch (sort) {
                 case "new":
@@ -32,7 +33,9 @@ const getResolver = (input) => {
                     });
                     // For each record, do record.get("discussion") to get the discussions
                     let newRecord = newDiscussionResult.records[0]; // Assuming there's only one result row
-                    let totalCount = newRecord.get("totalCount") || 0;
+                    if (newRecord) {
+                        totalCount = newRecord.get("totalCount");
+                    }
                     let discussions = newDiscussionResult.records.map((record) => {
                         return record.get("discussion");
                     });
@@ -62,13 +65,15 @@ const getResolver = (input) => {
                     });
                     // Extract the total count and the discussions from the query result
                     let topRecord = topDiscussionsResult.records[0]; // Assuming there's only one result row
-                    let topTotalCount = topRecord.get("totalCount");
+                    if (topRecord) {
+                        totalCount = topRecord.get("totalCount");
+                    }
                     let topDiscussions = topDiscussionsResult.records.map((record) => {
                         return record.get("discussion");
                     });
                     return {
                         discussions: topDiscussions,
-                        aggregateDiscussionCount: topTotalCount,
+                        aggregateDiscussionCount: totalCount,
                     };
                 default:
                     // By default, and if sort is "hot", get the DiscussionChannels sorted by hot,
@@ -87,13 +92,15 @@ const getResolver = (input) => {
                     });
                     // Extract the total count and the discussions from the query result
                     let hotRecord = hotDiscussionsResult.records[0]; // Assuming there's only one result row
-                    let hotTotalCount = hotRecord.get("totalCount");
+                    if (hotRecord) {
+                        totalCount = hotRecord.get("totalCount");
+                    }
                     let hotDiscussions = hotDiscussionsResult.records.map((record) => {
                         return record.get("discussion");
                     });
                     return {
                         discussions: hotDiscussions,
-                        aggregateDiscussionCount: hotTotalCount,
+                        aggregateDiscussionCount: totalCount,
                     };
             }
         }

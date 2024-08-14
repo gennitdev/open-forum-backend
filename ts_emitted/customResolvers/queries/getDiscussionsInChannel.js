@@ -1,52 +1,5 @@
 import { getDiscussionChannelsQuery } from "../cypher/cypherQueries.js";
 import { timeFrameOptions } from "./utils.js";
-const discussionChannelSelectionSet = `
-  {
-      id
-      weightedVotesCount
-      discussionId
-      channelUniqueName
-      emoji
-      createdAt
-      Channel {
-          uniqueName
-          displayName
-      }
-      Discussion {
-          id
-          title
-          body
-          createdAt
-          updatedAt
-          Author {
-              username
-              displayName
-              profilePicURL
-              commentKarma
-              createdAt
-              discussionKarma
-              ServerRoles {
-                showAdminTag
-              }
-              ChannelRoles {
-                showModTag
-              }
-          }
-          Tags {
-            text
-          }
-      }
-      CommentsAggregate {
-          count
-      }
-      UpvotedByUsers {
-          username
-      }
-      UpvotedByUsersAggregate {
-          count
-      }
-  }
-  `;
 var timeFrameOptionKeys;
 (function (timeFrameOptionKeys) {
     timeFrameOptionKeys["year"] = "year";
@@ -60,72 +13,32 @@ const getResolver = (input) => {
         const { channelUniqueName, options, selectedTags, searchInput } = args;
         const { offset, limit, sort, timeFrame } = options || {};
         const session = driver.session();
+        let titleRegex = `(?i).*${searchInput}.*`;
+        let bodyRegex = `(?i).*${searchInput}.*`;
         try {
-            const filters = [
-                {
-                    channelUniqueName,
-                },
-            ];
-            const aggregateDiscussionChannelsCountResult = await DiscussionChannel.aggregate({
-                where: {
-                    AND: filters,
-                },
-                aggregate: {
-                    count: true,
-                },
-            });
-            const aggregateCount = (aggregateDiscussionChannelsCountResult === null || aggregateDiscussionChannelsCountResult === void 0 ? void 0 : aggregateDiscussionChannelsCountResult.count) || 0;
-            if (aggregateCount === 0) {
-                return {
-                    discussionChannels: [],
-                    aggregateDiscussionChannelsCount: 0,
-                };
-            }
-            let result = [];
+            let aggregateCount = 0;
             switch (sort) {
                 case "new":
-                    if (searchInput) {
-                        filters.push({
-                            OR: [
-                                {
-                                    Discussion: {
-                                        body_CONTAINS: searchInput,
-                                    },
-                                },
-                                {
-                                    Discussion: {
-                                        title_CONTAINS: searchInput,
-                                    },
-                                },
-                            ],
-                        });
-                    }
-                    if (selectedTags && selectedTags.length > 0) {
-                        filters.push({
-                            Discussion: {
-                                // check if the related Tags contain any of the selectedTags
-                                Tags_SOME: {
-                                    text_IN: selectedTags,
-                                },
-                            },
-                        });
-                    }
-                    // if sort is "new", get the DiscussionChannels sorted by createdAt.
-                    result = await DiscussionChannel.find({
-                        where: {
-                            AND: filters,
-                        },
-                        selectionSet: discussionChannelSelectionSet,
-                        options: {
-                            offset,
-                            limit,
-                            sort: {
-                                createdAt: "DESC",
-                            },
-                        },
+                    const newDiscussionChannelsResult = await session.run(getDiscussionChannelsQuery, {
+                        searchInput,
+                        titleRegex,
+                        bodyRegex,
+                        selectedTags: selectedTags || [],
+                        channelUniqueName,
+                        offset: parseInt(offset, 10),
+                        limit: parseInt(limit, 10),
+                        startOfTimeFrame: null,
+                        sortOption: "new",
                     });
+                    const newDiscussionChannels = newDiscussionChannelsResult.records.map((record) => {
+                        return record.get("DiscussionChannel");
+                    });
+                    const firstResult = newDiscussionChannelsResult.records[0];
+                    if (firstResult) {
+                        aggregateCount = firstResult.get("totalCount");
+                    }
                     return {
-                        discussionChannels: result,
+                        discussionChannels: newDiscussionChannels,
                         aggregateDiscussionChannelsCount: aggregateCount,
                     };
                 case "top":
@@ -137,6 +50,8 @@ const getResolver = (input) => {
                     }
                     const topDiscussionChannelsResult = await session.run(getDiscussionChannelsQuery, {
                         searchInput,
+                        titleRegex,
+                        bodyRegex,
                         selectedTags: selectedTags || [],
                         channelUniqueName,
                         offset: parseInt(offset, 10),
@@ -147,6 +62,10 @@ const getResolver = (input) => {
                     const topDiscussionChannels = topDiscussionChannelsResult.records.map((record) => {
                         return record.get("DiscussionChannel");
                     });
+                    const firstTopResult = topDiscussionChannelsResult.records[0];
+                    if (firstTopResult) {
+                        aggregateCount = firstTopResult.get("totalCount");
+                    }
                     return {
                         discussionChannels: topDiscussionChannels,
                         aggregateDiscussionChannelsCount: aggregateCount,
@@ -156,6 +75,8 @@ const getResolver = (input) => {
                     // which takes into account both weightedVotesCount and createdAt.
                     const hotDiscussionChannelsResult = await session.run(getDiscussionChannelsQuery, {
                         searchInput,
+                        titleRegex,
+                        bodyRegex,
                         selectedTags: selectedTags || [],
                         channelUniqueName,
                         offset: parseInt(offset, 10),
@@ -166,6 +87,10 @@ const getResolver = (input) => {
                     const hotDiscussionChannels = hotDiscussionChannelsResult.records.map((record) => {
                         return record.get("DiscussionChannel");
                     });
+                    const firstHotResult = hotDiscussionChannelsResult.records[0];
+                    if (firstHotResult) {
+                        aggregateCount = firstHotResult.get("totalCount");
+                    }
                     return {
                         discussionChannels: hotDiscussionChannels,
                         aggregateDiscussionChannelsCount: aggregateCount,
