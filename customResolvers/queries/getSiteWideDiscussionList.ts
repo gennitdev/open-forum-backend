@@ -34,63 +34,18 @@ const getResolver = (input: Input) => {
     const { offset, limit, resultsOrder, sort, timeFrame } = options || {};
 
     const session = driver.session();
+    let titleRegex = `(?i).*${searchInput}.*`;
+    let bodyRegex = `(?i).*${searchInput}.*`;
 
     try {
-      const filters = [];
-
-      if (searchInput) {
-        filters.push({
-          OR: [
-            {
-              title_CONTAINS: searchInput,
-            },
-            {
-              body_CONTAINS: searchInput,
-            },
-          ],
-        });
-      }
-
-      if (selectedTags?.length > 0) {
-        filters.push({
-          Tags: {
-            text_IN: selectedTags,
-          },
-        });
-      }
-
-      if (selectedChannels?.length > 0) {
-        filters.push({
-          DiscussionChannels_SOME: {
-            channelUniqueName_IN: selectedChannels,
-          },
-        });
-      }
-
-      // We use the OGM for counting the results, but for sorting them
-      // we use our own fancy custom cypher query because the order is complicated.
-      const aggregateDiscussionCountResult = await Discussion.aggregate({
-        where: {
-          AND: filters,
-        },
-        aggregate: {
-          count: true,
-        },
-      });
-      const count = aggregateDiscussionCountResult?.count || 0;
-
-      if (count === 0) {
-        return {
-          discussions: [],
-          aggregateDiscussionCount: 0,
-        };
-      }
       switch (sort) {
         case "new":
           let newDiscussionResult = await session.run(
             getSiteWideDiscussionsQuery,
             {
               searchInput,
+              titleRegex,
+              bodyRegex,
               selectedChannels,
               selectedTags,
               offset,
@@ -101,16 +56,18 @@ const getResolver = (input: Input) => {
             }
           );
 
-          const newDiscussions = newDiscussionResult.records.map(
-            (record: any) => {
-              return record.get("discussion");
-            }
-          );
+          // For each record, do record.get("discussion") to get the discussions
+          let newRecord = newDiscussionResult.records[0]; // Assuming there's only one result row
+          let totalCount = newRecord.get("totalCount") || 0;
+          let discussions = newDiscussionResult.records.map((record: any) => {
+            return record.get("discussion")
+          })
 
           return {
-            discussions: newDiscussions,
-            aggregateDiscussionCount: count,
+            discussions,
+            aggregateDiscussionCount: totalCount,
           };
+
         case "top":
           // if sort is "top", get the Discussions sorted by the sum of the
           // weightedVotesCounts of the related DiscussionChannels.
@@ -120,10 +77,13 @@ const getResolver = (input: Input) => {
           if (timeFrameOptions[timeFrame]) {
             selectedTimeFrame = timeFrameOptions[timeFrame].start;
           }
-          const topDiscussionsResult = await session.run(
+
+          let topDiscussionsResult = await session.run(
             getSiteWideDiscussionsQuery,
             {
               searchInput,
+              titleRegex,
+              bodyRegex,
               selectedChannels,
               selectedTags,
               offset,
@@ -134,23 +94,27 @@ const getResolver = (input: Input) => {
             }
           );
 
-          const discussions = topDiscussionsResult.records.map(
-            (record: any) => {
-              return record.get("discussion");
-            }
-          );
+          // Extract the total count and the discussions from the query result
+          let topRecord = topDiscussionsResult.records[0]; // Assuming there's only one result row
+          let topTotalCount = topRecord.get("totalCount");
+          let topDiscussions = topDiscussionsResult.records.map((record: any) => {
+            return record.get("discussion")
+          })
 
           return {
-            discussions,
-            aggregateDiscussionCount: count,
+            discussions: topDiscussions,
+            aggregateDiscussionCount: topTotalCount,
           };
+
         default:
           // By default, and if sort is "hot", get the DiscussionChannels sorted by hot,
           // which takes into account both weightedVotesCount and createdAt.
-          const hotDiscussionsResult = await session.run(
+          let hotDiscussionsResult = await session.run(
             getSiteWideDiscussionsQuery,
             {
               searchInput,
+              titleRegex,
+              bodyRegex,
               selectedChannels,
               selectedTags,
               offset,
@@ -161,15 +125,16 @@ const getResolver = (input: Input) => {
             }
           );
 
-          const hotDiscussions = hotDiscussionsResult.records.map(
-            (record: any) => {
-              return record.get("discussion");
-            }
-          );
+          // Extract the total count and the discussions from the query result
+          let hotRecord = hotDiscussionsResult.records[0]; // Assuming there's only one result row
+          let hotTotalCount = hotRecord.get("totalCount");
+          let hotDiscussions = hotDiscussionsResult.records.map((record: any) => {
+            return record.get("discussion")
+          })
 
           return {
             discussions: hotDiscussions,
-            aggregateDiscussionCount: count,
+            aggregateDiscussionCount: hotTotalCount,
           };
       }
     } catch (error: any) {

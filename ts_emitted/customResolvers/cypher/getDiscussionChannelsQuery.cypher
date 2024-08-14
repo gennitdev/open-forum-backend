@@ -2,7 +2,7 @@ MATCH (dc:DiscussionChannel {channelUniqueName: $channelUniqueName})
 WHERE 
     ($searchInput = "" OR EXISTS { 
         MATCH (dc)-[:POSTED_IN_CHANNEL]->(d:Discussion) 
-        WHERE d.title CONTAINS $searchInput OR d.body CONTAINS $searchInput 
+        WHERE d.title MATCHES '(?i).*' + $searchInput + '.*' OR d.body MATCHES '(?i).*' + $searchInput + '.*'
     })
     AND (CASE WHEN $sortOption = "top" THEN (datetime(dc.createdAt).epochMillis > datetime($startOfTimeFrame).epochMillis OR $startOfTimeFrame IS NULL ) ELSE TRUE END)
     AND (

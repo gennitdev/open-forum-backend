@@ -13,55 +13,15 @@ const getResolver = (input) => {
         const { searchInput, selectedChannels, selectedTags, options } = args;
         const { offset, limit, resultsOrder, sort, timeFrame } = options || {};
         const session = driver.session();
+        let titleRegex = `(?i).*${searchInput}.*`;
+        let bodyRegex = `(?i).*${searchInput}.*`;
         try {
-            const filters = [];
-            if (searchInput) {
-                filters.push({
-                    OR: [
-                        {
-                            title_CONTAINS: searchInput,
-                        },
-                        {
-                            body_CONTAINS: searchInput,
-                        },
-                    ],
-                });
-            }
-            if ((selectedTags === null || selectedTags === void 0 ? void 0 : selectedTags.length) > 0) {
-                filters.push({
-                    Tags: {
-                        text_IN: selectedTags,
-                    },
-                });
-            }
-            if ((selectedChannels === null || selectedChannels === void 0 ? void 0 : selectedChannels.length) > 0) {
-                filters.push({
-                    DiscussionChannels_SOME: {
-                        channelUniqueName_IN: selectedChannels,
-                    },
-                });
-            }
-            // We use the OGM for counting the results, but for sorting them
-            // we use our own fancy custom cypher query because the order is complicated.
-            const aggregateDiscussionCountResult = await Discussion.aggregate({
-                where: {
-                    AND: filters,
-                },
-                aggregate: {
-                    count: true,
-                },
-            });
-            const count = (aggregateDiscussionCountResult === null || aggregateDiscussionCountResult === void 0 ? void 0 : aggregateDiscussionCountResult.count) || 0;
-            if (count === 0) {
-                return {
-                    discussions: [],
-                    aggregateDiscussionCount: 0,
-                };
-            }
             switch (sort) {
                 case "new":
                     let newDiscussionResult = await session.run(getSiteWideDiscussionsQuery, {
                         searchInput,
+                        titleRegex,
+                        bodyRegex,
                         selectedChannels,
                         selectedTags,
                         offset,
@@ -70,12 +30,15 @@ const getResolver = (input) => {
                         startOfTimeFrame: null,
                         sortOption: "new",
                     });
-                    const newDiscussions = newDiscussionResult.records.map((record) => {
+                    // For each record, do record.get("discussion") to get the discussions
+                    let newRecord = newDiscussionResult.records[0]; // Assuming there's only one result row
+                    let totalCount = newRecord.get("totalCount") || 0;
+                    let discussions = newDiscussionResult.records.map((record) => {
                         return record.get("discussion");
                     });
                     return {
-                        discussions: newDiscussions,
-                        aggregateDiscussionCount: count,
+                        discussions,
+                        aggregateDiscussionCount: totalCount,
                     };
                 case "top":
                     // if sort is "top", get the Discussions sorted by the sum of the
@@ -85,8 +48,10 @@ const getResolver = (input) => {
                     if (timeFrameOptions[timeFrame]) {
                         selectedTimeFrame = timeFrameOptions[timeFrame].start;
                     }
-                    const topDiscussionsResult = await session.run(getSiteWideDiscussionsQuery, {
+                    let topDiscussionsResult = await session.run(getSiteWideDiscussionsQuery, {
                         searchInput,
+                        titleRegex,
+                        bodyRegex,
                         selectedChannels,
                         selectedTags,
                         offset,
@@ -95,18 +60,23 @@ const getResolver = (input) => {
                         startOfTimeFrame: selectedTimeFrame,
                         sortOption: "top",
                     });
-                    const discussions = topDiscussionsResult.records.map((record) => {
+                    // Extract the total count and the discussions from the query result
+                    let topRecord = topDiscussionsResult.records[0]; // Assuming there's only one result row
+                    let topTotalCount = topRecord.get("totalCount");
+                    let topDiscussions = topDiscussionsResult.records.map((record) => {
                         return record.get("discussion");
                     });
                     return {
-                        discussions,
-                        aggregateDiscussionCount: count,
+                        discussions: topDiscussions,
+                        aggregateDiscussionCount: topTotalCount,
                     };
                 default:
                     // By default, and if sort is "hot", get the DiscussionChannels sorted by hot,
                     // which takes into account both weightedVotesCount and createdAt.
-                    const hotDiscussionsResult = await session.run(getSiteWideDiscussionsQuery, {
+                    let hotDiscussionsResult = await session.run(getSiteWideDiscussionsQuery, {
                         searchInput,
+                        titleRegex,
+                        bodyRegex,
                         selectedChannels,
                         selectedTags,
                         offset,
@@ -115,12 +85,15 @@ const getResolver = (input) => {
                         startOfTimeFrame: null,
                         sortOption: "hot",
                     });
-                    const hotDiscussions = hotDiscussionsResult.records.map((record) => {
+                    // Extract the total count and the discussions from the query result
+                    let hotRecord = hotDiscussionsResult.records[0]; // Assuming there's only one result row
+                    let hotTotalCount = hotRecord.get("totalCount");
+                    let hotDiscussions = hotDiscussionsResult.records.map((record) => {
                         return record.get("discussion");
                     });
                     return {
                         discussions: hotDiscussions,
-                        aggregateDiscussionCount: count,
+                        aggregateDiscussionCount: hotTotalCount,
                     };
             }
         }

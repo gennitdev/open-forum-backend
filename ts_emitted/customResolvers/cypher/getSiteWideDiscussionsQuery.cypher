@@ -1,7 +1,7 @@
 MATCH (d:Discussion)
 WHERE EXISTS((d)<-[:POSTED_IN_CHANNEL]-(:DiscussionChannel))
 AND (CASE WHEN $sortOption = "top" THEN datetime(d.createdAt).epochMillis > datetime($startOfTimeFrame).epochMillis ELSE TRUE END)
-AND ($searchInput = "" OR d.title CONTAINS $searchInput OR d.body CONTAINS $searchInput)
+AND ($searchInput = "" OR d.title =~ $titleRegex OR d.body =~ $bodyRegex)
 
 // Collect all discussion channels associated with a discussion
 WITH d
@@ -82,8 +82,23 @@ WITH d, tagsText, author, discussionChannels, score, rank,
 WITH d, tagsText, author, discussionChannels, score, rank,
     [role IN serverRoles | {showAdminTag: role.showAdminTag}] AS serverRoles
 
-RETURN
-{
+// Get the total count before pagination
+WITH COUNT(d) AS totalCount, d, tagsText, author, discussionChannels, score, rank, serverRoles
+
+// Sort based on individual elements, not the collection
+ORDER BY 
+    CASE WHEN $sortOption = "new" THEN d.createdAt END DESC,
+    CASE WHEN $sortOption = "top" THEN score END DESC,
+    CASE WHEN $sortOption = "hot" THEN rank END DESC,
+    d.createdAt DESC
+
+// Apply pagination
+WITH totalCount, d, tagsText, author, discussionChannels, score, rank, serverRoles
+SKIP toInteger($offset)
+LIMIT toInteger($limit)
+
+// Return the results
+RETURN {
     id: d.id,
     title: d.title,
     body: d.body,
@@ -103,12 +118,4 @@ RETURN
               END,
     DiscussionChannels: discussionChannels,
     Tags: [t IN tagsText | {text: t}]
-} AS discussion, score, rank
-
-ORDER BY 
-    CASE WHEN $sortOption = "new" THEN discussion.createdAt END DESC,
-    CASE WHEN $sortOption = "top" THEN score END DESC,
-    CASE WHEN $sortOption = "hot" THEN rank END DESC,
-    discussion.createdAt DESC
-SKIP toInteger($offset)
-LIMIT toInteger($limit)
+} AS discussion, totalCount
