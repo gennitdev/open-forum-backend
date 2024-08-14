@@ -58,7 +58,7 @@ const getResolver = (input: Input) => {
 
           // For each record, do record.get("discussion") to get the discussions
           let newRecord = newDiscussionResult.records[0]; // Assuming there's only one result row
-          let totalCount = newRecord.get("totalCount") || 0;
+          let totalCount = newRecord?.get ? newRecord.get("totalCount") : 0;
           let discussions = newDiscussionResult.records.map((record: any) => {
             return record.get("discussion")
           })
@@ -96,7 +96,7 @@ const getResolver = (input: Input) => {
 
           // Extract the total count and the discussions from the query result
           let topRecord = topDiscussionsResult.records[0]; // Assuming there's only one result row
-          let topTotalCount = topRecord.get("totalCount");
+          let topTotalCount = topRecord?.get ? topRecord.get("totalCount") : 0;
           let topDiscussions = topDiscussionsResult.records.map((record: any) => {
             return record.get("discussion")
           })
@@ -127,7 +127,7 @@ const getResolver = (input: Input) => {
 
           // Extract the total count and the discussions from the query result
           let hotRecord = hotDiscussionsResult.records[0]; // Assuming there's only one result row
-          let hotTotalCount = hotRecord.get("totalCount");
+          let hotTotalCount = hotRecord?.get ? hotRecord.get("totalCount") : 0;
           let hotDiscussions = hotDiscussionsResult.records.map((record: any) => {
             return record.get("discussion")
           })

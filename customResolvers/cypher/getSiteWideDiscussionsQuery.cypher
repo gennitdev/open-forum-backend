@@ -1,25 +1,34 @@
+// First, calculate the total count of discussions matching the criteria
+MATCH (d:Discussion)
+WHERE EXISTS((d)<-[:POSTED_IN_CHANNEL]-(:DiscussionChannel))
+AND (CASE WHEN $sortOption = "top" THEN datetime(d.createdAt).epochMillis > datetime($startOfTimeFrame).epochMillis ELSE TRUE END)
+AND ($searchInput = "" OR d.title =~ $titleRegex OR d.body =~ $bodyRegex)
+AND (SIZE($selectedTags) = 0 OR ANY(t IN $selectedTags WHERE EXISTS((d)-[:HAS_TAG]->(:Tag {text: t}))))
+WITH COUNT(d) AS totalCount
+
+// Now, fetch the discussions with pagination and other filters
 MATCH (d:Discussion)
 WHERE EXISTS((d)<-[:POSTED_IN_CHANNEL]-(:DiscussionChannel))
 AND (CASE WHEN $sortOption = "top" THEN datetime(d.createdAt).epochMillis > datetime($startOfTimeFrame).epochMillis ELSE TRUE END)
 AND ($searchInput = "" OR d.title =~ $titleRegex OR d.body =~ $bodyRegex)
 
 // Collect all discussion channels associated with a discussion
-WITH d
+WITH d, totalCount
 MATCH (dc:DiscussionChannel)-[:POSTED_IN_CHANNEL]->(d)
 WHERE SIZE($selectedChannels) = 0 OR dc.channelUniqueName IN $selectedChannels
-WITH d, COLLECT(dc) AS discussionChannels
+WITH d, COLLECT(dc) AS discussionChannels, totalCount
 
 // Unwind the discussion channels to work with them individually for fetching related data
 UNWIND discussionChannels AS dc
 OPTIONAL MATCH (dc)-[:UPVOTED_DISCUSSION]->(upvoter:User)
 OPTIONAL MATCH (dc)-[:CONTAINS_COMMENT]->(c:Comment)
-WITH d, dc, COLLECT(DISTINCT upvoter) AS upvotedByUsers, COUNT(DISTINCT c) AS commentsCount
-WITH d, COLLECT({dc: dc, upvotedByUsers: upvotedByUsers, commentsCount: commentsCount}) AS channelData
+WITH d, dc, COLLECT(DISTINCT upvoter) AS upvotedByUsers, COUNT(DISTINCT c) AS commentsCount, totalCount
+WITH d, COLLECT({dc: dc, upvotedByUsers: upvotedByUsers, commentsCount: commentsCount}) AS channelData, totalCount
 
 // Now, you can proceed with calculating the score and other aggregations at the discussion level
-WITH d, channelData, 
+WITH d, channelData, totalCount,
      REDUCE(s = 0, channel IN channelData | s + CASE WHEN coalesce(channel.dc.weightedVotesCount, 0) < 0 THEN 0 ELSE coalesce(channel.dc.weightedVotesCount, 0) END) AS score
-WITH d, score,
+WITH d, score, totalCount,
      [channel IN channelData |
       {
         id: channel.dc.id,
@@ -32,12 +41,12 @@ WITH d, score,
         }
       }] AS discussionChannels
 
-WITH d, discussionChannels, score
+WITH d, discussionChannels, score, totalCount
 
 // Handle tags
 OPTIONAL MATCH (d)-[:HAS_TAG]->(tag:Tag)
 
-WITH d,
+WITH d, totalCount,
     COLLECT(DISTINCT tag.text) AS tagsText,
     discussionChannels,
     score
@@ -49,7 +58,7 @@ OPTIONAL MATCH (d)<-[:POSTED_DISCUSSION]-(author:User)
 OPTIONAL MATCH (author)-[:HAS_SERVER_ROLE]->(serverRole:ServerRole)
 
 // Calculate the discussion's age in months
-WITH d, 
+WITH d, totalCount, 
   tagsText, 
   author, 
   serverRole,
@@ -59,7 +68,7 @@ WITH d,
     duration.between(d.createdAt, datetime()).days / 30.0 AS ageInMonths
 
 // Give a default value for the age in months if it's null
-WITH d, 
+WITH d, totalCount, 
   tagsText, 
   author, 
   serverRole,
@@ -68,7 +77,7 @@ WITH d,
   CASE WHEN ageInMonths IS NULL THEN 0 ELSE ageInMonths END AS ageInMonths
 
 // Calculate the rank based on the age in months and the score
-WITH d,
+WITH d, totalCount,
     tagsText,
     author, 
     serverRole,
@@ -76,14 +85,10 @@ WITH d,
     CASE WHEN score < 0 THEN 0 ELSE score END AS score, 
     CASE WHEN $sortOption = "hot" THEN 10000 * log10(score + 1) / ((ageInMonths + 2) ^ 1.8) ELSE NULL END AS rank
 
-WITH d, tagsText, author, discussionChannels, score, rank,
+WITH d, totalCount, tagsText, author, discussionChannels, score, rank,
     COLLECT(DISTINCT serverRole) AS serverRoles
 
-WITH d, tagsText, author, discussionChannels, score, rank,
-    [role IN serverRoles | {showAdminTag: role.showAdminTag}] AS serverRoles
-
-// Get the total count before pagination
-WITH COUNT(d) AS totalCount, d, tagsText, author, discussionChannels, score, rank, serverRoles
+WITH d, totalCount, tagsText, author, discussionChannels, score, rank, serverRoles
 
 // Sort based on individual elements, not the collection
 ORDER BY 
