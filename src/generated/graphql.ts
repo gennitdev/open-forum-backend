@@ -19,6 +19,812 @@ export type Scalars = {
   JSON: { input: any; output: any; }
 };
 
+export type Album = {
+  __typename?: 'Album';
+  Discussions: Array<Discussion>;
+  DiscussionsAggregate?: Maybe<AlbumDiscussionDiscussionsAggregationSelection>;
+  DiscussionsConnection: AlbumDiscussionsConnection;
+  Images: Array<Image>;
+  ImagesAggregate?: Maybe<AlbumImageImagesAggregationSelection>;
+  ImagesConnection: AlbumImagesConnection;
+  Owner?: Maybe<User>;
+  OwnerAggregate?: Maybe<AlbumUserOwnerAggregationSelection>;
+  OwnerConnection: AlbumOwnerConnection;
+  id: Scalars['ID']['output'];
+};
+
+
+export type AlbumDiscussionsArgs = {
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  options?: InputMaybe<DiscussionOptions>;
+  where?: InputMaybe<DiscussionWhere>;
+};
+
+
+export type AlbumDiscussionsAggregateArgs = {
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  where?: InputMaybe<DiscussionWhere>;
+};
+
+
+export type AlbumDiscussionsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<Array<AlbumDiscussionsConnectionSort>>;
+  where?: InputMaybe<AlbumDiscussionsConnectionWhere>;
+};
+
+
+export type AlbumImagesArgs = {
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  options?: InputMaybe<ImageOptions>;
+  where?: InputMaybe<ImageWhere>;
+};
+
+
+export type AlbumImagesAggregateArgs = {
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  where?: InputMaybe<ImageWhere>;
+};
+
+
+export type AlbumImagesConnectionArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<Array<AlbumImagesConnectionSort>>;
+  where?: InputMaybe<AlbumImagesConnectionWhere>;
+};
+
+
+export type AlbumOwnerArgs = {
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  options?: InputMaybe<UserOptions>;
+  where?: InputMaybe<UserWhere>;
+};
+
+
+export type AlbumOwnerAggregateArgs = {
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  where?: InputMaybe<UserWhere>;
+};
+
+
+export type AlbumOwnerConnectionArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<Array<AlbumOwnerConnectionSort>>;
+  where?: InputMaybe<AlbumOwnerConnectionWhere>;
+};
+
+export type AlbumAggregateSelection = {
+  __typename?: 'AlbumAggregateSelection';
+  count: Scalars['Int']['output'];
+  id: IdAggregateSelectionNonNullable;
+};
+
+export type AlbumConnectInput = {
+  Discussions?: InputMaybe<Array<AlbumDiscussionsConnectFieldInput>>;
+  Images?: InputMaybe<Array<AlbumImagesConnectFieldInput>>;
+  Owner?: InputMaybe<AlbumOwnerConnectFieldInput>;
+};
+
+export type AlbumConnectOrCreateInput = {
+  Owner?: InputMaybe<AlbumOwnerConnectOrCreateFieldInput>;
+};
+
+export type AlbumConnectWhere = {
+  node: AlbumWhere;
+};
+
+export type AlbumCreateInput = {
+  Discussions?: InputMaybe<AlbumDiscussionsFieldInput>;
+  Images?: InputMaybe<AlbumImagesFieldInput>;
+  Owner?: InputMaybe<AlbumOwnerFieldInput>;
+};
+
+export type AlbumDeleteInput = {
+  Discussions?: InputMaybe<Array<AlbumDiscussionsDeleteFieldInput>>;
+  Images?: InputMaybe<Array<AlbumImagesDeleteFieldInput>>;
+  Owner?: InputMaybe<AlbumOwnerDeleteFieldInput>;
+};
+
+export type AlbumDisconnectInput = {
+  Discussions?: InputMaybe<Array<AlbumDiscussionsDisconnectFieldInput>>;
+  Images?: InputMaybe<Array<AlbumImagesDisconnectFieldInput>>;
+  Owner?: InputMaybe<AlbumOwnerDisconnectFieldInput>;
+};
+
+export type AlbumDiscussionDiscussionsAggregationSelection = {
+  __typename?: 'AlbumDiscussionDiscussionsAggregationSelection';
+  count: Scalars['Int']['output'];
+  node?: Maybe<AlbumDiscussionDiscussionsNodeAggregateSelection>;
+};
+
+export type AlbumDiscussionDiscussionsNodeAggregateSelection = {
+  __typename?: 'AlbumDiscussionDiscussionsNodeAggregateSelection';
+  body: StringAggregateSelectionNullable;
+  createdAt: DateTimeAggregateSelectionNonNullable;
+  id: IdAggregateSelectionNonNullable;
+  title: StringAggregateSelectionNonNullable;
+  updatedAt: DateTimeAggregateSelectionNullable;
+};
+
+export type AlbumDiscussionsAggregateInput = {
+  AND?: InputMaybe<Array<AlbumDiscussionsAggregateInput>>;
+  NOT?: InputMaybe<AlbumDiscussionsAggregateInput>;
+  OR?: InputMaybe<Array<AlbumDiscussionsAggregateInput>>;
+  count?: InputMaybe<Scalars['Int']['input']>;
+  count_GT?: InputMaybe<Scalars['Int']['input']>;
+  count_GTE?: InputMaybe<Scalars['Int']['input']>;
+  count_LT?: InputMaybe<Scalars['Int']['input']>;
+  count_LTE?: InputMaybe<Scalars['Int']['input']>;
+  node?: InputMaybe<AlbumDiscussionsNodeAggregationWhereInput>;
+};
+
+export type AlbumDiscussionsConnectFieldInput = {
+  connect?: InputMaybe<Array<DiscussionConnectInput>>;
+  /** Whether or not to overwrite any matching relationship with the new properties. */
+  overwrite?: Scalars['Boolean']['input'];
+  where?: InputMaybe<DiscussionConnectWhere>;
+};
+
+export type AlbumDiscussionsConnection = {
+  __typename?: 'AlbumDiscussionsConnection';
+  edges: Array<AlbumDiscussionsRelationship>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type AlbumDiscussionsConnectionSort = {
+  node?: InputMaybe<DiscussionSort>;
+};
+
+export type AlbumDiscussionsConnectionWhere = {
+  AND?: InputMaybe<Array<AlbumDiscussionsConnectionWhere>>;
+  NOT?: InputMaybe<AlbumDiscussionsConnectionWhere>;
+  OR?: InputMaybe<Array<AlbumDiscussionsConnectionWhere>>;
+  node?: InputMaybe<DiscussionWhere>;
+};
+
+export type AlbumDiscussionsCreateFieldInput = {
+  node: DiscussionCreateInput;
+};
+
+export type AlbumDiscussionsDeleteFieldInput = {
+  delete?: InputMaybe<DiscussionDeleteInput>;
+  where?: InputMaybe<AlbumDiscussionsConnectionWhere>;
+};
+
+export type AlbumDiscussionsDisconnectFieldInput = {
+  disconnect?: InputMaybe<DiscussionDisconnectInput>;
+  where?: InputMaybe<AlbumDiscussionsConnectionWhere>;
+};
+
+export type AlbumDiscussionsFieldInput = {
+  connect?: InputMaybe<Array<AlbumDiscussionsConnectFieldInput>>;
+  create?: InputMaybe<Array<AlbumDiscussionsCreateFieldInput>>;
+};
+
+export type AlbumDiscussionsNodeAggregationWhereInput = {
+  AND?: InputMaybe<Array<AlbumDiscussionsNodeAggregationWhereInput>>;
+  NOT?: InputMaybe<AlbumDiscussionsNodeAggregationWhereInput>;
+  OR?: InputMaybe<Array<AlbumDiscussionsNodeAggregationWhereInput>>;
+  body_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  body_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  body_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  body_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  body_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  body_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  body_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  body_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  body_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  body_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  body_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  body_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  body_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  body_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  body_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  createdAt_MAX_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+  title_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  title_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  title_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  title_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  title_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  title_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  title_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  title_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  title_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  title_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  title_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  title_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  title_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  title_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  title_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  updatedAt_MAX_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MAX_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MAX_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MAX_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MAX_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MIN_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MIN_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MIN_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MIN_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MIN_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+};
+
+export type AlbumDiscussionsRelationship = {
+  __typename?: 'AlbumDiscussionsRelationship';
+  cursor: Scalars['String']['output'];
+  node: Discussion;
+};
+
+export type AlbumDiscussionsUpdateConnectionInput = {
+  node?: InputMaybe<DiscussionUpdateInput>;
+};
+
+export type AlbumDiscussionsUpdateFieldInput = {
+  connect?: InputMaybe<Array<AlbumDiscussionsConnectFieldInput>>;
+  create?: InputMaybe<Array<AlbumDiscussionsCreateFieldInput>>;
+  delete?: InputMaybe<Array<AlbumDiscussionsDeleteFieldInput>>;
+  disconnect?: InputMaybe<Array<AlbumDiscussionsDisconnectFieldInput>>;
+  update?: InputMaybe<AlbumDiscussionsUpdateConnectionInput>;
+  where?: InputMaybe<AlbumDiscussionsConnectionWhere>;
+};
+
+export type AlbumEdge = {
+  __typename?: 'AlbumEdge';
+  cursor: Scalars['String']['output'];
+  node: Album;
+};
+
+export type AlbumImageImagesAggregationSelection = {
+  __typename?: 'AlbumImageImagesAggregationSelection';
+  count: Scalars['Int']['output'];
+  node?: Maybe<AlbumImageImagesNodeAggregateSelection>;
+};
+
+export type AlbumImageImagesNodeAggregateSelection = {
+  __typename?: 'AlbumImageImagesNodeAggregateSelection';
+  alt: StringAggregateSelectionNullable;
+  caption: StringAggregateSelectionNullable;
+  copyright: StringAggregateSelectionNullable;
+  id: IdAggregateSelectionNonNullable;
+  url: StringAggregateSelectionNullable;
+};
+
+export type AlbumImagesAggregateInput = {
+  AND?: InputMaybe<Array<AlbumImagesAggregateInput>>;
+  NOT?: InputMaybe<AlbumImagesAggregateInput>;
+  OR?: InputMaybe<Array<AlbumImagesAggregateInput>>;
+  count?: InputMaybe<Scalars['Int']['input']>;
+  count_GT?: InputMaybe<Scalars['Int']['input']>;
+  count_GTE?: InputMaybe<Scalars['Int']['input']>;
+  count_LT?: InputMaybe<Scalars['Int']['input']>;
+  count_LTE?: InputMaybe<Scalars['Int']['input']>;
+  node?: InputMaybe<AlbumImagesNodeAggregationWhereInput>;
+};
+
+export type AlbumImagesConnectFieldInput = {
+  connect?: InputMaybe<Array<ImageConnectInput>>;
+  /** Whether or not to overwrite any matching relationship with the new properties. */
+  overwrite?: Scalars['Boolean']['input'];
+  where?: InputMaybe<ImageConnectWhere>;
+};
+
+export type AlbumImagesConnection = {
+  __typename?: 'AlbumImagesConnection';
+  edges: Array<AlbumImagesRelationship>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type AlbumImagesConnectionSort = {
+  node?: InputMaybe<ImageSort>;
+};
+
+export type AlbumImagesConnectionWhere = {
+  AND?: InputMaybe<Array<AlbumImagesConnectionWhere>>;
+  NOT?: InputMaybe<AlbumImagesConnectionWhere>;
+  OR?: InputMaybe<Array<AlbumImagesConnectionWhere>>;
+  node?: InputMaybe<ImageWhere>;
+};
+
+export type AlbumImagesCreateFieldInput = {
+  node: ImageCreateInput;
+};
+
+export type AlbumImagesDeleteFieldInput = {
+  delete?: InputMaybe<ImageDeleteInput>;
+  where?: InputMaybe<AlbumImagesConnectionWhere>;
+};
+
+export type AlbumImagesDisconnectFieldInput = {
+  disconnect?: InputMaybe<ImageDisconnectInput>;
+  where?: InputMaybe<AlbumImagesConnectionWhere>;
+};
+
+export type AlbumImagesFieldInput = {
+  connect?: InputMaybe<Array<AlbumImagesConnectFieldInput>>;
+  create?: InputMaybe<Array<AlbumImagesCreateFieldInput>>;
+};
+
+export type AlbumImagesNodeAggregationWhereInput = {
+  AND?: InputMaybe<Array<AlbumImagesNodeAggregationWhereInput>>;
+  NOT?: InputMaybe<AlbumImagesNodeAggregationWhereInput>;
+  OR?: InputMaybe<Array<AlbumImagesNodeAggregationWhereInput>>;
+  alt_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  alt_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  alt_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  alt_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  alt_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  alt_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  alt_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  alt_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  alt_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  alt_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  alt_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  alt_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  alt_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  alt_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  alt_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  caption_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  caption_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  caption_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  caption_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  caption_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  caption_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  caption_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  caption_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  caption_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  caption_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  caption_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  caption_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  caption_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  caption_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  caption_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  copyright_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  copyright_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  copyright_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  copyright_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  copyright_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  copyright_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  copyright_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  copyright_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  copyright_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  copyright_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  copyright_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  copyright_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  copyright_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  copyright_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  copyright_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  url_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  url_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  url_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  url_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  url_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  url_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  url_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  url_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  url_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  url_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  url_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  url_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  url_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  url_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  url_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type AlbumImagesRelationship = {
+  __typename?: 'AlbumImagesRelationship';
+  cursor: Scalars['String']['output'];
+  node: Image;
+};
+
+export type AlbumImagesUpdateConnectionInput = {
+  node?: InputMaybe<ImageUpdateInput>;
+};
+
+export type AlbumImagesUpdateFieldInput = {
+  connect?: InputMaybe<Array<AlbumImagesConnectFieldInput>>;
+  create?: InputMaybe<Array<AlbumImagesCreateFieldInput>>;
+  delete?: InputMaybe<Array<AlbumImagesDeleteFieldInput>>;
+  disconnect?: InputMaybe<Array<AlbumImagesDisconnectFieldInput>>;
+  update?: InputMaybe<AlbumImagesUpdateConnectionInput>;
+  where?: InputMaybe<AlbumImagesConnectionWhere>;
+};
+
+export type AlbumOptions = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  /** Specify one or more AlbumSort objects to sort Albums by. The sorts will be applied in the order in which they are arranged in the array. */
+  sort?: InputMaybe<Array<AlbumSort>>;
+};
+
+export type AlbumOwnerAggregateInput = {
+  AND?: InputMaybe<Array<AlbumOwnerAggregateInput>>;
+  NOT?: InputMaybe<AlbumOwnerAggregateInput>;
+  OR?: InputMaybe<Array<AlbumOwnerAggregateInput>>;
+  count?: InputMaybe<Scalars['Int']['input']>;
+  count_GT?: InputMaybe<Scalars['Int']['input']>;
+  count_GTE?: InputMaybe<Scalars['Int']['input']>;
+  count_LT?: InputMaybe<Scalars['Int']['input']>;
+  count_LTE?: InputMaybe<Scalars['Int']['input']>;
+  node?: InputMaybe<AlbumOwnerNodeAggregationWhereInput>;
+};
+
+export type AlbumOwnerConnectFieldInput = {
+  connect?: InputMaybe<UserConnectInput>;
+  /** Whether or not to overwrite any matching relationship with the new properties. */
+  overwrite?: Scalars['Boolean']['input'];
+  where?: InputMaybe<UserConnectWhere>;
+};
+
+export type AlbumOwnerConnectOrCreateFieldInput = {
+  onCreate: AlbumOwnerConnectOrCreateFieldInputOnCreate;
+  where: UserConnectOrCreateWhere;
+};
+
+export type AlbumOwnerConnectOrCreateFieldInputOnCreate = {
+  node: UserOnCreateInput;
+};
+
+export type AlbumOwnerConnection = {
+  __typename?: 'AlbumOwnerConnection';
+  edges: Array<AlbumOwnerRelationship>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type AlbumOwnerConnectionSort = {
+  node?: InputMaybe<UserSort>;
+};
+
+export type AlbumOwnerConnectionWhere = {
+  AND?: InputMaybe<Array<AlbumOwnerConnectionWhere>>;
+  NOT?: InputMaybe<AlbumOwnerConnectionWhere>;
+  OR?: InputMaybe<Array<AlbumOwnerConnectionWhere>>;
+  node?: InputMaybe<UserWhere>;
+};
+
+export type AlbumOwnerCreateFieldInput = {
+  node: UserCreateInput;
+};
+
+export type AlbumOwnerDeleteFieldInput = {
+  delete?: InputMaybe<UserDeleteInput>;
+  where?: InputMaybe<AlbumOwnerConnectionWhere>;
+};
+
+export type AlbumOwnerDisconnectFieldInput = {
+  disconnect?: InputMaybe<UserDisconnectInput>;
+  where?: InputMaybe<AlbumOwnerConnectionWhere>;
+};
+
+export type AlbumOwnerFieldInput = {
+  connect?: InputMaybe<AlbumOwnerConnectFieldInput>;
+  connectOrCreate?: InputMaybe<AlbumOwnerConnectOrCreateFieldInput>;
+  create?: InputMaybe<AlbumOwnerCreateFieldInput>;
+};
+
+export type AlbumOwnerNodeAggregationWhereInput = {
+  AND?: InputMaybe<Array<AlbumOwnerNodeAggregationWhereInput>>;
+  DefaultEmojiSkinTone_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  DefaultEmojiSkinTone_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  DefaultEmojiSkinTone_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  DefaultEmojiSkinTone_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  DefaultEmojiSkinTone_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  DefaultEmojiSkinTone_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  DefaultEmojiSkinTone_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  DefaultEmojiSkinTone_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  DefaultEmojiSkinTone_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  DefaultEmojiSkinTone_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  DefaultEmojiSkinTone_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  DefaultEmojiSkinTone_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  DefaultEmojiSkinTone_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  DefaultEmojiSkinTone_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  DefaultEmojiSkinTone_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  NOT?: InputMaybe<AlbumOwnerNodeAggregationWhereInput>;
+  NotificationBundleInterval_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  NotificationBundleInterval_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  NotificationBundleInterval_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  NotificationBundleInterval_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  NotificationBundleInterval_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  NotificationBundleInterval_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  NotificationBundleInterval_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  NotificationBundleInterval_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  NotificationBundleInterval_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  NotificationBundleInterval_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  NotificationBundleInterval_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  NotificationBundleInterval_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  NotificationBundleInterval_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  NotificationBundleInterval_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  NotificationBundleInterval_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  OR?: InputMaybe<Array<AlbumOwnerNodeAggregationWhereInput>>;
+  PreferredTimeZone_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  PreferredTimeZone_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  PreferredTimeZone_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  PreferredTimeZone_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  PreferredTimeZone_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  PreferredTimeZone_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  PreferredTimeZone_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  PreferredTimeZone_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  PreferredTimeZone_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  PreferredTimeZone_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  PreferredTimeZone_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  PreferredTimeZone_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  PreferredTimeZone_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  PreferredTimeZone_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  PreferredTimeZone_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  bio_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  bio_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  bio_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  bio_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  bio_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  bio_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  bio_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  bio_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  bio_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  bio_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  bio_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  bio_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  bio_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  bio_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  bio_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_AVERAGE_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  commentKarma_AVERAGE_GT?: InputMaybe<Scalars['Float']['input']>;
+  commentKarma_AVERAGE_GTE?: InputMaybe<Scalars['Float']['input']>;
+  commentKarma_AVERAGE_LT?: InputMaybe<Scalars['Float']['input']>;
+  commentKarma_AVERAGE_LTE?: InputMaybe<Scalars['Float']['input']>;
+  commentKarma_MAX_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_MAX_GT?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_MAX_GTE?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_MAX_LT?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_MAX_LTE?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_MIN_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_MIN_GT?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_MIN_GTE?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_MIN_LT?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_MIN_LTE?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_SUM_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_SUM_GT?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_SUM_GTE?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_SUM_LT?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_SUM_LTE?: InputMaybe<Scalars['Int']['input']>;
+  createdAt_MAX_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+  discussionKarma_AVERAGE_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  discussionKarma_AVERAGE_GT?: InputMaybe<Scalars['Float']['input']>;
+  discussionKarma_AVERAGE_GTE?: InputMaybe<Scalars['Float']['input']>;
+  discussionKarma_AVERAGE_LT?: InputMaybe<Scalars['Float']['input']>;
+  discussionKarma_AVERAGE_LTE?: InputMaybe<Scalars['Float']['input']>;
+  discussionKarma_MAX_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_MAX_GT?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_MAX_GTE?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_MAX_LT?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_MAX_LTE?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_MIN_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_MIN_GT?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_MIN_GTE?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_MIN_LT?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_MIN_LTE?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_SUM_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_SUM_GT?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_SUM_GTE?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_SUM_LT?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_SUM_LTE?: InputMaybe<Scalars['Int']['input']>;
+  displayName_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  displayName_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  displayName_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  displayName_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  displayName_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  displayName_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  displayName_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  displayName_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  displayName_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  displayName_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  displayName_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  displayName_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  displayName_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  displayName_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  displayName_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  location_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  location_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  location_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  location_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  location_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  location_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  location_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  location_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  location_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  location_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  location_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  location_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  location_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  location_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  location_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  profilePicURL_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  profilePicURL_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  profilePicURL_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  profilePicURL_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  profilePicURL_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  profilePicURL_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  profilePicURL_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  profilePicURL_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  profilePicURL_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  profilePicURL_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  profilePicURL_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  profilePicURL_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  profilePicURL_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  profilePicURL_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  profilePicURL_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  pronouns_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  pronouns_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  pronouns_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  pronouns_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  pronouns_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  pronouns_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  pronouns_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  pronouns_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  pronouns_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  pronouns_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  pronouns_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  pronouns_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  pronouns_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  pronouns_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  pronouns_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  username_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  username_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  username_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  username_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  username_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  username_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  username_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  username_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  username_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  username_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  username_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  username_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  username_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  username_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  username_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type AlbumOwnerRelationship = {
+  __typename?: 'AlbumOwnerRelationship';
+  cursor: Scalars['String']['output'];
+  node: User;
+};
+
+export type AlbumOwnerUpdateConnectionInput = {
+  node?: InputMaybe<UserUpdateInput>;
+};
+
+export type AlbumOwnerUpdateFieldInput = {
+  connect?: InputMaybe<AlbumOwnerConnectFieldInput>;
+  connectOrCreate?: InputMaybe<AlbumOwnerConnectOrCreateFieldInput>;
+  create?: InputMaybe<AlbumOwnerCreateFieldInput>;
+  delete?: InputMaybe<AlbumOwnerDeleteFieldInput>;
+  disconnect?: InputMaybe<AlbumOwnerDisconnectFieldInput>;
+  update?: InputMaybe<AlbumOwnerUpdateConnectionInput>;
+  where?: InputMaybe<AlbumOwnerConnectionWhere>;
+};
+
+export type AlbumRelationInput = {
+  Discussions?: InputMaybe<Array<AlbumDiscussionsCreateFieldInput>>;
+  Images?: InputMaybe<Array<AlbumImagesCreateFieldInput>>;
+  Owner?: InputMaybe<AlbumOwnerCreateFieldInput>;
+};
+
+/** Fields to sort Albums by. The order in which sorts are applied is not guaranteed when specifying many fields in one AlbumSort object. */
+export type AlbumSort = {
+  id?: InputMaybe<SortDirection>;
+};
+
+export type AlbumUpdateInput = {
+  Discussions?: InputMaybe<Array<AlbumDiscussionsUpdateFieldInput>>;
+  Images?: InputMaybe<Array<AlbumImagesUpdateFieldInput>>;
+  Owner?: InputMaybe<AlbumOwnerUpdateFieldInput>;
+};
+
+export type AlbumUserOwnerAggregationSelection = {
+  __typename?: 'AlbumUserOwnerAggregationSelection';
+  count: Scalars['Int']['output'];
+  node?: Maybe<AlbumUserOwnerNodeAggregateSelection>;
+};
+
+export type AlbumUserOwnerNodeAggregateSelection = {
+  __typename?: 'AlbumUserOwnerNodeAggregateSelection';
+  DefaultEmojiSkinTone: StringAggregateSelectionNullable;
+  NotificationBundleInterval: StringAggregateSelectionNullable;
+  PreferredTimeZone: StringAggregateSelectionNullable;
+  bio: StringAggregateSelectionNullable;
+  commentKarma: IntAggregateSelectionNullable;
+  createdAt: DateTimeAggregateSelectionNonNullable;
+  discussionKarma: IntAggregateSelectionNullable;
+  displayName: StringAggregateSelectionNullable;
+  location: StringAggregateSelectionNullable;
+  profilePicURL: StringAggregateSelectionNullable;
+  pronouns: StringAggregateSelectionNullable;
+  username: StringAggregateSelectionNonNullable;
+};
+
+export type AlbumWhere = {
+  AND?: InputMaybe<Array<AlbumWhere>>;
+  DiscussionsAggregate?: InputMaybe<AlbumDiscussionsAggregateInput>;
+  /** Return Albums where all of the related AlbumDiscussionsConnections match this filter */
+  DiscussionsConnection_ALL?: InputMaybe<AlbumDiscussionsConnectionWhere>;
+  /** Return Albums where none of the related AlbumDiscussionsConnections match this filter */
+  DiscussionsConnection_NONE?: InputMaybe<AlbumDiscussionsConnectionWhere>;
+  /** Return Albums where one of the related AlbumDiscussionsConnections match this filter */
+  DiscussionsConnection_SINGLE?: InputMaybe<AlbumDiscussionsConnectionWhere>;
+  /** Return Albums where some of the related AlbumDiscussionsConnections match this filter */
+  DiscussionsConnection_SOME?: InputMaybe<AlbumDiscussionsConnectionWhere>;
+  /** Return Albums where all of the related Discussions match this filter */
+  Discussions_ALL?: InputMaybe<DiscussionWhere>;
+  /** Return Albums where none of the related Discussions match this filter */
+  Discussions_NONE?: InputMaybe<DiscussionWhere>;
+  /** Return Albums where one of the related Discussions match this filter */
+  Discussions_SINGLE?: InputMaybe<DiscussionWhere>;
+  /** Return Albums where some of the related Discussions match this filter */
+  Discussions_SOME?: InputMaybe<DiscussionWhere>;
+  ImagesAggregate?: InputMaybe<AlbumImagesAggregateInput>;
+  /** Return Albums where all of the related AlbumImagesConnections match this filter */
+  ImagesConnection_ALL?: InputMaybe<AlbumImagesConnectionWhere>;
+  /** Return Albums where none of the related AlbumImagesConnections match this filter */
+  ImagesConnection_NONE?: InputMaybe<AlbumImagesConnectionWhere>;
+  /** Return Albums where one of the related AlbumImagesConnections match this filter */
+  ImagesConnection_SINGLE?: InputMaybe<AlbumImagesConnectionWhere>;
+  /** Return Albums where some of the related AlbumImagesConnections match this filter */
+  ImagesConnection_SOME?: InputMaybe<AlbumImagesConnectionWhere>;
+  /** Return Albums where all of the related Images match this filter */
+  Images_ALL?: InputMaybe<ImageWhere>;
+  /** Return Albums where none of the related Images match this filter */
+  Images_NONE?: InputMaybe<ImageWhere>;
+  /** Return Albums where one of the related Images match this filter */
+  Images_SINGLE?: InputMaybe<ImageWhere>;
+  /** Return Albums where some of the related Images match this filter */
+  Images_SOME?: InputMaybe<ImageWhere>;
+  NOT?: InputMaybe<AlbumWhere>;
+  OR?: InputMaybe<Array<AlbumWhere>>;
+  Owner?: InputMaybe<UserWhere>;
+  OwnerAggregate?: InputMaybe<AlbumOwnerAggregateInput>;
+  OwnerConnection?: InputMaybe<AlbumOwnerConnectionWhere>;
+  OwnerConnection_NOT?: InputMaybe<AlbumOwnerConnectionWhere>;
+  Owner_NOT?: InputMaybe<UserWhere>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  id_CONTAINS?: InputMaybe<Scalars['ID']['input']>;
+  id_ENDS_WITH?: InputMaybe<Scalars['ID']['input']>;
+  id_IN?: InputMaybe<Array<Scalars['ID']['input']>>;
+  id_STARTS_WITH?: InputMaybe<Scalars['ID']['input']>;
+};
+
+export type AlbumsConnection = {
+  __typename?: 'AlbumsConnection';
+  edges: Array<AlbumEdge>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
 export type Channel = {
   __typename?: 'Channel';
   Admins: Array<User>;
@@ -5429,6 +6235,12 @@ export type CommentsConnection = {
   totalCount: Scalars['Int']['output'];
 };
 
+export type CreateAlbumsMutationResponse = {
+  __typename?: 'CreateAlbumsMutationResponse';
+  albums: Array<Album>;
+  info: CreateInfo;
+};
+
 export type CreateChannelRolesMutationResponse = {
   __typename?: 'CreateChannelRolesMutationResponse';
   channelRoles: Array<ChannelRole>;
@@ -5516,6 +6328,12 @@ export type CreateFeedsMutationResponse = {
 export type CreateGetSubredditResponsesMutationResponse = {
   __typename?: 'CreateGetSubredditResponsesMutationResponse';
   getSubredditResponses: Array<GetSubredditResponse>;
+  info: CreateInfo;
+};
+
+export type CreateImagesMutationResponse = {
+  __typename?: 'CreateImagesMutationResponse';
+  images: Array<Image>;
   info: CreateInfo;
 };
 
@@ -5653,6 +6471,9 @@ export type DeleteInfo = {
 
 export type Discussion = {
   __typename?: 'Discussion';
+  Album?: Maybe<Album>;
+  AlbumAggregate?: Maybe<DiscussionAlbumAlbumAggregationSelection>;
+  AlbumConnection: DiscussionAlbumConnection;
   Author?: Maybe<User>;
   AuthorAggregate?: Maybe<DiscussionUserAuthorAggregationSelection>;
   AuthorConnection: DiscussionAuthorConnection;
@@ -5674,6 +6495,28 @@ export type Discussion = {
   id: Scalars['ID']['output'];
   title: Scalars['String']['output'];
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
+};
+
+
+export type DiscussionAlbumArgs = {
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  options?: InputMaybe<AlbumOptions>;
+  where?: InputMaybe<AlbumWhere>;
+};
+
+
+export type DiscussionAlbumAggregateArgs = {
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  where?: InputMaybe<AlbumWhere>;
+};
+
+
+export type DiscussionAlbumConnectionArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<Array<DiscussionAlbumConnectionSort>>;
+  where?: InputMaybe<DiscussionAlbumConnectionWhere>;
 };
 
 
@@ -5794,6 +6637,98 @@ export type DiscussionAggregateSelection = {
   id: IdAggregateSelectionNonNullable;
   title: StringAggregateSelectionNonNullable;
   updatedAt: DateTimeAggregateSelectionNullable;
+};
+
+export type DiscussionAlbumAggregateInput = {
+  AND?: InputMaybe<Array<DiscussionAlbumAggregateInput>>;
+  NOT?: InputMaybe<DiscussionAlbumAggregateInput>;
+  OR?: InputMaybe<Array<DiscussionAlbumAggregateInput>>;
+  count?: InputMaybe<Scalars['Int']['input']>;
+  count_GT?: InputMaybe<Scalars['Int']['input']>;
+  count_GTE?: InputMaybe<Scalars['Int']['input']>;
+  count_LT?: InputMaybe<Scalars['Int']['input']>;
+  count_LTE?: InputMaybe<Scalars['Int']['input']>;
+  node?: InputMaybe<DiscussionAlbumNodeAggregationWhereInput>;
+};
+
+export type DiscussionAlbumAlbumAggregationSelection = {
+  __typename?: 'DiscussionAlbumAlbumAggregationSelection';
+  count: Scalars['Int']['output'];
+  node?: Maybe<DiscussionAlbumAlbumNodeAggregateSelection>;
+};
+
+export type DiscussionAlbumAlbumNodeAggregateSelection = {
+  __typename?: 'DiscussionAlbumAlbumNodeAggregateSelection';
+  id: IdAggregateSelectionNonNullable;
+};
+
+export type DiscussionAlbumConnectFieldInput = {
+  connect?: InputMaybe<AlbumConnectInput>;
+  /** Whether or not to overwrite any matching relationship with the new properties. */
+  overwrite?: Scalars['Boolean']['input'];
+  where?: InputMaybe<AlbumConnectWhere>;
+};
+
+export type DiscussionAlbumConnection = {
+  __typename?: 'DiscussionAlbumConnection';
+  edges: Array<DiscussionAlbumRelationship>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type DiscussionAlbumConnectionSort = {
+  node?: InputMaybe<AlbumSort>;
+};
+
+export type DiscussionAlbumConnectionWhere = {
+  AND?: InputMaybe<Array<DiscussionAlbumConnectionWhere>>;
+  NOT?: InputMaybe<DiscussionAlbumConnectionWhere>;
+  OR?: InputMaybe<Array<DiscussionAlbumConnectionWhere>>;
+  node?: InputMaybe<AlbumWhere>;
+};
+
+export type DiscussionAlbumCreateFieldInput = {
+  node: AlbumCreateInput;
+};
+
+export type DiscussionAlbumDeleteFieldInput = {
+  delete?: InputMaybe<AlbumDeleteInput>;
+  where?: InputMaybe<DiscussionAlbumConnectionWhere>;
+};
+
+export type DiscussionAlbumDisconnectFieldInput = {
+  disconnect?: InputMaybe<AlbumDisconnectInput>;
+  where?: InputMaybe<DiscussionAlbumConnectionWhere>;
+};
+
+export type DiscussionAlbumFieldInput = {
+  connect?: InputMaybe<DiscussionAlbumConnectFieldInput>;
+  create?: InputMaybe<DiscussionAlbumCreateFieldInput>;
+};
+
+export type DiscussionAlbumNodeAggregationWhereInput = {
+  AND?: InputMaybe<Array<DiscussionAlbumNodeAggregationWhereInput>>;
+  NOT?: InputMaybe<DiscussionAlbumNodeAggregationWhereInput>;
+  OR?: InputMaybe<Array<DiscussionAlbumNodeAggregationWhereInput>>;
+};
+
+export type DiscussionAlbumRelationship = {
+  __typename?: 'DiscussionAlbumRelationship';
+  cursor: Scalars['String']['output'];
+  node: Album;
+};
+
+export type DiscussionAlbumUpdateConnectionInput = {
+  node?: InputMaybe<AlbumUpdateInput>;
+};
+
+export type DiscussionAlbumUpdateFieldInput = {
+  connect?: InputMaybe<DiscussionAlbumConnectFieldInput>;
+  create?: InputMaybe<DiscussionAlbumCreateFieldInput>;
+  delete?: InputMaybe<DiscussionAlbumDeleteFieldInput>;
+  disconnect?: InputMaybe<DiscussionAlbumDisconnectFieldInput>;
+  update?: InputMaybe<DiscussionAlbumUpdateConnectionInput>;
+  where?: InputMaybe<DiscussionAlbumConnectionWhere>;
 };
 
 export type DiscussionAuthorAggregateInput = {
@@ -7235,6 +8170,7 @@ export type DiscussionCommentFeedbackCommentsNodeAggregateSelection = {
 };
 
 export type DiscussionConnectInput = {
+  Album?: InputMaybe<DiscussionAlbumConnectFieldInput>;
   Author?: InputMaybe<DiscussionAuthorConnectFieldInput>;
   DiscussionChannels?: InputMaybe<Array<DiscussionDiscussionChannelsConnectFieldInput>>;
   FeedbackComments?: InputMaybe<Array<DiscussionFeedbackCommentsConnectFieldInput>>;
@@ -7252,6 +8188,7 @@ export type DiscussionConnectWhere = {
 };
 
 export type DiscussionCreateInput = {
+  Album?: InputMaybe<DiscussionAlbumFieldInput>;
   Author?: InputMaybe<DiscussionAuthorFieldInput>;
   DiscussionChannels?: InputMaybe<DiscussionDiscussionChannelsFieldInput>;
   FeedbackComments?: InputMaybe<DiscussionFeedbackCommentsFieldInput>;
@@ -7263,6 +8200,7 @@ export type DiscussionCreateInput = {
 };
 
 export type DiscussionDeleteInput = {
+  Album?: InputMaybe<DiscussionAlbumDeleteFieldInput>;
   Author?: InputMaybe<DiscussionAuthorDeleteFieldInput>;
   DiscussionChannels?: InputMaybe<Array<DiscussionDiscussionChannelsDeleteFieldInput>>;
   FeedbackComments?: InputMaybe<Array<DiscussionFeedbackCommentsDeleteFieldInput>>;
@@ -7271,6 +8209,7 @@ export type DiscussionDeleteInput = {
 };
 
 export type DiscussionDisconnectInput = {
+  Album?: InputMaybe<DiscussionAlbumDisconnectFieldInput>;
   Author?: InputMaybe<DiscussionAuthorDisconnectFieldInput>;
   DiscussionChannels?: InputMaybe<Array<DiscussionDiscussionChannelsDisconnectFieldInput>>;
   FeedbackComments?: InputMaybe<Array<DiscussionFeedbackCommentsDisconnectFieldInput>>;
@@ -7757,6 +8696,7 @@ export type DiscussionRelatedIssuesUpdateFieldInput = {
 };
 
 export type DiscussionRelationInput = {
+  Album?: InputMaybe<DiscussionAlbumCreateFieldInput>;
   Author?: InputMaybe<DiscussionAuthorCreateFieldInput>;
   DiscussionChannels?: InputMaybe<Array<DiscussionDiscussionChannelsCreateFieldInput>>;
   FeedbackComments?: InputMaybe<Array<DiscussionFeedbackCommentsCreateFieldInput>>;
@@ -7893,6 +8833,7 @@ export type DiscussionTagsUpdateFieldInput = {
 };
 
 export type DiscussionUpdateInput = {
+  Album?: InputMaybe<DiscussionAlbumUpdateFieldInput>;
   Author?: InputMaybe<DiscussionAuthorUpdateFieldInput>;
   DiscussionChannels?: InputMaybe<Array<DiscussionDiscussionChannelsUpdateFieldInput>>;
   FeedbackComments?: InputMaybe<Array<DiscussionFeedbackCommentsUpdateFieldInput>>;
@@ -7927,6 +8868,11 @@ export type DiscussionUserAuthorNodeAggregateSelection = {
 
 export type DiscussionWhere = {
   AND?: InputMaybe<Array<DiscussionWhere>>;
+  Album?: InputMaybe<AlbumWhere>;
+  AlbumAggregate?: InputMaybe<DiscussionAlbumAggregateInput>;
+  AlbumConnection?: InputMaybe<DiscussionAlbumConnectionWhere>;
+  AlbumConnection_NOT?: InputMaybe<DiscussionAlbumConnectionWhere>;
+  Album_NOT?: InputMaybe<AlbumWhere>;
   Author?: InputMaybe<UserWhere>;
   AuthorAggregate?: InputMaybe<DiscussionAuthorAggregateInput>;
   AuthorConnection?: InputMaybe<DiscussionAuthorConnectionWhere>;
@@ -12181,6 +13127,247 @@ export type IdAggregateSelectionNullable = {
   shortest?: Maybe<Scalars['ID']['output']>;
 };
 
+export type Image = {
+  __typename?: 'Image';
+  Album?: Maybe<Album>;
+  AlbumAggregate?: Maybe<ImageAlbumAlbumAggregationSelection>;
+  AlbumConnection: ImageAlbumConnection;
+  alt?: Maybe<Scalars['String']['output']>;
+  caption?: Maybe<Scalars['String']['output']>;
+  copyright?: Maybe<Scalars['String']['output']>;
+  id: Scalars['ID']['output'];
+  url?: Maybe<Scalars['String']['output']>;
+};
+
+
+export type ImageAlbumArgs = {
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  options?: InputMaybe<AlbumOptions>;
+  where?: InputMaybe<AlbumWhere>;
+};
+
+
+export type ImageAlbumAggregateArgs = {
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  where?: InputMaybe<AlbumWhere>;
+};
+
+
+export type ImageAlbumConnectionArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<Array<ImageAlbumConnectionSort>>;
+  where?: InputMaybe<ImageAlbumConnectionWhere>;
+};
+
+export type ImageAggregateSelection = {
+  __typename?: 'ImageAggregateSelection';
+  alt: StringAggregateSelectionNullable;
+  caption: StringAggregateSelectionNullable;
+  copyright: StringAggregateSelectionNullable;
+  count: Scalars['Int']['output'];
+  id: IdAggregateSelectionNonNullable;
+  url: StringAggregateSelectionNullable;
+};
+
+export type ImageAlbumAggregateInput = {
+  AND?: InputMaybe<Array<ImageAlbumAggregateInput>>;
+  NOT?: InputMaybe<ImageAlbumAggregateInput>;
+  OR?: InputMaybe<Array<ImageAlbumAggregateInput>>;
+  count?: InputMaybe<Scalars['Int']['input']>;
+  count_GT?: InputMaybe<Scalars['Int']['input']>;
+  count_GTE?: InputMaybe<Scalars['Int']['input']>;
+  count_LT?: InputMaybe<Scalars['Int']['input']>;
+  count_LTE?: InputMaybe<Scalars['Int']['input']>;
+  node?: InputMaybe<ImageAlbumNodeAggregationWhereInput>;
+};
+
+export type ImageAlbumAlbumAggregationSelection = {
+  __typename?: 'ImageAlbumAlbumAggregationSelection';
+  count: Scalars['Int']['output'];
+  node?: Maybe<ImageAlbumAlbumNodeAggregateSelection>;
+};
+
+export type ImageAlbumAlbumNodeAggregateSelection = {
+  __typename?: 'ImageAlbumAlbumNodeAggregateSelection';
+  id: IdAggregateSelectionNonNullable;
+};
+
+export type ImageAlbumConnectFieldInput = {
+  connect?: InputMaybe<AlbumConnectInput>;
+  /** Whether or not to overwrite any matching relationship with the new properties. */
+  overwrite?: Scalars['Boolean']['input'];
+  where?: InputMaybe<AlbumConnectWhere>;
+};
+
+export type ImageAlbumConnection = {
+  __typename?: 'ImageAlbumConnection';
+  edges: Array<ImageAlbumRelationship>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type ImageAlbumConnectionSort = {
+  node?: InputMaybe<AlbumSort>;
+};
+
+export type ImageAlbumConnectionWhere = {
+  AND?: InputMaybe<Array<ImageAlbumConnectionWhere>>;
+  NOT?: InputMaybe<ImageAlbumConnectionWhere>;
+  OR?: InputMaybe<Array<ImageAlbumConnectionWhere>>;
+  node?: InputMaybe<AlbumWhere>;
+};
+
+export type ImageAlbumCreateFieldInput = {
+  node: AlbumCreateInput;
+};
+
+export type ImageAlbumDeleteFieldInput = {
+  delete?: InputMaybe<AlbumDeleteInput>;
+  where?: InputMaybe<ImageAlbumConnectionWhere>;
+};
+
+export type ImageAlbumDisconnectFieldInput = {
+  disconnect?: InputMaybe<AlbumDisconnectInput>;
+  where?: InputMaybe<ImageAlbumConnectionWhere>;
+};
+
+export type ImageAlbumFieldInput = {
+  connect?: InputMaybe<ImageAlbumConnectFieldInput>;
+  create?: InputMaybe<ImageAlbumCreateFieldInput>;
+};
+
+export type ImageAlbumNodeAggregationWhereInput = {
+  AND?: InputMaybe<Array<ImageAlbumNodeAggregationWhereInput>>;
+  NOT?: InputMaybe<ImageAlbumNodeAggregationWhereInput>;
+  OR?: InputMaybe<Array<ImageAlbumNodeAggregationWhereInput>>;
+};
+
+export type ImageAlbumRelationship = {
+  __typename?: 'ImageAlbumRelationship';
+  cursor: Scalars['String']['output'];
+  node: Album;
+};
+
+export type ImageAlbumUpdateConnectionInput = {
+  node?: InputMaybe<AlbumUpdateInput>;
+};
+
+export type ImageAlbumUpdateFieldInput = {
+  connect?: InputMaybe<ImageAlbumConnectFieldInput>;
+  create?: InputMaybe<ImageAlbumCreateFieldInput>;
+  delete?: InputMaybe<ImageAlbumDeleteFieldInput>;
+  disconnect?: InputMaybe<ImageAlbumDisconnectFieldInput>;
+  update?: InputMaybe<ImageAlbumUpdateConnectionInput>;
+  where?: InputMaybe<ImageAlbumConnectionWhere>;
+};
+
+export type ImageConnectInput = {
+  Album?: InputMaybe<ImageAlbumConnectFieldInput>;
+};
+
+export type ImageConnectWhere = {
+  node: ImageWhere;
+};
+
+export type ImageCreateInput = {
+  Album?: InputMaybe<ImageAlbumFieldInput>;
+  alt?: InputMaybe<Scalars['String']['input']>;
+  caption?: InputMaybe<Scalars['String']['input']>;
+  copyright?: InputMaybe<Scalars['String']['input']>;
+  url?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type ImageDeleteInput = {
+  Album?: InputMaybe<ImageAlbumDeleteFieldInput>;
+};
+
+export type ImageDisconnectInput = {
+  Album?: InputMaybe<ImageAlbumDisconnectFieldInput>;
+};
+
+export type ImageEdge = {
+  __typename?: 'ImageEdge';
+  cursor: Scalars['String']['output'];
+  node: Image;
+};
+
+export type ImageOptions = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  /** Specify one or more ImageSort objects to sort Images by. The sorts will be applied in the order in which they are arranged in the array. */
+  sort?: InputMaybe<Array<ImageSort>>;
+};
+
+export type ImageRelationInput = {
+  Album?: InputMaybe<ImageAlbumCreateFieldInput>;
+};
+
+/** Fields to sort Images by. The order in which sorts are applied is not guaranteed when specifying many fields in one ImageSort object. */
+export type ImageSort = {
+  alt?: InputMaybe<SortDirection>;
+  caption?: InputMaybe<SortDirection>;
+  copyright?: InputMaybe<SortDirection>;
+  id?: InputMaybe<SortDirection>;
+  url?: InputMaybe<SortDirection>;
+};
+
+export type ImageUpdateInput = {
+  Album?: InputMaybe<ImageAlbumUpdateFieldInput>;
+  alt?: InputMaybe<Scalars['String']['input']>;
+  caption?: InputMaybe<Scalars['String']['input']>;
+  copyright?: InputMaybe<Scalars['String']['input']>;
+  url?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type ImageWhere = {
+  AND?: InputMaybe<Array<ImageWhere>>;
+  Album?: InputMaybe<AlbumWhere>;
+  AlbumAggregate?: InputMaybe<ImageAlbumAggregateInput>;
+  AlbumConnection?: InputMaybe<ImageAlbumConnectionWhere>;
+  AlbumConnection_NOT?: InputMaybe<ImageAlbumConnectionWhere>;
+  Album_NOT?: InputMaybe<AlbumWhere>;
+  NOT?: InputMaybe<ImageWhere>;
+  OR?: InputMaybe<Array<ImageWhere>>;
+  alt?: InputMaybe<Scalars['String']['input']>;
+  alt_CONTAINS?: InputMaybe<Scalars['String']['input']>;
+  alt_ENDS_WITH?: InputMaybe<Scalars['String']['input']>;
+  alt_IN?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  alt_MATCHES?: InputMaybe<Scalars['String']['input']>;
+  alt_STARTS_WITH?: InputMaybe<Scalars['String']['input']>;
+  caption?: InputMaybe<Scalars['String']['input']>;
+  caption_CONTAINS?: InputMaybe<Scalars['String']['input']>;
+  caption_ENDS_WITH?: InputMaybe<Scalars['String']['input']>;
+  caption_IN?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  caption_MATCHES?: InputMaybe<Scalars['String']['input']>;
+  caption_STARTS_WITH?: InputMaybe<Scalars['String']['input']>;
+  copyright?: InputMaybe<Scalars['String']['input']>;
+  copyright_CONTAINS?: InputMaybe<Scalars['String']['input']>;
+  copyright_ENDS_WITH?: InputMaybe<Scalars['String']['input']>;
+  copyright_IN?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  copyright_MATCHES?: InputMaybe<Scalars['String']['input']>;
+  copyright_STARTS_WITH?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  id_CONTAINS?: InputMaybe<Scalars['ID']['input']>;
+  id_ENDS_WITH?: InputMaybe<Scalars['ID']['input']>;
+  id_IN?: InputMaybe<Array<Scalars['ID']['input']>>;
+  id_STARTS_WITH?: InputMaybe<Scalars['ID']['input']>;
+  url?: InputMaybe<Scalars['String']['input']>;
+  url_CONTAINS?: InputMaybe<Scalars['String']['input']>;
+  url_ENDS_WITH?: InputMaybe<Scalars['String']['input']>;
+  url_IN?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  url_MATCHES?: InputMaybe<Scalars['String']['input']>;
+  url_STARTS_WITH?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type ImagesConnection = {
+  __typename?: 'ImagesConnection';
+  edges: Array<ImageEdge>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
 export type IntAggregateSelectionNonNullable = {
   __typename?: 'IntAggregateSelectionNonNullable';
   average: Scalars['Float']['output'];
@@ -15150,6 +16337,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   addEmojiToComment?: Maybe<Comment>;
   addEmojiToDiscussionChannel?: Maybe<DiscussionChannel>;
+  createAlbums: CreateAlbumsMutationResponse;
   createChannelRoles: CreateChannelRolesMutationResponse;
   createChannels: CreateChannelsMutationResponse;
   createCommentRepliesFormats: CreateCommentRepliesFormatsMutationResponse;
@@ -15168,6 +16356,7 @@ export type Mutation = {
   createEvents: CreateEventsMutationResponse;
   createFeeds: CreateFeedsMutationResponse;
   createGetSubredditResponses: CreateGetSubredditResponsesMutationResponse;
+  createImages: CreateImagesMutationResponse;
   createIssues: CreateIssuesMutationResponse;
   createLinkFlairs: CreateLinkFlairsMutationResponse;
   createModChannelRoles: CreateModChannelRolesMutationResponse;
@@ -15186,6 +16375,7 @@ export type Mutation = {
   createSubredditSidebars: CreateSubredditSidebarsMutationResponse;
   createTags: CreateTagsMutationResponse;
   createUsers: CreateUsersMutationResponse;
+  deleteAlbums: DeleteInfo;
   deleteChannelRoles: DeleteInfo;
   deleteChannels: DeleteInfo;
   deleteCommentRepliesFormats: DeleteInfo;
@@ -15201,6 +16391,7 @@ export type Mutation = {
   deleteEvents: DeleteInfo;
   deleteFeeds: DeleteInfo;
   deleteGetSubredditResponses: DeleteInfo;
+  deleteImages: DeleteInfo;
   deleteIssues: DeleteInfo;
   deleteLinkFlairs: DeleteInfo;
   deleteModChannelRoles: DeleteInfo;
@@ -15222,6 +16413,7 @@ export type Mutation = {
   removeEmojiFromDiscussionChannel?: Maybe<DiscussionChannel>;
   undoUpvoteComment?: Maybe<Comment>;
   undoUpvoteDiscussionChannel?: Maybe<DiscussionChannel>;
+  updateAlbums: UpdateAlbumsMutationResponse;
   updateChannelRoles: UpdateChannelRolesMutationResponse;
   updateChannels: UpdateChannelsMutationResponse;
   updateCommentRepliesFormats: UpdateCommentRepliesFormatsMutationResponse;
@@ -15239,6 +16431,7 @@ export type Mutation = {
   updateEvents: UpdateEventsMutationResponse;
   updateFeeds: UpdateFeedsMutationResponse;
   updateGetSubredditResponses: UpdateGetSubredditResponsesMutationResponse;
+  updateImages: UpdateImagesMutationResponse;
   updateIssues: UpdateIssuesMutationResponse;
   updateLinkFlairs: UpdateLinkFlairsMutationResponse;
   updateModChannelRoles: UpdateModChannelRolesMutationResponse;
@@ -15274,6 +16467,11 @@ export type MutationAddEmojiToDiscussionChannelArgs = {
   emojiLabel: Scalars['String']['input'];
   unicode: Scalars['String']['input'];
   username: Scalars['String']['input'];
+};
+
+
+export type MutationCreateAlbumsArgs = {
+  input: Array<AlbumCreateInput>;
 };
 
 
@@ -15370,6 +16568,11 @@ export type MutationCreateGetSubredditResponsesArgs = {
 };
 
 
+export type MutationCreateImagesArgs = {
+  input: Array<ImageCreateInput>;
+};
+
+
 export type MutationCreateIssuesArgs = {
   input: Array<IssueCreateInput>;
 };
@@ -15461,6 +16664,12 @@ export type MutationCreateUsersArgs = {
 };
 
 
+export type MutationDeleteAlbumsArgs = {
+  delete?: InputMaybe<AlbumDeleteInput>;
+  where?: InputMaybe<AlbumWhere>;
+};
+
+
 export type MutationDeleteChannelRolesArgs = {
   where?: InputMaybe<ChannelRoleWhere>;
 };
@@ -15542,6 +16751,12 @@ export type MutationDeleteFeedsArgs = {
 
 export type MutationDeleteGetSubredditResponsesArgs = {
   where?: InputMaybe<GetSubredditResponseWhere>;
+};
+
+
+export type MutationDeleteImagesArgs = {
+  delete?: InputMaybe<ImageDeleteInput>;
+  where?: InputMaybe<ImageWhere>;
 };
 
 
@@ -15660,6 +16875,17 @@ export type MutationUndoUpvoteCommentArgs = {
 export type MutationUndoUpvoteDiscussionChannelArgs = {
   discussionChannelId: Scalars['ID']['input'];
   username: Scalars['String']['input'];
+};
+
+
+export type MutationUpdateAlbumsArgs = {
+  connect?: InputMaybe<AlbumConnectInput>;
+  connectOrCreate?: InputMaybe<AlbumConnectOrCreateInput>;
+  create?: InputMaybe<AlbumRelationInput>;
+  delete?: InputMaybe<AlbumDeleteInput>;
+  disconnect?: InputMaybe<AlbumDisconnectInput>;
+  update?: InputMaybe<AlbumUpdateInput>;
+  where?: InputMaybe<AlbumWhere>;
 };
 
 
@@ -15811,6 +17037,16 @@ export type MutationUpdateFeedsArgs = {
 export type MutationUpdateGetSubredditResponsesArgs = {
   update?: InputMaybe<GetSubredditResponseUpdateInput>;
   where?: InputMaybe<GetSubredditResponseWhere>;
+};
+
+
+export type MutationUpdateImagesArgs = {
+  connect?: InputMaybe<ImageConnectInput>;
+  create?: InputMaybe<ImageRelationInput>;
+  delete?: InputMaybe<ImageDeleteInput>;
+  disconnect?: InputMaybe<ImageDisconnectInput>;
+  update?: InputMaybe<ImageUpdateInput>;
+  where?: InputMaybe<ImageWhere>;
 };
 
 
@@ -15996,6 +17232,9 @@ export type PointInput = {
 
 export type Query = {
   __typename?: 'Query';
+  albums: Array<Album>;
+  albumsAggregate: AlbumAggregateSelection;
+  albumsConnection: AlbumsConnection;
   channelRoles: Array<ChannelRole>;
   channelRolesAggregate: ChannelRoleAggregateSelection;
   channelRolesConnection: ChannelRolesConnection;
@@ -16048,6 +17287,9 @@ export type Query = {
   getSubredditResponsesAggregate: GetSubredditResponseAggregateSelection;
   getSubredditResponsesConnection: GetSubredditResponsesConnection;
   getSubredditSidebar?: Maybe<SubredditSidebar>;
+  images: Array<Image>;
+  imagesAggregate: ImageAggregateSelection;
+  imagesConnection: ImagesConnection;
   issues: Array<Issue>;
   issuesAggregate: IssueAggregateSelection;
   issuesConnection: IssuesConnection;
@@ -16099,6 +17341,25 @@ export type Query = {
   users: Array<User>;
   usersAggregate: UserAggregateSelection;
   usersConnection: UsersConnection;
+};
+
+
+export type QueryAlbumsArgs = {
+  options?: InputMaybe<AlbumOptions>;
+  where?: InputMaybe<AlbumWhere>;
+};
+
+
+export type QueryAlbumsAggregateArgs = {
+  where?: InputMaybe<AlbumWhere>;
+};
+
+
+export type QueryAlbumsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<AlbumSort>>>;
+  where?: InputMaybe<AlbumWhere>;
 };
 
 
@@ -16438,6 +17699,25 @@ export type QueryGetSubredditResponsesConnectionArgs = {
 export type QueryGetSubredditSidebarArgs = {
   options?: InputMaybe<Scalars['JSON']['input']>;
   subredditName: Scalars['String']['input'];
+};
+
+
+export type QueryImagesArgs = {
+  options?: InputMaybe<ImageOptions>;
+  where?: InputMaybe<ImageWhere>;
+};
+
+
+export type QueryImagesAggregateArgs = {
+  where?: InputMaybe<ImageWhere>;
+};
+
+
+export type QueryImagesConnectionArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<ImageSort>>>;
+  where?: InputMaybe<ImageWhere>;
 };
 
 
@@ -19833,6 +21113,12 @@ export enum TimeFrame {
   Year = 'year'
 }
 
+export type UpdateAlbumsMutationResponse = {
+  __typename?: 'UpdateAlbumsMutationResponse';
+  albums: Array<Album>;
+  info: UpdateInfo;
+};
+
 export type UpdateChannelRolesMutationResponse = {
   __typename?: 'UpdateChannelRolesMutationResponse';
   channelRoles: Array<ChannelRole>;
@@ -19920,6 +21206,12 @@ export type UpdateFeedsMutationResponse = {
 export type UpdateGetSubredditResponsesMutationResponse = {
   __typename?: 'UpdateGetSubredditResponsesMutationResponse';
   getSubredditResponses: Array<GetSubredditResponse>;
+  info: UpdateInfo;
+};
+
+export type UpdateImagesMutationResponse = {
+  __typename?: 'UpdateImagesMutationResponse';
+  images: Array<Image>;
   info: UpdateInfo;
 };
 
@@ -20041,6 +21333,9 @@ export type User = {
   AdminOfChannels: Array<Channel>;
   AdminOfChannelsAggregate?: Maybe<UserChannelAdminOfChannelsAggregationSelection>;
   AdminOfChannelsConnection: UserAdminOfChannelsConnection;
+  Albums: Array<Album>;
+  AlbumsAggregate?: Maybe<UserAlbumAlbumsAggregationSelection>;
+  AlbumsConnection: UserAlbumsConnection;
   Blocked?: Maybe<User>;
   BlockedAggregate?: Maybe<UserUserBlockedAggregationSelection>;
   BlockedConnection: UserBlockedConnection;
@@ -20130,6 +21425,28 @@ export type UserAdminOfChannelsConnectionArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<Array<UserAdminOfChannelsConnectionSort>>;
   where?: InputMaybe<UserAdminOfChannelsConnectionWhere>;
+};
+
+
+export type UserAlbumsArgs = {
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  options?: InputMaybe<AlbumOptions>;
+  where?: InputMaybe<AlbumWhere>;
+};
+
+
+export type UserAlbumsAggregateArgs = {
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  where?: InputMaybe<AlbumWhere>;
+};
+
+
+export type UserAlbumsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<Array<UserAlbumsConnectionSort>>;
+  where?: InputMaybe<UserAlbumsConnectionWhere>;
 };
 
 
@@ -20720,6 +22037,98 @@ export type UserAggregateSelection = {
   profilePicURL: StringAggregateSelectionNullable;
   pronouns: StringAggregateSelectionNullable;
   username: StringAggregateSelectionNonNullable;
+};
+
+export type UserAlbumAlbumsAggregationSelection = {
+  __typename?: 'UserAlbumAlbumsAggregationSelection';
+  count: Scalars['Int']['output'];
+  node?: Maybe<UserAlbumAlbumsNodeAggregateSelection>;
+};
+
+export type UserAlbumAlbumsNodeAggregateSelection = {
+  __typename?: 'UserAlbumAlbumsNodeAggregateSelection';
+  id: IdAggregateSelectionNonNullable;
+};
+
+export type UserAlbumsAggregateInput = {
+  AND?: InputMaybe<Array<UserAlbumsAggregateInput>>;
+  NOT?: InputMaybe<UserAlbumsAggregateInput>;
+  OR?: InputMaybe<Array<UserAlbumsAggregateInput>>;
+  count?: InputMaybe<Scalars['Int']['input']>;
+  count_GT?: InputMaybe<Scalars['Int']['input']>;
+  count_GTE?: InputMaybe<Scalars['Int']['input']>;
+  count_LT?: InputMaybe<Scalars['Int']['input']>;
+  count_LTE?: InputMaybe<Scalars['Int']['input']>;
+  node?: InputMaybe<UserAlbumsNodeAggregationWhereInput>;
+};
+
+export type UserAlbumsConnectFieldInput = {
+  connect?: InputMaybe<Array<AlbumConnectInput>>;
+  /** Whether or not to overwrite any matching relationship with the new properties. */
+  overwrite?: Scalars['Boolean']['input'];
+  where?: InputMaybe<AlbumConnectWhere>;
+};
+
+export type UserAlbumsConnection = {
+  __typename?: 'UserAlbumsConnection';
+  edges: Array<UserAlbumsRelationship>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type UserAlbumsConnectionSort = {
+  node?: InputMaybe<AlbumSort>;
+};
+
+export type UserAlbumsConnectionWhere = {
+  AND?: InputMaybe<Array<UserAlbumsConnectionWhere>>;
+  NOT?: InputMaybe<UserAlbumsConnectionWhere>;
+  OR?: InputMaybe<Array<UserAlbumsConnectionWhere>>;
+  node?: InputMaybe<AlbumWhere>;
+};
+
+export type UserAlbumsCreateFieldInput = {
+  node: AlbumCreateInput;
+};
+
+export type UserAlbumsDeleteFieldInput = {
+  delete?: InputMaybe<AlbumDeleteInput>;
+  where?: InputMaybe<UserAlbumsConnectionWhere>;
+};
+
+export type UserAlbumsDisconnectFieldInput = {
+  disconnect?: InputMaybe<AlbumDisconnectInput>;
+  where?: InputMaybe<UserAlbumsConnectionWhere>;
+};
+
+export type UserAlbumsFieldInput = {
+  connect?: InputMaybe<Array<UserAlbumsConnectFieldInput>>;
+  create?: InputMaybe<Array<UserAlbumsCreateFieldInput>>;
+};
+
+export type UserAlbumsNodeAggregationWhereInput = {
+  AND?: InputMaybe<Array<UserAlbumsNodeAggregationWhereInput>>;
+  NOT?: InputMaybe<UserAlbumsNodeAggregationWhereInput>;
+  OR?: InputMaybe<Array<UserAlbumsNodeAggregationWhereInput>>;
+};
+
+export type UserAlbumsRelationship = {
+  __typename?: 'UserAlbumsRelationship';
+  cursor: Scalars['String']['output'];
+  node: Album;
+};
+
+export type UserAlbumsUpdateConnectionInput = {
+  node?: InputMaybe<AlbumUpdateInput>;
+};
+
+export type UserAlbumsUpdateFieldInput = {
+  connect?: InputMaybe<Array<UserAlbumsConnectFieldInput>>;
+  create?: InputMaybe<Array<UserAlbumsCreateFieldInput>>;
+  delete?: InputMaybe<Array<UserAlbumsDeleteFieldInput>>;
+  disconnect?: InputMaybe<Array<UserAlbumsDisconnectFieldInput>>;
+  update?: InputMaybe<UserAlbumsUpdateConnectionInput>;
+  where?: InputMaybe<UserAlbumsConnectionWhere>;
 };
 
 export type UserBlockedAggregateInput = {
@@ -21377,6 +22786,7 @@ export type UserCommentsUpdateFieldInput = {
 
 export type UserConnectInput = {
   AdminOfChannels?: InputMaybe<Array<UserAdminOfChannelsConnectFieldInput>>;
+  Albums?: InputMaybe<Array<UserAlbumsConnectFieldInput>>;
   Blocked?: InputMaybe<UserBlockedConnectFieldInput>;
   ChannelRoles?: InputMaybe<Array<UserChannelRolesConnectFieldInput>>;
   Comments?: InputMaybe<Array<UserCommentsConnectFieldInput>>;
@@ -21419,6 +22829,7 @@ export type UserConnectWhere = {
 
 export type UserCreateInput = {
   AdminOfChannels?: InputMaybe<UserAdminOfChannelsFieldInput>;
+  Albums?: InputMaybe<UserAlbumsFieldInput>;
   Blocked?: InputMaybe<UserBlockedFieldInput>;
   ChannelRoles?: InputMaybe<UserChannelRolesFieldInput>;
   Comments?: InputMaybe<UserCommentsFieldInput>;
@@ -21675,6 +23086,7 @@ export type UserDefaultFeedUpdateFieldInput = {
 
 export type UserDeleteInput = {
   AdminOfChannels?: InputMaybe<Array<UserAdminOfChannelsDeleteFieldInput>>;
+  Albums?: InputMaybe<Array<UserAlbumsDeleteFieldInput>>;
   Blocked?: InputMaybe<UserBlockedDeleteFieldInput>;
   ChannelRoles?: InputMaybe<Array<UserChannelRolesDeleteFieldInput>>;
   Comments?: InputMaybe<Array<UserCommentsDeleteFieldInput>>;
@@ -21697,6 +23109,7 @@ export type UserDeleteInput = {
 
 export type UserDisconnectInput = {
   AdminOfChannels?: InputMaybe<Array<UserAdminOfChannelsDisconnectFieldInput>>;
+  Albums?: InputMaybe<Array<UserAlbumsDisconnectFieldInput>>;
   Blocked?: InputMaybe<UserBlockedDisconnectFieldInput>;
   ChannelRoles?: InputMaybe<Array<UserChannelRolesDisconnectFieldInput>>;
   Comments?: InputMaybe<Array<UserCommentsDisconnectFieldInput>>;
@@ -23554,6 +24967,7 @@ export type UserRecentlyVisitedChannelsUpdateFieldInput = {
 
 export type UserRelationInput = {
   AdminOfChannels?: InputMaybe<Array<UserAdminOfChannelsCreateFieldInput>>;
+  Albums?: InputMaybe<Array<UserAlbumsCreateFieldInput>>;
   Blocked?: InputMaybe<UserBlockedCreateFieldInput>;
   ChannelRoles?: InputMaybe<Array<UserChannelRolesCreateFieldInput>>;
   Comments?: InputMaybe<Array<UserCommentsCreateFieldInput>>;
@@ -23728,6 +25142,7 @@ export type UserUniqueWhere = {
 
 export type UserUpdateInput = {
   AdminOfChannels?: InputMaybe<Array<UserAdminOfChannelsUpdateFieldInput>>;
+  Albums?: InputMaybe<Array<UserAlbumsUpdateFieldInput>>;
   Blocked?: InputMaybe<UserBlockedUpdateFieldInput>;
   ChannelRoles?: InputMaybe<Array<UserChannelRolesUpdateFieldInput>>;
   Comments?: InputMaybe<Array<UserCommentsUpdateFieldInput>>;
@@ -24089,6 +25504,23 @@ export type UserWhere = {
   AdminOfChannels_SINGLE?: InputMaybe<ChannelWhere>;
   /** Return Users where some of the related Channels match this filter */
   AdminOfChannels_SOME?: InputMaybe<ChannelWhere>;
+  AlbumsAggregate?: InputMaybe<UserAlbumsAggregateInput>;
+  /** Return Users where all of the related UserAlbumsConnections match this filter */
+  AlbumsConnection_ALL?: InputMaybe<UserAlbumsConnectionWhere>;
+  /** Return Users where none of the related UserAlbumsConnections match this filter */
+  AlbumsConnection_NONE?: InputMaybe<UserAlbumsConnectionWhere>;
+  /** Return Users where one of the related UserAlbumsConnections match this filter */
+  AlbumsConnection_SINGLE?: InputMaybe<UserAlbumsConnectionWhere>;
+  /** Return Users where some of the related UserAlbumsConnections match this filter */
+  AlbumsConnection_SOME?: InputMaybe<UserAlbumsConnectionWhere>;
+  /** Return Users where all of the related Albums match this filter */
+  Albums_ALL?: InputMaybe<AlbumWhere>;
+  /** Return Users where none of the related Albums match this filter */
+  Albums_NONE?: InputMaybe<AlbumWhere>;
+  /** Return Users where one of the related Albums match this filter */
+  Albums_SINGLE?: InputMaybe<AlbumWhere>;
+  /** Return Users where some of the related Albums match this filter */
+  Albums_SOME?: InputMaybe<AlbumWhere>;
   Blocked?: InputMaybe<UserWhere>;
   BlockedAggregate?: InputMaybe<UserBlockedAggregateInput>;
   BlockedConnection?: InputMaybe<UserBlockedConnectionWhere>;
@@ -24495,6 +25927,68 @@ export type ResolversUnionTypes<RefType extends Record<string, unknown>> = {
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
+  Album: ResolverTypeWrapper<Album>;
+  AlbumAggregateSelection: ResolverTypeWrapper<AlbumAggregateSelection>;
+  AlbumConnectInput: AlbumConnectInput;
+  AlbumConnectOrCreateInput: AlbumConnectOrCreateInput;
+  AlbumConnectWhere: AlbumConnectWhere;
+  AlbumCreateInput: AlbumCreateInput;
+  AlbumDeleteInput: AlbumDeleteInput;
+  AlbumDisconnectInput: AlbumDisconnectInput;
+  AlbumDiscussionDiscussionsAggregationSelection: ResolverTypeWrapper<AlbumDiscussionDiscussionsAggregationSelection>;
+  AlbumDiscussionDiscussionsNodeAggregateSelection: ResolverTypeWrapper<AlbumDiscussionDiscussionsNodeAggregateSelection>;
+  AlbumDiscussionsAggregateInput: AlbumDiscussionsAggregateInput;
+  AlbumDiscussionsConnectFieldInput: AlbumDiscussionsConnectFieldInput;
+  AlbumDiscussionsConnection: ResolverTypeWrapper<AlbumDiscussionsConnection>;
+  AlbumDiscussionsConnectionSort: AlbumDiscussionsConnectionSort;
+  AlbumDiscussionsConnectionWhere: AlbumDiscussionsConnectionWhere;
+  AlbumDiscussionsCreateFieldInput: AlbumDiscussionsCreateFieldInput;
+  AlbumDiscussionsDeleteFieldInput: AlbumDiscussionsDeleteFieldInput;
+  AlbumDiscussionsDisconnectFieldInput: AlbumDiscussionsDisconnectFieldInput;
+  AlbumDiscussionsFieldInput: AlbumDiscussionsFieldInput;
+  AlbumDiscussionsNodeAggregationWhereInput: AlbumDiscussionsNodeAggregationWhereInput;
+  AlbumDiscussionsRelationship: ResolverTypeWrapper<AlbumDiscussionsRelationship>;
+  AlbumDiscussionsUpdateConnectionInput: AlbumDiscussionsUpdateConnectionInput;
+  AlbumDiscussionsUpdateFieldInput: AlbumDiscussionsUpdateFieldInput;
+  AlbumEdge: ResolverTypeWrapper<AlbumEdge>;
+  AlbumImageImagesAggregationSelection: ResolverTypeWrapper<AlbumImageImagesAggregationSelection>;
+  AlbumImageImagesNodeAggregateSelection: ResolverTypeWrapper<AlbumImageImagesNodeAggregateSelection>;
+  AlbumImagesAggregateInput: AlbumImagesAggregateInput;
+  AlbumImagesConnectFieldInput: AlbumImagesConnectFieldInput;
+  AlbumImagesConnection: ResolverTypeWrapper<AlbumImagesConnection>;
+  AlbumImagesConnectionSort: AlbumImagesConnectionSort;
+  AlbumImagesConnectionWhere: AlbumImagesConnectionWhere;
+  AlbumImagesCreateFieldInput: AlbumImagesCreateFieldInput;
+  AlbumImagesDeleteFieldInput: AlbumImagesDeleteFieldInput;
+  AlbumImagesDisconnectFieldInput: AlbumImagesDisconnectFieldInput;
+  AlbumImagesFieldInput: AlbumImagesFieldInput;
+  AlbumImagesNodeAggregationWhereInput: AlbumImagesNodeAggregationWhereInput;
+  AlbumImagesRelationship: ResolverTypeWrapper<AlbumImagesRelationship>;
+  AlbumImagesUpdateConnectionInput: AlbumImagesUpdateConnectionInput;
+  AlbumImagesUpdateFieldInput: AlbumImagesUpdateFieldInput;
+  AlbumOptions: AlbumOptions;
+  AlbumOwnerAggregateInput: AlbumOwnerAggregateInput;
+  AlbumOwnerConnectFieldInput: AlbumOwnerConnectFieldInput;
+  AlbumOwnerConnectOrCreateFieldInput: AlbumOwnerConnectOrCreateFieldInput;
+  AlbumOwnerConnectOrCreateFieldInputOnCreate: AlbumOwnerConnectOrCreateFieldInputOnCreate;
+  AlbumOwnerConnection: ResolverTypeWrapper<AlbumOwnerConnection>;
+  AlbumOwnerConnectionSort: AlbumOwnerConnectionSort;
+  AlbumOwnerConnectionWhere: AlbumOwnerConnectionWhere;
+  AlbumOwnerCreateFieldInput: AlbumOwnerCreateFieldInput;
+  AlbumOwnerDeleteFieldInput: AlbumOwnerDeleteFieldInput;
+  AlbumOwnerDisconnectFieldInput: AlbumOwnerDisconnectFieldInput;
+  AlbumOwnerFieldInput: AlbumOwnerFieldInput;
+  AlbumOwnerNodeAggregationWhereInput: AlbumOwnerNodeAggregationWhereInput;
+  AlbumOwnerRelationship: ResolverTypeWrapper<AlbumOwnerRelationship>;
+  AlbumOwnerUpdateConnectionInput: AlbumOwnerUpdateConnectionInput;
+  AlbumOwnerUpdateFieldInput: AlbumOwnerUpdateFieldInput;
+  AlbumRelationInput: AlbumRelationInput;
+  AlbumSort: AlbumSort;
+  AlbumUpdateInput: AlbumUpdateInput;
+  AlbumUserOwnerAggregationSelection: ResolverTypeWrapper<AlbumUserOwnerAggregationSelection>;
+  AlbumUserOwnerNodeAggregateSelection: ResolverTypeWrapper<AlbumUserOwnerNodeAggregateSelection>;
+  AlbumWhere: AlbumWhere;
+  AlbumsConnection: ResolverTypeWrapper<AlbumsConnection>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   Channel: ResolverTypeWrapper<Channel>;
   ChannelAdminsAggregateInput: ChannelAdminsAggregateInput;
@@ -24922,6 +26416,7 @@ export type ResolversTypes = {
   CommentUserUpvotedByUsersNodeAggregateSelection: ResolverTypeWrapper<CommentUserUpvotedByUsersNodeAggregateSelection>;
   CommentWhere: CommentWhere;
   CommentsConnection: ResolverTypeWrapper<CommentsConnection>;
+  CreateAlbumsMutationResponse: ResolverTypeWrapper<CreateAlbumsMutationResponse>;
   CreateChannelRolesMutationResponse: ResolverTypeWrapper<CreateChannelRolesMutationResponse>;
   CreateChannelsMutationResponse: ResolverTypeWrapper<CreateChannelsMutationResponse>;
   CreateCommentRepliesFormatsMutationResponse: ResolverTypeWrapper<CreateCommentRepliesFormatsMutationResponse>;
@@ -24937,6 +26432,7 @@ export type ResolversTypes = {
   CreateEventsMutationResponse: ResolverTypeWrapper<CreateEventsMutationResponse>;
   CreateFeedsMutationResponse: ResolverTypeWrapper<CreateFeedsMutationResponse>;
   CreateGetSubredditResponsesMutationResponse: ResolverTypeWrapper<CreateGetSubredditResponsesMutationResponse>;
+  CreateImagesMutationResponse: ResolverTypeWrapper<CreateImagesMutationResponse>;
   CreateInfo: ResolverTypeWrapper<CreateInfo>;
   CreateIssuesMutationResponse: ResolverTypeWrapper<CreateIssuesMutationResponse>;
   CreateLinkFlairsMutationResponse: ResolverTypeWrapper<CreateLinkFlairsMutationResponse>;
@@ -24961,6 +26457,21 @@ export type ResolversTypes = {
   DeleteInfo: ResolverTypeWrapper<DeleteInfo>;
   Discussion: ResolverTypeWrapper<Discussion>;
   DiscussionAggregateSelection: ResolverTypeWrapper<DiscussionAggregateSelection>;
+  DiscussionAlbumAggregateInput: DiscussionAlbumAggregateInput;
+  DiscussionAlbumAlbumAggregationSelection: ResolverTypeWrapper<DiscussionAlbumAlbumAggregationSelection>;
+  DiscussionAlbumAlbumNodeAggregateSelection: ResolverTypeWrapper<DiscussionAlbumAlbumNodeAggregateSelection>;
+  DiscussionAlbumConnectFieldInput: DiscussionAlbumConnectFieldInput;
+  DiscussionAlbumConnection: ResolverTypeWrapper<DiscussionAlbumConnection>;
+  DiscussionAlbumConnectionSort: DiscussionAlbumConnectionSort;
+  DiscussionAlbumConnectionWhere: DiscussionAlbumConnectionWhere;
+  DiscussionAlbumCreateFieldInput: DiscussionAlbumCreateFieldInput;
+  DiscussionAlbumDeleteFieldInput: DiscussionAlbumDeleteFieldInput;
+  DiscussionAlbumDisconnectFieldInput: DiscussionAlbumDisconnectFieldInput;
+  DiscussionAlbumFieldInput: DiscussionAlbumFieldInput;
+  DiscussionAlbumNodeAggregationWhereInput: DiscussionAlbumNodeAggregationWhereInput;
+  DiscussionAlbumRelationship: ResolverTypeWrapper<DiscussionAlbumRelationship>;
+  DiscussionAlbumUpdateConnectionInput: DiscussionAlbumUpdateConnectionInput;
+  DiscussionAlbumUpdateFieldInput: DiscussionAlbumUpdateFieldInput;
   DiscussionAuthorAggregateInput: DiscussionAuthorAggregateInput;
   DiscussionAuthorConnectFieldInput: DiscussionAuthorConnectFieldInput;
   DiscussionAuthorConnectOrCreateFieldInput: DiscussionAuthorConnectOrCreateFieldInput;
@@ -25465,6 +26976,35 @@ export type ResolversTypes = {
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   IDAggregateSelectionNonNullable: ResolverTypeWrapper<IdAggregateSelectionNonNullable>;
   IDAggregateSelectionNullable: ResolverTypeWrapper<IdAggregateSelectionNullable>;
+  Image: ResolverTypeWrapper<Image>;
+  ImageAggregateSelection: ResolverTypeWrapper<ImageAggregateSelection>;
+  ImageAlbumAggregateInput: ImageAlbumAggregateInput;
+  ImageAlbumAlbumAggregationSelection: ResolverTypeWrapper<ImageAlbumAlbumAggregationSelection>;
+  ImageAlbumAlbumNodeAggregateSelection: ResolverTypeWrapper<ImageAlbumAlbumNodeAggregateSelection>;
+  ImageAlbumConnectFieldInput: ImageAlbumConnectFieldInput;
+  ImageAlbumConnection: ResolverTypeWrapper<ImageAlbumConnection>;
+  ImageAlbumConnectionSort: ImageAlbumConnectionSort;
+  ImageAlbumConnectionWhere: ImageAlbumConnectionWhere;
+  ImageAlbumCreateFieldInput: ImageAlbumCreateFieldInput;
+  ImageAlbumDeleteFieldInput: ImageAlbumDeleteFieldInput;
+  ImageAlbumDisconnectFieldInput: ImageAlbumDisconnectFieldInput;
+  ImageAlbumFieldInput: ImageAlbumFieldInput;
+  ImageAlbumNodeAggregationWhereInput: ImageAlbumNodeAggregationWhereInput;
+  ImageAlbumRelationship: ResolverTypeWrapper<ImageAlbumRelationship>;
+  ImageAlbumUpdateConnectionInput: ImageAlbumUpdateConnectionInput;
+  ImageAlbumUpdateFieldInput: ImageAlbumUpdateFieldInput;
+  ImageConnectInput: ImageConnectInput;
+  ImageConnectWhere: ImageConnectWhere;
+  ImageCreateInput: ImageCreateInput;
+  ImageDeleteInput: ImageDeleteInput;
+  ImageDisconnectInput: ImageDisconnectInput;
+  ImageEdge: ResolverTypeWrapper<ImageEdge>;
+  ImageOptions: ImageOptions;
+  ImageRelationInput: ImageRelationInput;
+  ImageSort: ImageSort;
+  ImageUpdateInput: ImageUpdateInput;
+  ImageWhere: ImageWhere;
+  ImagesConnection: ResolverTypeWrapper<ImagesConnection>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   IntAggregateSelectionNonNullable: ResolverTypeWrapper<IntAggregateSelectionNonNullable>;
   IntAggregateSelectionNullable: ResolverTypeWrapper<IntAggregateSelectionNullable>;
@@ -26015,6 +27555,7 @@ export type ResolversTypes = {
   TagWhere: TagWhere;
   TagsConnection: ResolverTypeWrapper<TagsConnection>;
   TimeFrame: TimeFrame;
+  UpdateAlbumsMutationResponse: ResolverTypeWrapper<UpdateAlbumsMutationResponse>;
   UpdateChannelRolesMutationResponse: ResolverTypeWrapper<UpdateChannelRolesMutationResponse>;
   UpdateChannelsMutationResponse: ResolverTypeWrapper<UpdateChannelsMutationResponse>;
   UpdateCommentRepliesFormatsMutationResponse: ResolverTypeWrapper<UpdateCommentRepliesFormatsMutationResponse>;
@@ -26030,6 +27571,7 @@ export type ResolversTypes = {
   UpdateEventsMutationResponse: ResolverTypeWrapper<UpdateEventsMutationResponse>;
   UpdateFeedsMutationResponse: ResolverTypeWrapper<UpdateFeedsMutationResponse>;
   UpdateGetSubredditResponsesMutationResponse: ResolverTypeWrapper<UpdateGetSubredditResponsesMutationResponse>;
+  UpdateImagesMutationResponse: ResolverTypeWrapper<UpdateImagesMutationResponse>;
   UpdateInfo: ResolverTypeWrapper<UpdateInfo>;
   UpdateIssuesMutationResponse: ResolverTypeWrapper<UpdateIssuesMutationResponse>;
   UpdateLinkFlairsMutationResponse: ResolverTypeWrapper<UpdateLinkFlairsMutationResponse>;
@@ -26065,6 +27607,21 @@ export type ResolversTypes = {
   UserAdminOfChannelsUpdateConnectionInput: UserAdminOfChannelsUpdateConnectionInput;
   UserAdminOfChannelsUpdateFieldInput: UserAdminOfChannelsUpdateFieldInput;
   UserAggregateSelection: ResolverTypeWrapper<UserAggregateSelection>;
+  UserAlbumAlbumsAggregationSelection: ResolverTypeWrapper<UserAlbumAlbumsAggregationSelection>;
+  UserAlbumAlbumsNodeAggregateSelection: ResolverTypeWrapper<UserAlbumAlbumsNodeAggregateSelection>;
+  UserAlbumsAggregateInput: UserAlbumsAggregateInput;
+  UserAlbumsConnectFieldInput: UserAlbumsConnectFieldInput;
+  UserAlbumsConnection: ResolverTypeWrapper<UserAlbumsConnection>;
+  UserAlbumsConnectionSort: UserAlbumsConnectionSort;
+  UserAlbumsConnectionWhere: UserAlbumsConnectionWhere;
+  UserAlbumsCreateFieldInput: UserAlbumsCreateFieldInput;
+  UserAlbumsDeleteFieldInput: UserAlbumsDeleteFieldInput;
+  UserAlbumsDisconnectFieldInput: UserAlbumsDisconnectFieldInput;
+  UserAlbumsFieldInput: UserAlbumsFieldInput;
+  UserAlbumsNodeAggregationWhereInput: UserAlbumsNodeAggregationWhereInput;
+  UserAlbumsRelationship: ResolverTypeWrapper<UserAlbumsRelationship>;
+  UserAlbumsUpdateConnectionInput: UserAlbumsUpdateConnectionInput;
+  UserAlbumsUpdateFieldInput: UserAlbumsUpdateFieldInput;
   UserBlockedAggregateInput: UserBlockedAggregateInput;
   UserBlockedConnectFieldInput: UserBlockedConnectFieldInput;
   UserBlockedConnectOrCreateFieldInput: UserBlockedConnectOrCreateFieldInput;
@@ -26373,6 +27930,68 @@ export type ResolversTypes = {
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
+  Album: Album;
+  AlbumAggregateSelection: AlbumAggregateSelection;
+  AlbumConnectInput: AlbumConnectInput;
+  AlbumConnectOrCreateInput: AlbumConnectOrCreateInput;
+  AlbumConnectWhere: AlbumConnectWhere;
+  AlbumCreateInput: AlbumCreateInput;
+  AlbumDeleteInput: AlbumDeleteInput;
+  AlbumDisconnectInput: AlbumDisconnectInput;
+  AlbumDiscussionDiscussionsAggregationSelection: AlbumDiscussionDiscussionsAggregationSelection;
+  AlbumDiscussionDiscussionsNodeAggregateSelection: AlbumDiscussionDiscussionsNodeAggregateSelection;
+  AlbumDiscussionsAggregateInput: AlbumDiscussionsAggregateInput;
+  AlbumDiscussionsConnectFieldInput: AlbumDiscussionsConnectFieldInput;
+  AlbumDiscussionsConnection: AlbumDiscussionsConnection;
+  AlbumDiscussionsConnectionSort: AlbumDiscussionsConnectionSort;
+  AlbumDiscussionsConnectionWhere: AlbumDiscussionsConnectionWhere;
+  AlbumDiscussionsCreateFieldInput: AlbumDiscussionsCreateFieldInput;
+  AlbumDiscussionsDeleteFieldInput: AlbumDiscussionsDeleteFieldInput;
+  AlbumDiscussionsDisconnectFieldInput: AlbumDiscussionsDisconnectFieldInput;
+  AlbumDiscussionsFieldInput: AlbumDiscussionsFieldInput;
+  AlbumDiscussionsNodeAggregationWhereInput: AlbumDiscussionsNodeAggregationWhereInput;
+  AlbumDiscussionsRelationship: AlbumDiscussionsRelationship;
+  AlbumDiscussionsUpdateConnectionInput: AlbumDiscussionsUpdateConnectionInput;
+  AlbumDiscussionsUpdateFieldInput: AlbumDiscussionsUpdateFieldInput;
+  AlbumEdge: AlbumEdge;
+  AlbumImageImagesAggregationSelection: AlbumImageImagesAggregationSelection;
+  AlbumImageImagesNodeAggregateSelection: AlbumImageImagesNodeAggregateSelection;
+  AlbumImagesAggregateInput: AlbumImagesAggregateInput;
+  AlbumImagesConnectFieldInput: AlbumImagesConnectFieldInput;
+  AlbumImagesConnection: AlbumImagesConnection;
+  AlbumImagesConnectionSort: AlbumImagesConnectionSort;
+  AlbumImagesConnectionWhere: AlbumImagesConnectionWhere;
+  AlbumImagesCreateFieldInput: AlbumImagesCreateFieldInput;
+  AlbumImagesDeleteFieldInput: AlbumImagesDeleteFieldInput;
+  AlbumImagesDisconnectFieldInput: AlbumImagesDisconnectFieldInput;
+  AlbumImagesFieldInput: AlbumImagesFieldInput;
+  AlbumImagesNodeAggregationWhereInput: AlbumImagesNodeAggregationWhereInput;
+  AlbumImagesRelationship: AlbumImagesRelationship;
+  AlbumImagesUpdateConnectionInput: AlbumImagesUpdateConnectionInput;
+  AlbumImagesUpdateFieldInput: AlbumImagesUpdateFieldInput;
+  AlbumOptions: AlbumOptions;
+  AlbumOwnerAggregateInput: AlbumOwnerAggregateInput;
+  AlbumOwnerConnectFieldInput: AlbumOwnerConnectFieldInput;
+  AlbumOwnerConnectOrCreateFieldInput: AlbumOwnerConnectOrCreateFieldInput;
+  AlbumOwnerConnectOrCreateFieldInputOnCreate: AlbumOwnerConnectOrCreateFieldInputOnCreate;
+  AlbumOwnerConnection: AlbumOwnerConnection;
+  AlbumOwnerConnectionSort: AlbumOwnerConnectionSort;
+  AlbumOwnerConnectionWhere: AlbumOwnerConnectionWhere;
+  AlbumOwnerCreateFieldInput: AlbumOwnerCreateFieldInput;
+  AlbumOwnerDeleteFieldInput: AlbumOwnerDeleteFieldInput;
+  AlbumOwnerDisconnectFieldInput: AlbumOwnerDisconnectFieldInput;
+  AlbumOwnerFieldInput: AlbumOwnerFieldInput;
+  AlbumOwnerNodeAggregationWhereInput: AlbumOwnerNodeAggregationWhereInput;
+  AlbumOwnerRelationship: AlbumOwnerRelationship;
+  AlbumOwnerUpdateConnectionInput: AlbumOwnerUpdateConnectionInput;
+  AlbumOwnerUpdateFieldInput: AlbumOwnerUpdateFieldInput;
+  AlbumRelationInput: AlbumRelationInput;
+  AlbumSort: AlbumSort;
+  AlbumUpdateInput: AlbumUpdateInput;
+  AlbumUserOwnerAggregationSelection: AlbumUserOwnerAggregationSelection;
+  AlbumUserOwnerNodeAggregateSelection: AlbumUserOwnerNodeAggregateSelection;
+  AlbumWhere: AlbumWhere;
+  AlbumsConnection: AlbumsConnection;
   Boolean: Scalars['Boolean']['output'];
   Channel: Channel;
   ChannelAdminsAggregateInput: ChannelAdminsAggregateInput;
@@ -26800,6 +28419,7 @@ export type ResolversParentTypes = {
   CommentUserUpvotedByUsersNodeAggregateSelection: CommentUserUpvotedByUsersNodeAggregateSelection;
   CommentWhere: CommentWhere;
   CommentsConnection: CommentsConnection;
+  CreateAlbumsMutationResponse: CreateAlbumsMutationResponse;
   CreateChannelRolesMutationResponse: CreateChannelRolesMutationResponse;
   CreateChannelsMutationResponse: CreateChannelsMutationResponse;
   CreateCommentRepliesFormatsMutationResponse: CreateCommentRepliesFormatsMutationResponse;
@@ -26815,6 +28435,7 @@ export type ResolversParentTypes = {
   CreateEventsMutationResponse: CreateEventsMutationResponse;
   CreateFeedsMutationResponse: CreateFeedsMutationResponse;
   CreateGetSubredditResponsesMutationResponse: CreateGetSubredditResponsesMutationResponse;
+  CreateImagesMutationResponse: CreateImagesMutationResponse;
   CreateInfo: CreateInfo;
   CreateIssuesMutationResponse: CreateIssuesMutationResponse;
   CreateLinkFlairsMutationResponse: CreateLinkFlairsMutationResponse;
@@ -26839,6 +28460,21 @@ export type ResolversParentTypes = {
   DeleteInfo: DeleteInfo;
   Discussion: Discussion;
   DiscussionAggregateSelection: DiscussionAggregateSelection;
+  DiscussionAlbumAggregateInput: DiscussionAlbumAggregateInput;
+  DiscussionAlbumAlbumAggregationSelection: DiscussionAlbumAlbumAggregationSelection;
+  DiscussionAlbumAlbumNodeAggregateSelection: DiscussionAlbumAlbumNodeAggregateSelection;
+  DiscussionAlbumConnectFieldInput: DiscussionAlbumConnectFieldInput;
+  DiscussionAlbumConnection: DiscussionAlbumConnection;
+  DiscussionAlbumConnectionSort: DiscussionAlbumConnectionSort;
+  DiscussionAlbumConnectionWhere: DiscussionAlbumConnectionWhere;
+  DiscussionAlbumCreateFieldInput: DiscussionAlbumCreateFieldInput;
+  DiscussionAlbumDeleteFieldInput: DiscussionAlbumDeleteFieldInput;
+  DiscussionAlbumDisconnectFieldInput: DiscussionAlbumDisconnectFieldInput;
+  DiscussionAlbumFieldInput: DiscussionAlbumFieldInput;
+  DiscussionAlbumNodeAggregationWhereInput: DiscussionAlbumNodeAggregationWhereInput;
+  DiscussionAlbumRelationship: DiscussionAlbumRelationship;
+  DiscussionAlbumUpdateConnectionInput: DiscussionAlbumUpdateConnectionInput;
+  DiscussionAlbumUpdateFieldInput: DiscussionAlbumUpdateFieldInput;
   DiscussionAuthorAggregateInput: DiscussionAuthorAggregateInput;
   DiscussionAuthorConnectFieldInput: DiscussionAuthorConnectFieldInput;
   DiscussionAuthorConnectOrCreateFieldInput: DiscussionAuthorConnectOrCreateFieldInput;
@@ -27343,6 +28979,35 @@ export type ResolversParentTypes = {
   ID: Scalars['ID']['output'];
   IDAggregateSelectionNonNullable: IdAggregateSelectionNonNullable;
   IDAggregateSelectionNullable: IdAggregateSelectionNullable;
+  Image: Image;
+  ImageAggregateSelection: ImageAggregateSelection;
+  ImageAlbumAggregateInput: ImageAlbumAggregateInput;
+  ImageAlbumAlbumAggregationSelection: ImageAlbumAlbumAggregationSelection;
+  ImageAlbumAlbumNodeAggregateSelection: ImageAlbumAlbumNodeAggregateSelection;
+  ImageAlbumConnectFieldInput: ImageAlbumConnectFieldInput;
+  ImageAlbumConnection: ImageAlbumConnection;
+  ImageAlbumConnectionSort: ImageAlbumConnectionSort;
+  ImageAlbumConnectionWhere: ImageAlbumConnectionWhere;
+  ImageAlbumCreateFieldInput: ImageAlbumCreateFieldInput;
+  ImageAlbumDeleteFieldInput: ImageAlbumDeleteFieldInput;
+  ImageAlbumDisconnectFieldInput: ImageAlbumDisconnectFieldInput;
+  ImageAlbumFieldInput: ImageAlbumFieldInput;
+  ImageAlbumNodeAggregationWhereInput: ImageAlbumNodeAggregationWhereInput;
+  ImageAlbumRelationship: ImageAlbumRelationship;
+  ImageAlbumUpdateConnectionInput: ImageAlbumUpdateConnectionInput;
+  ImageAlbumUpdateFieldInput: ImageAlbumUpdateFieldInput;
+  ImageConnectInput: ImageConnectInput;
+  ImageConnectWhere: ImageConnectWhere;
+  ImageCreateInput: ImageCreateInput;
+  ImageDeleteInput: ImageDeleteInput;
+  ImageDisconnectInput: ImageDisconnectInput;
+  ImageEdge: ImageEdge;
+  ImageOptions: ImageOptions;
+  ImageRelationInput: ImageRelationInput;
+  ImageSort: ImageSort;
+  ImageUpdateInput: ImageUpdateInput;
+  ImageWhere: ImageWhere;
+  ImagesConnection: ImagesConnection;
   Int: Scalars['Int']['output'];
   IntAggregateSelectionNonNullable: IntAggregateSelectionNonNullable;
   IntAggregateSelectionNullable: IntAggregateSelectionNullable;
@@ -27889,6 +29554,7 @@ export type ResolversParentTypes = {
   TagUpdateInput: TagUpdateInput;
   TagWhere: TagWhere;
   TagsConnection: TagsConnection;
+  UpdateAlbumsMutationResponse: UpdateAlbumsMutationResponse;
   UpdateChannelRolesMutationResponse: UpdateChannelRolesMutationResponse;
   UpdateChannelsMutationResponse: UpdateChannelsMutationResponse;
   UpdateCommentRepliesFormatsMutationResponse: UpdateCommentRepliesFormatsMutationResponse;
@@ -27904,6 +29570,7 @@ export type ResolversParentTypes = {
   UpdateEventsMutationResponse: UpdateEventsMutationResponse;
   UpdateFeedsMutationResponse: UpdateFeedsMutationResponse;
   UpdateGetSubredditResponsesMutationResponse: UpdateGetSubredditResponsesMutationResponse;
+  UpdateImagesMutationResponse: UpdateImagesMutationResponse;
   UpdateInfo: UpdateInfo;
   UpdateIssuesMutationResponse: UpdateIssuesMutationResponse;
   UpdateLinkFlairsMutationResponse: UpdateLinkFlairsMutationResponse;
@@ -27939,6 +29606,21 @@ export type ResolversParentTypes = {
   UserAdminOfChannelsUpdateConnectionInput: UserAdminOfChannelsUpdateConnectionInput;
   UserAdminOfChannelsUpdateFieldInput: UserAdminOfChannelsUpdateFieldInput;
   UserAggregateSelection: UserAggregateSelection;
+  UserAlbumAlbumsAggregationSelection: UserAlbumAlbumsAggregationSelection;
+  UserAlbumAlbumsNodeAggregateSelection: UserAlbumAlbumsNodeAggregateSelection;
+  UserAlbumsAggregateInput: UserAlbumsAggregateInput;
+  UserAlbumsConnectFieldInput: UserAlbumsConnectFieldInput;
+  UserAlbumsConnection: UserAlbumsConnection;
+  UserAlbumsConnectionSort: UserAlbumsConnectionSort;
+  UserAlbumsConnectionWhere: UserAlbumsConnectionWhere;
+  UserAlbumsCreateFieldInput: UserAlbumsCreateFieldInput;
+  UserAlbumsDeleteFieldInput: UserAlbumsDeleteFieldInput;
+  UserAlbumsDisconnectFieldInput: UserAlbumsDisconnectFieldInput;
+  UserAlbumsFieldInput: UserAlbumsFieldInput;
+  UserAlbumsNodeAggregationWhereInput: UserAlbumsNodeAggregationWhereInput;
+  UserAlbumsRelationship: UserAlbumsRelationship;
+  UserAlbumsUpdateConnectionInput: UserAlbumsUpdateConnectionInput;
+  UserAlbumsUpdateFieldInput: UserAlbumsUpdateFieldInput;
   UserBlockedAggregateInput: UserBlockedAggregateInput;
   UserBlockedConnectFieldInput: UserBlockedConnectFieldInput;
   UserBlockedConnectOrCreateFieldInput: UserBlockedConnectOrCreateFieldInput;
@@ -28243,6 +29925,130 @@ export type ResolversParentTypes = {
   UserUserIsBlockedByNodeAggregateSelection: UserUserIsBlockedByNodeAggregateSelection;
   UserWhere: UserWhere;
   UsersConnection: UsersConnection;
+};
+
+export type AlbumResolvers<ContextType = any, ParentType extends ResolversParentTypes['Album'] = ResolversParentTypes['Album']> = {
+  Discussions?: Resolver<Array<ResolversTypes['Discussion']>, ParentType, ContextType, RequireFields<AlbumDiscussionsArgs, 'directed'>>;
+  DiscussionsAggregate?: Resolver<Maybe<ResolversTypes['AlbumDiscussionDiscussionsAggregationSelection']>, ParentType, ContextType, RequireFields<AlbumDiscussionsAggregateArgs, 'directed'>>;
+  DiscussionsConnection?: Resolver<ResolversTypes['AlbumDiscussionsConnection'], ParentType, ContextType, RequireFields<AlbumDiscussionsConnectionArgs, 'directed'>>;
+  Images?: Resolver<Array<ResolversTypes['Image']>, ParentType, ContextType, RequireFields<AlbumImagesArgs, 'directed'>>;
+  ImagesAggregate?: Resolver<Maybe<ResolversTypes['AlbumImageImagesAggregationSelection']>, ParentType, ContextType, RequireFields<AlbumImagesAggregateArgs, 'directed'>>;
+  ImagesConnection?: Resolver<ResolversTypes['AlbumImagesConnection'], ParentType, ContextType, RequireFields<AlbumImagesConnectionArgs, 'directed'>>;
+  Owner?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<AlbumOwnerArgs, 'directed'>>;
+  OwnerAggregate?: Resolver<Maybe<ResolversTypes['AlbumUserOwnerAggregationSelection']>, ParentType, ContextType, RequireFields<AlbumOwnerAggregateArgs, 'directed'>>;
+  OwnerConnection?: Resolver<ResolversTypes['AlbumOwnerConnection'], ParentType, ContextType, RequireFields<AlbumOwnerConnectionArgs, 'directed'>>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type AlbumAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['AlbumAggregateSelection'] = ResolversParentTypes['AlbumAggregateSelection']> = {
+  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['IDAggregateSelectionNonNullable'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type AlbumDiscussionDiscussionsAggregationSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['AlbumDiscussionDiscussionsAggregationSelection'] = ResolversParentTypes['AlbumDiscussionDiscussionsAggregationSelection']> = {
+  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['AlbumDiscussionDiscussionsNodeAggregateSelection']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type AlbumDiscussionDiscussionsNodeAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['AlbumDiscussionDiscussionsNodeAggregateSelection'] = ResolversParentTypes['AlbumDiscussionDiscussionsNodeAggregateSelection']> = {
+  body?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['DateTimeAggregateSelectionNonNullable'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['IDAggregateSelectionNonNullable'], ParentType, ContextType>;
+  title?: Resolver<ResolversTypes['StringAggregateSelectionNonNullable'], ParentType, ContextType>;
+  updatedAt?: Resolver<ResolversTypes['DateTimeAggregateSelectionNullable'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type AlbumDiscussionsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['AlbumDiscussionsConnection'] = ResolversParentTypes['AlbumDiscussionsConnection']> = {
+  edges?: Resolver<Array<ResolversTypes['AlbumDiscussionsRelationship']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type AlbumDiscussionsRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['AlbumDiscussionsRelationship'] = ResolversParentTypes['AlbumDiscussionsRelationship']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['Discussion'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type AlbumEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['AlbumEdge'] = ResolversParentTypes['AlbumEdge']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['Album'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type AlbumImageImagesAggregationSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['AlbumImageImagesAggregationSelection'] = ResolversParentTypes['AlbumImageImagesAggregationSelection']> = {
+  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['AlbumImageImagesNodeAggregateSelection']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type AlbumImageImagesNodeAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['AlbumImageImagesNodeAggregateSelection'] = ResolversParentTypes['AlbumImageImagesNodeAggregateSelection']> = {
+  alt?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  caption?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  copyright?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['IDAggregateSelectionNonNullable'], ParentType, ContextType>;
+  url?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type AlbumImagesConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['AlbumImagesConnection'] = ResolversParentTypes['AlbumImagesConnection']> = {
+  edges?: Resolver<Array<ResolversTypes['AlbumImagesRelationship']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type AlbumImagesRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['AlbumImagesRelationship'] = ResolversParentTypes['AlbumImagesRelationship']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['Image'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type AlbumOwnerConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['AlbumOwnerConnection'] = ResolversParentTypes['AlbumOwnerConnection']> = {
+  edges?: Resolver<Array<ResolversTypes['AlbumOwnerRelationship']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type AlbumOwnerRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['AlbumOwnerRelationship'] = ResolversParentTypes['AlbumOwnerRelationship']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type AlbumUserOwnerAggregationSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['AlbumUserOwnerAggregationSelection'] = ResolversParentTypes['AlbumUserOwnerAggregationSelection']> = {
+  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['AlbumUserOwnerNodeAggregateSelection']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type AlbumUserOwnerNodeAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['AlbumUserOwnerNodeAggregateSelection'] = ResolversParentTypes['AlbumUserOwnerNodeAggregateSelection']> = {
+  DefaultEmojiSkinTone?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  NotificationBundleInterval?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  PreferredTimeZone?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  bio?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  commentKarma?: Resolver<ResolversTypes['IntAggregateSelectionNullable'], ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['DateTimeAggregateSelectionNonNullable'], ParentType, ContextType>;
+  discussionKarma?: Resolver<ResolversTypes['IntAggregateSelectionNullable'], ParentType, ContextType>;
+  displayName?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  location?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  profilePicURL?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  pronouns?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  username?: Resolver<ResolversTypes['StringAggregateSelectionNonNullable'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type AlbumsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['AlbumsConnection'] = ResolversParentTypes['AlbumsConnection']> = {
+  edges?: Resolver<Array<ResolversTypes['AlbumEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type ChannelResolvers<ContextType = any, ParentType extends ResolversParentTypes['Channel'] = ResolversParentTypes['Channel']> = {
@@ -29104,6 +30910,12 @@ export type CommentsConnectionResolvers<ContextType = any, ParentType extends Re
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type CreateAlbumsMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateAlbumsMutationResponse'] = ResolversParentTypes['CreateAlbumsMutationResponse']> = {
+  albums?: Resolver<Array<ResolversTypes['Album']>, ParentType, ContextType>;
+  info?: Resolver<ResolversTypes['CreateInfo'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type CreateChannelRolesMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateChannelRolesMutationResponse'] = ResolversParentTypes['CreateChannelRolesMutationResponse']> = {
   channelRoles?: Resolver<Array<ResolversTypes['ChannelRole']>, ParentType, ContextType>;
   info?: Resolver<ResolversTypes['CreateInfo'], ParentType, ContextType>;
@@ -29190,6 +31002,12 @@ export type CreateFeedsMutationResponseResolvers<ContextType = any, ParentType e
 
 export type CreateGetSubredditResponsesMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateGetSubredditResponsesMutationResponse'] = ResolversParentTypes['CreateGetSubredditResponsesMutationResponse']> = {
   getSubredditResponses?: Resolver<Array<ResolversTypes['GetSubredditResponse']>, ParentType, ContextType>;
+  info?: Resolver<ResolversTypes['CreateInfo'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CreateImagesMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateImagesMutationResponse'] = ResolversParentTypes['CreateImagesMutationResponse']> = {
+  images?: Resolver<Array<ResolversTypes['Image']>, ParentType, ContextType>;
   info?: Resolver<ResolversTypes['CreateInfo'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -29327,6 +31145,9 @@ export type DeleteInfoResolvers<ContextType = any, ParentType extends ResolversP
 };
 
 export type DiscussionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Discussion'] = ResolversParentTypes['Discussion']> = {
+  Album?: Resolver<Maybe<ResolversTypes['Album']>, ParentType, ContextType, RequireFields<DiscussionAlbumArgs, 'directed'>>;
+  AlbumAggregate?: Resolver<Maybe<ResolversTypes['DiscussionAlbumAlbumAggregationSelection']>, ParentType, ContextType, RequireFields<DiscussionAlbumAggregateArgs, 'directed'>>;
+  AlbumConnection?: Resolver<ResolversTypes['DiscussionAlbumConnection'], ParentType, ContextType, RequireFields<DiscussionAlbumConnectionArgs, 'directed'>>;
   Author?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<DiscussionAuthorArgs, 'directed'>>;
   AuthorAggregate?: Resolver<Maybe<ResolversTypes['DiscussionUserAuthorAggregationSelection']>, ParentType, ContextType, RequireFields<DiscussionAuthorAggregateArgs, 'directed'>>;
   AuthorConnection?: Resolver<ResolversTypes['DiscussionAuthorConnection'], ParentType, ContextType, RequireFields<DiscussionAuthorConnectionArgs, 'directed'>>;
@@ -29358,6 +31179,30 @@ export type DiscussionAggregateSelectionResolvers<ContextType = any, ParentType 
   id?: Resolver<ResolversTypes['IDAggregateSelectionNonNullable'], ParentType, ContextType>;
   title?: Resolver<ResolversTypes['StringAggregateSelectionNonNullable'], ParentType, ContextType>;
   updatedAt?: Resolver<ResolversTypes['DateTimeAggregateSelectionNullable'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DiscussionAlbumAlbumAggregationSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscussionAlbumAlbumAggregationSelection'] = ResolversParentTypes['DiscussionAlbumAlbumAggregationSelection']> = {
+  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['DiscussionAlbumAlbumNodeAggregateSelection']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DiscussionAlbumAlbumNodeAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscussionAlbumAlbumNodeAggregateSelection'] = ResolversParentTypes['DiscussionAlbumAlbumNodeAggregateSelection']> = {
+  id?: Resolver<ResolversTypes['IDAggregateSelectionNonNullable'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DiscussionAlbumConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscussionAlbumConnection'] = ResolversParentTypes['DiscussionAlbumConnection']> = {
+  edges?: Resolver<Array<ResolversTypes['DiscussionAlbumRelationship']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DiscussionAlbumRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscussionAlbumRelationship'] = ResolversParentTypes['DiscussionAlbumRelationship']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['Album'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -30419,6 +32264,65 @@ export type IdAggregateSelectionNullableResolvers<ContextType = any, ParentType 
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type ImageResolvers<ContextType = any, ParentType extends ResolversParentTypes['Image'] = ResolversParentTypes['Image']> = {
+  Album?: Resolver<Maybe<ResolversTypes['Album']>, ParentType, ContextType, RequireFields<ImageAlbumArgs, 'directed'>>;
+  AlbumAggregate?: Resolver<Maybe<ResolversTypes['ImageAlbumAlbumAggregationSelection']>, ParentType, ContextType, RequireFields<ImageAlbumAggregateArgs, 'directed'>>;
+  AlbumConnection?: Resolver<ResolversTypes['ImageAlbumConnection'], ParentType, ContextType, RequireFields<ImageAlbumConnectionArgs, 'directed'>>;
+  alt?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  caption?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  copyright?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  url?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ImageAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ImageAggregateSelection'] = ResolversParentTypes['ImageAggregateSelection']> = {
+  alt?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  caption?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  copyright?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['IDAggregateSelectionNonNullable'], ParentType, ContextType>;
+  url?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ImageAlbumAlbumAggregationSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ImageAlbumAlbumAggregationSelection'] = ResolversParentTypes['ImageAlbumAlbumAggregationSelection']> = {
+  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['ImageAlbumAlbumNodeAggregateSelection']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ImageAlbumAlbumNodeAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ImageAlbumAlbumNodeAggregateSelection'] = ResolversParentTypes['ImageAlbumAlbumNodeAggregateSelection']> = {
+  id?: Resolver<ResolversTypes['IDAggregateSelectionNonNullable'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ImageAlbumConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ImageAlbumConnection'] = ResolversParentTypes['ImageAlbumConnection']> = {
+  edges?: Resolver<Array<ResolversTypes['ImageAlbumRelationship']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ImageAlbumRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['ImageAlbumRelationship'] = ResolversParentTypes['ImageAlbumRelationship']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['Album'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ImageEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['ImageEdge'] = ResolversParentTypes['ImageEdge']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['Image'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ImagesConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ImagesConnection'] = ResolversParentTypes['ImagesConnection']> = {
+  edges?: Resolver<Array<ResolversTypes['ImageEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type IntAggregateSelectionNonNullableResolvers<ContextType = any, ParentType extends ResolversParentTypes['IntAggregateSelectionNonNullable'] = ResolversParentTypes['IntAggregateSelectionNonNullable']> = {
   average?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   max?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
@@ -30963,6 +32867,7 @@ export type ModerationProfilesConnectionResolvers<ContextType = any, ParentType 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   addEmojiToComment?: Resolver<Maybe<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<MutationAddEmojiToCommentArgs, 'commentId' | 'emojiLabel' | 'unicode' | 'username'>>;
   addEmojiToDiscussionChannel?: Resolver<Maybe<ResolversTypes['DiscussionChannel']>, ParentType, ContextType, RequireFields<MutationAddEmojiToDiscussionChannelArgs, 'discussionChannelId' | 'emojiLabel' | 'unicode' | 'username'>>;
+  createAlbums?: Resolver<ResolversTypes['CreateAlbumsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateAlbumsArgs, 'input'>>;
   createChannelRoles?: Resolver<ResolversTypes['CreateChannelRolesMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateChannelRolesArgs, 'input'>>;
   createChannels?: Resolver<ResolversTypes['CreateChannelsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateChannelsArgs, 'input'>>;
   createCommentRepliesFormats?: Resolver<ResolversTypes['CreateCommentRepliesFormatsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateCommentRepliesFormatsArgs, 'input'>>;
@@ -30981,6 +32886,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createEvents?: Resolver<ResolversTypes['CreateEventsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateEventsArgs, 'input'>>;
   createFeeds?: Resolver<ResolversTypes['CreateFeedsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateFeedsArgs, 'input'>>;
   createGetSubredditResponses?: Resolver<ResolversTypes['CreateGetSubredditResponsesMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateGetSubredditResponsesArgs, 'input'>>;
+  createImages?: Resolver<ResolversTypes['CreateImagesMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateImagesArgs, 'input'>>;
   createIssues?: Resolver<ResolversTypes['CreateIssuesMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateIssuesArgs, 'input'>>;
   createLinkFlairs?: Resolver<ResolversTypes['CreateLinkFlairsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateLinkFlairsArgs, 'input'>>;
   createModChannelRoles?: Resolver<ResolversTypes['CreateModChannelRolesMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateModChannelRolesArgs, 'input'>>;
@@ -30999,6 +32905,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createSubredditSidebars?: Resolver<ResolversTypes['CreateSubredditSidebarsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateSubredditSidebarsArgs, 'input'>>;
   createTags?: Resolver<ResolversTypes['CreateTagsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateTagsArgs, 'input'>>;
   createUsers?: Resolver<ResolversTypes['CreateUsersMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateUsersArgs, 'input'>>;
+  deleteAlbums?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteAlbumsArgs>>;
   deleteChannelRoles?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteChannelRolesArgs>>;
   deleteChannels?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteChannelsArgs>>;
   deleteCommentRepliesFormats?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteCommentRepliesFormatsArgs>>;
@@ -31014,6 +32921,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteEvents?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteEventsArgs>>;
   deleteFeeds?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteFeedsArgs>>;
   deleteGetSubredditResponses?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteGetSubredditResponsesArgs>>;
+  deleteImages?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteImagesArgs>>;
   deleteIssues?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteIssuesArgs>>;
   deleteLinkFlairs?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteLinkFlairsArgs>>;
   deleteModChannelRoles?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteModChannelRolesArgs>>;
@@ -31035,6 +32943,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   removeEmojiFromDiscussionChannel?: Resolver<Maybe<ResolversTypes['DiscussionChannel']>, ParentType, ContextType, RequireFields<MutationRemoveEmojiFromDiscussionChannelArgs, 'discussionChannelId' | 'emojiLabel' | 'username'>>;
   undoUpvoteComment?: Resolver<Maybe<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<MutationUndoUpvoteCommentArgs, 'commentId' | 'username'>>;
   undoUpvoteDiscussionChannel?: Resolver<Maybe<ResolversTypes['DiscussionChannel']>, ParentType, ContextType, RequireFields<MutationUndoUpvoteDiscussionChannelArgs, 'discussionChannelId' | 'username'>>;
+  updateAlbums?: Resolver<ResolversTypes['UpdateAlbumsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateAlbumsArgs>>;
   updateChannelRoles?: Resolver<ResolversTypes['UpdateChannelRolesMutationResponse'], ParentType, ContextType, Partial<MutationUpdateChannelRolesArgs>>;
   updateChannels?: Resolver<ResolversTypes['UpdateChannelsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateChannelsArgs>>;
   updateCommentRepliesFormats?: Resolver<ResolversTypes['UpdateCommentRepliesFormatsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateCommentRepliesFormatsArgs>>;
@@ -31052,6 +32961,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   updateEvents?: Resolver<ResolversTypes['UpdateEventsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateEventsArgs>>;
   updateFeeds?: Resolver<ResolversTypes['UpdateFeedsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateFeedsArgs>>;
   updateGetSubredditResponses?: Resolver<ResolversTypes['UpdateGetSubredditResponsesMutationResponse'], ParentType, ContextType, Partial<MutationUpdateGetSubredditResponsesArgs>>;
+  updateImages?: Resolver<ResolversTypes['UpdateImagesMutationResponse'], ParentType, ContextType, Partial<MutationUpdateImagesArgs>>;
   updateIssues?: Resolver<ResolversTypes['UpdateIssuesMutationResponse'], ParentType, ContextType, Partial<MutationUpdateIssuesArgs>>;
   updateLinkFlairs?: Resolver<ResolversTypes['UpdateLinkFlairsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateLinkFlairsArgs>>;
   updateModChannelRoles?: Resolver<ResolversTypes['UpdateModChannelRolesMutationResponse'], ParentType, ContextType, Partial<MutationUpdateModChannelRolesArgs>>;
@@ -31091,6 +33001,9 @@ export type PointResolvers<ContextType = any, ParentType extends ResolversParent
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
+  albums?: Resolver<Array<ResolversTypes['Album']>, ParentType, ContextType, Partial<QueryAlbumsArgs>>;
+  albumsAggregate?: Resolver<ResolversTypes['AlbumAggregateSelection'], ParentType, ContextType, Partial<QueryAlbumsAggregateArgs>>;
+  albumsConnection?: Resolver<ResolversTypes['AlbumsConnection'], ParentType, ContextType, Partial<QueryAlbumsConnectionArgs>>;
   channelRoles?: Resolver<Array<ResolversTypes['ChannelRole']>, ParentType, ContextType, Partial<QueryChannelRolesArgs>>;
   channelRolesAggregate?: Resolver<ResolversTypes['ChannelRoleAggregateSelection'], ParentType, ContextType, Partial<QueryChannelRolesAggregateArgs>>;
   channelRolesConnection?: Resolver<ResolversTypes['ChannelRolesConnection'], ParentType, ContextType, Partial<QueryChannelRolesConnectionArgs>>;
@@ -31143,6 +33056,9 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   getSubredditResponsesAggregate?: Resolver<ResolversTypes['GetSubredditResponseAggregateSelection'], ParentType, ContextType, Partial<QueryGetSubredditResponsesAggregateArgs>>;
   getSubredditResponsesConnection?: Resolver<ResolversTypes['GetSubredditResponsesConnection'], ParentType, ContextType, Partial<QueryGetSubredditResponsesConnectionArgs>>;
   getSubredditSidebar?: Resolver<Maybe<ResolversTypes['SubredditSidebar']>, ParentType, ContextType, RequireFields<QueryGetSubredditSidebarArgs, 'subredditName'>>;
+  images?: Resolver<Array<ResolversTypes['Image']>, ParentType, ContextType, Partial<QueryImagesArgs>>;
+  imagesAggregate?: Resolver<ResolversTypes['ImageAggregateSelection'], ParentType, ContextType, Partial<QueryImagesAggregateArgs>>;
+  imagesConnection?: Resolver<ResolversTypes['ImagesConnection'], ParentType, ContextType, Partial<QueryImagesConnectionArgs>>;
   issues?: Resolver<Array<ResolversTypes['Issue']>, ParentType, ContextType, Partial<QueryIssuesArgs>>;
   issuesAggregate?: Resolver<ResolversTypes['IssueAggregateSelection'], ParentType, ContextType, Partial<QueryIssuesAggregateArgs>>;
   issuesConnection?: Resolver<ResolversTypes['IssuesConnection'], ParentType, ContextType, Partial<QueryIssuesConnectionArgs>>;
@@ -31801,6 +33717,12 @@ export type TagsConnectionResolvers<ContextType = any, ParentType extends Resolv
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type UpdateAlbumsMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateAlbumsMutationResponse'] = ResolversParentTypes['UpdateAlbumsMutationResponse']> = {
+  albums?: Resolver<Array<ResolversTypes['Album']>, ParentType, ContextType>;
+  info?: Resolver<ResolversTypes['UpdateInfo'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type UpdateChannelRolesMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateChannelRolesMutationResponse'] = ResolversParentTypes['UpdateChannelRolesMutationResponse']> = {
   channelRoles?: Resolver<Array<ResolversTypes['ChannelRole']>, ParentType, ContextType>;
   info?: Resolver<ResolversTypes['UpdateInfo'], ParentType, ContextType>;
@@ -31887,6 +33809,12 @@ export type UpdateFeedsMutationResponseResolvers<ContextType = any, ParentType e
 
 export type UpdateGetSubredditResponsesMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateGetSubredditResponsesMutationResponse'] = ResolversParentTypes['UpdateGetSubredditResponsesMutationResponse']> = {
   getSubredditResponses?: Resolver<Array<ResolversTypes['GetSubredditResponse']>, ParentType, ContextType>;
+  info?: Resolver<ResolversTypes['UpdateInfo'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type UpdateImagesMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateImagesMutationResponse'] = ResolversParentTypes['UpdateImagesMutationResponse']> = {
+  images?: Resolver<Array<ResolversTypes['Image']>, ParentType, ContextType>;
   info?: Resolver<ResolversTypes['UpdateInfo'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -32006,6 +33934,9 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   AdminOfChannels?: Resolver<Array<ResolversTypes['Channel']>, ParentType, ContextType, RequireFields<UserAdminOfChannelsArgs, 'directed'>>;
   AdminOfChannelsAggregate?: Resolver<Maybe<ResolversTypes['UserChannelAdminOfChannelsAggregationSelection']>, ParentType, ContextType, RequireFields<UserAdminOfChannelsAggregateArgs, 'directed'>>;
   AdminOfChannelsConnection?: Resolver<ResolversTypes['UserAdminOfChannelsConnection'], ParentType, ContextType, RequireFields<UserAdminOfChannelsConnectionArgs, 'directed'>>;
+  Albums?: Resolver<Array<ResolversTypes['Album']>, ParentType, ContextType, RequireFields<UserAlbumsArgs, 'directed'>>;
+  AlbumsAggregate?: Resolver<Maybe<ResolversTypes['UserAlbumAlbumsAggregationSelection']>, ParentType, ContextType, RequireFields<UserAlbumsAggregateArgs, 'directed'>>;
+  AlbumsConnection?: Resolver<ResolversTypes['UserAlbumsConnection'], ParentType, ContextType, RequireFields<UserAlbumsConnectionArgs, 'directed'>>;
   Blocked?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<UserBlockedArgs, 'directed'>>;
   BlockedAggregate?: Resolver<Maybe<ResolversTypes['UserUserBlockedAggregationSelection']>, ParentType, ContextType, RequireFields<UserBlockedAggregateArgs, 'directed'>>;
   BlockedConnection?: Resolver<ResolversTypes['UserBlockedConnection'], ParentType, ContextType, RequireFields<UserBlockedConnectionArgs, 'directed'>>;
@@ -32103,6 +34034,30 @@ export type UserAggregateSelectionResolvers<ContextType = any, ParentType extend
   profilePicURL?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
   pronouns?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
   username?: Resolver<ResolversTypes['StringAggregateSelectionNonNullable'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type UserAlbumAlbumsAggregationSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserAlbumAlbumsAggregationSelection'] = ResolversParentTypes['UserAlbumAlbumsAggregationSelection']> = {
+  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['UserAlbumAlbumsNodeAggregateSelection']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type UserAlbumAlbumsNodeAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserAlbumAlbumsNodeAggregateSelection'] = ResolversParentTypes['UserAlbumAlbumsNodeAggregateSelection']> = {
+  id?: Resolver<ResolversTypes['IDAggregateSelectionNonNullable'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type UserAlbumsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserAlbumsConnection'] = ResolversParentTypes['UserAlbumsConnection']> = {
+  edges?: Resolver<Array<ResolversTypes['UserAlbumsRelationship']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type UserAlbumsRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserAlbumsRelationship'] = ResolversParentTypes['UserAlbumsRelationship']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['Album'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -32653,6 +34608,22 @@ export type UsersConnectionResolvers<ContextType = any, ParentType extends Resol
 };
 
 export type Resolvers<ContextType = any> = {
+  Album?: AlbumResolvers<ContextType>;
+  AlbumAggregateSelection?: AlbumAggregateSelectionResolvers<ContextType>;
+  AlbumDiscussionDiscussionsAggregationSelection?: AlbumDiscussionDiscussionsAggregationSelectionResolvers<ContextType>;
+  AlbumDiscussionDiscussionsNodeAggregateSelection?: AlbumDiscussionDiscussionsNodeAggregateSelectionResolvers<ContextType>;
+  AlbumDiscussionsConnection?: AlbumDiscussionsConnectionResolvers<ContextType>;
+  AlbumDiscussionsRelationship?: AlbumDiscussionsRelationshipResolvers<ContextType>;
+  AlbumEdge?: AlbumEdgeResolvers<ContextType>;
+  AlbumImageImagesAggregationSelection?: AlbumImageImagesAggregationSelectionResolvers<ContextType>;
+  AlbumImageImagesNodeAggregateSelection?: AlbumImageImagesNodeAggregateSelectionResolvers<ContextType>;
+  AlbumImagesConnection?: AlbumImagesConnectionResolvers<ContextType>;
+  AlbumImagesRelationship?: AlbumImagesRelationshipResolvers<ContextType>;
+  AlbumOwnerConnection?: AlbumOwnerConnectionResolvers<ContextType>;
+  AlbumOwnerRelationship?: AlbumOwnerRelationshipResolvers<ContextType>;
+  AlbumUserOwnerAggregationSelection?: AlbumUserOwnerAggregationSelectionResolvers<ContextType>;
+  AlbumUserOwnerNodeAggregateSelection?: AlbumUserOwnerNodeAggregateSelectionResolvers<ContextType>;
+  AlbumsConnection?: AlbumsConnectionResolvers<ContextType>;
   Channel?: ChannelResolvers<ContextType>;
   ChannelAdminsConnection?: ChannelAdminsConnectionResolvers<ContextType>;
   ChannelAdminsRelationship?: ChannelAdminsRelationshipResolvers<ContextType>;
@@ -32760,6 +34731,7 @@ export type Resolvers<ContextType = any> = {
   CommentUserUpvotedByUsersAggregationSelection?: CommentUserUpvotedByUsersAggregationSelectionResolvers<ContextType>;
   CommentUserUpvotedByUsersNodeAggregateSelection?: CommentUserUpvotedByUsersNodeAggregateSelectionResolvers<ContextType>;
   CommentsConnection?: CommentsConnectionResolvers<ContextType>;
+  CreateAlbumsMutationResponse?: CreateAlbumsMutationResponseResolvers<ContextType>;
   CreateChannelRolesMutationResponse?: CreateChannelRolesMutationResponseResolvers<ContextType>;
   CreateChannelsMutationResponse?: CreateChannelsMutationResponseResolvers<ContextType>;
   CreateCommentRepliesFormatsMutationResponse?: CreateCommentRepliesFormatsMutationResponseResolvers<ContextType>;
@@ -32775,6 +34747,7 @@ export type Resolvers<ContextType = any> = {
   CreateEventsMutationResponse?: CreateEventsMutationResponseResolvers<ContextType>;
   CreateFeedsMutationResponse?: CreateFeedsMutationResponseResolvers<ContextType>;
   CreateGetSubredditResponsesMutationResponse?: CreateGetSubredditResponsesMutationResponseResolvers<ContextType>;
+  CreateImagesMutationResponse?: CreateImagesMutationResponseResolvers<ContextType>;
   CreateInfo?: CreateInfoResolvers<ContextType>;
   CreateIssuesMutationResponse?: CreateIssuesMutationResponseResolvers<ContextType>;
   CreateLinkFlairsMutationResponse?: CreateLinkFlairsMutationResponseResolvers<ContextType>;
@@ -32799,6 +34772,10 @@ export type Resolvers<ContextType = any> = {
   DeleteInfo?: DeleteInfoResolvers<ContextType>;
   Discussion?: DiscussionResolvers<ContextType>;
   DiscussionAggregateSelection?: DiscussionAggregateSelectionResolvers<ContextType>;
+  DiscussionAlbumAlbumAggregationSelection?: DiscussionAlbumAlbumAggregationSelectionResolvers<ContextType>;
+  DiscussionAlbumAlbumNodeAggregateSelection?: DiscussionAlbumAlbumNodeAggregateSelectionResolvers<ContextType>;
+  DiscussionAlbumConnection?: DiscussionAlbumConnectionResolvers<ContextType>;
+  DiscussionAlbumRelationship?: DiscussionAlbumRelationshipResolvers<ContextType>;
   DiscussionAuthorConnection?: DiscussionAuthorConnectionResolvers<ContextType>;
   DiscussionAuthorRelationship?: DiscussionAuthorRelationshipResolvers<ContextType>;
   DiscussionChannel?: DiscussionChannelResolvers<ContextType>;
@@ -32932,6 +34909,14 @@ export type Resolvers<ContextType = any> = {
   GetSubredditResponsesConnection?: GetSubredditResponsesConnectionResolvers<ContextType>;
   IDAggregateSelectionNonNullable?: IdAggregateSelectionNonNullableResolvers<ContextType>;
   IDAggregateSelectionNullable?: IdAggregateSelectionNullableResolvers<ContextType>;
+  Image?: ImageResolvers<ContextType>;
+  ImageAggregateSelection?: ImageAggregateSelectionResolvers<ContextType>;
+  ImageAlbumAlbumAggregationSelection?: ImageAlbumAlbumAggregationSelectionResolvers<ContextType>;
+  ImageAlbumAlbumNodeAggregateSelection?: ImageAlbumAlbumNodeAggregateSelectionResolvers<ContextType>;
+  ImageAlbumConnection?: ImageAlbumConnectionResolvers<ContextType>;
+  ImageAlbumRelationship?: ImageAlbumRelationshipResolvers<ContextType>;
+  ImageEdge?: ImageEdgeResolvers<ContextType>;
+  ImagesConnection?: ImagesConnectionResolvers<ContextType>;
   IntAggregateSelectionNonNullable?: IntAggregateSelectionNonNullableResolvers<ContextType>;
   IntAggregateSelectionNullable?: IntAggregateSelectionNullableResolvers<ContextType>;
   Issue?: IssueResolvers<ContextType>;
@@ -33084,6 +35069,7 @@ export type Resolvers<ContextType = any> = {
   TagFeedsConnection?: TagFeedsConnectionResolvers<ContextType>;
   TagFeedsRelationship?: TagFeedsRelationshipResolvers<ContextType>;
   TagsConnection?: TagsConnectionResolvers<ContextType>;
+  UpdateAlbumsMutationResponse?: UpdateAlbumsMutationResponseResolvers<ContextType>;
   UpdateChannelRolesMutationResponse?: UpdateChannelRolesMutationResponseResolvers<ContextType>;
   UpdateChannelsMutationResponse?: UpdateChannelsMutationResponseResolvers<ContextType>;
   UpdateCommentRepliesFormatsMutationResponse?: UpdateCommentRepliesFormatsMutationResponseResolvers<ContextType>;
@@ -33099,6 +35085,7 @@ export type Resolvers<ContextType = any> = {
   UpdateEventsMutationResponse?: UpdateEventsMutationResponseResolvers<ContextType>;
   UpdateFeedsMutationResponse?: UpdateFeedsMutationResponseResolvers<ContextType>;
   UpdateGetSubredditResponsesMutationResponse?: UpdateGetSubredditResponsesMutationResponseResolvers<ContextType>;
+  UpdateImagesMutationResponse?: UpdateImagesMutationResponseResolvers<ContextType>;
   UpdateInfo?: UpdateInfoResolvers<ContextType>;
   UpdateIssuesMutationResponse?: UpdateIssuesMutationResponseResolvers<ContextType>;
   UpdateLinkFlairsMutationResponse?: UpdateLinkFlairsMutationResponseResolvers<ContextType>;
@@ -33121,6 +35108,10 @@ export type Resolvers<ContextType = any> = {
   UserAdminOfChannelsConnection?: UserAdminOfChannelsConnectionResolvers<ContextType>;
   UserAdminOfChannelsRelationship?: UserAdminOfChannelsRelationshipResolvers<ContextType>;
   UserAggregateSelection?: UserAggregateSelectionResolvers<ContextType>;
+  UserAlbumAlbumsAggregationSelection?: UserAlbumAlbumsAggregationSelectionResolvers<ContextType>;
+  UserAlbumAlbumsNodeAggregateSelection?: UserAlbumAlbumsNodeAggregateSelectionResolvers<ContextType>;
+  UserAlbumsConnection?: UserAlbumsConnectionResolvers<ContextType>;
+  UserAlbumsRelationship?: UserAlbumsRelationshipResolvers<ContextType>;
   UserBlockedConnection?: UserBlockedConnectionResolvers<ContextType>;
   UserBlockedRelationship?: UserBlockedRelationshipResolvers<ContextType>;
   UserChannelAdminOfChannelsAggregationSelection?: UserChannelAdminOfChannelsAggregationSelectionResolvers<ContextType>;

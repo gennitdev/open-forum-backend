@@ -12,6 +12,74 @@ const typeDefinitions = gql`
     detail: String!
   }
 
+  type Image {
+    id: ID! @id
+    url: String
+    alt: String
+    caption: String
+    copyright: String
+    Album: Album @relationship(type: "HAS_IMAGE", direction: IN)
+  }
+
+  type Album {
+    id: ID! @id
+    Owner: User @relationship(type: "HAS_ALBUM", direction: IN)
+    Images: [Image!]! @relationship(type: "HAS_IMAGE", direction: OUT)
+    Discussions: [Discussion!]! @relationship(type: "HAS_ALBUM", direction: IN)
+  }
+
+  type User {
+    Albums: [Album!]! @relationship(type: "HAS_ALBUM", direction: OUT)
+    username: String! @unique
+    Email: Email @relationship(type: "HAS_EMAIL", direction: IN)
+    displayName: String
+    pronouns: String
+    location: String
+    bio: String
+    commentKarma: Int
+    discussionKarma: Int
+    profilePicURL: String
+    Comments: [Comment!]!
+      @relationship(type: "AUTHORED_COMMENT", direction: OUT)
+    AdminOfChannels: [Channel!]!
+      @relationship(type: "ADMIN_OF_CHANNEL", direction: OUT)
+    Discussions: [Discussion!]!
+      @relationship(type: "POSTED_DISCUSSION", direction: OUT)
+    Events: [Event!]! @relationship(type: "POSTED_BY", direction: OUT)
+    # SentMessages:            [Message!]           @relationship(type: "SENT_MESSAGE", direction: OUT)
+    # ReceivedMessages:        [Message!]           @relationship(type: "RECEIVED_MESSAGE", direction: OUT)
+    Feeds: [Feed!]! @relationship(type: "HAS_FEED_IN_LIBRARY", direction: OUT)
+    CreatedFeeds: [Feed!]! @relationship(type: "CREATED_FEED", direction: OUT)
+    DefaultFeed: Feed @relationship(type: "DEFAULT_FEED", direction: OUT)
+    createdAt: DateTime! @timestamp(operations: [CREATE])
+    # WikiChangeProposals:     [WikiChangeProposal] @relationship(type: "AUTHORED_CHANGE_PROPOSAL", direction: OUT)
+    # Notifications:           [Notification]       @relationship(type: "HAS_NOTIFICATION", direction: OUT)
+    Blocked: User @relationship(type: "BLOCKED", direction: OUT)
+    IsBlockedBy: User @relationship(type: "BLOCKED", direction: IN)
+    FavoriteChannels: [Channel!]!
+      @relationship(type: "FAVORITE_CHANNEL", direction: OUT)
+    RecentlyVisitedChannels: [Channel!]!
+      @relationship(type: "RECENTLY_VISITED_CHANNEL", direction: OUT)
+    UpvotedComments: [Comment!]!
+      @relationship(type: "UPVOTED_COMMENT", direction: OUT)
+    UpvotedDiscussionChannels: [DiscussionChannel!]!
+      @relationship(type: "UPVOTED_DISCUSSION_IN_CHANNEL", direction: OUT)
+    ModerationProfile: ModerationProfile
+      @relationship(type: "MODERATION_PROFILE", direction: OUT)
+    DefaultEmojiSkinTone: String
+    NotificationBundleInterval: String
+    PreferredTimeZone: String
+    Issues: [Issue!]! @relationship(type: "AUTHORED_ISSUE", direction: OUT)
+    IssueComments: [Comment!]!
+      @relationship(type: "AUTHORED_ISSUE_COMMENT", direction: OUT)
+    deleted: Boolean
+    ChannelRoles: [ChannelRole!]!
+      @relationship(type: "HAS_CHANNEL_ROLE", direction: OUT)
+    ServerRoles: [ServerRole!]!
+      @relationship(type: "HAS_SERVER_ROLE", direction: OUT)
+  }
+
+
   type Channel {
     description: String
     displayName: String
@@ -69,6 +137,7 @@ const typeDefinitions = gql`
       @relationship(type: "POSTED_IN_CHANNEL", direction: IN)
     FeedbackComments: [Comment!]! @relationship(type: "HAS_FEEDBACK_COMMENT", direction: IN)
     RelatedIssues: [Issue!]! @relationship(type: "CITED_ISSUE", direction: IN)
+    Album: Album @relationship(type: "HAS_ALBUM", direction: OUT)
   }
 
   type EventChannel {
@@ -190,56 +259,6 @@ const typeDefinitions = gql`
   type Email {
     address: String! @unique
     User: User @relationship(type: "HAS_EMAIL", direction: OUT)
-  }
-
-  type User {
-    username: String! @unique
-    Email: Email @relationship(type: "HAS_EMAIL", direction: IN)
-    displayName: String
-    pronouns: String
-    location: String
-    bio: String
-    commentKarma: Int
-    discussionKarma: Int
-    profilePicURL: String
-    Comments: [Comment!]!
-      @relationship(type: "AUTHORED_COMMENT", direction: OUT)
-    AdminOfChannels: [Channel!]!
-      @relationship(type: "ADMIN_OF_CHANNEL", direction: OUT)
-    Discussions: [Discussion!]!
-      @relationship(type: "POSTED_DISCUSSION", direction: OUT)
-    Events: [Event!]! @relationship(type: "POSTED_BY", direction: OUT)
-    # SentMessages:            [Message!]           @relationship(type: "SENT_MESSAGE", direction: OUT)
-    # ReceivedMessages:        [Message!]           @relationship(type: "RECEIVED_MESSAGE", direction: OUT)
-    Feeds: [Feed!]! @relationship(type: "HAS_FEED_IN_LIBRARY", direction: OUT)
-    CreatedFeeds: [Feed!]! @relationship(type: "CREATED_FEED", direction: OUT)
-    DefaultFeed: Feed @relationship(type: "DEFAULT_FEED", direction: OUT)
-    createdAt: DateTime! @timestamp(operations: [CREATE])
-    # WikiChangeProposals:     [WikiChangeProposal] @relationship(type: "AUTHORED_CHANGE_PROPOSAL", direction: OUT)
-    # Notifications:           [Notification]       @relationship(type: "HAS_NOTIFICATION", direction: OUT)
-    Blocked: User @relationship(type: "BLOCKED", direction: OUT)
-    IsBlockedBy: User @relationship(type: "BLOCKED", direction: IN)
-    FavoriteChannels: [Channel!]!
-      @relationship(type: "FAVORITE_CHANNEL", direction: OUT)
-    RecentlyVisitedChannels: [Channel!]!
-      @relationship(type: "RECENTLY_VISITED_CHANNEL", direction: OUT)
-    UpvotedComments: [Comment!]!
-      @relationship(type: "UPVOTED_COMMENT", direction: OUT)
-    UpvotedDiscussionChannels: [DiscussionChannel!]!
-      @relationship(type: "UPVOTED_DISCUSSION_IN_CHANNEL", direction: OUT)
-    ModerationProfile: ModerationProfile
-      @relationship(type: "MODERATION_PROFILE", direction: OUT)
-    DefaultEmojiSkinTone: String
-    NotificationBundleInterval: String
-    PreferredTimeZone: String
-    Issues: [Issue!]! @relationship(type: "AUTHORED_ISSUE", direction: OUT)
-    IssueComments: [Comment!]!
-      @relationship(type: "AUTHORED_ISSUE_COMMENT", direction: OUT)
-    deleted: Boolean
-    ChannelRoles: [ChannelRole!]!
-      @relationship(type: "HAS_CHANNEL_ROLE", direction: OUT)
-    ServerRoles: [ServerRole!]!
-      @relationship(type: "HAS_SERVER_ROLE", direction: OUT)
   }
 
   type ModerationProfile {

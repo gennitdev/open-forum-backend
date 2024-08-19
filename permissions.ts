@@ -60,6 +60,10 @@ const permissionList = shield({
       createIssues: rules.issueIsValid,
       deleteIssues: allow, // rules.canDeleteIssues,
       updateIssues: allow, // rules.canUpdateIssues,
+
+      createAlbums: allow,
+      updateAlbums: allow,
+      deleteAlbums: allow,
       // hideComments: updateComments: and(rules.verifiedEmail, or(rules.hasChannelModPermission("hideComments"), rules.isAdmin)),
       // canOpenChannelSupportTicket: and(rules.verifiedEmail, rules.isNotSuspendedFromServer),
       // canCloseChannelSupportTicket: and(rules.verifiedEmail, rules.isChannelModerator, rules.isNotSuspendedFromServer),
