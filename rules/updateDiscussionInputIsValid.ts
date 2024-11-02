@@ -1,6 +1,8 @@
 import { rule } from "graphql-shield";
 import { CanUpdateDiscussionArgs } from "./rules";
 
+const MAX_CHARS_IN_DISCUSSION_BODY = 18000;
+
 export const updateDiscussionInputIsValid = rule({ cache: "contextual" })(
   async (parent: any, args: CanUpdateDiscussionArgs, ctx: any, info: any) => {
     if (!args.discussionUpdateInput) {
@@ -14,8 +16,8 @@ export const updateDiscussionInputIsValid = rule({ cache: "contextual" })(
       return "A title is required.";
     }
 
-    if (body && body.length > 100) {
-      return "The discussion body cannot exceed 100 characters.";
+    if (body && body.length > MAX_CHARS_IN_DISCUSSION_BODY) {
+      return "The discussion body cannot exceed 18,000 characters.";
     }
 
     return true;
