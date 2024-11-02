@@ -1,6 +1,6 @@
 import { rule } from "graphql-shield";
 import { CanCreateDiscussionArgs } from "./rules";
-import { MAX_CHARS_IN_DISCUSSION_BODY, MAX_CHARS_IN_DISCUSSION_TITLE } from "./constants";
+import { MAX_CHARS_IN_DISCUSSION_BODY, MAX_CHARS_IN_DISCUSSION_TITLE } from "./updateDiscussionInputIsValid";
 
 export const createDiscussionInputIsValid = rule({ cache: "contextual" })(
   async (parent: any, args: CanCreateDiscussionArgs, ctx: any, info: any) => {
