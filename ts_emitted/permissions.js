@@ -1,4 +1,4 @@
-import { shield, allow, deny, or } from "graphql-shield";
+import { and, shield, allow, deny, or } from "graphql-shield";
 import rules from "./rules/rules.js";
 const permissionList = shield({
     Query: {
@@ -17,21 +17,21 @@ const permissionList = shield({
         createEmailAndUser: allow,
         // will prevent users from making themselves admins or moderators but allow other fields to be updated by account owner
         updateUsers: or(rules.isAccountOwner, rules.isAdmin),
-        createChannels: allow, //rules.canCreateChannel,
-        updateChannels: allow, // or(rules.isChannelOwner, rules.isAdmin),
-        deleteChannels: allow, //or(rules.isChannelOwner, rules.isAdmin),
-        deleteEmails: allow, // or(rules.isAccountOwner, rules.isAdmin),
-        deleteUsers: allow, // or(rules.isAccountOwner, rules.isAdmin),
-        createDiscussionWithChannelConnections: allow, //or(rules.canCreateDiscussion, rules.isAdmin),
-        updateDiscussionWithChannelConnections: allow, //or(rules.isDiscussionOwner, rules.isAdmin),
-        deleteDiscussions: allow, //or(rules.isDiscussionOwner, rules.isAdmin),
+        createChannels: rules.canCreateChannel,
+        updateChannels: or(rules.isChannelOwner, rules.isAdmin),
+        deleteChannels: or(rules.isChannelOwner, rules.isAdmin),
+        deleteEmails: or(rules.isAccountOwner, rules.isAdmin),
+        deleteUsers: or(rules.isAccountOwner, rules.isAdmin),
+        createDiscussionWithChannelConnections: or(rules.canCreateDiscussion, rules.isAdmin),
+        updateDiscussionWithChannelConnections: and(rules.updateDiscussionInputIsValid, or(rules.isDiscussionOwner, rules.isAdmin)),
+        deleteDiscussions: or(rules.isDiscussionOwner, rules.isAdmin),
         createEventWithChannelConnections: rules.canCreateEvent,
         updateEventWithChannelConnections: or(rules.isEventOwner, rules.isAdmin),
-        deleteEvents: allow, //or(rules.isEventOwner, rules.isAdmin),
-        updateEvents: allow, // or(rules.isEventOwner, rules.isAdmin),
+        deleteEvents: or(rules.isEventOwner, rules.isAdmin),
+        updateEvents: or(rules.isEventOwner, rules.isAdmin),
         createComments: allow, //rules.canCreateComment,
-        updateComments: allow, //or(rules.isCommentAuthor, rules.isAdmin),
-        deleteComments: allow, //or(rules.isCommentAuthor, rules.isAdmin),
+        updateComments: or(rules.isCommentAuthor, rules.isAdmin),
+        deleteComments: or(rules.isCommentAuthor, rules.isAdmin),
         createSignedStorageURL: allow, //rules.canUploadFile,
         addEmojiToComment: rules.canUpvoteComment,
         removeEmojiFromComment: rules.canUpvoteComment,

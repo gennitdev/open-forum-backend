@@ -1,4 +1,4 @@
-import { shield, allow, deny, or } from "graphql-shield";
+import { and, shield, allow, deny, or } from "graphql-shield";
 import rules from "./rules/rules.js";
 
 const permissionList = shield({
@@ -28,8 +28,8 @@ const permissionList = shield({
       deleteEmails: or(rules.isAccountOwner, rules.isAdmin),
       deleteUsers: or(rules.isAccountOwner, rules.isAdmin),
     
-      createDiscussionWithChannelConnections: or(rules.canCreateDiscussion, rules.isAdmin),
-      updateDiscussionWithChannelConnections:  or(rules.isDiscussionOwner, rules.isAdmin),
+      createDiscussionWithChannelConnections:  or(rules.canCreateDiscussion, rules.isAdmin),
+      updateDiscussionWithChannelConnections:  and(rules.updateDiscussionInputIsValid, or(rules.isDiscussionOwner, rules.isAdmin)),
       deleteDiscussions: or(rules.isDiscussionOwner, rules.isAdmin),
       
       createEventWithChannelConnections: rules.canCreateEvent,
