@@ -60,7 +60,7 @@ export const canCreateDiscussion = rule({ cache: "contextual" })(
   }
 );
 
-type CanUpdateEventArgs = {
+export type CanUpdateEventArgs = {
   eventCreateInput: EventCreateInput;
   channelConnections: string[];
 };

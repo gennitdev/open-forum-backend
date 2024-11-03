@@ -1,9 +1,9 @@
 import { rule } from "graphql-shield";
-import { CanCreateEventArgs } from "./rules";
+import { CanUpdateEventArgs } from "./rules";
 import { MAX_CHARS_IN_EVENT_DESCRIPTION, MAX_CHARS_IN_EVENT_TITLE } from "./constants";
 
-export const createEventInputIsValid = rule({ cache: "contextual" })(
-  async (parent: any, args: CanCreateEventArgs, ctx: any, info: any) => {
+export const updateDiscussionInputIsValid = rule({ cache: "contextual" })(
+  async (parent: any, args: CanUpdateEventArgs, ctx: any, info: any) => {
     if (!args.eventCreateInput) {
       return "Missing eventCreateInput in args.";
     }
@@ -16,11 +16,11 @@ export const createEventInputIsValid = rule({ cache: "contextual" })(
     }
 
     if (title && title.length > MAX_CHARS_IN_EVENT_TITLE) {
-        return `The event title cannot exceed ${MAX_CHARS_IN_EVENT_TITLE} characters.`;
-      }
+      return `The event title cannot exceed ${MAX_CHARS_IN_EVENT_TITLE} characters.`;
+    }
 
     if (description && description.length > MAX_CHARS_IN_EVENT_DESCRIPTION) {
-      return `The event description cannot exceed ${MAX_CHARS_IN_EVENT_DESCRIPTION} characters.`;
+      return `The event body cannot exceed ${MAX_CHARS_IN_EVENT_DESCRIPTION} characters.`;
     }
 
     return true;
