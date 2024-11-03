@@ -1,6 +1,6 @@
 import { rule } from "graphql-shield";
 import { CanUpdateEventArgs } from "./rules";
-import { MAX_CHARS_IN_EVENT_DESCRIPTION, MAX_CHARS_IN_EVENT_TITLE } from "./constants";
+import { MAX_CHARS_IN_EVENT_DESCRIPTION, MAX_CHARS_IN_EVENT_TITLE } from "./constants.js";
 
 export const updateDiscussionInputIsValid = rule({ cache: "contextual" })(
   async (parent: any, args: CanUpdateEventArgs, ctx: any, info: any) => {

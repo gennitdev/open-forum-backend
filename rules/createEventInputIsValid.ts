@@ -1,6 +1,6 @@
 import { rule } from "graphql-shield";
 import { CanCreateEventArgs } from "./rules";
-import { MAX_CHARS_IN_EVENT_DESCRIPTION, MAX_CHARS_IN_EVENT_TITLE } from "./constants";
+import { MAX_CHARS_IN_EVENT_DESCRIPTION, MAX_CHARS_IN_EVENT_TITLE } from "./constants.js";
 
 export const createEventInputIsValid = rule({ cache: "contextual" })(
   async (parent: any, args: CanCreateEventArgs, ctx: any, info: any) => {
