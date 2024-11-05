@@ -21,7 +21,10 @@ import {
   DiscussionCreateInput,
   EventCreateInput,
 } from "../src/generated/graphql.js";
+import { createDiscussionInputIsValid } from "./createDiscussionInputIsValid.js";
 import { updateDiscussionInputIsValid } from "./updateDiscussionInputIsValid.js";
+import { createCommentInputIsValid } from "./createCommentInputIsValid.js";
+import { updateCommentInputIsValid } from "./updateCommentInputIsValid.js";
 
 const canCreateChannel = rule({ cache: "contextual" })(
   async (parent: any, args: any, ctx: any, info: any) => {
@@ -331,6 +334,9 @@ const ruleList = {
   canCreateComment,
   canCreateDiscussion,
   canCreateEvent,
+  createCommentInputIsValid,
+  updateCommentInputIsValid,
+  createDiscussionInputIsValid,
   updateDiscussionInputIsValid,
   hasChannelPermission,
   isAdmin,

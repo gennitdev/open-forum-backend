@@ -28,7 +28,7 @@ const permissionList = shield({
       deleteEmails: or(rules.isAccountOwner, rules.isAdmin),
       deleteUsers: or(rules.isAccountOwner, rules.isAdmin),
     
-      createDiscussionWithChannelConnections:  or(rules.canCreateDiscussion, rules.isAdmin),
+      createDiscussionWithChannelConnections:  and(rules.createDiscussionInputIsValid, or(rules.canCreateDiscussion, rules.isAdmin)),
       updateDiscussionWithChannelConnections:  and(rules.updateDiscussionInputIsValid, or(rules.isDiscussionOwner, rules.isAdmin)),
       deleteDiscussions: or(rules.isDiscussionOwner, rules.isAdmin),
       
@@ -37,11 +37,11 @@ const permissionList = shield({
       deleteEvents: or(rules.isEventOwner, rules.isAdmin),
       updateEvents: or(rules.isEventOwner, rules.isAdmin),
 
-      createComments: allow ,//rules.canCreateComment,
-      updateComments: or(rules.isCommentAuthor, rules.isAdmin),
+      createComments: and(rules.createCommentInputIsValid,rules.canCreateComment),
+      updateComments: and(rules.updateCommentInputIsValid, or(rules.isCommentAuthor, rules.isAdmin)),
       deleteComments: or(rules.isCommentAuthor, rules.isAdmin),
       
-      createSignedStorageURL: allow,//rules.canUploadFile,
+      createSignedStorageURL: rules.canUploadFile,
       addEmojiToComment: rules.canUpvoteComment,
       removeEmojiFromComment: rules.canUpvoteComment,
       addEmojiToDiscussionChannel: rules.canUpvoteDiscussion,
