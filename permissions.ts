@@ -21,8 +21,8 @@ const permissionList = shield({
       // will prevent users from making themselves admins or moderators but allow other fields to be updated by account owner
       updateUsers: or(rules.isAccountOwner, rules.isAdmin),
       
-      createChannels:rules.canCreateChannel,
-      updateChannels: or(rules.isChannelOwner, rules.isAdmin),
+      createChannels: and(rules.createChannelInputIsValid, rules.canCreateChannel),
+      updateChannels: and(rules.updateChannelInputIsValid, or(rules.isChannelOwner, rules.isAdmin)),
       deleteChannels: or(rules.isChannelOwner, rules.isAdmin),
 
       deleteEmails: or(rules.isAccountOwner, rules.isAdmin),

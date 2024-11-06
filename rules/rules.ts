@@ -24,6 +24,7 @@ import {
 import { createDiscussionInputIsValid, updateDiscussionInputIsValid } from "./discussionIsValid.js";
 import { createCommentInputIsValid, updateCommentInputIsValid } from "./commentIsValid.js";
 import { createEventInputIsValid, updateEventInputIsValid } from "./eventIsValid.js";
+import { createChannelInputIsValid, updateChannelInputIsValid } from "./channelIsValid.js";
 
 const canCreateChannel = rule({ cache: "contextual" })(
   async (parent: any, args: any, ctx: any, info: any) => {
