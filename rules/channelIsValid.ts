@@ -28,7 +28,7 @@ const validateChannelInput = (input: ChannelInput): true | string => {
 };
 
 type CreateChannelInput = { input: ChannelCreateInput[] };
-export const createCommentInputIsValid = rule({ cache: "contextual" })(
+export const createChannelInputIsValid = rule({ cache: "contextual" })(
   async (parent: any, args: CreateChannelInput, ctx: any, info: any) => {
     if (!args.input || !args.input[0]) {
       return "Missing or empty input in args.";
