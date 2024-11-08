@@ -1,11 +1,15 @@
 import { rule } from "graphql-shield";
 import { ChannelCreateInput, ChannelUpdateInput } from "../src/generated/graphql.js";
-import { MAX_CHARS_IN_CHANNEL_NAME, MAX_CHARS_IN_CHANNEL_DESCRIPTION } from "./constants.js";
+import { MAX_CHARS_IN_CHANNEL_NAME, MAX_CHARS_IN_DISPLAY_NAME, MAX_CHARS_IN_CHANNEL_DESCRIPTION } from "./constants.js";
 
-type ChannelInput = { uniqueName?: string | null; description?: string | null };
+type ChannelInput = { 
+  uniqueName?: string | null; 
+  description?: string | null;
+  displayName?: string | null;
+};
 
 const validateChannelInput = (input: ChannelInput): true | string => {
-  const { uniqueName, description } = input;
+  const { uniqueName, description, displayName } = input;
 
   if (!uniqueName) {
     return "A unique name is required.";
@@ -22,6 +26,10 @@ const validateChannelInput = (input: ChannelInput): true | string => {
 
   if (description && description.length > MAX_CHARS_IN_CHANNEL_DESCRIPTION) {
     return `The description text cannot exceed ${MAX_CHARS_IN_CHANNEL_DESCRIPTION} characters.`;
+  }
+
+  if (displayName && displayName.length > MAX_CHARS_IN_DISPLAY_NAME) {
+    return `The display name cannot exceed ${MAX_CHARS_IN_DISPLAY_NAME} characters.`;
   }
 
   return true;
