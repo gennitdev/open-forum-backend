@@ -6,6 +6,7 @@ type ChannelInput = {
   uniqueName?: string | null; 
   description?: string | null;
   displayName?: string | null;
+  isEditMode?: boolean | null;
 };
 
 const validateChannelInput = (input: ChannelInput): true | string => {
@@ -41,7 +42,10 @@ export const createChannelInputIsValid = rule({ cache: "contextual" })(
     if (!args.input || !args.input[0]) {
       return "Missing or empty input in args.";
     }
-    return validateChannelInput(args.input[0]);
+    return validateChannelInput({
+      ...args.input[0],
+      isEditMode: false
+    });
   }
 );
 
@@ -51,6 +55,9 @@ export const updateChannelInputIsValid = rule({ cache: "contextual" })(
     if (!args.update) {
       return "Missing update input in args.";
     }
-    return validateChannelInput(args.update);
+    return validateChannelInput({
+      ...args.update,
+      isEditMode: true
+    });
   }
 );
