@@ -1,4 +1,4 @@
-import { setUserDataOnContext } from "./userDataHelperFunctions";
+import { setUserDataOnContext } from "./userDataHelperFunctions.js";
 import { ERROR_MESSAGES } from "../errorMessages.js";
 
 export const ServerPermissionChecks = {
