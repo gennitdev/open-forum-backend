@@ -1,5 +1,5 @@
 import { rule } from "graphql-shield";
-import { CommentCreateInput, CommentUpdateInput } from "../src/generated/graphql.js";
+import { CommentCreateInput, CommentUpdateInput } from "../../src/generated/graphql.js";
 import { MAX_CHARS_IN_COMMENT_TEXT } from "./constants.js";
 
 type CommentInput = { text?: string | null};

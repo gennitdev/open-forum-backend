@@ -1,5 +1,5 @@
 import { setUserDataOnContext } from "./userDataHelperFunctions.js";
-import { ERROR_MESSAGES } from "./errorMessages.js";
+import { ERROR_MESSAGES } from "../errorMessages.js";
 import { ServerModPermissionChecks } from "./hasChannelPermission.js";
 
 

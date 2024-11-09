@@ -1,30 +1,30 @@
 import { rule } from "graphql-shield";
-import { isAuthenticatedAndVerified } from "./userDataHelperFunctions.js";
-import { hasServerPermission } from "./hasServerPermission.js";
-import { hasServerModPermission } from "./hasServerModPermission.js";
+import { isAuthenticatedAndVerified } from "./permission/userDataHelperFunctions.js";
+import { hasServerPermission } from "./permission/hasServerPermission.js";
+import { hasServerModPermission } from "./permission/hasServerModPermission.js";
 import {
   isChannelOwner,
   isAccountOwner,
   isDiscussionOwner,
   isEventOwner,
   isCommentAuthor,
-} from "./isOwner.js";
+} from "./permission/isOwner.js";
 import {
   ChannelPermissionChecks,
   ServerPermissionChecks,
   ServerModPermissionChecks,
   hasChannelPermission,
-} from "./hasChannelPermission.js";
-import { checkChannelPermissions } from "./hasChannelPermission.js";
+} from "./permission/hasChannelPermission.js";
+import { checkChannelPermissions } from "./permission/hasChannelPermission.js";
 import {
   CommentCreateInput,
   DiscussionCreateInput,
   EventCreateInput,
 } from "../src/generated/graphql.js";
-import { createDiscussionInputIsValid, updateDiscussionInputIsValid } from "./discussionIsValid.js";
-import { createCommentInputIsValid, updateCommentInputIsValid } from "./commentIsValid.js";
-import { createEventInputIsValid, updateEventInputIsValid } from "./eventIsValid.js";
-import { createChannelInputIsValid, updateChannelInputIsValid } from "./channelIsValid.js";
+import { createDiscussionInputIsValid, updateDiscussionInputIsValid } from "./validation/discussionIsValid.js";
+import { createCommentInputIsValid, updateCommentInputIsValid } from "./validation/commentIsValid.js";
+import { createEventInputIsValid, updateEventInputIsValid } from "./validation/eventIsValid.js";
+import { createChannelInputIsValid, updateChannelInputIsValid } from "./validation/channelIsValid.js";
 
 const canCreateChannel = rule({ cache: "contextual" })(
   async (parent: any, args: any, ctx: any, info: any) => {

@@ -1,5 +1,5 @@
 import { rule } from "graphql-shield";
-import { CanCreateDiscussionArgs, CanUpdateDiscussionArgs } from "./rules";
+import { CanCreateDiscussionArgs, CanUpdateDiscussionArgs } from "../rules";
 import { MAX_CHARS_IN_DISCUSSION_BODY, MAX_CHARS_IN_DISCUSSION_TITLE } from "./constants.js";
 
 type DiscussionInput = { title?: string; body?: string | null };

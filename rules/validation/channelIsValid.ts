@@ -2,7 +2,7 @@ import { rule } from "graphql-shield";
 import {
   ChannelCreateInput,
   ChannelUpdateInput,
-} from "../src/generated/graphql.js";
+} from "../../src/generated/graphql.js";
 import {
   MAX_CHARS_IN_CHANNEL_NAME,
   MAX_CHARS_IN_DISPLAY_NAME,

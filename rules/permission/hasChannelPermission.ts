@@ -1,5 +1,5 @@
-import { setUserDataOnContext } from "./userDataHelperFunctions.js";
-import { ERROR_MESSAGES } from "./errorMessages.js";
+import { setUserDataOnContext } from "./userDataHelperFunctions";
+import { ERROR_MESSAGES } from "../errorMessages.js";
 
 export const ServerPermissionChecks = {
   CREATE_CHANNEL: "createChannel",

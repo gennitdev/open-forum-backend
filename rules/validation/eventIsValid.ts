@@ -1,5 +1,5 @@
 import { rule } from "graphql-shield";
-import { CanCreateEventArgs, CanUpdateEventArgs } from "./rules";
+import { CanCreateEventArgs, CanUpdateEventArgs } from "../rules";
 import { MAX_CHARS_IN_EVENT_DESCRIPTION, MAX_CHARS_IN_EVENT_TITLE } from "./constants.js";
 
 type EventInput = { title?: string; description?: string | null };

@@ -1,5 +1,5 @@
 import { rule } from "graphql-shield";
-import { ERROR_MESSAGES } from "../rules/errorMessages.js";
+import { ERROR_MESSAGES } from "../../rules/errorMessages.js";
 import {
   ChannelWhere,
   Channel,
@@ -12,7 +12,7 @@ import {
   EventUpdateInput,
   CommentWhere,
   UserWhere,
-} from "../src/generated/graphql.js";
+} from "../../src/generated/graphql.js";
 import { setUserDataOnContext } from "./userDataHelperFunctions.js";
 
 type IsChannelOwnerInput = {
