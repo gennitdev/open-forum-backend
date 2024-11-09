@@ -28,7 +28,7 @@ export const hasServerModPermission: (
   if (modServerRoles.length > 0) {
     for (const modServerRole of modServerRoles) {
       if (!modServerRole[permission]) {
-        return new Error(ERROR_MESSAGES.server.noServerPermission);
+        throw new Error(ERROR_MESSAGES.server.noServerPermission);
       }
     }
   }
@@ -50,7 +50,7 @@ export const hasServerModPermission: (
   });
 
   if (!serverConfig || !serverConfig[0]) {
-    return new Error(
+    throw new Error(
       "Could not find the server config, which contains the default server mod role. Therefore could not check the user's permissions."
     );
   }
@@ -58,7 +58,7 @@ export const hasServerModPermission: (
   const defaultServerModRole = serverConfig[0]?.DefaultModRole;
 
   if (!defaultServerModRole) {
-    return new Error("Could not find the default server mod role.");
+    throw new Error("Could not find the default server mod role.");
   }
 
   modServerRoles.push(serverConfig[0]?.DefaultModRole);
@@ -66,7 +66,7 @@ export const hasServerModPermission: (
   // Error handling: Make sure we could successfully fetch the
   // default server role. If not, return an error.
   if (!modServerRoles[0]) {
-    return new Error(
+    throw new Error(
       "Could not find permission on user's mod profile roles or on the default server mod role."
     );
   }
@@ -77,5 +77,5 @@ export const hasServerModPermission: (
   if (permission === ServerModPermissionChecks.GIVE_FEEDBACK) {
     return serverRoleToCheck.canGiveFeedback;
   }
-  return new Error(ERROR_MESSAGES.channel.noChannelPermission);
+  throw new Error(ERROR_MESSAGES.channel.noChannelPermission);
 };

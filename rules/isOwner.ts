@@ -28,13 +28,14 @@ export const isChannelOwner = rule({ cache: "contextual" })(
       getPermissionInfo: false,
     });
     let username = ctx.user.username;
+    console.log("username: ", ctx.user);
 
     let ogm = ctx.ogm;
     const { where } = args;
     const { uniqueName } = where;
 
     if (!uniqueName) {
-      return new Error(ERROR_MESSAGES.channel.notFound);
+      throw new Error(ERROR_MESSAGES.channel.notFound);
     }
     const ChannelModel = ogm.model("Channel");
 
@@ -50,19 +51,21 @@ export const isChannelOwner = rule({ cache: "contextual" })(
     });
 
     if (!channel) {
-      return new Error(ERROR_MESSAGES.channel.notFound);
+      throw new Error(ERROR_MESSAGES.channel.notFound);
     }
 
     if (channel.length === 0) {
-      return new Error(ERROR_MESSAGES.channel.notFound);
+      throw new Error(ERROR_MESSAGES.channel.notFound);
     }
 
     // Get the list of channel owners.
     const channelOwners = channel[0].Admins.map((admin) => admin.username);
+    console.log("channel owners: ", channelOwners);
+    console.log("username: ", username);
 
     // Check if the user is in the list of channel owners.
     if (!channelOwners.includes(username)) {
-      return new Error(ERROR_MESSAGES.channel.notOwner);
+      throw new Error(ERROR_MESSAGES.channel.notOwner);
     }
 
     return true;
@@ -95,7 +98,7 @@ export const isDiscussionOwner = rule({ cache: "contextual" })(
     let ogm = ctx.ogm;
 
     if (!discussionId) {
-      return new Error(ERROR_MESSAGES.discussion.noId);
+      throw new Error(ERROR_MESSAGES.discussion.noId);
     }
     const DiscussionModel = ogm.model("Discussion");
 
@@ -111,7 +114,7 @@ export const isDiscussionOwner = rule({ cache: "contextual" })(
     });
 
     if (!discussions || discussions.length === 0) {
-      return new Error(ERROR_MESSAGES.channel.notFound);
+      throw new Error(ERROR_MESSAGES.channel.notFound);
     }
     const discussion = discussions[0];
 
@@ -119,12 +122,12 @@ export const isDiscussionOwner = rule({ cache: "contextual" })(
     const discussionOwner = discussion?.Author?.username;
 
     if (!discussionOwner) {
-      return new Error(ERROR_MESSAGES.discussion.noAuthor);
+      throw new Error(ERROR_MESSAGES.discussion.noAuthor);
     }
 
     // Check if the user is in the list of channel owners.
     if (!discussionOwner === username) {
-      return new Error(ERROR_MESSAGES.discussion.notOwner);
+      throw new Error(ERROR_MESSAGES.discussion.notOwner);
     }
     return true;
   }
@@ -157,7 +160,7 @@ export const isEventOwner = rule({ cache: "contextual" })(
     let ogm = ctx.ogm;
 
     if (!eventId) {
-      return new Error(ERROR_MESSAGES.event.noId);
+      throw new Error(ERROR_MESSAGES.event.noId);
     }
     const EventModel = ogm.model("Event");
 
@@ -173,7 +176,7 @@ export const isEventOwner = rule({ cache: "contextual" })(
     });
 
     if (!events || events.length === 0) {
-      return new Error(ERROR_MESSAGES.event.notFound);
+      throw new Error(ERROR_MESSAGES.event.notFound);
     }
     const event = events[0];
 
@@ -181,12 +184,12 @@ export const isEventOwner = rule({ cache: "contextual" })(
     const eventOwner = event?.Poster?.username;
 
     if (!eventOwner) {
-      return new Error(ERROR_MESSAGES.event.noOwner);
+      throw new Error(ERROR_MESSAGES.event.noOwner);
     }
 
     // Check if the user is in the list of channel owners.
     if (!eventOwner === username) {
-      return new Error(ERROR_MESSAGES.event.notOwner);
+      throw new Error(ERROR_MESSAGES.event.notOwner);
     }
     return true;
   }
@@ -199,6 +202,7 @@ type IsCommentAuthorInput = {
 
 export const isCommentAuthor = rule({ cache: "contextual" })(
   async (parent: any, args: IsCommentAuthorInput, ctx: any, info: any) => {
+    console.log("isCommentAuthor rule");
     const { where } = args;
     const { id: commentId } = where;
 
@@ -210,10 +214,13 @@ export const isCommentAuthor = rule({ cache: "contextual" })(
 
     let username = ctx.user.username;
     let modName =  ctx.user.data?.ModerationProfile?.displayName || null;
+    console.log("username: ", username);
+    console.log("modName: ", modName);
+
     let ogm = ctx.ogm;
 
     if (!commentId) {
-      return new Error(ERROR_MESSAGES.comment.noId);
+      throw new Error(ERROR_MESSAGES.comment.noId);
     }
     const CommentModel = ogm.model("Comment");
 
@@ -234,7 +241,7 @@ export const isCommentAuthor = rule({ cache: "contextual" })(
     });
 
     if (!comments || comments.length === 0) {
-      return new Error(ERROR_MESSAGES.comment.notFound);
+      throw new Error(ERROR_MESSAGES.comment.notFound);
     }
     const comment = comments[0];
 
@@ -248,7 +255,7 @@ export const isCommentAuthor = rule({ cache: "contextual" })(
     // For a moderation profile, the displayName is stored on 
     // the moderation profile object.
     if (!author) {
-      return new Error(ERROR_MESSAGES.comment.noOwner);
+      throw new Error(ERROR_MESSAGES.comment.noOwner);
     }
 
     // @ts-ignore
@@ -258,15 +265,15 @@ export const isCommentAuthor = rule({ cache: "contextual" })(
     } else if (author.displayName) {
       authorModProfileName = author.displayName;
     } else {
-      return new Error(ERROR_MESSAGES.comment.noOwner);
+      throw new Error(ERROR_MESSAGES.comment.noOwner);
     }
 
     // Check if the user is the comment author.
     if (authorUsername && !authorUsername === username) {
-      return new Error(ERROR_MESSAGES.comment.notOwner);
+      throw new Error(ERROR_MESSAGES.comment.notOwner);
     }
     if (authorModProfileName && !authorModProfileName === modName) {
-      return new Error(ERROR_MESSAGES.comment.notOwner);
+      throw new Error(ERROR_MESSAGES.comment.notOwner);
     }
     return true;
   }
@@ -287,12 +294,12 @@ export const isAccountOwner = rule({ cache: "contextual" })(
     });
 
     if (!username) {
-      return new Error(ERROR_MESSAGES.user.noUsername);
+      throw new Error(ERROR_MESSAGES.user.noUsername);
     }
 
     // Check if the user is the account owner.
     if (!username === ctx.user.username) {
-      return new Error(ERROR_MESSAGES.user.notOwner);
+      throw new Error(ERROR_MESSAGES.user.notOwner);
     }
 
     return true;

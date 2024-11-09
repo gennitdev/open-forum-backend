@@ -107,19 +107,19 @@ export const canCreateComment = rule({ cache: "contextual" })(
     const firstItemInInput = input[0];
 
     if (!firstItemInInput) {
-      return new Error("No comment create input found.");
+      throw new Error("No comment create input found.");
     }
 
     const { DiscussionChannel } = firstItemInInput;
 
     if (!DiscussionChannel) {
-      return new Error("No discussion channel found.");
+      throw new Error("No discussion channel found.");
     }
 
     const discussionChannelId = DiscussionChannel.connect?.where?.node?.id;
 
     if (!discussionChannelId) {
-      return new Error("No discussion channel ID found.");
+      throw new Error("No discussion channel ID found.");
     }
 
     // Look up the channelUniqueName from the discussion channel ID.
@@ -130,13 +130,13 @@ export const canCreateComment = rule({ cache: "contextual" })(
     });
 
     if (!discussionChannel || !discussionChannel[0]) {
-      return new Error("No discussion channel found.");
+      throw new Error("No discussion channel found.");
     }
 
     const channelName = discussionChannel[0]?.channelUniqueName;
 
     if (!channelName) {
-      return new Error("No channel name found.");
+      throw new Error("No channel name found.");
     }
 
     return checkChannelPermissions({
@@ -188,7 +188,7 @@ const canUpvoteComment = rule({ cache: "contextual" })(
     const { commentId, username } = args;
 
     if (!commentId || !username) {
-      return new Error("All arguments (commentId, username) are required");
+      throw new Error("All arguments (commentId, username) are required");
     }
 
     const commentData = await CommentModel.find({
@@ -202,14 +202,14 @@ const canUpvoteComment = rule({ cache: "contextual" })(
     });
 
     if (!commentData || !commentData[0]) {
-      return new Error("No comment found.");
+      throw new Error("No comment found.");
     }
 
     const channelThatCommentIsIn =
       commentData[0]?.DiscussionChannel?.channelUniqueName;
 
     if (!channelThatCommentIsIn) {
-      return new Error("No channel found.");
+      throw new Error("No channel found.");
     }
 
     const permissionResult = await hasChannelPermission({
@@ -219,7 +219,7 @@ const canUpvoteComment = rule({ cache: "contextual" })(
     });
 
     if (!permissionResult) {
-      return new Error("The user does not have permission in this channel.");
+      throw new Error("The user does not have permission in this channel.");
     }
 
     if (permissionResult instanceof Error) {
@@ -248,7 +248,7 @@ const canUpvoteDiscussion = rule({ cache: "contextual" })(
     const { discussionChannelId, username } = args;
 
     if (!discussionChannelId || !username) {
-      return new Error(
+      throw new Error(
         "All arguments (discussionChannelId, username) are required"
       );
     }
@@ -262,13 +262,13 @@ const canUpvoteDiscussion = rule({ cache: "contextual" })(
     });
 
     if (!discussionChannelData || !discussionChannelData[0]) {
-      return new Error("No discussion channel found.");
+      throw new Error("No discussion channel found.");
     }
 
     const channelName = discussionChannelData[0]?.channelUniqueName;
 
     if (!channelName) {
-      return new Error("No channel found.");
+      throw new Error("No channel found.");
     }
 
     const permissionResult = await hasChannelPermission({
@@ -278,7 +278,7 @@ const canUpvoteDiscussion = rule({ cache: "contextual" })(
     });
 
     if (!permissionResult) {
-      return new Error("The user does not have permission in this channel.");
+      throw new Error("The user does not have permission in this channel.");
     }
 
     if (permissionResult instanceof Error) {

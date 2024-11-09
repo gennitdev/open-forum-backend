@@ -27,29 +27,33 @@ type SetUserDataInput = {
   getPermissionInfo: boolean;
   checkSpecificChannel?: string;
 };
-
 export const setUserDataOnContext = async (input: SetUserDataInput) => {
+  console.log("setting user data on context");
   const { context, getPermissionInfo } = input;
   const { ogm, req } = context;
   const token = req?.headers?.authorization || "";
+  console.log("request headers", req.headers);
+  
   if (!token) {
-    return new Error(ERROR_MESSAGES.channel.notAuthenticated);
+    console.error("No token found in headers");
+    throw new Error(ERROR_MESSAGES.channel.notAuthenticated);
   }
+
   const decoded = jwt.decode(token.replace("Bearer ", ""));
   if (!decoded) {
-    return {
-      req,
-      ogm,
-    };
+    console.error("No decoded token found");
+    throw new Error(ERROR_MESSAGES.channel.notAuthenticated);
   }
+  console.log("decoded: ", decoded);
 
   // @ts-ignore
   if (!decoded?.email) {
-    return new Error(ERROR_MESSAGES.channel.notAuthenticated);
+    throw new Error(ERROR_MESSAGES.channel.notAuthenticated);
   }
 
   // @ts-ignore
   const { email, email_verified } = decoded;
+  console.log("email: ", email);
   const Email = ogm.model("Email");
   const User = ogm.model("User");
 
@@ -112,6 +116,7 @@ export const setUserDataOnContext = async (input: SetUserDataInput) => {
   return null;
 };
 
+
 export const isAuthenticatedAndVerified = rule({ cache: "contextual" })(
   async (parent: any, args: any, context: any, info: any) => {
     // Set user data on context
@@ -120,11 +125,11 @@ export const isAuthenticatedAndVerified = rule({ cache: "contextual" })(
       getPermissionInfo: false,
     });
     if (!context.user?.username) {
-      return new Error(ERROR_MESSAGES.channel.notAuthenticated);
+      throw new Error(ERROR_MESSAGES.channel.notAuthenticated);
     }
 
     if (!context.user.email_verified) {
-      return new Error(ERROR_MESSAGES.channel.notVerified);
+      throw new Error(ERROR_MESSAGES.channel.notVerified);
     }
     return true;
   }

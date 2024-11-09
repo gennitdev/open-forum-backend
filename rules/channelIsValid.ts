@@ -1,28 +1,43 @@
 import { rule } from "graphql-shield";
-import { ChannelCreateInput, ChannelUpdateInput } from "../src/generated/graphql.js";
-import { MAX_CHARS_IN_CHANNEL_NAME, MAX_CHARS_IN_DISPLAY_NAME, MAX_CHARS_IN_CHANNEL_DESCRIPTION } from "./constants.js";
+import {
+  ChannelCreateInput,
+  ChannelUpdateInput,
+} from "../src/generated/graphql.js";
+import {
+  MAX_CHARS_IN_CHANNEL_NAME,
+  MAX_CHARS_IN_DISPLAY_NAME,
+  MAX_CHARS_IN_CHANNEL_DESCRIPTION,
+} from "./constants.js";
 
-type ChannelInput = { 
-  uniqueName?: string | null; 
+type ChannelRule = {
+  summary: string;
+  detail: string;
+}
+
+type ChannelInput = {
+  uniqueName?: string | null;
   description?: string | null;
   displayName?: string | null;
+  rules?: string;
   isEditMode?: boolean | null;
 };
 
 const validateChannelInput = (input: ChannelInput): true | string => {
-  const { uniqueName, description, displayName } = input;
+  const { uniqueName, description, displayName, isEditMode } = input;
 
-  if (!uniqueName) {
-    return "A unique name is required.";
-  }
+  if (!isEditMode) {
+    if (!uniqueName) {
+      return "A unique name is required.";
+    }
 
-  if (uniqueName.length > MAX_CHARS_IN_CHANNEL_NAME) {
-    return `The unique name cannot exceed ${MAX_CHARS_IN_CHANNEL_NAME} characters.`;
-  }
+    if (uniqueName.length > MAX_CHARS_IN_CHANNEL_NAME) {
+      return `The unique name cannot exceed ${MAX_CHARS_IN_CHANNEL_NAME} characters.`;
+    }
 
-  // Allow only letters, numbers, and underscores in uniqueName; no spaces or special characters.
-  if (!/^[a-zA-Z0-9_]+$/.test(uniqueName)) {
-    return "The unique name can only contain letters, numbers, and underscores and cannot contain spaces or special characters.";
+    // Allow only letters, numbers, and underscores in uniqueName; no spaces or special characters.
+    if (!/^[a-zA-Z0-9_]+$/.test(uniqueName)) {
+      return "The unique name can only contain letters, numbers, and underscores and cannot contain spaces or special characters.";
+    }
   }
 
   if (description && description.length > MAX_CHARS_IN_CHANNEL_DESCRIPTION) {
@@ -31,6 +46,24 @@ const validateChannelInput = (input: ChannelInput): true | string => {
 
   if (displayName && displayName.length > MAX_CHARS_IN_DISPLAY_NAME) {
     return `The display name cannot exceed ${MAX_CHARS_IN_DISPLAY_NAME} characters.`;
+  }
+
+  // Rules will come in as a JSON string. We'll parse it to validate it.
+  if (input.rules) {
+    try {
+      const rules = JSON.parse(input.rules);
+      if (!Array.isArray(rules)) {
+        return "The rules must be an array.";
+      }
+      // Make sure each rule has a summary and detail.
+      for (const rule of rules) {
+        if (!rule.summary || !rule.detail) {
+          return "Each rule must have a summary and detail.";
+        }
+      }
+    } catch (e) {
+      return "The rules must be a valid JSON array.";
+    }
   }
 
   return true;
@@ -44,7 +77,7 @@ export const createChannelInputIsValid = rule({ cache: "contextual" })(
     }
     return validateChannelInput({
       ...args.input[0],
-      isEditMode: false
+      isEditMode: false,
     });
   }
 );
@@ -57,7 +90,7 @@ export const updateChannelInputIsValid = rule({ cache: "contextual" })(
     }
     return validateChannelInput({
       ...args.update,
-      isEditMode: true
+      isEditMode: true,
     });
   }
 );
