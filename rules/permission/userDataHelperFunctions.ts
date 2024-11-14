@@ -87,6 +87,13 @@ export const setUserDataOnContext = async (input: SetUserDataInput) => {
             ServerRoles { 
               name
               canCreateChannel
+              canCreateComment
+              canCreateDiscussion
+              canCreateEvent
+              canGiveFeedback
+              canUploadFile
+              canUpvoteComment
+              canUpvoteDiscussion
             }
             ChannelRoles ${
               input.checkSpecificChannel

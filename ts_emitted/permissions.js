@@ -21,7 +21,7 @@ const permissionList = shield({
         updateChannels: and(rules.updateChannelInputIsValid, or(rules.isChannelOwner, rules.isAdmin)),
         deleteChannels: or(rules.isChannelOwner, rules.isAdmin),
         deleteEmails: or(rules.isAccountOwner, rules.isAdmin),
-        // deleteUsers: or(rules.isAccountOwner, rules.isAdmin),
+        deleteUsers: or(rules.isAccountOwner, rules.isAdmin),
         createDiscussionWithChannelConnections: and(rules.createDiscussionInputIsValid, or(rules.canCreateDiscussion, rules.isAdmin)),
         updateDiscussionWithChannelConnections: and(rules.updateDiscussionInputIsValid, or(rules.isDiscussionOwner, rules.isAdmin)),
         deleteDiscussions: or(rules.isDiscussionOwner, rules.isAdmin),

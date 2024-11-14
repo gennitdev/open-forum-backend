@@ -20,6 +20,7 @@ import {
   CommentCreateInput,
   DiscussionCreateInput,
   EventCreateInput,
+  EventUpdateInput
 } from "../src/generated/graphql.js";
 import { createDiscussionInputIsValid, updateDiscussionInputIsValid } from "./validation/discussionIsValid.js";
 import { createCommentInputIsValid, updateCommentInputIsValid } from "./validation/commentIsValid.js";
@@ -64,7 +65,7 @@ export const canCreateDiscussion = rule({ cache: "contextual" })(
 );
 
 export type CanUpdateEventArgs = {
-  eventCreateInput: EventCreateInput;
+  eventUpdateInput: EventUpdateInput;
   channelConnections: string[];
 };
 
@@ -159,16 +160,19 @@ const isAdmin = rule({ cache: "contextual" })(
 
 const canUploadFile = rule({ cache: "contextual" })(
   async (parent: any, args: any, ctx: any, info: any) => {
+    console.log("Checking if user can upload file");
     const permissionResult = await hasServerPermission(
       ServerPermissionChecks.UPLOAD_FILE,
       ctx
     );
 
     if (!permissionResult) {
+      console.log("no permission result");
       return false;
     }
 
     if (permissionResult instanceof Error) {
+      console.log("permission error")
       return permissionResult;
     }
 

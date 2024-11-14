@@ -13,6 +13,8 @@ export const hasServerPermission: (
     getPermissionInfo: true,
   });
   const usersServerRoles = context.user?.data?.ServerRoles || [];
+  console.log("usersServerRoles", usersServerRoles);
+  console.log("permission", permission);
 
   // 2. If there is at least one server role on the user
   //    object, loop over them. All of them must explicitly
