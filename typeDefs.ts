@@ -419,7 +419,7 @@ const typeDefinitions = gql`
   }
 
   type EventCommentsFormat {
-    Event: Event!
+    Event: Event
     Comments: [Comment!]!
   }
 

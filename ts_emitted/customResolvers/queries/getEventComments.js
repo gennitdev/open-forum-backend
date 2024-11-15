@@ -167,7 +167,10 @@ const getResolver = (input) => {
         }
         catch (error) {
             console.error("Error getting comment section:", error);
-            throw new Error(`Failed to fetch comment section. ${error.message}`);
+            return {
+                Event: null,
+                Comments: []
+            };
         }
         finally {
             session.close();
