@@ -34,6 +34,7 @@ const getResolver = (input: Input) => {
   return async (parent: any, args: Args, context: any, info: any) => {
     const { channelUniqueName, options, selectedTags, searchInput } = args;
     const { offset, limit, sort, timeFrame } = options || {};
+    const loggedInUsername = context.user?.username;
 
     const session = driver.session();
     let titleRegex = `(?i).*${searchInput}.*`;
@@ -56,6 +57,7 @@ const getResolver = (input: Input) => {
               limit: parseInt(limit, 10),
               startOfTimeFrame: null,
               sortOption: "new",
+              loggedInUsername
             }
           );
 
@@ -95,6 +97,7 @@ const getResolver = (input: Input) => {
               limit: parseInt(limit, 10),
               startOfTimeFrame: selectedTimeFrame,
               sortOption: "top",
+              loggedInUsername
             }
           );
 
@@ -128,6 +131,7 @@ const getResolver = (input: Input) => {
               limit: parseInt(limit, 10),
               startOfTimeFrame: null,
               sortOption: "hot",
+              loggedInUsername
             }
           );
 

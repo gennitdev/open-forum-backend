@@ -39,24 +39,36 @@ WITH dc, d, COLLECT(DISTINCT tag.text) AS tagsText, totalCount
 OPTIONAL MATCH (d)<-[:POSTED_DISCUSSION]-(author:User)
 OPTIONAL MATCH (author)-[:HAS_SERVER_ROLE]->(serverRole:ServerRole)
 OPTIONAL MATCH (author)-[:HAS_CHANNEL_ROLE]->(channelRole:ChannelRole)
+
+// Modified upvoter collection to only get count and logged-in user if they upvoted
 OPTIONAL MATCH (dc)-[:UPVOTED_DISCUSSION]->(upvoter:User)
-WITH dc, d, author, serverRole, channelRole, tagsText, COLLECT(DISTINCT upvoter) AS UpvotedByUsers, totalCount,
-  CASE WHEN coalesce(dc.weightedVotesCount, 0.0) < 0 THEN 0.0 ELSE coalesce(dc.weightedVotesCount, 0.0) END AS weightedVotesCount
+WITH dc, d, author, serverRole, channelRole, tagsText, 
+     COLLECT(DISTINCT upvoter) AS allUpvoters,
+     COUNT(DISTINCT upvoter) AS upvoterCount,
+     $loggedInUsername AS loggedInUsername,
+     totalCount
+
+// Filter for logged-in user's upvote
+WITH dc, d, author, serverRole, channelRole, tagsText, 
+     [u IN allUpvoters WHERE u.username = loggedInUsername] AS loggedInUserUpvote,
+     upvoterCount AS totalUpvoters,
+     totalCount,
+     CASE WHEN coalesce(dc.weightedVotesCount, 0.0) < 0 THEN 0.0 ELSE coalesce(dc.weightedVotesCount, 0.0) END AS weightedVotesCount
 
 OPTIONAL MATCH (dc)-[:CONTAINS_COMMENT]->(c:Comment)
-WITH dc, d, author, serverRole, channelRole, COLLECT(c) AS comments, tagsText, UpvotedByUsers, weightedVotesCount, totalCount,
+WITH dc, d, author, serverRole, channelRole, COLLECT(c) AS comments, tagsText, loggedInUserUpvote, totalUpvoters, weightedVotesCount, totalCount,
      duration.between(dc.createdAt, datetime()).months + 
      duration.between(dc.createdAt, datetime()).days / 30.0 AS ageInMonths
 
-WITH dc, d, author, serverRole, channelRole, tagsText, UpvotedByUsers, weightedVotesCount, comments, totalCount,
+WITH dc, d, author, serverRole, channelRole, tagsText, loggedInUserUpvote, totalUpvoters, weightedVotesCount, comments, totalCount,
      10000 * log10(weightedVotesCount + 1) / ((ageInMonths + 2) ^ 1.8) AS hotRank
 
-WITH dc, d, author, tagsText, UpvotedByUsers, weightedVotesCount, comments, hotRank, totalCount,
+WITH dc, d, author, tagsText, loggedInUserUpvote, totalUpvoters, weightedVotesCount, comments, hotRank, totalCount,
      COLLECT(DISTINCT serverRole) AS serverRoles, channelRole
 
-WITH dc, d, author, tagsText, UpvotedByUsers, weightedVotesCount, comments, hotRank, serverRoles, channelRole, totalCount
+WITH dc, d, author, tagsText, loggedInUserUpvote, totalUpvoters, weightedVotesCount, comments, hotRank, serverRoles, channelRole, totalCount
 
-WITH dc, d, author, tagsText, UpvotedByUsers, weightedVotesCount, comments, hotRank, totalCount,
+WITH dc, d, author, tagsText, loggedInUserUpvote, totalUpvoters, weightedVotesCount, comments, hotRank, totalCount,
      [role in serverRoles | {showAdminTag: role.showAdminTag}] AS serverRoles, 
      [role in COLLECT(DISTINCT channelRole) | {showModTag: role.showModTag}] AS channelRoles
 
@@ -68,11 +80,11 @@ ORDER BY
     dc.createdAt DESC
 
 // Apply pagination
-WITH totalCount, dc, d, author, tagsText, UpvotedByUsers, weightedVotesCount, comments, hotRank, serverRoles, channelRoles
+WITH totalCount, dc, d, author, tagsText, loggedInUserUpvote, totalUpvoters, weightedVotesCount, comments, hotRank, serverRoles, channelRoles
 SKIP toInteger($offset)
 LIMIT toInteger($limit)
 
-// Return the results
+// Return the results with modified UpvotedByUsers
 RETURN {
     id: dc.id,
     discussionId: d.id,
@@ -82,9 +94,9 @@ RETURN {
     CommentsAggregate: {
         count: SIZE(comments)
     },
-    UpvotedByUsers: [up in UpvotedByUsers | { username: up.username }],
+    UpvotedByUsers: [up in loggedInUserUpvote | { username: up.username }],
     UpvotedByUsersAggregate: {
-        count: SIZE(UpvotedByUsers) 
+        count: totalUpvoters 
     },
     Discussion: {
         id: d.id,

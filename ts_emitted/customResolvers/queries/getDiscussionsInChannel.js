@@ -10,8 +10,10 @@ var timeFrameOptionKeys;
 const getResolver = (input) => {
     const { driver, DiscussionChannel } = input;
     return async (parent, args, context, info) => {
+        var _a;
         const { channelUniqueName, options, selectedTags, searchInput } = args;
         const { offset, limit, sort, timeFrame } = options || {};
+        const loggedInUsername = (_a = context.user) === null || _a === void 0 ? void 0 : _a.username;
         const session = driver.session();
         let titleRegex = `(?i).*${searchInput}.*`;
         let bodyRegex = `(?i).*${searchInput}.*`;
@@ -29,6 +31,7 @@ const getResolver = (input) => {
                         limit: parseInt(limit, 10),
                         startOfTimeFrame: null,
                         sortOption: "new",
+                        loggedInUsername
                     });
                     const newDiscussionChannels = newDiscussionChannelsResult.records.map((record) => {
                         return record.get("DiscussionChannel");
@@ -58,6 +61,7 @@ const getResolver = (input) => {
                         limit: parseInt(limit, 10),
                         startOfTimeFrame: selectedTimeFrame,
                         sortOption: "top",
+                        loggedInUsername
                     });
                     const topDiscussionChannels = topDiscussionChannelsResult.records.map((record) => {
                         return record.get("DiscussionChannel");
@@ -83,6 +87,7 @@ const getResolver = (input) => {
                         limit: parseInt(limit, 10),
                         startOfTimeFrame: null,
                         sortOption: "hot",
+                        loggedInUsername
                     });
                     const hotDiscussionChannels = hotDiscussionChannelsResult.records.map((record) => {
                         return record.get("DiscussionChannel");

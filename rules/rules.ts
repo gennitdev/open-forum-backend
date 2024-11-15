@@ -30,7 +30,7 @@ import { createChannelInputIsValid, updateChannelInputIsValid } from "./validati
 const canCreateChannel = rule({ cache: "contextual" })(
   async (parent: any, args: any, ctx: any, info: any) => {
     const hasPermissionToCreateChannels = hasServerPermission(
-      "createChannel",
+      "canCreateChannel",
       ctx
     );
 
