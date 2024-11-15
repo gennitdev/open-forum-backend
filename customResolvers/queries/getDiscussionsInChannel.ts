@@ -34,7 +34,8 @@ const getResolver = (input: Input) => {
   return async (parent: any, args: Args, context: any, info: any) => {
     const { channelUniqueName, options, selectedTags, searchInput } = args;
     const { offset, limit, sort, timeFrame } = options || {};
-    const loggedInUsername = context.user?.username;
+    // Set loggedInUsername to null explicitly if not present
+    const loggedInUsername = context.user?.username || null;
 
     const session = driver.session();
     let titleRegex = `(?i).*${searchInput}.*`;
@@ -42,23 +43,24 @@ const getResolver = (input: Input) => {
 
     try {
       let aggregateCount = 0;
+      const queryParams = {
+        searchInput,
+        titleRegex,
+        bodyRegex,
+        selectedTags: selectedTags || [],
+        channelUniqueName,
+        offset: parseInt(offset, 10),
+        limit: parseInt(limit, 10),
+        startOfTimeFrame: null,
+        sortOption: "new",
+        loggedInUsername  // Will be null if user not logged in
+      };
 
       switch (sort) {
         case "new":
           const newDiscussionChannelsResult = await session.run(
             getDiscussionChannelsQuery,
-            {
-              searchInput,
-              titleRegex,
-              bodyRegex,
-              selectedTags: selectedTags || [],
-              channelUniqueName,
-              offset: parseInt(offset, 10),
-              limit: parseInt(limit, 10),
-              startOfTimeFrame: null,
-              sortOption: "new",
-              loggedInUsername
-            }
+            queryParams
           );
 
           const newDiscussionChannels = newDiscussionChannelsResult.records.map(
@@ -77,8 +79,6 @@ const getResolver = (input: Input) => {
           };
 
         case "top":
-          // if sort is "top", get the DiscussionChannels sorted by weightedVotesCount.
-          // Treat a null weightedVotesCount as 0.
           let selectedTimeFrame = null;
 
           if (timeFrameOptions[timeFrame]) {
@@ -88,16 +88,9 @@ const getResolver = (input: Input) => {
           const topDiscussionChannelsResult = await session.run(
             getDiscussionChannelsQuery,
             {
-              searchInput,
-              titleRegex,
-              bodyRegex,
-              selectedTags: selectedTags || [],
-              channelUniqueName,
-              offset: parseInt(offset, 10),
-              limit: parseInt(limit, 10),
+              ...queryParams,
               startOfTimeFrame: selectedTimeFrame,
-              sortOption: "top",
-              loggedInUsername
+              sortOption: "top"
             }
           );
 
@@ -116,22 +109,13 @@ const getResolver = (input: Input) => {
             discussionChannels: topDiscussionChannels,
             aggregateDiscussionChannelsCount: aggregateCount,
           };
+
         default:
-          // By default, and if sort is "hot", get the DiscussionChannels sorted by hot,
-          // which takes into account both weightedVotesCount and createdAt.
           const hotDiscussionChannelsResult = await session.run(
             getDiscussionChannelsQuery,
             {
-              searchInput,
-              titleRegex,
-              bodyRegex,
-              selectedTags: selectedTags || [],
-              channelUniqueName,
-              offset: parseInt(offset, 10),
-              limit: parseInt(limit, 10),
-              startOfTimeFrame: null,
-              sortOption: "hot",
-              loggedInUsername
+              ...queryParams,
+              sortOption: "hot"
             }
           );
 
