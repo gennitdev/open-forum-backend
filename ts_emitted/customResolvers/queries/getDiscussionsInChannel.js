@@ -1,3 +1,4 @@
+import { setUserDataOnContext } from "../../rules/permission/userDataHelperFunctions.js";
 import { getDiscussionChannelsQuery } from "../cypher/cypherQueries.js";
 import { timeFrameOptions } from "./utils.js";
 var timeFrameOptionKeys;
@@ -10,29 +11,37 @@ var timeFrameOptionKeys;
 const getResolver = (input) => {
     const { driver, DiscussionChannel } = input;
     return async (parent, args, context, info) => {
-        var _a;
+        var _a, _b;
         const { channelUniqueName, options, selectedTags, searchInput } = args;
         const { offset, limit, sort, timeFrame } = options || {};
-        const loggedInUsername = (_a = context.user) === null || _a === void 0 ? void 0 : _a.username;
+        // Set loggedInUsername to null explicitly if not present
+        context.user = await setUserDataOnContext({
+            context,
+            getPermissionInfo: false
+        });
+        const loggedInUsername = ((_a = context.user) === null || _a === void 0 ? void 0 : _a.username) || null;
+        console.log('get discussions in channel');
+        console.log("loggedInUser", (_b = context.user) === null || _b === void 0 ? void 0 : _b.username);
         const session = driver.session();
         let titleRegex = `(?i).*${searchInput}.*`;
         let bodyRegex = `(?i).*${searchInput}.*`;
         try {
             let aggregateCount = 0;
+            const queryParams = {
+                searchInput,
+                titleRegex,
+                bodyRegex,
+                selectedTags: selectedTags || [],
+                channelUniqueName,
+                offset: parseInt(offset, 10),
+                limit: parseInt(limit, 10),
+                startOfTimeFrame: null,
+                sortOption: "new",
+                loggedInUsername
+            };
             switch (sort) {
                 case "new":
-                    const newDiscussionChannelsResult = await session.run(getDiscussionChannelsQuery, {
-                        searchInput,
-                        titleRegex,
-                        bodyRegex,
-                        selectedTags: selectedTags || [],
-                        channelUniqueName,
-                        offset: parseInt(offset, 10),
-                        limit: parseInt(limit, 10),
-                        startOfTimeFrame: null,
-                        sortOption: "new",
-                        loggedInUsername
-                    });
+                    const newDiscussionChannelsResult = await session.run(getDiscussionChannelsQuery, queryParams);
                     const newDiscussionChannels = newDiscussionChannelsResult.records.map((record) => {
                         return record.get("DiscussionChannel");
                     });
@@ -45,23 +54,14 @@ const getResolver = (input) => {
                         aggregateDiscussionChannelsCount: aggregateCount,
                     };
                 case "top":
-                    // if sort is "top", get the DiscussionChannels sorted by weightedVotesCount.
-                    // Treat a null weightedVotesCount as 0.
                     let selectedTimeFrame = null;
                     if (timeFrameOptions[timeFrame]) {
                         selectedTimeFrame = timeFrameOptions[timeFrame].start;
                     }
                     const topDiscussionChannelsResult = await session.run(getDiscussionChannelsQuery, {
-                        searchInput,
-                        titleRegex,
-                        bodyRegex,
-                        selectedTags: selectedTags || [],
-                        channelUniqueName,
-                        offset: parseInt(offset, 10),
-                        limit: parseInt(limit, 10),
+                        ...queryParams,
                         startOfTimeFrame: selectedTimeFrame,
-                        sortOption: "top",
-                        loggedInUsername
+                        sortOption: "top"
                     });
                     const topDiscussionChannels = topDiscussionChannelsResult.records.map((record) => {
                         return record.get("DiscussionChannel");
@@ -75,19 +75,9 @@ const getResolver = (input) => {
                         aggregateDiscussionChannelsCount: aggregateCount,
                     };
                 default:
-                    // By default, and if sort is "hot", get the DiscussionChannels sorted by hot,
-                    // which takes into account both weightedVotesCount and createdAt.
                     const hotDiscussionChannelsResult = await session.run(getDiscussionChannelsQuery, {
-                        searchInput,
-                        titleRegex,
-                        bodyRegex,
-                        selectedTags: selectedTags || [],
-                        channelUniqueName,
-                        offset: parseInt(offset, 10),
-                        limit: parseInt(limit, 10),
-                        startOfTimeFrame: null,
-                        sortOption: "hot",
-                        loggedInUsername
+                        ...queryParams,
+                        sortOption: "hot"
                     });
                     const hotDiscussionChannels = hotDiscussionChannelsResult.records.map((record) => {
                         return record.get("DiscussionChannel");

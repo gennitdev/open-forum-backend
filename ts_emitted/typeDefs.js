@@ -497,6 +497,7 @@ const typeDefinitions = gql `
 
   type ModChannelRole {
     name: String @unique
+    channelUniqueName: String
     description: String
     canHideComment: Boolean
     canHideEvent: Boolean
@@ -520,9 +521,10 @@ const typeDefinitions = gql `
     serverName: String @unique
     serverDescription: String
     serverIconURL: String
-    DefaultChannelRole: ChannelRole @relationship(type: "HAS_DEFAULT_CHANNEL_ROLE", direction: OUT)
     DefaultServerRole: ServerRole! @relationship(type: "HAS_DEFAULT_SERVER_ROLE", direction: OUT)
     DefaultModRole: ModServerRole @relationship(type: "HAS_DEFAULT_MOD_ROLE", direction: OUT)
+    DefaultChannelRole: ChannelRole @relationship(type: "HAS_DEFAULT_CHANNEL_ROLE", direction: OUT)
+    DefaultModChannelRole: ModChannelRole @relationship(type: "HAS_DEFAULT_MOD_ROLE", direction: OUT)
   }
 
   input RedditPostOptions {

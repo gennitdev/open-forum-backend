@@ -44,17 +44,19 @@ OPTIONAL MATCH (author)-[:HAS_CHANNEL_ROLE]->(channelRole:ChannelRole)
 OPTIONAL MATCH (dc)-[:UPVOTED_DISCUSSION]->(upvoter:User)
 WITH dc, d, author, serverRole, channelRole, tagsText, 
      COLLECT(DISTINCT upvoter) AS allUpvoters,
-     COUNT(DISTINCT upvoter) AS upvoterCount,
+     COUNT(DISTINCT upvoter) AS totalUpvoters,
      COALESCE($loggedInUsername, "") AS loggedInUsername,
      totalCount
 
 // Filter for logged-in user's upvote
+OPTIONAL MATCH (dc)-[:UPVOTED_DISCUSSION]->(loggedInUser:User {username: loggedInUsername})
 WITH dc, d, author, serverRole, channelRole, tagsText, 
      CASE 
          WHEN loggedInUsername = "" THEN []
-         ELSE [u IN allUpvoters WHERE u.username = loggedInUsername]
+         WHEN loggedInUser IS NOT NULL THEN [{username: loggedInUser.username}]
+         ELSE []
      END AS loggedInUserUpvote,
-     upvoterCount AS totalUpvoters,
+     totalUpvoters,
      totalCount,
      CASE WHEN coalesce(dc.weightedVotesCount, 0.0) < 0 THEN 0.0 ELSE coalesce(dc.weightedVotesCount, 0.0) END AS weightedVotesCount
 

@@ -11018,7 +11018,7 @@ export type EventCommentsFieldInput = {
 export type EventCommentsFormat = {
   __typename?: 'EventCommentsFormat';
   Comments: Array<Comment>;
-  Event: Event;
+  Event?: Maybe<Event>;
 };
 
 export type EventCommentsFormatAggregateSelection = {
@@ -14249,12 +14249,14 @@ export type ModChannelRole = {
   canHideEvent?: Maybe<Scalars['Boolean']['output']>;
   canOpenSupportTickets?: Maybe<Scalars['Boolean']['output']>;
   canReport?: Maybe<Scalars['Boolean']['output']>;
+  channelUniqueName?: Maybe<Scalars['String']['output']>;
   description?: Maybe<Scalars['String']['output']>;
   name?: Maybe<Scalars['String']['output']>;
 };
 
 export type ModChannelRoleAggregateSelection = {
   __typename?: 'ModChannelRoleAggregateSelection';
+  channelUniqueName: StringAggregateSelectionNullable;
   count: Scalars['Int']['output'];
   description: StringAggregateSelectionNullable;
   name: StringAggregateSelectionNullable;
@@ -14276,6 +14278,7 @@ export type ModChannelRoleCreateInput = {
   canHideEvent?: InputMaybe<Scalars['Boolean']['input']>;
   canOpenSupportTickets?: InputMaybe<Scalars['Boolean']['input']>;
   canReport?: InputMaybe<Scalars['Boolean']['input']>;
+  channelUniqueName?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
 };
@@ -14294,6 +14297,7 @@ export type ModChannelRoleOnCreateInput = {
   canHideEvent?: InputMaybe<Scalars['Boolean']['input']>;
   canOpenSupportTickets?: InputMaybe<Scalars['Boolean']['input']>;
   canReport?: InputMaybe<Scalars['Boolean']['input']>;
+  channelUniqueName?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
 };
@@ -14314,6 +14318,7 @@ export type ModChannelRoleSort = {
   canHideEvent?: InputMaybe<SortDirection>;
   canOpenSupportTickets?: InputMaybe<SortDirection>;
   canReport?: InputMaybe<SortDirection>;
+  channelUniqueName?: InputMaybe<SortDirection>;
   description?: InputMaybe<SortDirection>;
   name?: InputMaybe<SortDirection>;
 };
@@ -14330,6 +14335,7 @@ export type ModChannelRoleUpdateInput = {
   canHideEvent?: InputMaybe<Scalars['Boolean']['input']>;
   canOpenSupportTickets?: InputMaybe<Scalars['Boolean']['input']>;
   canReport?: InputMaybe<Scalars['Boolean']['input']>;
+  channelUniqueName?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
 };
@@ -14345,6 +14351,12 @@ export type ModChannelRoleWhere = {
   canHideEvent?: InputMaybe<Scalars['Boolean']['input']>;
   canOpenSupportTickets?: InputMaybe<Scalars['Boolean']['input']>;
   canReport?: InputMaybe<Scalars['Boolean']['input']>;
+  channelUniqueName?: InputMaybe<Scalars['String']['input']>;
+  channelUniqueName_CONTAINS?: InputMaybe<Scalars['String']['input']>;
+  channelUniqueName_ENDS_WITH?: InputMaybe<Scalars['String']['input']>;
+  channelUniqueName_IN?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  channelUniqueName_MATCHES?: InputMaybe<Scalars['String']['input']>;
+  channelUniqueName_STARTS_WITH?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   description_CONTAINS?: InputMaybe<Scalars['String']['input']>;
   description_ENDS_WITH?: InputMaybe<Scalars['String']['input']>;
@@ -15611,6 +15623,7 @@ export type ModerationProfileModChannelRoleModChannelRolesAggregationSelection =
 
 export type ModerationProfileModChannelRoleModChannelRolesNodeAggregateSelection = {
   __typename?: 'ModerationProfileModChannelRoleModChannelRolesNodeAggregateSelection';
+  channelUniqueName: StringAggregateSelectionNullable;
   description: StringAggregateSelectionNullable;
   name: StringAggregateSelectionNullable;
 };
@@ -15682,6 +15695,21 @@ export type ModerationProfileModChannelRolesNodeAggregationWhereInput = {
   AND?: InputMaybe<Array<ModerationProfileModChannelRolesNodeAggregationWhereInput>>;
   NOT?: InputMaybe<ModerationProfileModChannelRolesNodeAggregationWhereInput>;
   OR?: InputMaybe<Array<ModerationProfileModChannelRolesNodeAggregationWhereInput>>;
+  channelUniqueName_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
   description_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
   description_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
   description_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
@@ -18842,6 +18870,9 @@ export type ServerConfig = {
   DefaultChannelRole?: Maybe<ChannelRole>;
   DefaultChannelRoleAggregate?: Maybe<ServerConfigChannelRoleDefaultChannelRoleAggregationSelection>;
   DefaultChannelRoleConnection: ServerConfigDefaultChannelRoleConnection;
+  DefaultModChannelRole?: Maybe<ModChannelRole>;
+  DefaultModChannelRoleAggregate?: Maybe<ServerConfigModChannelRoleDefaultModChannelRoleAggregationSelection>;
+  DefaultModChannelRoleConnection: ServerConfigDefaultModChannelRoleConnection;
   DefaultModRole?: Maybe<ModServerRole>;
   DefaultModRoleAggregate?: Maybe<ServerConfigModServerRoleDefaultModRoleAggregationSelection>;
   DefaultModRoleConnection: ServerConfigDefaultModRoleConnection;
@@ -18873,6 +18904,28 @@ export type ServerConfigDefaultChannelRoleConnectionArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<Array<ServerConfigDefaultChannelRoleConnectionSort>>;
   where?: InputMaybe<ServerConfigDefaultChannelRoleConnectionWhere>;
+};
+
+
+export type ServerConfigDefaultModChannelRoleArgs = {
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  options?: InputMaybe<ModChannelRoleOptions>;
+  where?: InputMaybe<ModChannelRoleWhere>;
+};
+
+
+export type ServerConfigDefaultModChannelRoleAggregateArgs = {
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  where?: InputMaybe<ModChannelRoleWhere>;
+};
+
+
+export type ServerConfigDefaultModChannelRoleConnectionArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<Array<ServerConfigDefaultModChannelRoleConnectionSort>>;
+  where?: InputMaybe<ServerConfigDefaultModChannelRoleConnectionWhere>;
 };
 
 
@@ -18942,18 +18995,21 @@ export type ServerConfigChannelRoleDefaultChannelRoleNodeAggregateSelection = {
 
 export type ServerConfigConnectInput = {
   DefaultChannelRole?: InputMaybe<ServerConfigDefaultChannelRoleConnectFieldInput>;
+  DefaultModChannelRole?: InputMaybe<ServerConfigDefaultModChannelRoleConnectFieldInput>;
   DefaultModRole?: InputMaybe<ServerConfigDefaultModRoleConnectFieldInput>;
   DefaultServerRole?: InputMaybe<ServerConfigDefaultServerRoleConnectFieldInput>;
 };
 
 export type ServerConfigConnectOrCreateInput = {
   DefaultChannelRole?: InputMaybe<ServerConfigDefaultChannelRoleConnectOrCreateFieldInput>;
+  DefaultModChannelRole?: InputMaybe<ServerConfigDefaultModChannelRoleConnectOrCreateFieldInput>;
   DefaultModRole?: InputMaybe<ServerConfigDefaultModRoleConnectOrCreateFieldInput>;
   DefaultServerRole?: InputMaybe<ServerConfigDefaultServerRoleConnectOrCreateFieldInput>;
 };
 
 export type ServerConfigCreateInput = {
   DefaultChannelRole?: InputMaybe<ServerConfigDefaultChannelRoleFieldInput>;
+  DefaultModChannelRole?: InputMaybe<ServerConfigDefaultModChannelRoleFieldInput>;
   DefaultModRole?: InputMaybe<ServerConfigDefaultModRoleFieldInput>;
   DefaultServerRole?: InputMaybe<ServerConfigDefaultServerRoleFieldInput>;
   serverDescription?: InputMaybe<Scalars['String']['input']>;
@@ -19093,6 +19149,140 @@ export type ServerConfigDefaultChannelRoleUpdateFieldInput = {
   disconnect?: InputMaybe<ServerConfigDefaultChannelRoleDisconnectFieldInput>;
   update?: InputMaybe<ServerConfigDefaultChannelRoleUpdateConnectionInput>;
   where?: InputMaybe<ServerConfigDefaultChannelRoleConnectionWhere>;
+};
+
+export type ServerConfigDefaultModChannelRoleAggregateInput = {
+  AND?: InputMaybe<Array<ServerConfigDefaultModChannelRoleAggregateInput>>;
+  NOT?: InputMaybe<ServerConfigDefaultModChannelRoleAggregateInput>;
+  OR?: InputMaybe<Array<ServerConfigDefaultModChannelRoleAggregateInput>>;
+  count?: InputMaybe<Scalars['Int']['input']>;
+  count_GT?: InputMaybe<Scalars['Int']['input']>;
+  count_GTE?: InputMaybe<Scalars['Int']['input']>;
+  count_LT?: InputMaybe<Scalars['Int']['input']>;
+  count_LTE?: InputMaybe<Scalars['Int']['input']>;
+  node?: InputMaybe<ServerConfigDefaultModChannelRoleNodeAggregationWhereInput>;
+};
+
+export type ServerConfigDefaultModChannelRoleConnectFieldInput = {
+  /** Whether or not to overwrite any matching relationship with the new properties. */
+  overwrite?: Scalars['Boolean']['input'];
+  where?: InputMaybe<ModChannelRoleConnectWhere>;
+};
+
+export type ServerConfigDefaultModChannelRoleConnectOrCreateFieldInput = {
+  onCreate: ServerConfigDefaultModChannelRoleConnectOrCreateFieldInputOnCreate;
+  where: ModChannelRoleConnectOrCreateWhere;
+};
+
+export type ServerConfigDefaultModChannelRoleConnectOrCreateFieldInputOnCreate = {
+  node: ModChannelRoleOnCreateInput;
+};
+
+export type ServerConfigDefaultModChannelRoleConnection = {
+  __typename?: 'ServerConfigDefaultModChannelRoleConnection';
+  edges: Array<ServerConfigDefaultModChannelRoleRelationship>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type ServerConfigDefaultModChannelRoleConnectionSort = {
+  node?: InputMaybe<ModChannelRoleSort>;
+};
+
+export type ServerConfigDefaultModChannelRoleConnectionWhere = {
+  AND?: InputMaybe<Array<ServerConfigDefaultModChannelRoleConnectionWhere>>;
+  NOT?: InputMaybe<ServerConfigDefaultModChannelRoleConnectionWhere>;
+  OR?: InputMaybe<Array<ServerConfigDefaultModChannelRoleConnectionWhere>>;
+  node?: InputMaybe<ModChannelRoleWhere>;
+};
+
+export type ServerConfigDefaultModChannelRoleCreateFieldInput = {
+  node: ModChannelRoleCreateInput;
+};
+
+export type ServerConfigDefaultModChannelRoleDeleteFieldInput = {
+  where?: InputMaybe<ServerConfigDefaultModChannelRoleConnectionWhere>;
+};
+
+export type ServerConfigDefaultModChannelRoleDisconnectFieldInput = {
+  where?: InputMaybe<ServerConfigDefaultModChannelRoleConnectionWhere>;
+};
+
+export type ServerConfigDefaultModChannelRoleFieldInput = {
+  connect?: InputMaybe<ServerConfigDefaultModChannelRoleConnectFieldInput>;
+  connectOrCreate?: InputMaybe<ServerConfigDefaultModChannelRoleConnectOrCreateFieldInput>;
+  create?: InputMaybe<ServerConfigDefaultModChannelRoleCreateFieldInput>;
+};
+
+export type ServerConfigDefaultModChannelRoleNodeAggregationWhereInput = {
+  AND?: InputMaybe<Array<ServerConfigDefaultModChannelRoleNodeAggregationWhereInput>>;
+  NOT?: InputMaybe<ServerConfigDefaultModChannelRoleNodeAggregationWhereInput>;
+  OR?: InputMaybe<Array<ServerConfigDefaultModChannelRoleNodeAggregationWhereInput>>;
+  channelUniqueName_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  description_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  description_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  description_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  description_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  description_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  description_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  description_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  description_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  description_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  description_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  description_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  description_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  description_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  description_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  description_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  name_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  name_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  name_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  name_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  name_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  name_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  name_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  name_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  name_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  name_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  name_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  name_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  name_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  name_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  name_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type ServerConfigDefaultModChannelRoleRelationship = {
+  __typename?: 'ServerConfigDefaultModChannelRoleRelationship';
+  cursor: Scalars['String']['output'];
+  node: ModChannelRole;
+};
+
+export type ServerConfigDefaultModChannelRoleUpdateConnectionInput = {
+  node?: InputMaybe<ModChannelRoleUpdateInput>;
+};
+
+export type ServerConfigDefaultModChannelRoleUpdateFieldInput = {
+  connect?: InputMaybe<ServerConfigDefaultModChannelRoleConnectFieldInput>;
+  connectOrCreate?: InputMaybe<ServerConfigDefaultModChannelRoleConnectOrCreateFieldInput>;
+  create?: InputMaybe<ServerConfigDefaultModChannelRoleCreateFieldInput>;
+  delete?: InputMaybe<ServerConfigDefaultModChannelRoleDeleteFieldInput>;
+  disconnect?: InputMaybe<ServerConfigDefaultModChannelRoleDisconnectFieldInput>;
+  update?: InputMaybe<ServerConfigDefaultModChannelRoleUpdateConnectionInput>;
+  where?: InputMaybe<ServerConfigDefaultModChannelRoleConnectionWhere>;
 };
 
 export type ServerConfigDefaultModRoleAggregateInput = {
@@ -19335,12 +19525,14 @@ export type ServerConfigDefaultServerRoleUpdateFieldInput = {
 
 export type ServerConfigDeleteInput = {
   DefaultChannelRole?: InputMaybe<ServerConfigDefaultChannelRoleDeleteFieldInput>;
+  DefaultModChannelRole?: InputMaybe<ServerConfigDefaultModChannelRoleDeleteFieldInput>;
   DefaultModRole?: InputMaybe<ServerConfigDefaultModRoleDeleteFieldInput>;
   DefaultServerRole?: InputMaybe<ServerConfigDefaultServerRoleDeleteFieldInput>;
 };
 
 export type ServerConfigDisconnectInput = {
   DefaultChannelRole?: InputMaybe<ServerConfigDefaultChannelRoleDisconnectFieldInput>;
+  DefaultModChannelRole?: InputMaybe<ServerConfigDefaultModChannelRoleDisconnectFieldInput>;
   DefaultModRole?: InputMaybe<ServerConfigDefaultModRoleDisconnectFieldInput>;
   DefaultServerRole?: InputMaybe<ServerConfigDefaultServerRoleDisconnectFieldInput>;
 };
@@ -19349,6 +19541,19 @@ export type ServerConfigEdge = {
   __typename?: 'ServerConfigEdge';
   cursor: Scalars['String']['output'];
   node: ServerConfig;
+};
+
+export type ServerConfigModChannelRoleDefaultModChannelRoleAggregationSelection = {
+  __typename?: 'ServerConfigModChannelRoleDefaultModChannelRoleAggregationSelection';
+  count: Scalars['Int']['output'];
+  node?: Maybe<ServerConfigModChannelRoleDefaultModChannelRoleNodeAggregateSelection>;
+};
+
+export type ServerConfigModChannelRoleDefaultModChannelRoleNodeAggregateSelection = {
+  __typename?: 'ServerConfigModChannelRoleDefaultModChannelRoleNodeAggregateSelection';
+  channelUniqueName: StringAggregateSelectionNullable;
+  description: StringAggregateSelectionNullable;
+  name: StringAggregateSelectionNullable;
 };
 
 export type ServerConfigModServerRoleDefaultModRoleAggregationSelection = {
@@ -19372,6 +19577,7 @@ export type ServerConfigOptions = {
 
 export type ServerConfigRelationInput = {
   DefaultChannelRole?: InputMaybe<ServerConfigDefaultChannelRoleCreateFieldInput>;
+  DefaultModChannelRole?: InputMaybe<ServerConfigDefaultModChannelRoleCreateFieldInput>;
   DefaultModRole?: InputMaybe<ServerConfigDefaultModRoleCreateFieldInput>;
   DefaultServerRole?: InputMaybe<ServerConfigDefaultServerRoleCreateFieldInput>;
 };
@@ -19397,6 +19603,7 @@ export type ServerConfigSort = {
 
 export type ServerConfigUpdateInput = {
   DefaultChannelRole?: InputMaybe<ServerConfigDefaultChannelRoleUpdateFieldInput>;
+  DefaultModChannelRole?: InputMaybe<ServerConfigDefaultModChannelRoleUpdateFieldInput>;
   DefaultModRole?: InputMaybe<ServerConfigDefaultModRoleUpdateFieldInput>;
   DefaultServerRole?: InputMaybe<ServerConfigDefaultServerRoleUpdateFieldInput>;
   serverDescription?: InputMaybe<Scalars['String']['input']>;
@@ -19411,6 +19618,11 @@ export type ServerConfigWhere = {
   DefaultChannelRoleConnection?: InputMaybe<ServerConfigDefaultChannelRoleConnectionWhere>;
   DefaultChannelRoleConnection_NOT?: InputMaybe<ServerConfigDefaultChannelRoleConnectionWhere>;
   DefaultChannelRole_NOT?: InputMaybe<ChannelRoleWhere>;
+  DefaultModChannelRole?: InputMaybe<ModChannelRoleWhere>;
+  DefaultModChannelRoleAggregate?: InputMaybe<ServerConfigDefaultModChannelRoleAggregateInput>;
+  DefaultModChannelRoleConnection?: InputMaybe<ServerConfigDefaultModChannelRoleConnectionWhere>;
+  DefaultModChannelRoleConnection_NOT?: InputMaybe<ServerConfigDefaultModChannelRoleConnectionWhere>;
+  DefaultModChannelRole_NOT?: InputMaybe<ModChannelRoleWhere>;
   DefaultModRole?: InputMaybe<ModServerRoleWhere>;
   DefaultModRoleAggregate?: InputMaybe<ServerConfigDefaultModRoleAggregateInput>;
   DefaultModRoleConnection?: InputMaybe<ServerConfigDefaultModRoleConnectionWhere>;
@@ -27371,6 +27583,21 @@ export type ResolversTypes = {
   ServerConfigDefaultChannelRoleRelationship: ResolverTypeWrapper<ServerConfigDefaultChannelRoleRelationship>;
   ServerConfigDefaultChannelRoleUpdateConnectionInput: ServerConfigDefaultChannelRoleUpdateConnectionInput;
   ServerConfigDefaultChannelRoleUpdateFieldInput: ServerConfigDefaultChannelRoleUpdateFieldInput;
+  ServerConfigDefaultModChannelRoleAggregateInput: ServerConfigDefaultModChannelRoleAggregateInput;
+  ServerConfigDefaultModChannelRoleConnectFieldInput: ServerConfigDefaultModChannelRoleConnectFieldInput;
+  ServerConfigDefaultModChannelRoleConnectOrCreateFieldInput: ServerConfigDefaultModChannelRoleConnectOrCreateFieldInput;
+  ServerConfigDefaultModChannelRoleConnectOrCreateFieldInputOnCreate: ServerConfigDefaultModChannelRoleConnectOrCreateFieldInputOnCreate;
+  ServerConfigDefaultModChannelRoleConnection: ResolverTypeWrapper<ServerConfigDefaultModChannelRoleConnection>;
+  ServerConfigDefaultModChannelRoleConnectionSort: ServerConfigDefaultModChannelRoleConnectionSort;
+  ServerConfigDefaultModChannelRoleConnectionWhere: ServerConfigDefaultModChannelRoleConnectionWhere;
+  ServerConfigDefaultModChannelRoleCreateFieldInput: ServerConfigDefaultModChannelRoleCreateFieldInput;
+  ServerConfigDefaultModChannelRoleDeleteFieldInput: ServerConfigDefaultModChannelRoleDeleteFieldInput;
+  ServerConfigDefaultModChannelRoleDisconnectFieldInput: ServerConfigDefaultModChannelRoleDisconnectFieldInput;
+  ServerConfigDefaultModChannelRoleFieldInput: ServerConfigDefaultModChannelRoleFieldInput;
+  ServerConfigDefaultModChannelRoleNodeAggregationWhereInput: ServerConfigDefaultModChannelRoleNodeAggregationWhereInput;
+  ServerConfigDefaultModChannelRoleRelationship: ResolverTypeWrapper<ServerConfigDefaultModChannelRoleRelationship>;
+  ServerConfigDefaultModChannelRoleUpdateConnectionInput: ServerConfigDefaultModChannelRoleUpdateConnectionInput;
+  ServerConfigDefaultModChannelRoleUpdateFieldInput: ServerConfigDefaultModChannelRoleUpdateFieldInput;
   ServerConfigDefaultModRoleAggregateInput: ServerConfigDefaultModRoleAggregateInput;
   ServerConfigDefaultModRoleConnectFieldInput: ServerConfigDefaultModRoleConnectFieldInput;
   ServerConfigDefaultModRoleConnectOrCreateFieldInput: ServerConfigDefaultModRoleConnectOrCreateFieldInput;
@@ -27404,6 +27631,8 @@ export type ResolversTypes = {
   ServerConfigDeleteInput: ServerConfigDeleteInput;
   ServerConfigDisconnectInput: ServerConfigDisconnectInput;
   ServerConfigEdge: ResolverTypeWrapper<ServerConfigEdge>;
+  ServerConfigModChannelRoleDefaultModChannelRoleAggregationSelection: ResolverTypeWrapper<ServerConfigModChannelRoleDefaultModChannelRoleAggregationSelection>;
+  ServerConfigModChannelRoleDefaultModChannelRoleNodeAggregateSelection: ResolverTypeWrapper<ServerConfigModChannelRoleDefaultModChannelRoleNodeAggregateSelection>;
   ServerConfigModServerRoleDefaultModRoleAggregationSelection: ResolverTypeWrapper<ServerConfigModServerRoleDefaultModRoleAggregationSelection>;
   ServerConfigModServerRoleDefaultModRoleNodeAggregateSelection: ResolverTypeWrapper<ServerConfigModServerRoleDefaultModRoleNodeAggregateSelection>;
   ServerConfigOptions: ServerConfigOptions;
@@ -29373,6 +29602,21 @@ export type ResolversParentTypes = {
   ServerConfigDefaultChannelRoleRelationship: ServerConfigDefaultChannelRoleRelationship;
   ServerConfigDefaultChannelRoleUpdateConnectionInput: ServerConfigDefaultChannelRoleUpdateConnectionInput;
   ServerConfigDefaultChannelRoleUpdateFieldInput: ServerConfigDefaultChannelRoleUpdateFieldInput;
+  ServerConfigDefaultModChannelRoleAggregateInput: ServerConfigDefaultModChannelRoleAggregateInput;
+  ServerConfigDefaultModChannelRoleConnectFieldInput: ServerConfigDefaultModChannelRoleConnectFieldInput;
+  ServerConfigDefaultModChannelRoleConnectOrCreateFieldInput: ServerConfigDefaultModChannelRoleConnectOrCreateFieldInput;
+  ServerConfigDefaultModChannelRoleConnectOrCreateFieldInputOnCreate: ServerConfigDefaultModChannelRoleConnectOrCreateFieldInputOnCreate;
+  ServerConfigDefaultModChannelRoleConnection: ServerConfigDefaultModChannelRoleConnection;
+  ServerConfigDefaultModChannelRoleConnectionSort: ServerConfigDefaultModChannelRoleConnectionSort;
+  ServerConfigDefaultModChannelRoleConnectionWhere: ServerConfigDefaultModChannelRoleConnectionWhere;
+  ServerConfigDefaultModChannelRoleCreateFieldInput: ServerConfigDefaultModChannelRoleCreateFieldInput;
+  ServerConfigDefaultModChannelRoleDeleteFieldInput: ServerConfigDefaultModChannelRoleDeleteFieldInput;
+  ServerConfigDefaultModChannelRoleDisconnectFieldInput: ServerConfigDefaultModChannelRoleDisconnectFieldInput;
+  ServerConfigDefaultModChannelRoleFieldInput: ServerConfigDefaultModChannelRoleFieldInput;
+  ServerConfigDefaultModChannelRoleNodeAggregationWhereInput: ServerConfigDefaultModChannelRoleNodeAggregationWhereInput;
+  ServerConfigDefaultModChannelRoleRelationship: ServerConfigDefaultModChannelRoleRelationship;
+  ServerConfigDefaultModChannelRoleUpdateConnectionInput: ServerConfigDefaultModChannelRoleUpdateConnectionInput;
+  ServerConfigDefaultModChannelRoleUpdateFieldInput: ServerConfigDefaultModChannelRoleUpdateFieldInput;
   ServerConfigDefaultModRoleAggregateInput: ServerConfigDefaultModRoleAggregateInput;
   ServerConfigDefaultModRoleConnectFieldInput: ServerConfigDefaultModRoleConnectFieldInput;
   ServerConfigDefaultModRoleConnectOrCreateFieldInput: ServerConfigDefaultModRoleConnectOrCreateFieldInput;
@@ -29406,6 +29650,8 @@ export type ResolversParentTypes = {
   ServerConfigDeleteInput: ServerConfigDeleteInput;
   ServerConfigDisconnectInput: ServerConfigDisconnectInput;
   ServerConfigEdge: ServerConfigEdge;
+  ServerConfigModChannelRoleDefaultModChannelRoleAggregationSelection: ServerConfigModChannelRoleDefaultModChannelRoleAggregationSelection;
+  ServerConfigModChannelRoleDefaultModChannelRoleNodeAggregateSelection: ServerConfigModChannelRoleDefaultModChannelRoleNodeAggregateSelection;
   ServerConfigModServerRoleDefaultModRoleAggregationSelection: ServerConfigModServerRoleDefaultModRoleAggregationSelection;
   ServerConfigModServerRoleDefaultModRoleNodeAggregateSelection: ServerConfigModServerRoleDefaultModRoleNodeAggregateSelection;
   ServerConfigOptions: ServerConfigOptions;
@@ -31928,7 +32174,7 @@ export type EventCommentsConnectionResolvers<ContextType = any, ParentType exten
 
 export type EventCommentsFormatResolvers<ContextType = any, ParentType extends ResolversParentTypes['EventCommentsFormat'] = ResolversParentTypes['EventCommentsFormat']> = {
   Comments?: Resolver<Array<ResolversTypes['Comment']>, ParentType, ContextType>;
-  Event?: Resolver<ResolversTypes['Event'], ParentType, ContextType>;
+  Event?: Resolver<Maybe<ResolversTypes['Event']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -32503,12 +32749,14 @@ export type ModChannelRoleResolvers<ContextType = any, ParentType extends Resolv
   canHideEvent?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   canOpenSupportTickets?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   canReport?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  channelUniqueName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type ModChannelRoleAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ModChannelRoleAggregateSelection'] = ResolversParentTypes['ModChannelRoleAggregateSelection']> = {
+  channelUniqueName?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
   count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   description?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
@@ -32765,6 +33013,7 @@ export type ModerationProfileModChannelRoleModChannelRolesAggregationSelectionRe
 };
 
 export type ModerationProfileModChannelRoleModChannelRolesNodeAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ModerationProfileModChannelRoleModChannelRolesNodeAggregateSelection'] = ResolversParentTypes['ModerationProfileModChannelRoleModChannelRolesNodeAggregateSelection']> = {
+  channelUniqueName?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
   description?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -33285,6 +33534,9 @@ export type ServerConfigResolvers<ContextType = any, ParentType extends Resolver
   DefaultChannelRole?: Resolver<Maybe<ResolversTypes['ChannelRole']>, ParentType, ContextType, RequireFields<ServerConfigDefaultChannelRoleArgs, 'directed'>>;
   DefaultChannelRoleAggregate?: Resolver<Maybe<ResolversTypes['ServerConfigChannelRoleDefaultChannelRoleAggregationSelection']>, ParentType, ContextType, RequireFields<ServerConfigDefaultChannelRoleAggregateArgs, 'directed'>>;
   DefaultChannelRoleConnection?: Resolver<ResolversTypes['ServerConfigDefaultChannelRoleConnection'], ParentType, ContextType, RequireFields<ServerConfigDefaultChannelRoleConnectionArgs, 'directed'>>;
+  DefaultModChannelRole?: Resolver<Maybe<ResolversTypes['ModChannelRole']>, ParentType, ContextType, RequireFields<ServerConfigDefaultModChannelRoleArgs, 'directed'>>;
+  DefaultModChannelRoleAggregate?: Resolver<Maybe<ResolversTypes['ServerConfigModChannelRoleDefaultModChannelRoleAggregationSelection']>, ParentType, ContextType, RequireFields<ServerConfigDefaultModChannelRoleAggregateArgs, 'directed'>>;
+  DefaultModChannelRoleConnection?: Resolver<ResolversTypes['ServerConfigDefaultModChannelRoleConnection'], ParentType, ContextType, RequireFields<ServerConfigDefaultModChannelRoleConnectionArgs, 'directed'>>;
   DefaultModRole?: Resolver<Maybe<ResolversTypes['ModServerRole']>, ParentType, ContextType, RequireFields<ServerConfigDefaultModRoleArgs, 'directed'>>;
   DefaultModRoleAggregate?: Resolver<Maybe<ResolversTypes['ServerConfigModServerRoleDefaultModRoleAggregationSelection']>, ParentType, ContextType, RequireFields<ServerConfigDefaultModRoleAggregateArgs, 'directed'>>;
   DefaultModRoleConnection?: Resolver<ResolversTypes['ServerConfigDefaultModRoleConnection'], ParentType, ContextType, RequireFields<ServerConfigDefaultModRoleConnectionArgs, 'directed'>>;
@@ -33331,6 +33583,19 @@ export type ServerConfigDefaultChannelRoleRelationshipResolvers<ContextType = an
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type ServerConfigDefaultModChannelRoleConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ServerConfigDefaultModChannelRoleConnection'] = ResolversParentTypes['ServerConfigDefaultModChannelRoleConnection']> = {
+  edges?: Resolver<Array<ResolversTypes['ServerConfigDefaultModChannelRoleRelationship']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ServerConfigDefaultModChannelRoleRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['ServerConfigDefaultModChannelRoleRelationship'] = ResolversParentTypes['ServerConfigDefaultModChannelRoleRelationship']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['ModChannelRole'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type ServerConfigDefaultModRoleConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ServerConfigDefaultModRoleConnection'] = ResolversParentTypes['ServerConfigDefaultModRoleConnection']> = {
   edges?: Resolver<Array<ResolversTypes['ServerConfigDefaultModRoleRelationship']>, ParentType, ContextType>;
   pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
@@ -33360,6 +33625,19 @@ export type ServerConfigDefaultServerRoleRelationshipResolvers<ContextType = any
 export type ServerConfigEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['ServerConfigEdge'] = ResolversParentTypes['ServerConfigEdge']> = {
   cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   node?: Resolver<ResolversTypes['ServerConfig'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ServerConfigModChannelRoleDefaultModChannelRoleAggregationSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ServerConfigModChannelRoleDefaultModChannelRoleAggregationSelection'] = ResolversParentTypes['ServerConfigModChannelRoleDefaultModChannelRoleAggregationSelection']> = {
+  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['ServerConfigModChannelRoleDefaultModChannelRoleNodeAggregateSelection']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ServerConfigModChannelRoleDefaultModChannelRoleNodeAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ServerConfigModChannelRoleDefaultModChannelRoleNodeAggregateSelection'] = ResolversParentTypes['ServerConfigModChannelRoleDefaultModChannelRoleNodeAggregateSelection']> = {
+  channelUniqueName?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  description?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -35017,11 +35295,15 @@ export type Resolvers<ContextType = any> = {
   ServerConfigChannelRoleDefaultChannelRoleNodeAggregateSelection?: ServerConfigChannelRoleDefaultChannelRoleNodeAggregateSelectionResolvers<ContextType>;
   ServerConfigDefaultChannelRoleConnection?: ServerConfigDefaultChannelRoleConnectionResolvers<ContextType>;
   ServerConfigDefaultChannelRoleRelationship?: ServerConfigDefaultChannelRoleRelationshipResolvers<ContextType>;
+  ServerConfigDefaultModChannelRoleConnection?: ServerConfigDefaultModChannelRoleConnectionResolvers<ContextType>;
+  ServerConfigDefaultModChannelRoleRelationship?: ServerConfigDefaultModChannelRoleRelationshipResolvers<ContextType>;
   ServerConfigDefaultModRoleConnection?: ServerConfigDefaultModRoleConnectionResolvers<ContextType>;
   ServerConfigDefaultModRoleRelationship?: ServerConfigDefaultModRoleRelationshipResolvers<ContextType>;
   ServerConfigDefaultServerRoleConnection?: ServerConfigDefaultServerRoleConnectionResolvers<ContextType>;
   ServerConfigDefaultServerRoleRelationship?: ServerConfigDefaultServerRoleRelationshipResolvers<ContextType>;
   ServerConfigEdge?: ServerConfigEdgeResolvers<ContextType>;
+  ServerConfigModChannelRoleDefaultModChannelRoleAggregationSelection?: ServerConfigModChannelRoleDefaultModChannelRoleAggregationSelectionResolvers<ContextType>;
+  ServerConfigModChannelRoleDefaultModChannelRoleNodeAggregateSelection?: ServerConfigModChannelRoleDefaultModChannelRoleNodeAggregateSelectionResolvers<ContextType>;
   ServerConfigModServerRoleDefaultModRoleAggregationSelection?: ServerConfigModServerRoleDefaultModRoleAggregationSelectionResolvers<ContextType>;
   ServerConfigModServerRoleDefaultModRoleNodeAggregateSelection?: ServerConfigModServerRoleDefaultModRoleNodeAggregateSelectionResolvers<ContextType>;
   ServerConfigServerRoleDefaultServerRoleAggregationSelection?: ServerConfigServerRoleDefaultServerRoleAggregationSelectionResolvers<ContextType>;

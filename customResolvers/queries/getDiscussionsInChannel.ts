@@ -1,7 +1,4 @@
-import {
-  DiscussionChannel,
-  DiscussionChannelWhere,
-} from "../../src/generated/graphql";
+import { setUserDataOnContext } from "../../rules/permission/userDataHelperFunctions.js";
 import { getDiscussionChannelsQuery } from "../cypher/cypherQueries.js";
 import { timeFrameOptions } from "./utils.js";
 
@@ -35,7 +32,14 @@ const getResolver = (input: Input) => {
     const { channelUniqueName, options, selectedTags, searchInput } = args;
     const { offset, limit, sort, timeFrame } = options || {};
     // Set loggedInUsername to null explicitly if not present
+    context.user = await setUserDataOnContext({
+      context,
+      getPermissionInfo: false
+    });
+  
     const loggedInUsername = context.user?.username || null;
+    console.log('get discussions in channel')
+    console.log("loggedInUser", context.user?.username);
 
     const session = driver.session();
     let titleRegex = `(?i).*${searchInput}.*`;
@@ -53,7 +57,7 @@ const getResolver = (input: Input) => {
         limit: parseInt(limit, 10),
         startOfTimeFrame: null,
         sortOption: "new",
-        loggedInUsername  // Will be null if user not logged in
+        loggedInUsername
       };
 
       switch (sort) {

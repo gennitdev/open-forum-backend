@@ -32,11 +32,10 @@ export const setUserDataOnContext = async (input: SetUserDataInput) => {
   const { context, getPermissionInfo } = input;
   const { ogm, req } = context;
   const token = req?.headers?.authorization || "";
-  console.log("request headers", req.headers);
   
   if (!token) {
-    console.error("No token found in headers");
-    throw new Error(ERROR_MESSAGES.channel.notAuthenticated);
+    console.log("No token found in headers");
+    return null;
   }
 
   const decoded = jwt.decode(token.replace("Bearer ", ""));
