@@ -23,9 +23,9 @@ import undoUpvoteComment from "./customResolvers/mutations/undoUpvoteComment.js"
 import upvoteDiscussionChannel from "./customResolvers/mutations/upvoteDiscussionChannel.js";
 import undoUpvoteDiscussionChannel from "./customResolvers/mutations/undoUpvoteDiscussionChannel.js";
 
-import getSubredditResolver from "./customResolvers/queries/getSubreddit.js";
-import getSubredditSidebar from "./customResolvers/queries/getSubredditSidebar.js";
 import createSignedStorageURL from "./customResolvers/mutations/createSignedStorageURL.js";
+
+import safetyCheck from "./customResolvers/queries/safetyCheck.js";
 
 import { ModelMap } from "./ogm-types.js";
 import getCreateEmailAndUserResolver from "./customResolvers/mutations/createEmailAndUser.js";
@@ -81,8 +81,7 @@ export default function (driver: any) {
         driver,
         Comment,
       }),
-      getSubreddit: getSubredditResolver(),
-      getSubredditSidebar: getSubredditSidebar(),
+      safetyCheck: safetyCheck
     },
     Mutation: {
       createDiscussionWithChannelConnections:

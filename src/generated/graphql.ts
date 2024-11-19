@@ -6301,6 +6301,12 @@ export type CreateEmojisMutationResponse = {
   info: CreateInfo;
 };
 
+export type CreateEnvironmentInfosMutationResponse = {
+  __typename?: 'CreateEnvironmentInfosMutationResponse';
+  environmentInfos: Array<EnvironmentInfo>;
+  info: CreateInfo;
+};
+
 export type CreateEventChannelsMutationResponse = {
   __typename?: 'CreateEventChannelsMutationResponse';
   eventChannels: Array<EventChannel>;
@@ -6322,12 +6328,6 @@ export type CreateEventsMutationResponse = {
 export type CreateFeedsMutationResponse = {
   __typename?: 'CreateFeedsMutationResponse';
   feeds: Array<Feed>;
-  info: CreateInfo;
-};
-
-export type CreateGetSubredditResponsesMutationResponse = {
-  __typename?: 'CreateGetSubredditResponsesMutationResponse';
-  getSubredditResponses: Array<GetSubredditResponse>;
   info: CreateInfo;
 };
 
@@ -6388,12 +6388,6 @@ export type CreateRecurringEventsMutationResponse = {
   recurringEvents: Array<RecurringEvent>;
 };
 
-export type CreateRedditSubmissionsMutationResponse = {
-  __typename?: 'CreateRedditSubmissionsMutationResponse';
-  info: CreateInfo;
-  redditSubmissions: Array<RedditSubmission>;
-};
-
 export type CreateRepeatEndsMutationResponse = {
   __typename?: 'CreateRepeatEndsMutationResponse';
   info: CreateInfo;
@@ -6404,6 +6398,12 @@ export type CreateRepeatEveriesMutationResponse = {
   __typename?: 'CreateRepeatEveriesMutationResponse';
   info: CreateInfo;
   repeatEveries: Array<RepeatEvery>;
+};
+
+export type CreateSafetyCheckResponsesMutationResponse = {
+  __typename?: 'CreateSafetyCheckResponsesMutationResponse';
+  info: CreateInfo;
+  safetyCheckResponses: Array<SafetyCheckResponse>;
 };
 
 export type CreateServerConfigsMutationResponse = {
@@ -6428,12 +6428,6 @@ export type CreateSiteWideDiscussionListFormatsMutationResponse = {
   __typename?: 'CreateSiteWideDiscussionListFormatsMutationResponse';
   info: CreateInfo;
   siteWideDiscussionListFormats: Array<SiteWideDiscussionListFormat>;
-};
-
-export type CreateSubredditSidebarsMutationResponse = {
-  __typename?: 'CreateSubredditSidebarsMutationResponse';
-  info: CreateInfo;
-  subredditSidebars: Array<SubredditSidebar>;
 };
 
 export type CreateTagsMutationResponse = {
@@ -9834,6 +9828,67 @@ export type EmojisConnection = {
   totalCount: Scalars['Int']['output'];
 };
 
+export type EnvironmentInfo = {
+  __typename?: 'EnvironmentInfo';
+  currentDatabase?: Maybe<Scalars['String']['output']>;
+  isTestEnvironment?: Maybe<Scalars['Boolean']['output']>;
+};
+
+export type EnvironmentInfoAggregateSelection = {
+  __typename?: 'EnvironmentInfoAggregateSelection';
+  count: Scalars['Int']['output'];
+  currentDatabase: StringAggregateSelectionNullable;
+};
+
+export type EnvironmentInfoCreateInput = {
+  currentDatabase?: InputMaybe<Scalars['String']['input']>;
+  isTestEnvironment?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+export type EnvironmentInfoEdge = {
+  __typename?: 'EnvironmentInfoEdge';
+  cursor: Scalars['String']['output'];
+  node: EnvironmentInfo;
+};
+
+export type EnvironmentInfoOptions = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  /** Specify one or more EnvironmentInfoSort objects to sort EnvironmentInfos by. The sorts will be applied in the order in which they are arranged in the array. */
+  sort?: InputMaybe<Array<EnvironmentInfoSort>>;
+};
+
+/** Fields to sort EnvironmentInfos by. The order in which sorts are applied is not guaranteed when specifying many fields in one EnvironmentInfoSort object. */
+export type EnvironmentInfoSort = {
+  currentDatabase?: InputMaybe<SortDirection>;
+  isTestEnvironment?: InputMaybe<SortDirection>;
+};
+
+export type EnvironmentInfoUpdateInput = {
+  currentDatabase?: InputMaybe<Scalars['String']['input']>;
+  isTestEnvironment?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+export type EnvironmentInfoWhere = {
+  AND?: InputMaybe<Array<EnvironmentInfoWhere>>;
+  NOT?: InputMaybe<EnvironmentInfoWhere>;
+  OR?: InputMaybe<Array<EnvironmentInfoWhere>>;
+  currentDatabase?: InputMaybe<Scalars['String']['input']>;
+  currentDatabase_CONTAINS?: InputMaybe<Scalars['String']['input']>;
+  currentDatabase_ENDS_WITH?: InputMaybe<Scalars['String']['input']>;
+  currentDatabase_IN?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  currentDatabase_MATCHES?: InputMaybe<Scalars['String']['input']>;
+  currentDatabase_STARTS_WITH?: InputMaybe<Scalars['String']['input']>;
+  isTestEnvironment?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+export type EnvironmentInfosConnection = {
+  __typename?: 'EnvironmentInfosConnection';
+  edges: Array<EnvironmentInfoEdge>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
 export type Event = {
   __typename?: 'Event';
   Comments: Array<Comment>;
@@ -13056,63 +13111,6 @@ export type FloatAggregateSelectionNullable = {
   max?: Maybe<Scalars['Float']['output']>;
   min?: Maybe<Scalars['Float']['output']>;
   sum?: Maybe<Scalars['Float']['output']>;
-};
-
-export type GetSubredditResponse = {
-  __typename?: 'GetSubredditResponse';
-  after?: Maybe<Scalars['String']['output']>;
-  posts?: Maybe<Array<Maybe<RedditSubmission>>>;
-};
-
-export type GetSubredditResponseAggregateSelection = {
-  __typename?: 'GetSubredditResponseAggregateSelection';
-  after: StringAggregateSelectionNullable;
-  count: Scalars['Int']['output'];
-};
-
-export type GetSubredditResponseCreateInput = {
-  after?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type GetSubredditResponseEdge = {
-  __typename?: 'GetSubredditResponseEdge';
-  cursor: Scalars['String']['output'];
-  node: GetSubredditResponse;
-};
-
-export type GetSubredditResponseOptions = {
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  /** Specify one or more GetSubredditResponseSort objects to sort GetSubredditResponses by. The sorts will be applied in the order in which they are arranged in the array. */
-  sort?: InputMaybe<Array<GetSubredditResponseSort>>;
-};
-
-/** Fields to sort GetSubredditResponses by. The order in which sorts are applied is not guaranteed when specifying many fields in one GetSubredditResponseSort object. */
-export type GetSubredditResponseSort = {
-  after?: InputMaybe<SortDirection>;
-};
-
-export type GetSubredditResponseUpdateInput = {
-  after?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type GetSubredditResponseWhere = {
-  AND?: InputMaybe<Array<GetSubredditResponseWhere>>;
-  NOT?: InputMaybe<GetSubredditResponseWhere>;
-  OR?: InputMaybe<Array<GetSubredditResponseWhere>>;
-  after?: InputMaybe<Scalars['String']['input']>;
-  after_CONTAINS?: InputMaybe<Scalars['String']['input']>;
-  after_ENDS_WITH?: InputMaybe<Scalars['String']['input']>;
-  after_IN?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  after_MATCHES?: InputMaybe<Scalars['String']['input']>;
-  after_STARTS_WITH?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type GetSubredditResponsesConnection = {
-  __typename?: 'GetSubredditResponsesConnection';
-  edges: Array<GetSubredditResponseEdge>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int']['output'];
 };
 
 export type IdAggregateSelectionNonNullable = {
@@ -16378,12 +16376,12 @@ export type Mutation = {
   createEmailAndUser?: Maybe<User>;
   createEmails: CreateEmailsMutationResponse;
   createEmojis: CreateEmojisMutationResponse;
+  createEnvironmentInfos: CreateEnvironmentInfosMutationResponse;
   createEventChannels: CreateEventChannelsMutationResponse;
   createEventCommentsFormats: CreateEventCommentsFormatsMutationResponse;
   createEventWithChannelConnections?: Maybe<Event>;
   createEvents: CreateEventsMutationResponse;
   createFeeds: CreateFeedsMutationResponse;
-  createGetSubredditResponses: CreateGetSubredditResponsesMutationResponse;
   createImages: CreateImagesMutationResponse;
   createIssues: CreateIssuesMutationResponse;
   createLinkFlairs: CreateLinkFlairsMutationResponse;
@@ -16392,15 +16390,14 @@ export type Mutation = {
   createModerationActions: CreateModerationActionsMutationResponse;
   createModerationProfiles: CreateModerationProfilesMutationResponse;
   createRecurringEvents: CreateRecurringEventsMutationResponse;
-  createRedditSubmissions: CreateRedditSubmissionsMutationResponse;
   createRepeatEnds: CreateRepeatEndsMutationResponse;
   createRepeatEveries: CreateRepeatEveriesMutationResponse;
+  createSafetyCheckResponses: CreateSafetyCheckResponsesMutationResponse;
   createServerConfigs: CreateServerConfigsMutationResponse;
   createServerRoles: CreateServerRolesMutationResponse;
   createSignedStorageURL?: Maybe<SignedUrl>;
   createSignedUrls: CreateSignedUrlsMutationResponse;
   createSiteWideDiscussionListFormats: CreateSiteWideDiscussionListFormatsMutationResponse;
-  createSubredditSidebars: CreateSubredditSidebarsMutationResponse;
   createTags: CreateTagsMutationResponse;
   createUsers: CreateUsersMutationResponse;
   deleteAlbums: DeleteInfo;
@@ -16414,11 +16411,11 @@ export type Mutation = {
   deleteDiscussions: DeleteInfo;
   deleteEmails: DeleteInfo;
   deleteEmojis: DeleteInfo;
+  deleteEnvironmentInfos: DeleteInfo;
   deleteEventChannels: DeleteInfo;
   deleteEventCommentsFormats: DeleteInfo;
   deleteEvents: DeleteInfo;
   deleteFeeds: DeleteInfo;
-  deleteGetSubredditResponses: DeleteInfo;
   deleteImages: DeleteInfo;
   deleteIssues: DeleteInfo;
   deleteLinkFlairs: DeleteInfo;
@@ -16427,14 +16424,13 @@ export type Mutation = {
   deleteModerationActions: DeleteInfo;
   deleteModerationProfiles: DeleteInfo;
   deleteRecurringEvents: DeleteInfo;
-  deleteRedditSubmissions: DeleteInfo;
   deleteRepeatEnds: DeleteInfo;
   deleteRepeatEveries: DeleteInfo;
+  deleteSafetyCheckResponses: DeleteInfo;
   deleteServerConfigs: DeleteInfo;
   deleteServerRoles: DeleteInfo;
   deleteSignedUrls: DeleteInfo;
   deleteSiteWideDiscussionListFormats: DeleteInfo;
-  deleteSubredditSidebars: DeleteInfo;
   deleteTags: DeleteInfo;
   deleteUsers: DeleteInfo;
   removeEmojiFromComment?: Maybe<Comment>;
@@ -16453,12 +16449,12 @@ export type Mutation = {
   updateDiscussions: UpdateDiscussionsMutationResponse;
   updateEmails: UpdateEmailsMutationResponse;
   updateEmojis: UpdateEmojisMutationResponse;
+  updateEnvironmentInfos: UpdateEnvironmentInfosMutationResponse;
   updateEventChannels: UpdateEventChannelsMutationResponse;
   updateEventCommentsFormats: UpdateEventCommentsFormatsMutationResponse;
   updateEventWithChannelConnections?: Maybe<Event>;
   updateEvents: UpdateEventsMutationResponse;
   updateFeeds: UpdateFeedsMutationResponse;
-  updateGetSubredditResponses: UpdateGetSubredditResponsesMutationResponse;
   updateImages: UpdateImagesMutationResponse;
   updateIssues: UpdateIssuesMutationResponse;
   updateLinkFlairs: UpdateLinkFlairsMutationResponse;
@@ -16467,14 +16463,13 @@ export type Mutation = {
   updateModerationActions: UpdateModerationActionsMutationResponse;
   updateModerationProfiles: UpdateModerationProfilesMutationResponse;
   updateRecurringEvents: UpdateRecurringEventsMutationResponse;
-  updateRedditSubmissions: UpdateRedditSubmissionsMutationResponse;
   updateRepeatEnds: UpdateRepeatEndsMutationResponse;
   updateRepeatEveries: UpdateRepeatEveriesMutationResponse;
+  updateSafetyCheckResponses: UpdateSafetyCheckResponsesMutationResponse;
   updateServerConfigs: UpdateServerConfigsMutationResponse;
   updateServerRoles: UpdateServerRolesMutationResponse;
   updateSignedUrls: UpdateSignedUrlsMutationResponse;
   updateSiteWideDiscussionListFormats: UpdateSiteWideDiscussionListFormatsMutationResponse;
-  updateSubredditSidebars: UpdateSubredditSidebarsMutationResponse;
   updateTags: UpdateTagsMutationResponse;
   updateUsers: UpdateUsersMutationResponse;
   upvoteComment?: Maybe<Comment>;
@@ -16565,6 +16560,11 @@ export type MutationCreateEmojisArgs = {
 };
 
 
+export type MutationCreateEnvironmentInfosArgs = {
+  input: Array<EnvironmentInfoCreateInput>;
+};
+
+
 export type MutationCreateEventChannelsArgs = {
   input: Array<EventChannelCreateInput>;
 };
@@ -16588,11 +16588,6 @@ export type MutationCreateEventsArgs = {
 
 export type MutationCreateFeedsArgs = {
   input: Array<FeedCreateInput>;
-};
-
-
-export type MutationCreateGetSubredditResponsesArgs = {
-  input: Array<GetSubredditResponseCreateInput>;
 };
 
 
@@ -16636,11 +16631,6 @@ export type MutationCreateRecurringEventsArgs = {
 };
 
 
-export type MutationCreateRedditSubmissionsArgs = {
-  input: Array<RedditSubmissionCreateInput>;
-};
-
-
 export type MutationCreateRepeatEndsArgs = {
   input: Array<RepeatEndsCreateInput>;
 };
@@ -16648,6 +16638,11 @@ export type MutationCreateRepeatEndsArgs = {
 
 export type MutationCreateRepeatEveriesArgs = {
   input: Array<RepeatEveryCreateInput>;
+};
+
+
+export type MutationCreateSafetyCheckResponsesArgs = {
+  input: Array<SafetyCheckResponseCreateInput>;
 };
 
 
@@ -16674,11 +16669,6 @@ export type MutationCreateSignedUrlsArgs = {
 
 export type MutationCreateSiteWideDiscussionListFormatsArgs = {
   input: Array<SiteWideDiscussionListFormatCreateInput>;
-};
-
-
-export type MutationCreateSubredditSidebarsArgs = {
-  input: Array<SubredditSidebarCreateInput>;
 };
 
 
@@ -16754,6 +16744,11 @@ export type MutationDeleteEmojisArgs = {
 };
 
 
+export type MutationDeleteEnvironmentInfosArgs = {
+  where?: InputMaybe<EnvironmentInfoWhere>;
+};
+
+
 export type MutationDeleteEventChannelsArgs = {
   delete?: InputMaybe<EventChannelDeleteInput>;
   where?: InputMaybe<EventChannelWhere>;
@@ -16774,11 +16769,6 @@ export type MutationDeleteEventsArgs = {
 export type MutationDeleteFeedsArgs = {
   delete?: InputMaybe<FeedDeleteInput>;
   where?: InputMaybe<FeedWhere>;
-};
-
-
-export type MutationDeleteGetSubredditResponsesArgs = {
-  where?: InputMaybe<GetSubredditResponseWhere>;
 };
 
 
@@ -16827,11 +16817,6 @@ export type MutationDeleteRecurringEventsArgs = {
 };
 
 
-export type MutationDeleteRedditSubmissionsArgs = {
-  where?: InputMaybe<RedditSubmissionWhere>;
-};
-
-
 export type MutationDeleteRepeatEndsArgs = {
   where?: InputMaybe<RepeatEndsWhere>;
 };
@@ -16839,6 +16824,11 @@ export type MutationDeleteRepeatEndsArgs = {
 
 export type MutationDeleteRepeatEveriesArgs = {
   where?: InputMaybe<RepeatEveryWhere>;
+};
+
+
+export type MutationDeleteSafetyCheckResponsesArgs = {
+  where?: InputMaybe<SafetyCheckResponseWhere>;
 };
 
 
@@ -16860,11 +16850,6 @@ export type MutationDeleteSignedUrlsArgs = {
 
 export type MutationDeleteSiteWideDiscussionListFormatsArgs = {
   where?: InputMaybe<SiteWideDiscussionListFormatWhere>;
-};
-
-
-export type MutationDeleteSubredditSidebarsArgs = {
-  where?: InputMaybe<SubredditSidebarWhere>;
 };
 
 
@@ -17015,6 +17000,12 @@ export type MutationUpdateEmojisArgs = {
 };
 
 
+export type MutationUpdateEnvironmentInfosArgs = {
+  update?: InputMaybe<EnvironmentInfoUpdateInput>;
+  where?: InputMaybe<EnvironmentInfoWhere>;
+};
+
+
 export type MutationUpdateEventChannelsArgs = {
   connect?: InputMaybe<EventChannelConnectInput>;
   connectOrCreate?: InputMaybe<EventChannelConnectOrCreateInput>;
@@ -17059,12 +17050,6 @@ export type MutationUpdateFeedsArgs = {
   disconnect?: InputMaybe<FeedDisconnectInput>;
   update?: InputMaybe<FeedUpdateInput>;
   where?: InputMaybe<FeedWhere>;
-};
-
-
-export type MutationUpdateGetSubredditResponsesArgs = {
-  update?: InputMaybe<GetSubredditResponseUpdateInput>;
-  where?: InputMaybe<GetSubredditResponseWhere>;
 };
 
 
@@ -17139,12 +17124,6 @@ export type MutationUpdateRecurringEventsArgs = {
 };
 
 
-export type MutationUpdateRedditSubmissionsArgs = {
-  update?: InputMaybe<RedditSubmissionUpdateInput>;
-  where?: InputMaybe<RedditSubmissionWhere>;
-};
-
-
 export type MutationUpdateRepeatEndsArgs = {
   update?: InputMaybe<RepeatEndsUpdateInput>;
   where?: InputMaybe<RepeatEndsWhere>;
@@ -17154,6 +17133,12 @@ export type MutationUpdateRepeatEndsArgs = {
 export type MutationUpdateRepeatEveriesArgs = {
   update?: InputMaybe<RepeatEveryUpdateInput>;
   where?: InputMaybe<RepeatEveryWhere>;
+};
+
+
+export type MutationUpdateSafetyCheckResponsesArgs = {
+  update?: InputMaybe<SafetyCheckResponseUpdateInput>;
+  where?: InputMaybe<SafetyCheckResponseWhere>;
 };
 
 
@@ -17183,12 +17168,6 @@ export type MutationUpdateSignedUrlsArgs = {
 export type MutationUpdateSiteWideDiscussionListFormatsArgs = {
   update?: InputMaybe<SiteWideDiscussionListFormatUpdateInput>;
   where?: InputMaybe<SiteWideDiscussionListFormatWhere>;
-};
-
-
-export type MutationUpdateSubredditSidebarsArgs = {
-  update?: InputMaybe<SubredditSidebarUpdateInput>;
-  where?: InputMaybe<SubredditSidebarWhere>;
 };
 
 
@@ -17293,6 +17272,9 @@ export type Query = {
   emojis: Array<Emoji>;
   emojisAggregate: EmojiAggregateSelection;
   emojisConnection: EmojisConnection;
+  environmentInfos: Array<EnvironmentInfo>;
+  environmentInfosAggregate: EnvironmentInfoAggregateSelection;
+  environmentInfosConnection: EnvironmentInfosConnection;
   eventChannels: Array<EventChannel>;
   eventChannelsAggregate: EventChannelAggregateSelection;
   eventChannelsConnection: EventChannelsConnection;
@@ -17310,11 +17292,6 @@ export type Query = {
   getDiscussionsInChannel?: Maybe<DiscussionChannelListFormat>;
   getEventComments?: Maybe<EventCommentsFormat>;
   getSiteWideDiscussionList?: Maybe<SiteWideDiscussionListFormat>;
-  getSubreddit?: Maybe<GetSubredditResponse>;
-  getSubredditResponses: Array<GetSubredditResponse>;
-  getSubredditResponsesAggregate: GetSubredditResponseAggregateSelection;
-  getSubredditResponsesConnection: GetSubredditResponsesConnection;
-  getSubredditSidebar?: Maybe<SubredditSidebar>;
   images: Array<Image>;
   imagesAggregate: ImageAggregateSelection;
   imagesConnection: ImagesConnection;
@@ -17339,15 +17316,16 @@ export type Query = {
   recurringEvents: Array<RecurringEvent>;
   recurringEventsAggregate: RecurringEventAggregateSelection;
   recurringEventsConnection: RecurringEventsConnection;
-  redditSubmissions: Array<RedditSubmission>;
-  redditSubmissionsAggregate: RedditSubmissionAggregateSelection;
-  redditSubmissionsConnection: RedditSubmissionsConnection;
   repeatEnds: Array<RepeatEnds>;
   repeatEndsAggregate: RepeatEndsAggregateSelection;
   repeatEndsConnection: RepeatEndsConnection;
   repeatEveries: Array<RepeatEvery>;
   repeatEveriesAggregate: RepeatEveryAggregateSelection;
   repeatEveriesConnection: RepeatEveriesConnection;
+  safetyCheck?: Maybe<SafetyCheckResponse>;
+  safetyCheckResponses: Array<SafetyCheckResponse>;
+  safetyCheckResponsesAggregate: SafetyCheckResponseAggregateSelection;
+  safetyCheckResponsesConnection: SafetyCheckResponsesConnection;
   serverConfigs: Array<ServerConfig>;
   serverConfigsAggregate: ServerConfigAggregateSelection;
   serverConfigsConnection: ServerConfigsConnection;
@@ -17360,9 +17338,6 @@ export type Query = {
   siteWideDiscussionListFormats: Array<SiteWideDiscussionListFormat>;
   siteWideDiscussionListFormatsAggregate: SiteWideDiscussionListFormatAggregateSelection;
   siteWideDiscussionListFormatsConnection: SiteWideDiscussionListFormatsConnection;
-  subredditSidebars: Array<SubredditSidebar>;
-  subredditSidebarsAggregate: SubredditSidebarAggregateSelection;
-  subredditSidebarsConnection: SubredditSidebarsConnection;
   tags: Array<Tag>;
   tagsAggregate: TagAggregateSelection;
   tagsConnection: TagsConnection;
@@ -17580,6 +17555,25 @@ export type QueryEmojisConnectionArgs = {
 };
 
 
+export type QueryEnvironmentInfosArgs = {
+  options?: InputMaybe<EnvironmentInfoOptions>;
+  where?: InputMaybe<EnvironmentInfoWhere>;
+};
+
+
+export type QueryEnvironmentInfosAggregateArgs = {
+  where?: InputMaybe<EnvironmentInfoWhere>;
+};
+
+
+export type QueryEnvironmentInfosConnectionArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<EnvironmentInfoSort>>>;
+  where?: InputMaybe<EnvironmentInfoWhere>;
+};
+
+
 export type QueryEventChannelsArgs = {
   options?: InputMaybe<EventChannelOptions>;
   where?: InputMaybe<EventChannelWhere>;
@@ -17695,38 +17689,6 @@ export type QueryGetSiteWideDiscussionListArgs = {
   searchInput?: InputMaybe<Scalars['String']['input']>;
   selectedChannels?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   selectedTags?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-};
-
-
-export type QueryGetSubredditArgs = {
-  flair?: InputMaybe<Scalars['String']['input']>;
-  options?: InputMaybe<RedditPostOptions>;
-  subredditName: Scalars['String']['input'];
-};
-
-
-export type QueryGetSubredditResponsesArgs = {
-  options?: InputMaybe<GetSubredditResponseOptions>;
-  where?: InputMaybe<GetSubredditResponseWhere>;
-};
-
-
-export type QueryGetSubredditResponsesAggregateArgs = {
-  where?: InputMaybe<GetSubredditResponseWhere>;
-};
-
-
-export type QueryGetSubredditResponsesConnectionArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  sort?: InputMaybe<Array<InputMaybe<GetSubredditResponseSort>>>;
-  where?: InputMaybe<GetSubredditResponseWhere>;
-};
-
-
-export type QueryGetSubredditSidebarArgs = {
-  options?: InputMaybe<Scalars['JSON']['input']>;
-  subredditName: Scalars['String']['input'];
 };
 
 
@@ -17882,25 +17844,6 @@ export type QueryRecurringEventsConnectionArgs = {
 };
 
 
-export type QueryRedditSubmissionsArgs = {
-  options?: InputMaybe<RedditSubmissionOptions>;
-  where?: InputMaybe<RedditSubmissionWhere>;
-};
-
-
-export type QueryRedditSubmissionsAggregateArgs = {
-  where?: InputMaybe<RedditSubmissionWhere>;
-};
-
-
-export type QueryRedditSubmissionsConnectionArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  sort?: InputMaybe<Array<InputMaybe<RedditSubmissionSort>>>;
-  where?: InputMaybe<RedditSubmissionWhere>;
-};
-
-
 export type QueryRepeatEndsArgs = {
   options?: InputMaybe<RepeatEndsOptions>;
   where?: InputMaybe<RepeatEndsWhere>;
@@ -17936,6 +17879,24 @@ export type QueryRepeatEveriesConnectionArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<Array<InputMaybe<RepeatEverySort>>>;
   where?: InputMaybe<RepeatEveryWhere>;
+};
+
+
+export type QuerySafetyCheckResponsesArgs = {
+  options?: InputMaybe<SafetyCheckResponseOptions>;
+  where?: InputMaybe<SafetyCheckResponseWhere>;
+};
+
+
+export type QuerySafetyCheckResponsesAggregateArgs = {
+  where?: InputMaybe<SafetyCheckResponseWhere>;
+};
+
+
+export type QuerySafetyCheckResponsesConnectionArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<SafetyCheckResponseWhere>;
 };
 
 
@@ -18012,25 +17973,6 @@ export type QuerySiteWideDiscussionListFormatsConnectionArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<Array<InputMaybe<SiteWideDiscussionListFormatSort>>>;
   where?: InputMaybe<SiteWideDiscussionListFormatWhere>;
-};
-
-
-export type QuerySubredditSidebarsArgs = {
-  options?: InputMaybe<SubredditSidebarOptions>;
-  where?: InputMaybe<SubredditSidebarWhere>;
-};
-
-
-export type QuerySubredditSidebarsAggregateArgs = {
-  where?: InputMaybe<SubredditSidebarWhere>;
-};
-
-
-export type QuerySubredditSidebarsConnectionArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  sort?: InputMaybe<Array<InputMaybe<SubredditSidebarSort>>>;
-  where?: InputMaybe<SubredditSidebarWhere>;
 };
 
 
@@ -18497,219 +18439,6 @@ export type RecurringEventsConnection = {
   totalCount: Scalars['Int']['output'];
 };
 
-export type RedditPostOptions = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  sort?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type RedditSubmission = {
-  __typename?: 'RedditSubmission';
-  author: Scalars['String']['output'];
-  commentCount: Scalars['Int']['output'];
-  createdUTC: Scalars['Int']['output'];
-  flair?: Maybe<Scalars['JSON']['output']>;
-  id: Scalars['ID']['output'];
-  media?: Maybe<Scalars['JSON']['output']>;
-  numCrossposts: Scalars['Int']['output'];
-  permalink: Scalars['String']['output'];
-  preview?: Maybe<Scalars['JSON']['output']>;
-  stickied: Scalars['Boolean']['output'];
-  subreddit: Scalars['String']['output'];
-  text: Scalars['String']['output'];
-  thumbnail: Scalars['String']['output'];
-  title: Scalars['String']['output'];
-  upvoteCount: Scalars['Int']['output'];
-  url?: Maybe<Scalars['String']['output']>;
-};
-
-export type RedditSubmissionAggregateSelection = {
-  __typename?: 'RedditSubmissionAggregateSelection';
-  author: StringAggregateSelectionNonNullable;
-  commentCount: IntAggregateSelectionNonNullable;
-  count: Scalars['Int']['output'];
-  createdUTC: IntAggregateSelectionNonNullable;
-  id: IdAggregateSelectionNonNullable;
-  numCrossposts: IntAggregateSelectionNonNullable;
-  permalink: StringAggregateSelectionNonNullable;
-  subreddit: StringAggregateSelectionNonNullable;
-  text: StringAggregateSelectionNonNullable;
-  thumbnail: StringAggregateSelectionNonNullable;
-  title: StringAggregateSelectionNonNullable;
-  upvoteCount: IntAggregateSelectionNonNullable;
-  url: StringAggregateSelectionNullable;
-};
-
-export type RedditSubmissionCreateInput = {
-  author: Scalars['String']['input'];
-  commentCount: Scalars['Int']['input'];
-  createdUTC: Scalars['Int']['input'];
-  flair?: InputMaybe<Scalars['JSON']['input']>;
-  id: Scalars['ID']['input'];
-  media?: InputMaybe<Scalars['JSON']['input']>;
-  numCrossposts: Scalars['Int']['input'];
-  permalink: Scalars['String']['input'];
-  preview?: InputMaybe<Scalars['JSON']['input']>;
-  stickied: Scalars['Boolean']['input'];
-  subreddit: Scalars['String']['input'];
-  text: Scalars['String']['input'];
-  thumbnail: Scalars['String']['input'];
-  title: Scalars['String']['input'];
-  upvoteCount: Scalars['Int']['input'];
-  url?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type RedditSubmissionEdge = {
-  __typename?: 'RedditSubmissionEdge';
-  cursor: Scalars['String']['output'];
-  node: RedditSubmission;
-};
-
-export type RedditSubmissionOptions = {
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  /** Specify one or more RedditSubmissionSort objects to sort RedditSubmissions by. The sorts will be applied in the order in which they are arranged in the array. */
-  sort?: InputMaybe<Array<RedditSubmissionSort>>;
-};
-
-/** Fields to sort RedditSubmissions by. The order in which sorts are applied is not guaranteed when specifying many fields in one RedditSubmissionSort object. */
-export type RedditSubmissionSort = {
-  author?: InputMaybe<SortDirection>;
-  commentCount?: InputMaybe<SortDirection>;
-  createdUTC?: InputMaybe<SortDirection>;
-  flair?: InputMaybe<SortDirection>;
-  id?: InputMaybe<SortDirection>;
-  media?: InputMaybe<SortDirection>;
-  numCrossposts?: InputMaybe<SortDirection>;
-  permalink?: InputMaybe<SortDirection>;
-  preview?: InputMaybe<SortDirection>;
-  stickied?: InputMaybe<SortDirection>;
-  subreddit?: InputMaybe<SortDirection>;
-  text?: InputMaybe<SortDirection>;
-  thumbnail?: InputMaybe<SortDirection>;
-  title?: InputMaybe<SortDirection>;
-  upvoteCount?: InputMaybe<SortDirection>;
-  url?: InputMaybe<SortDirection>;
-};
-
-export type RedditSubmissionUpdateInput = {
-  author?: InputMaybe<Scalars['String']['input']>;
-  commentCount?: InputMaybe<Scalars['Int']['input']>;
-  commentCount_DECREMENT?: InputMaybe<Scalars['Int']['input']>;
-  commentCount_INCREMENT?: InputMaybe<Scalars['Int']['input']>;
-  createdUTC?: InputMaybe<Scalars['Int']['input']>;
-  createdUTC_DECREMENT?: InputMaybe<Scalars['Int']['input']>;
-  createdUTC_INCREMENT?: InputMaybe<Scalars['Int']['input']>;
-  flair?: InputMaybe<Scalars['JSON']['input']>;
-  id?: InputMaybe<Scalars['ID']['input']>;
-  media?: InputMaybe<Scalars['JSON']['input']>;
-  numCrossposts?: InputMaybe<Scalars['Int']['input']>;
-  numCrossposts_DECREMENT?: InputMaybe<Scalars['Int']['input']>;
-  numCrossposts_INCREMENT?: InputMaybe<Scalars['Int']['input']>;
-  permalink?: InputMaybe<Scalars['String']['input']>;
-  preview?: InputMaybe<Scalars['JSON']['input']>;
-  stickied?: InputMaybe<Scalars['Boolean']['input']>;
-  subreddit?: InputMaybe<Scalars['String']['input']>;
-  text?: InputMaybe<Scalars['String']['input']>;
-  thumbnail?: InputMaybe<Scalars['String']['input']>;
-  title?: InputMaybe<Scalars['String']['input']>;
-  upvoteCount?: InputMaybe<Scalars['Int']['input']>;
-  upvoteCount_DECREMENT?: InputMaybe<Scalars['Int']['input']>;
-  upvoteCount_INCREMENT?: InputMaybe<Scalars['Int']['input']>;
-  url?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type RedditSubmissionWhere = {
-  AND?: InputMaybe<Array<RedditSubmissionWhere>>;
-  NOT?: InputMaybe<RedditSubmissionWhere>;
-  OR?: InputMaybe<Array<RedditSubmissionWhere>>;
-  author?: InputMaybe<Scalars['String']['input']>;
-  author_CONTAINS?: InputMaybe<Scalars['String']['input']>;
-  author_ENDS_WITH?: InputMaybe<Scalars['String']['input']>;
-  author_IN?: InputMaybe<Array<Scalars['String']['input']>>;
-  author_MATCHES?: InputMaybe<Scalars['String']['input']>;
-  author_STARTS_WITH?: InputMaybe<Scalars['String']['input']>;
-  commentCount?: InputMaybe<Scalars['Int']['input']>;
-  commentCount_GT?: InputMaybe<Scalars['Int']['input']>;
-  commentCount_GTE?: InputMaybe<Scalars['Int']['input']>;
-  commentCount_IN?: InputMaybe<Array<Scalars['Int']['input']>>;
-  commentCount_LT?: InputMaybe<Scalars['Int']['input']>;
-  commentCount_LTE?: InputMaybe<Scalars['Int']['input']>;
-  createdUTC?: InputMaybe<Scalars['Int']['input']>;
-  createdUTC_GT?: InputMaybe<Scalars['Int']['input']>;
-  createdUTC_GTE?: InputMaybe<Scalars['Int']['input']>;
-  createdUTC_IN?: InputMaybe<Array<Scalars['Int']['input']>>;
-  createdUTC_LT?: InputMaybe<Scalars['Int']['input']>;
-  createdUTC_LTE?: InputMaybe<Scalars['Int']['input']>;
-  flair?: InputMaybe<Scalars['JSON']['input']>;
-  flair_IN?: InputMaybe<Array<InputMaybe<Scalars['JSON']['input']>>>;
-  id?: InputMaybe<Scalars['ID']['input']>;
-  id_CONTAINS?: InputMaybe<Scalars['ID']['input']>;
-  id_ENDS_WITH?: InputMaybe<Scalars['ID']['input']>;
-  id_IN?: InputMaybe<Array<Scalars['ID']['input']>>;
-  id_STARTS_WITH?: InputMaybe<Scalars['ID']['input']>;
-  media?: InputMaybe<Scalars['JSON']['input']>;
-  media_IN?: InputMaybe<Array<InputMaybe<Scalars['JSON']['input']>>>;
-  numCrossposts?: InputMaybe<Scalars['Int']['input']>;
-  numCrossposts_GT?: InputMaybe<Scalars['Int']['input']>;
-  numCrossposts_GTE?: InputMaybe<Scalars['Int']['input']>;
-  numCrossposts_IN?: InputMaybe<Array<Scalars['Int']['input']>>;
-  numCrossposts_LT?: InputMaybe<Scalars['Int']['input']>;
-  numCrossposts_LTE?: InputMaybe<Scalars['Int']['input']>;
-  permalink?: InputMaybe<Scalars['String']['input']>;
-  permalink_CONTAINS?: InputMaybe<Scalars['String']['input']>;
-  permalink_ENDS_WITH?: InputMaybe<Scalars['String']['input']>;
-  permalink_IN?: InputMaybe<Array<Scalars['String']['input']>>;
-  permalink_MATCHES?: InputMaybe<Scalars['String']['input']>;
-  permalink_STARTS_WITH?: InputMaybe<Scalars['String']['input']>;
-  preview?: InputMaybe<Scalars['JSON']['input']>;
-  preview_IN?: InputMaybe<Array<InputMaybe<Scalars['JSON']['input']>>>;
-  stickied?: InputMaybe<Scalars['Boolean']['input']>;
-  subreddit?: InputMaybe<Scalars['String']['input']>;
-  subreddit_CONTAINS?: InputMaybe<Scalars['String']['input']>;
-  subreddit_ENDS_WITH?: InputMaybe<Scalars['String']['input']>;
-  subreddit_IN?: InputMaybe<Array<Scalars['String']['input']>>;
-  subreddit_MATCHES?: InputMaybe<Scalars['String']['input']>;
-  subreddit_STARTS_WITH?: InputMaybe<Scalars['String']['input']>;
-  text?: InputMaybe<Scalars['String']['input']>;
-  text_CONTAINS?: InputMaybe<Scalars['String']['input']>;
-  text_ENDS_WITH?: InputMaybe<Scalars['String']['input']>;
-  text_IN?: InputMaybe<Array<Scalars['String']['input']>>;
-  text_MATCHES?: InputMaybe<Scalars['String']['input']>;
-  text_STARTS_WITH?: InputMaybe<Scalars['String']['input']>;
-  thumbnail?: InputMaybe<Scalars['String']['input']>;
-  thumbnail_CONTAINS?: InputMaybe<Scalars['String']['input']>;
-  thumbnail_ENDS_WITH?: InputMaybe<Scalars['String']['input']>;
-  thumbnail_IN?: InputMaybe<Array<Scalars['String']['input']>>;
-  thumbnail_MATCHES?: InputMaybe<Scalars['String']['input']>;
-  thumbnail_STARTS_WITH?: InputMaybe<Scalars['String']['input']>;
-  title?: InputMaybe<Scalars['String']['input']>;
-  title_CONTAINS?: InputMaybe<Scalars['String']['input']>;
-  title_ENDS_WITH?: InputMaybe<Scalars['String']['input']>;
-  title_IN?: InputMaybe<Array<Scalars['String']['input']>>;
-  title_MATCHES?: InputMaybe<Scalars['String']['input']>;
-  title_STARTS_WITH?: InputMaybe<Scalars['String']['input']>;
-  upvoteCount?: InputMaybe<Scalars['Int']['input']>;
-  upvoteCount_GT?: InputMaybe<Scalars['Int']['input']>;
-  upvoteCount_GTE?: InputMaybe<Scalars['Int']['input']>;
-  upvoteCount_IN?: InputMaybe<Array<Scalars['Int']['input']>>;
-  upvoteCount_LT?: InputMaybe<Scalars['Int']['input']>;
-  upvoteCount_LTE?: InputMaybe<Scalars['Int']['input']>;
-  url?: InputMaybe<Scalars['String']['input']>;
-  url_CONTAINS?: InputMaybe<Scalars['String']['input']>;
-  url_ENDS_WITH?: InputMaybe<Scalars['String']['input']>;
-  url_IN?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  url_MATCHES?: InputMaybe<Scalars['String']['input']>;
-  url_STARTS_WITH?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type RedditSubmissionsConnection = {
-  __typename?: 'RedditSubmissionsConnection';
-  edges: Array<RedditSubmissionEdge>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int']['output'];
-};
-
 export type RepeatEnds = {
   __typename?: 'RepeatEnds';
   count?: Maybe<Scalars['Int']['output']>;
@@ -18864,6 +18593,50 @@ export enum RepeatUnit {
   Week = 'WEEK',
   Year = 'YEAR'
 }
+
+export type SafetyCheckResponse = {
+  __typename?: 'SafetyCheckResponse';
+  environment?: Maybe<EnvironmentInfo>;
+};
+
+export type SafetyCheckResponseAggregateSelection = {
+  __typename?: 'SafetyCheckResponseAggregateSelection';
+  count: Scalars['Int']['output'];
+};
+
+export type SafetyCheckResponseCreateInput = {
+  /** Appears because this input type would be empty otherwise because this type is composed of just generated and/or relationship properties. See https://neo4j.com/docs/graphql-manual/current/troubleshooting/faqs/ */
+  _emptyInput?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+export type SafetyCheckResponseEdge = {
+  __typename?: 'SafetyCheckResponseEdge';
+  cursor: Scalars['String']['output'];
+  node: SafetyCheckResponse;
+};
+
+export type SafetyCheckResponseOptions = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type SafetyCheckResponseUpdateInput = {
+  /** Appears because this input type would be empty otherwise because this type is composed of just generated and/or relationship properties. See https://neo4j.com/docs/graphql-manual/current/troubleshooting/faqs/ */
+  _emptyInput?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+export type SafetyCheckResponseWhere = {
+  AND?: InputMaybe<Array<SafetyCheckResponseWhere>>;
+  NOT?: InputMaybe<SafetyCheckResponseWhere>;
+  OR?: InputMaybe<Array<SafetyCheckResponseWhere>>;
+};
+
+export type SafetyCheckResponsesConnection = {
+  __typename?: 'SafetyCheckResponsesConnection';
+  edges: Array<SafetyCheckResponseEdge>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
 
 export type ServerConfig = {
   __typename?: 'ServerConfig';
@@ -19939,139 +19712,6 @@ export type StringAggregateSelectionNullable = {
   __typename?: 'StringAggregateSelectionNullable';
   longest?: Maybe<Scalars['String']['output']>;
   shortest?: Maybe<Scalars['String']['output']>;
-};
-
-export type SubredditSidebar = {
-  __typename?: 'SubredditSidebar';
-  allowGalleries?: Maybe<Scalars['Boolean']['output']>;
-  allowImages?: Maybe<Scalars['Boolean']['output']>;
-  bannerImg?: Maybe<Scalars['String']['output']>;
-  communityIcon?: Maybe<Scalars['String']['output']>;
-  displayName: Scalars['String']['output'];
-  linkFlairs?: Maybe<Array<Maybe<LinkFlair>>>;
-  longDescription?: Maybe<Scalars['String']['output']>;
-  rules?: Maybe<Scalars['JSON']['output']>;
-  shortDescription?: Maybe<Scalars['String']['output']>;
-  showMediaPreview?: Maybe<Scalars['Boolean']['output']>;
-  title: Scalars['String']['output'];
-};
-
-export type SubredditSidebarAggregateSelection = {
-  __typename?: 'SubredditSidebarAggregateSelection';
-  bannerImg: StringAggregateSelectionNullable;
-  communityIcon: StringAggregateSelectionNullable;
-  count: Scalars['Int']['output'];
-  displayName: StringAggregateSelectionNonNullable;
-  longDescription: StringAggregateSelectionNullable;
-  shortDescription: StringAggregateSelectionNullable;
-  title: StringAggregateSelectionNonNullable;
-};
-
-export type SubredditSidebarCreateInput = {
-  allowGalleries?: InputMaybe<Scalars['Boolean']['input']>;
-  allowImages?: InputMaybe<Scalars['Boolean']['input']>;
-  bannerImg?: InputMaybe<Scalars['String']['input']>;
-  communityIcon?: InputMaybe<Scalars['String']['input']>;
-  displayName: Scalars['String']['input'];
-  longDescription?: InputMaybe<Scalars['String']['input']>;
-  rules?: InputMaybe<Scalars['JSON']['input']>;
-  shortDescription?: InputMaybe<Scalars['String']['input']>;
-  showMediaPreview?: InputMaybe<Scalars['Boolean']['input']>;
-  title: Scalars['String']['input'];
-};
-
-export type SubredditSidebarEdge = {
-  __typename?: 'SubredditSidebarEdge';
-  cursor: Scalars['String']['output'];
-  node: SubredditSidebar;
-};
-
-export type SubredditSidebarOptions = {
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  /** Specify one or more SubredditSidebarSort objects to sort SubredditSidebars by. The sorts will be applied in the order in which they are arranged in the array. */
-  sort?: InputMaybe<Array<SubredditSidebarSort>>;
-};
-
-/** Fields to sort SubredditSidebars by. The order in which sorts are applied is not guaranteed when specifying many fields in one SubredditSidebarSort object. */
-export type SubredditSidebarSort = {
-  allowGalleries?: InputMaybe<SortDirection>;
-  allowImages?: InputMaybe<SortDirection>;
-  bannerImg?: InputMaybe<SortDirection>;
-  communityIcon?: InputMaybe<SortDirection>;
-  displayName?: InputMaybe<SortDirection>;
-  longDescription?: InputMaybe<SortDirection>;
-  rules?: InputMaybe<SortDirection>;
-  shortDescription?: InputMaybe<SortDirection>;
-  showMediaPreview?: InputMaybe<SortDirection>;
-  title?: InputMaybe<SortDirection>;
-};
-
-export type SubredditSidebarUpdateInput = {
-  allowGalleries?: InputMaybe<Scalars['Boolean']['input']>;
-  allowImages?: InputMaybe<Scalars['Boolean']['input']>;
-  bannerImg?: InputMaybe<Scalars['String']['input']>;
-  communityIcon?: InputMaybe<Scalars['String']['input']>;
-  displayName?: InputMaybe<Scalars['String']['input']>;
-  longDescription?: InputMaybe<Scalars['String']['input']>;
-  rules?: InputMaybe<Scalars['JSON']['input']>;
-  shortDescription?: InputMaybe<Scalars['String']['input']>;
-  showMediaPreview?: InputMaybe<Scalars['Boolean']['input']>;
-  title?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type SubredditSidebarWhere = {
-  AND?: InputMaybe<Array<SubredditSidebarWhere>>;
-  NOT?: InputMaybe<SubredditSidebarWhere>;
-  OR?: InputMaybe<Array<SubredditSidebarWhere>>;
-  allowGalleries?: InputMaybe<Scalars['Boolean']['input']>;
-  allowImages?: InputMaybe<Scalars['Boolean']['input']>;
-  bannerImg?: InputMaybe<Scalars['String']['input']>;
-  bannerImg_CONTAINS?: InputMaybe<Scalars['String']['input']>;
-  bannerImg_ENDS_WITH?: InputMaybe<Scalars['String']['input']>;
-  bannerImg_IN?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  bannerImg_MATCHES?: InputMaybe<Scalars['String']['input']>;
-  bannerImg_STARTS_WITH?: InputMaybe<Scalars['String']['input']>;
-  communityIcon?: InputMaybe<Scalars['String']['input']>;
-  communityIcon_CONTAINS?: InputMaybe<Scalars['String']['input']>;
-  communityIcon_ENDS_WITH?: InputMaybe<Scalars['String']['input']>;
-  communityIcon_IN?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  communityIcon_MATCHES?: InputMaybe<Scalars['String']['input']>;
-  communityIcon_STARTS_WITH?: InputMaybe<Scalars['String']['input']>;
-  displayName?: InputMaybe<Scalars['String']['input']>;
-  displayName_CONTAINS?: InputMaybe<Scalars['String']['input']>;
-  displayName_ENDS_WITH?: InputMaybe<Scalars['String']['input']>;
-  displayName_IN?: InputMaybe<Array<Scalars['String']['input']>>;
-  displayName_MATCHES?: InputMaybe<Scalars['String']['input']>;
-  displayName_STARTS_WITH?: InputMaybe<Scalars['String']['input']>;
-  longDescription?: InputMaybe<Scalars['String']['input']>;
-  longDescription_CONTAINS?: InputMaybe<Scalars['String']['input']>;
-  longDescription_ENDS_WITH?: InputMaybe<Scalars['String']['input']>;
-  longDescription_IN?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  longDescription_MATCHES?: InputMaybe<Scalars['String']['input']>;
-  longDescription_STARTS_WITH?: InputMaybe<Scalars['String']['input']>;
-  rules?: InputMaybe<Scalars['JSON']['input']>;
-  rules_IN?: InputMaybe<Array<InputMaybe<Scalars['JSON']['input']>>>;
-  shortDescription?: InputMaybe<Scalars['String']['input']>;
-  shortDescription_CONTAINS?: InputMaybe<Scalars['String']['input']>;
-  shortDescription_ENDS_WITH?: InputMaybe<Scalars['String']['input']>;
-  shortDescription_IN?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  shortDescription_MATCHES?: InputMaybe<Scalars['String']['input']>;
-  shortDescription_STARTS_WITH?: InputMaybe<Scalars['String']['input']>;
-  showMediaPreview?: InputMaybe<Scalars['Boolean']['input']>;
-  title?: InputMaybe<Scalars['String']['input']>;
-  title_CONTAINS?: InputMaybe<Scalars['String']['input']>;
-  title_ENDS_WITH?: InputMaybe<Scalars['String']['input']>;
-  title_IN?: InputMaybe<Array<Scalars['String']['input']>>;
-  title_MATCHES?: InputMaybe<Scalars['String']['input']>;
-  title_STARTS_WITH?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type SubredditSidebarsConnection = {
-  __typename?: 'SubredditSidebarsConnection';
-  edges: Array<SubredditSidebarEdge>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int']['output'];
 };
 
 export type Tag = {
@@ -21391,6 +21031,12 @@ export type UpdateEmojisMutationResponse = {
   info: UpdateInfo;
 };
 
+export type UpdateEnvironmentInfosMutationResponse = {
+  __typename?: 'UpdateEnvironmentInfosMutationResponse';
+  environmentInfos: Array<EnvironmentInfo>;
+  info: UpdateInfo;
+};
+
 export type UpdateEventChannelsMutationResponse = {
   __typename?: 'UpdateEventChannelsMutationResponse';
   eventChannels: Array<EventChannel>;
@@ -21412,12 +21058,6 @@ export type UpdateEventsMutationResponse = {
 export type UpdateFeedsMutationResponse = {
   __typename?: 'UpdateFeedsMutationResponse';
   feeds: Array<Feed>;
-  info: UpdateInfo;
-};
-
-export type UpdateGetSubredditResponsesMutationResponse = {
-  __typename?: 'UpdateGetSubredditResponsesMutationResponse';
-  getSubredditResponses: Array<GetSubredditResponse>;
   info: UpdateInfo;
 };
 
@@ -21480,12 +21120,6 @@ export type UpdateRecurringEventsMutationResponse = {
   recurringEvents: Array<RecurringEvent>;
 };
 
-export type UpdateRedditSubmissionsMutationResponse = {
-  __typename?: 'UpdateRedditSubmissionsMutationResponse';
-  info: UpdateInfo;
-  redditSubmissions: Array<RedditSubmission>;
-};
-
 export type UpdateRepeatEndsMutationResponse = {
   __typename?: 'UpdateRepeatEndsMutationResponse';
   info: UpdateInfo;
@@ -21496,6 +21130,12 @@ export type UpdateRepeatEveriesMutationResponse = {
   __typename?: 'UpdateRepeatEveriesMutationResponse';
   info: UpdateInfo;
   repeatEveries: Array<RepeatEvery>;
+};
+
+export type UpdateSafetyCheckResponsesMutationResponse = {
+  __typename?: 'UpdateSafetyCheckResponsesMutationResponse';
+  info: UpdateInfo;
+  safetyCheckResponses: Array<SafetyCheckResponse>;
 };
 
 export type UpdateServerConfigsMutationResponse = {
@@ -21520,12 +21160,6 @@ export type UpdateSiteWideDiscussionListFormatsMutationResponse = {
   __typename?: 'UpdateSiteWideDiscussionListFormatsMutationResponse';
   info: UpdateInfo;
   siteWideDiscussionListFormats: Array<SiteWideDiscussionListFormat>;
-};
-
-export type UpdateSubredditSidebarsMutationResponse = {
-  __typename?: 'UpdateSubredditSidebarsMutationResponse';
-  info: UpdateInfo;
-  subredditSidebars: Array<SubredditSidebar>;
 };
 
 export type UpdateTagsMutationResponse = {
@@ -26639,11 +26273,11 @@ export type ResolversTypes = {
   CreateDiscussionsMutationResponse: ResolverTypeWrapper<CreateDiscussionsMutationResponse>;
   CreateEmailsMutationResponse: ResolverTypeWrapper<CreateEmailsMutationResponse>;
   CreateEmojisMutationResponse: ResolverTypeWrapper<CreateEmojisMutationResponse>;
+  CreateEnvironmentInfosMutationResponse: ResolverTypeWrapper<CreateEnvironmentInfosMutationResponse>;
   CreateEventChannelsMutationResponse: ResolverTypeWrapper<CreateEventChannelsMutationResponse>;
   CreateEventCommentsFormatsMutationResponse: ResolverTypeWrapper<CreateEventCommentsFormatsMutationResponse>;
   CreateEventsMutationResponse: ResolverTypeWrapper<CreateEventsMutationResponse>;
   CreateFeedsMutationResponse: ResolverTypeWrapper<CreateFeedsMutationResponse>;
-  CreateGetSubredditResponsesMutationResponse: ResolverTypeWrapper<CreateGetSubredditResponsesMutationResponse>;
   CreateImagesMutationResponse: ResolverTypeWrapper<CreateImagesMutationResponse>;
   CreateInfo: ResolverTypeWrapper<CreateInfo>;
   CreateIssuesMutationResponse: ResolverTypeWrapper<CreateIssuesMutationResponse>;
@@ -26653,14 +26287,13 @@ export type ResolversTypes = {
   CreateModerationActionsMutationResponse: ResolverTypeWrapper<CreateModerationActionsMutationResponse>;
   CreateModerationProfilesMutationResponse: ResolverTypeWrapper<CreateModerationProfilesMutationResponse>;
   CreateRecurringEventsMutationResponse: ResolverTypeWrapper<CreateRecurringEventsMutationResponse>;
-  CreateRedditSubmissionsMutationResponse: ResolverTypeWrapper<CreateRedditSubmissionsMutationResponse>;
   CreateRepeatEndsMutationResponse: ResolverTypeWrapper<CreateRepeatEndsMutationResponse>;
   CreateRepeatEveriesMutationResponse: ResolverTypeWrapper<CreateRepeatEveriesMutationResponse>;
+  CreateSafetyCheckResponsesMutationResponse: ResolverTypeWrapper<CreateSafetyCheckResponsesMutationResponse>;
   CreateServerConfigsMutationResponse: ResolverTypeWrapper<CreateServerConfigsMutationResponse>;
   CreateServerRolesMutationResponse: ResolverTypeWrapper<CreateServerRolesMutationResponse>;
   CreateSignedUrlsMutationResponse: ResolverTypeWrapper<CreateSignedUrlsMutationResponse>;
   CreateSiteWideDiscussionListFormatsMutationResponse: ResolverTypeWrapper<CreateSiteWideDiscussionListFormatsMutationResponse>;
-  CreateSubredditSidebarsMutationResponse: ResolverTypeWrapper<CreateSubredditSidebarsMutationResponse>;
   CreateTagsMutationResponse: ResolverTypeWrapper<CreateTagsMutationResponse>;
   CreateUsersMutationResponse: ResolverTypeWrapper<CreateUsersMutationResponse>;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']['output']>;
@@ -26931,6 +26564,15 @@ export type ResolversTypes = {
   EmojiUserPostedByUserNodeAggregateSelection: ResolverTypeWrapper<EmojiUserPostedByUserNodeAggregateSelection>;
   EmojiWhere: EmojiWhere;
   EmojisConnection: ResolverTypeWrapper<EmojisConnection>;
+  EnvironmentInfo: ResolverTypeWrapper<EnvironmentInfo>;
+  EnvironmentInfoAggregateSelection: ResolverTypeWrapper<EnvironmentInfoAggregateSelection>;
+  EnvironmentInfoCreateInput: EnvironmentInfoCreateInput;
+  EnvironmentInfoEdge: ResolverTypeWrapper<EnvironmentInfoEdge>;
+  EnvironmentInfoOptions: EnvironmentInfoOptions;
+  EnvironmentInfoSort: EnvironmentInfoSort;
+  EnvironmentInfoUpdateInput: EnvironmentInfoUpdateInput;
+  EnvironmentInfoWhere: EnvironmentInfoWhere;
+  EnvironmentInfosConnection: ResolverTypeWrapper<EnvironmentInfosConnection>;
   Event: ResolverTypeWrapper<Event>;
   EventAggregateSelection: ResolverTypeWrapper<EventAggregateSelection>;
   EventChannel: ResolverTypeWrapper<EventChannel>;
@@ -27176,15 +26818,6 @@ export type ResolversTypes = {
   FeedsConnection: ResolverTypeWrapper<FeedsConnection>;
   Float: ResolverTypeWrapper<Scalars['Float']['output']>;
   FloatAggregateSelectionNullable: ResolverTypeWrapper<FloatAggregateSelectionNullable>;
-  GetSubredditResponse: ResolverTypeWrapper<GetSubredditResponse>;
-  GetSubredditResponseAggregateSelection: ResolverTypeWrapper<GetSubredditResponseAggregateSelection>;
-  GetSubredditResponseCreateInput: GetSubredditResponseCreateInput;
-  GetSubredditResponseEdge: ResolverTypeWrapper<GetSubredditResponseEdge>;
-  GetSubredditResponseOptions: GetSubredditResponseOptions;
-  GetSubredditResponseSort: GetSubredditResponseSort;
-  GetSubredditResponseUpdateInput: GetSubredditResponseUpdateInput;
-  GetSubredditResponseWhere: GetSubredditResponseWhere;
-  GetSubredditResponsesConnection: ResolverTypeWrapper<GetSubredditResponsesConnection>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   IDAggregateSelectionNonNullable: ResolverTypeWrapper<IdAggregateSelectionNonNullable>;
   IDAggregateSelectionNullable: ResolverTypeWrapper<IdAggregateSelectionNullable>;
@@ -27532,16 +27165,6 @@ export type ResolversTypes = {
   RecurringEventUpdateInput: RecurringEventUpdateInput;
   RecurringEventWhere: RecurringEventWhere;
   RecurringEventsConnection: ResolverTypeWrapper<RecurringEventsConnection>;
-  RedditPostOptions: RedditPostOptions;
-  RedditSubmission: ResolverTypeWrapper<RedditSubmission>;
-  RedditSubmissionAggregateSelection: ResolverTypeWrapper<RedditSubmissionAggregateSelection>;
-  RedditSubmissionCreateInput: RedditSubmissionCreateInput;
-  RedditSubmissionEdge: ResolverTypeWrapper<RedditSubmissionEdge>;
-  RedditSubmissionOptions: RedditSubmissionOptions;
-  RedditSubmissionSort: RedditSubmissionSort;
-  RedditSubmissionUpdateInput: RedditSubmissionUpdateInput;
-  RedditSubmissionWhere: RedditSubmissionWhere;
-  RedditSubmissionsConnection: ResolverTypeWrapper<RedditSubmissionsConnection>;
   RepeatEnds: ResolverTypeWrapper<RepeatEnds>;
   RepeatEndsAggregateSelection: ResolverTypeWrapper<RepeatEndsAggregateSelection>;
   RepeatEndsConnection: ResolverTypeWrapper<RepeatEndsConnection>;
@@ -27561,6 +27184,14 @@ export type ResolversTypes = {
   RepeatEveryUpdateInput: RepeatEveryUpdateInput;
   RepeatEveryWhere: RepeatEveryWhere;
   RepeatUnit: RepeatUnit;
+  SafetyCheckResponse: ResolverTypeWrapper<SafetyCheckResponse>;
+  SafetyCheckResponseAggregateSelection: ResolverTypeWrapper<SafetyCheckResponseAggregateSelection>;
+  SafetyCheckResponseCreateInput: SafetyCheckResponseCreateInput;
+  SafetyCheckResponseEdge: ResolverTypeWrapper<SafetyCheckResponseEdge>;
+  SafetyCheckResponseOptions: SafetyCheckResponseOptions;
+  SafetyCheckResponseUpdateInput: SafetyCheckResponseUpdateInput;
+  SafetyCheckResponseWhere: SafetyCheckResponseWhere;
+  SafetyCheckResponsesConnection: ResolverTypeWrapper<SafetyCheckResponsesConnection>;
   ServerConfig: ResolverTypeWrapper<ServerConfig>;
   ServerConfigAggregateSelection: ResolverTypeWrapper<ServerConfigAggregateSelection>;
   ServerConfigChannelRoleDefaultChannelRoleAggregationSelection: ResolverTypeWrapper<ServerConfigChannelRoleDefaultChannelRoleAggregationSelection>;
@@ -27679,15 +27310,6 @@ export type ResolversTypes = {
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   StringAggregateSelectionNonNullable: ResolverTypeWrapper<StringAggregateSelectionNonNullable>;
   StringAggregateSelectionNullable: ResolverTypeWrapper<StringAggregateSelectionNullable>;
-  SubredditSidebar: ResolverTypeWrapper<SubredditSidebar>;
-  SubredditSidebarAggregateSelection: ResolverTypeWrapper<SubredditSidebarAggregateSelection>;
-  SubredditSidebarCreateInput: SubredditSidebarCreateInput;
-  SubredditSidebarEdge: ResolverTypeWrapper<SubredditSidebarEdge>;
-  SubredditSidebarOptions: SubredditSidebarOptions;
-  SubredditSidebarSort: SubredditSidebarSort;
-  SubredditSidebarUpdateInput: SubredditSidebarUpdateInput;
-  SubredditSidebarWhere: SubredditSidebarWhere;
-  SubredditSidebarsConnection: ResolverTypeWrapper<SubredditSidebarsConnection>;
   Tag: ResolverTypeWrapper<Tag>;
   TagAggregateSelection: ResolverTypeWrapper<TagAggregateSelection>;
   TagChannelChannelsAggregationSelection: ResolverTypeWrapper<TagChannelChannelsAggregationSelection>;
@@ -27795,11 +27417,11 @@ export type ResolversTypes = {
   UpdateDiscussionsMutationResponse: ResolverTypeWrapper<UpdateDiscussionsMutationResponse>;
   UpdateEmailsMutationResponse: ResolverTypeWrapper<UpdateEmailsMutationResponse>;
   UpdateEmojisMutationResponse: ResolverTypeWrapper<UpdateEmojisMutationResponse>;
+  UpdateEnvironmentInfosMutationResponse: ResolverTypeWrapper<UpdateEnvironmentInfosMutationResponse>;
   UpdateEventChannelsMutationResponse: ResolverTypeWrapper<UpdateEventChannelsMutationResponse>;
   UpdateEventCommentsFormatsMutationResponse: ResolverTypeWrapper<UpdateEventCommentsFormatsMutationResponse>;
   UpdateEventsMutationResponse: ResolverTypeWrapper<UpdateEventsMutationResponse>;
   UpdateFeedsMutationResponse: ResolverTypeWrapper<UpdateFeedsMutationResponse>;
-  UpdateGetSubredditResponsesMutationResponse: ResolverTypeWrapper<UpdateGetSubredditResponsesMutationResponse>;
   UpdateImagesMutationResponse: ResolverTypeWrapper<UpdateImagesMutationResponse>;
   UpdateInfo: ResolverTypeWrapper<UpdateInfo>;
   UpdateIssuesMutationResponse: ResolverTypeWrapper<UpdateIssuesMutationResponse>;
@@ -27809,14 +27431,13 @@ export type ResolversTypes = {
   UpdateModerationActionsMutationResponse: ResolverTypeWrapper<UpdateModerationActionsMutationResponse>;
   UpdateModerationProfilesMutationResponse: ResolverTypeWrapper<UpdateModerationProfilesMutationResponse>;
   UpdateRecurringEventsMutationResponse: ResolverTypeWrapper<UpdateRecurringEventsMutationResponse>;
-  UpdateRedditSubmissionsMutationResponse: ResolverTypeWrapper<UpdateRedditSubmissionsMutationResponse>;
   UpdateRepeatEndsMutationResponse: ResolverTypeWrapper<UpdateRepeatEndsMutationResponse>;
   UpdateRepeatEveriesMutationResponse: ResolverTypeWrapper<UpdateRepeatEveriesMutationResponse>;
+  UpdateSafetyCheckResponsesMutationResponse: ResolverTypeWrapper<UpdateSafetyCheckResponsesMutationResponse>;
   UpdateServerConfigsMutationResponse: ResolverTypeWrapper<UpdateServerConfigsMutationResponse>;
   UpdateServerRolesMutationResponse: ResolverTypeWrapper<UpdateServerRolesMutationResponse>;
   UpdateSignedUrlsMutationResponse: ResolverTypeWrapper<UpdateSignedUrlsMutationResponse>;
   UpdateSiteWideDiscussionListFormatsMutationResponse: ResolverTypeWrapper<UpdateSiteWideDiscussionListFormatsMutationResponse>;
-  UpdateSubredditSidebarsMutationResponse: ResolverTypeWrapper<UpdateSubredditSidebarsMutationResponse>;
   UpdateTagsMutationResponse: ResolverTypeWrapper<UpdateTagsMutationResponse>;
   UpdateUsersMutationResponse: ResolverTypeWrapper<UpdateUsersMutationResponse>;
   User: ResolverTypeWrapper<User>;
@@ -28659,11 +28280,11 @@ export type ResolversParentTypes = {
   CreateDiscussionsMutationResponse: CreateDiscussionsMutationResponse;
   CreateEmailsMutationResponse: CreateEmailsMutationResponse;
   CreateEmojisMutationResponse: CreateEmojisMutationResponse;
+  CreateEnvironmentInfosMutationResponse: CreateEnvironmentInfosMutationResponse;
   CreateEventChannelsMutationResponse: CreateEventChannelsMutationResponse;
   CreateEventCommentsFormatsMutationResponse: CreateEventCommentsFormatsMutationResponse;
   CreateEventsMutationResponse: CreateEventsMutationResponse;
   CreateFeedsMutationResponse: CreateFeedsMutationResponse;
-  CreateGetSubredditResponsesMutationResponse: CreateGetSubredditResponsesMutationResponse;
   CreateImagesMutationResponse: CreateImagesMutationResponse;
   CreateInfo: CreateInfo;
   CreateIssuesMutationResponse: CreateIssuesMutationResponse;
@@ -28673,14 +28294,13 @@ export type ResolversParentTypes = {
   CreateModerationActionsMutationResponse: CreateModerationActionsMutationResponse;
   CreateModerationProfilesMutationResponse: CreateModerationProfilesMutationResponse;
   CreateRecurringEventsMutationResponse: CreateRecurringEventsMutationResponse;
-  CreateRedditSubmissionsMutationResponse: CreateRedditSubmissionsMutationResponse;
   CreateRepeatEndsMutationResponse: CreateRepeatEndsMutationResponse;
   CreateRepeatEveriesMutationResponse: CreateRepeatEveriesMutationResponse;
+  CreateSafetyCheckResponsesMutationResponse: CreateSafetyCheckResponsesMutationResponse;
   CreateServerConfigsMutationResponse: CreateServerConfigsMutationResponse;
   CreateServerRolesMutationResponse: CreateServerRolesMutationResponse;
   CreateSignedUrlsMutationResponse: CreateSignedUrlsMutationResponse;
   CreateSiteWideDiscussionListFormatsMutationResponse: CreateSiteWideDiscussionListFormatsMutationResponse;
-  CreateSubredditSidebarsMutationResponse: CreateSubredditSidebarsMutationResponse;
   CreateTagsMutationResponse: CreateTagsMutationResponse;
   CreateUsersMutationResponse: CreateUsersMutationResponse;
   DateTime: Scalars['DateTime']['output'];
@@ -28951,6 +28571,15 @@ export type ResolversParentTypes = {
   EmojiUserPostedByUserNodeAggregateSelection: EmojiUserPostedByUserNodeAggregateSelection;
   EmojiWhere: EmojiWhere;
   EmojisConnection: EmojisConnection;
+  EnvironmentInfo: EnvironmentInfo;
+  EnvironmentInfoAggregateSelection: EnvironmentInfoAggregateSelection;
+  EnvironmentInfoCreateInput: EnvironmentInfoCreateInput;
+  EnvironmentInfoEdge: EnvironmentInfoEdge;
+  EnvironmentInfoOptions: EnvironmentInfoOptions;
+  EnvironmentInfoSort: EnvironmentInfoSort;
+  EnvironmentInfoUpdateInput: EnvironmentInfoUpdateInput;
+  EnvironmentInfoWhere: EnvironmentInfoWhere;
+  EnvironmentInfosConnection: EnvironmentInfosConnection;
   Event: Event;
   EventAggregateSelection: EventAggregateSelection;
   EventChannel: EventChannel;
@@ -29196,15 +28825,6 @@ export type ResolversParentTypes = {
   FeedsConnection: FeedsConnection;
   Float: Scalars['Float']['output'];
   FloatAggregateSelectionNullable: FloatAggregateSelectionNullable;
-  GetSubredditResponse: GetSubredditResponse;
-  GetSubredditResponseAggregateSelection: GetSubredditResponseAggregateSelection;
-  GetSubredditResponseCreateInput: GetSubredditResponseCreateInput;
-  GetSubredditResponseEdge: GetSubredditResponseEdge;
-  GetSubredditResponseOptions: GetSubredditResponseOptions;
-  GetSubredditResponseSort: GetSubredditResponseSort;
-  GetSubredditResponseUpdateInput: GetSubredditResponseUpdateInput;
-  GetSubredditResponseWhere: GetSubredditResponseWhere;
-  GetSubredditResponsesConnection: GetSubredditResponsesConnection;
   ID: Scalars['ID']['output'];
   IDAggregateSelectionNonNullable: IdAggregateSelectionNonNullable;
   IDAggregateSelectionNullable: IdAggregateSelectionNullable;
@@ -29552,16 +29172,6 @@ export type ResolversParentTypes = {
   RecurringEventUpdateInput: RecurringEventUpdateInput;
   RecurringEventWhere: RecurringEventWhere;
   RecurringEventsConnection: RecurringEventsConnection;
-  RedditPostOptions: RedditPostOptions;
-  RedditSubmission: RedditSubmission;
-  RedditSubmissionAggregateSelection: RedditSubmissionAggregateSelection;
-  RedditSubmissionCreateInput: RedditSubmissionCreateInput;
-  RedditSubmissionEdge: RedditSubmissionEdge;
-  RedditSubmissionOptions: RedditSubmissionOptions;
-  RedditSubmissionSort: RedditSubmissionSort;
-  RedditSubmissionUpdateInput: RedditSubmissionUpdateInput;
-  RedditSubmissionWhere: RedditSubmissionWhere;
-  RedditSubmissionsConnection: RedditSubmissionsConnection;
   RepeatEnds: RepeatEnds;
   RepeatEndsAggregateSelection: RepeatEndsAggregateSelection;
   RepeatEndsConnection: RepeatEndsConnection;
@@ -29580,6 +29190,14 @@ export type ResolversParentTypes = {
   RepeatEverySort: RepeatEverySort;
   RepeatEveryUpdateInput: RepeatEveryUpdateInput;
   RepeatEveryWhere: RepeatEveryWhere;
+  SafetyCheckResponse: SafetyCheckResponse;
+  SafetyCheckResponseAggregateSelection: SafetyCheckResponseAggregateSelection;
+  SafetyCheckResponseCreateInput: SafetyCheckResponseCreateInput;
+  SafetyCheckResponseEdge: SafetyCheckResponseEdge;
+  SafetyCheckResponseOptions: SafetyCheckResponseOptions;
+  SafetyCheckResponseUpdateInput: SafetyCheckResponseUpdateInput;
+  SafetyCheckResponseWhere: SafetyCheckResponseWhere;
+  SafetyCheckResponsesConnection: SafetyCheckResponsesConnection;
   ServerConfig: ServerConfig;
   ServerConfigAggregateSelection: ServerConfigAggregateSelection;
   ServerConfigChannelRoleDefaultChannelRoleAggregationSelection: ServerConfigChannelRoleDefaultChannelRoleAggregationSelection;
@@ -29696,15 +29314,6 @@ export type ResolversParentTypes = {
   String: Scalars['String']['output'];
   StringAggregateSelectionNonNullable: StringAggregateSelectionNonNullable;
   StringAggregateSelectionNullable: StringAggregateSelectionNullable;
-  SubredditSidebar: SubredditSidebar;
-  SubredditSidebarAggregateSelection: SubredditSidebarAggregateSelection;
-  SubredditSidebarCreateInput: SubredditSidebarCreateInput;
-  SubredditSidebarEdge: SubredditSidebarEdge;
-  SubredditSidebarOptions: SubredditSidebarOptions;
-  SubredditSidebarSort: SubredditSidebarSort;
-  SubredditSidebarUpdateInput: SubredditSidebarUpdateInput;
-  SubredditSidebarWhere: SubredditSidebarWhere;
-  SubredditSidebarsConnection: SubredditSidebarsConnection;
   Tag: Tag;
   TagAggregateSelection: TagAggregateSelection;
   TagChannelChannelsAggregationSelection: TagChannelChannelsAggregationSelection;
@@ -29811,11 +29420,11 @@ export type ResolversParentTypes = {
   UpdateDiscussionsMutationResponse: UpdateDiscussionsMutationResponse;
   UpdateEmailsMutationResponse: UpdateEmailsMutationResponse;
   UpdateEmojisMutationResponse: UpdateEmojisMutationResponse;
+  UpdateEnvironmentInfosMutationResponse: UpdateEnvironmentInfosMutationResponse;
   UpdateEventChannelsMutationResponse: UpdateEventChannelsMutationResponse;
   UpdateEventCommentsFormatsMutationResponse: UpdateEventCommentsFormatsMutationResponse;
   UpdateEventsMutationResponse: UpdateEventsMutationResponse;
   UpdateFeedsMutationResponse: UpdateFeedsMutationResponse;
-  UpdateGetSubredditResponsesMutationResponse: UpdateGetSubredditResponsesMutationResponse;
   UpdateImagesMutationResponse: UpdateImagesMutationResponse;
   UpdateInfo: UpdateInfo;
   UpdateIssuesMutationResponse: UpdateIssuesMutationResponse;
@@ -29825,14 +29434,13 @@ export type ResolversParentTypes = {
   UpdateModerationActionsMutationResponse: UpdateModerationActionsMutationResponse;
   UpdateModerationProfilesMutationResponse: UpdateModerationProfilesMutationResponse;
   UpdateRecurringEventsMutationResponse: UpdateRecurringEventsMutationResponse;
-  UpdateRedditSubmissionsMutationResponse: UpdateRedditSubmissionsMutationResponse;
   UpdateRepeatEndsMutationResponse: UpdateRepeatEndsMutationResponse;
   UpdateRepeatEveriesMutationResponse: UpdateRepeatEveriesMutationResponse;
+  UpdateSafetyCheckResponsesMutationResponse: UpdateSafetyCheckResponsesMutationResponse;
   UpdateServerConfigsMutationResponse: UpdateServerConfigsMutationResponse;
   UpdateServerRolesMutationResponse: UpdateServerRolesMutationResponse;
   UpdateSignedUrlsMutationResponse: UpdateSignedUrlsMutationResponse;
   UpdateSiteWideDiscussionListFormatsMutationResponse: UpdateSiteWideDiscussionListFormatsMutationResponse;
-  UpdateSubredditSidebarsMutationResponse: UpdateSubredditSidebarsMutationResponse;
   UpdateTagsMutationResponse: UpdateTagsMutationResponse;
   UpdateUsersMutationResponse: UpdateUsersMutationResponse;
   User: User;
@@ -31222,6 +30830,12 @@ export type CreateEmojisMutationResponseResolvers<ContextType = any, ParentType 
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type CreateEnvironmentInfosMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateEnvironmentInfosMutationResponse'] = ResolversParentTypes['CreateEnvironmentInfosMutationResponse']> = {
+  environmentInfos?: Resolver<Array<ResolversTypes['EnvironmentInfo']>, ParentType, ContextType>;
+  info?: Resolver<ResolversTypes['CreateInfo'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type CreateEventChannelsMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateEventChannelsMutationResponse'] = ResolversParentTypes['CreateEventChannelsMutationResponse']> = {
   eventChannels?: Resolver<Array<ResolversTypes['EventChannel']>, ParentType, ContextType>;
   info?: Resolver<ResolversTypes['CreateInfo'], ParentType, ContextType>;
@@ -31242,12 +30856,6 @@ export type CreateEventsMutationResponseResolvers<ContextType = any, ParentType 
 
 export type CreateFeedsMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateFeedsMutationResponse'] = ResolversParentTypes['CreateFeedsMutationResponse']> = {
   feeds?: Resolver<Array<ResolversTypes['Feed']>, ParentType, ContextType>;
-  info?: Resolver<ResolversTypes['CreateInfo'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type CreateGetSubredditResponsesMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateGetSubredditResponsesMutationResponse'] = ResolversParentTypes['CreateGetSubredditResponsesMutationResponse']> = {
-  getSubredditResponses?: Resolver<Array<ResolversTypes['GetSubredditResponse']>, ParentType, ContextType>;
   info?: Resolver<ResolversTypes['CreateInfo'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -31307,12 +30915,6 @@ export type CreateRecurringEventsMutationResponseResolvers<ContextType = any, Pa
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type CreateRedditSubmissionsMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateRedditSubmissionsMutationResponse'] = ResolversParentTypes['CreateRedditSubmissionsMutationResponse']> = {
-  info?: Resolver<ResolversTypes['CreateInfo'], ParentType, ContextType>;
-  redditSubmissions?: Resolver<Array<ResolversTypes['RedditSubmission']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
 export type CreateRepeatEndsMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateRepeatEndsMutationResponse'] = ResolversParentTypes['CreateRepeatEndsMutationResponse']> = {
   info?: Resolver<ResolversTypes['CreateInfo'], ParentType, ContextType>;
   repeatEnds?: Resolver<Array<ResolversTypes['RepeatEnds']>, ParentType, ContextType>;
@@ -31322,6 +30924,12 @@ export type CreateRepeatEndsMutationResponseResolvers<ContextType = any, ParentT
 export type CreateRepeatEveriesMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateRepeatEveriesMutationResponse'] = ResolversParentTypes['CreateRepeatEveriesMutationResponse']> = {
   info?: Resolver<ResolversTypes['CreateInfo'], ParentType, ContextType>;
   repeatEveries?: Resolver<Array<ResolversTypes['RepeatEvery']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CreateSafetyCheckResponsesMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateSafetyCheckResponsesMutationResponse'] = ResolversParentTypes['CreateSafetyCheckResponsesMutationResponse']> = {
+  info?: Resolver<ResolversTypes['CreateInfo'], ParentType, ContextType>;
+  safetyCheckResponses?: Resolver<Array<ResolversTypes['SafetyCheckResponse']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -31346,12 +30954,6 @@ export type CreateSignedUrlsMutationResponseResolvers<ContextType = any, ParentT
 export type CreateSiteWideDiscussionListFormatsMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateSiteWideDiscussionListFormatsMutationResponse'] = ResolversParentTypes['CreateSiteWideDiscussionListFormatsMutationResponse']> = {
   info?: Resolver<ResolversTypes['CreateInfo'], ParentType, ContextType>;
   siteWideDiscussionListFormats?: Resolver<Array<ResolversTypes['SiteWideDiscussionListFormat']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type CreateSubredditSidebarsMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateSubredditSidebarsMutationResponse'] = ResolversParentTypes['CreateSubredditSidebarsMutationResponse']> = {
-  info?: Resolver<ResolversTypes['CreateInfo'], ParentType, ContextType>;
-  subredditSidebars?: Resolver<Array<ResolversTypes['SubredditSidebar']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -31932,6 +31534,31 @@ export type EmojisConnectionResolvers<ContextType = any, ParentType extends Reso
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type EnvironmentInfoResolvers<ContextType = any, ParentType extends ResolversParentTypes['EnvironmentInfo'] = ResolversParentTypes['EnvironmentInfo']> = {
+  currentDatabase?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  isTestEnvironment?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type EnvironmentInfoAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['EnvironmentInfoAggregateSelection'] = ResolversParentTypes['EnvironmentInfoAggregateSelection']> = {
+  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  currentDatabase?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type EnvironmentInfoEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['EnvironmentInfoEdge'] = ResolversParentTypes['EnvironmentInfoEdge']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['EnvironmentInfo'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type EnvironmentInfosConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['EnvironmentInfosConnection'] = ResolversParentTypes['EnvironmentInfosConnection']> = {
+  edges?: Resolver<Array<ResolversTypes['EnvironmentInfoEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type EventResolvers<ContextType = any, ParentType extends ResolversParentTypes['Event'] = ResolversParentTypes['Event']> = {
   Comments?: Resolver<Array<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<EventCommentsArgs, 'directed'>>;
   CommentsAggregate?: Resolver<Maybe<ResolversTypes['EventCommentCommentsAggregationSelection']>, ParentType, ContextType, RequireFields<EventCommentsAggregateArgs, 'directed'>>;
@@ -32470,31 +32097,6 @@ export type FloatAggregateSelectionNullableResolvers<ContextType = any, ParentTy
   max?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
   min?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
   sum?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type GetSubredditResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['GetSubredditResponse'] = ResolversParentTypes['GetSubredditResponse']> = {
-  after?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  posts?: Resolver<Maybe<Array<Maybe<ResolversTypes['RedditSubmission']>>>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type GetSubredditResponseAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['GetSubredditResponseAggregateSelection'] = ResolversParentTypes['GetSubredditResponseAggregateSelection']> = {
-  after?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
-  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type GetSubredditResponseEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['GetSubredditResponseEdge'] = ResolversParentTypes['GetSubredditResponseEdge']> = {
-  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  node?: Resolver<ResolversTypes['GetSubredditResponse'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type GetSubredditResponsesConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['GetSubredditResponsesConnection'] = ResolversParentTypes['GetSubredditResponsesConnection']> = {
-  edges?: Resolver<Array<ResolversTypes['GetSubredditResponseEdge']>, ParentType, ContextType>;
-  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
-  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -33129,12 +32731,12 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createEmailAndUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationCreateEmailAndUserArgs, 'emailAddress' | 'username'>>;
   createEmails?: Resolver<ResolversTypes['CreateEmailsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateEmailsArgs, 'input'>>;
   createEmojis?: Resolver<ResolversTypes['CreateEmojisMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateEmojisArgs, 'input'>>;
+  createEnvironmentInfos?: Resolver<ResolversTypes['CreateEnvironmentInfosMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateEnvironmentInfosArgs, 'input'>>;
   createEventChannels?: Resolver<ResolversTypes['CreateEventChannelsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateEventChannelsArgs, 'input'>>;
   createEventCommentsFormats?: Resolver<ResolversTypes['CreateEventCommentsFormatsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateEventCommentsFormatsArgs, 'input'>>;
   createEventWithChannelConnections?: Resolver<Maybe<ResolversTypes['Event']>, ParentType, ContextType, Partial<MutationCreateEventWithChannelConnectionsArgs>>;
   createEvents?: Resolver<ResolversTypes['CreateEventsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateEventsArgs, 'input'>>;
   createFeeds?: Resolver<ResolversTypes['CreateFeedsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateFeedsArgs, 'input'>>;
-  createGetSubredditResponses?: Resolver<ResolversTypes['CreateGetSubredditResponsesMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateGetSubredditResponsesArgs, 'input'>>;
   createImages?: Resolver<ResolversTypes['CreateImagesMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateImagesArgs, 'input'>>;
   createIssues?: Resolver<ResolversTypes['CreateIssuesMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateIssuesArgs, 'input'>>;
   createLinkFlairs?: Resolver<ResolversTypes['CreateLinkFlairsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateLinkFlairsArgs, 'input'>>;
@@ -33143,15 +32745,14 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createModerationActions?: Resolver<ResolversTypes['CreateModerationActionsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateModerationActionsArgs, 'input'>>;
   createModerationProfiles?: Resolver<ResolversTypes['CreateModerationProfilesMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateModerationProfilesArgs, 'input'>>;
   createRecurringEvents?: Resolver<ResolversTypes['CreateRecurringEventsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateRecurringEventsArgs, 'input'>>;
-  createRedditSubmissions?: Resolver<ResolversTypes['CreateRedditSubmissionsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateRedditSubmissionsArgs, 'input'>>;
   createRepeatEnds?: Resolver<ResolversTypes['CreateRepeatEndsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateRepeatEndsArgs, 'input'>>;
   createRepeatEveries?: Resolver<ResolversTypes['CreateRepeatEveriesMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateRepeatEveriesArgs, 'input'>>;
+  createSafetyCheckResponses?: Resolver<ResolversTypes['CreateSafetyCheckResponsesMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateSafetyCheckResponsesArgs, 'input'>>;
   createServerConfigs?: Resolver<ResolversTypes['CreateServerConfigsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateServerConfigsArgs, 'input'>>;
   createServerRoles?: Resolver<ResolversTypes['CreateServerRolesMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateServerRolesArgs, 'input'>>;
   createSignedStorageURL?: Resolver<Maybe<ResolversTypes['SignedURL']>, ParentType, ContextType, RequireFields<MutationCreateSignedStorageUrlArgs, 'contentType' | 'filename'>>;
   createSignedUrls?: Resolver<ResolversTypes['CreateSignedUrlsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateSignedUrlsArgs, 'input'>>;
   createSiteWideDiscussionListFormats?: Resolver<ResolversTypes['CreateSiteWideDiscussionListFormatsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateSiteWideDiscussionListFormatsArgs, 'input'>>;
-  createSubredditSidebars?: Resolver<ResolversTypes['CreateSubredditSidebarsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateSubredditSidebarsArgs, 'input'>>;
   createTags?: Resolver<ResolversTypes['CreateTagsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateTagsArgs, 'input'>>;
   createUsers?: Resolver<ResolversTypes['CreateUsersMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateUsersArgs, 'input'>>;
   deleteAlbums?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteAlbumsArgs>>;
@@ -33165,11 +32766,11 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteDiscussions?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteDiscussionsArgs>>;
   deleteEmails?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteEmailsArgs>>;
   deleteEmojis?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteEmojisArgs>>;
+  deleteEnvironmentInfos?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteEnvironmentInfosArgs>>;
   deleteEventChannels?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteEventChannelsArgs>>;
   deleteEventCommentsFormats?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteEventCommentsFormatsArgs>>;
   deleteEvents?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteEventsArgs>>;
   deleteFeeds?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteFeedsArgs>>;
-  deleteGetSubredditResponses?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteGetSubredditResponsesArgs>>;
   deleteImages?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteImagesArgs>>;
   deleteIssues?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteIssuesArgs>>;
   deleteLinkFlairs?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteLinkFlairsArgs>>;
@@ -33178,14 +32779,13 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteModerationActions?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteModerationActionsArgs>>;
   deleteModerationProfiles?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteModerationProfilesArgs>>;
   deleteRecurringEvents?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteRecurringEventsArgs>>;
-  deleteRedditSubmissions?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteRedditSubmissionsArgs>>;
   deleteRepeatEnds?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteRepeatEndsArgs>>;
   deleteRepeatEveries?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteRepeatEveriesArgs>>;
+  deleteSafetyCheckResponses?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteSafetyCheckResponsesArgs>>;
   deleteServerConfigs?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteServerConfigsArgs>>;
   deleteServerRoles?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteServerRolesArgs>>;
   deleteSignedUrls?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteSignedUrlsArgs>>;
   deleteSiteWideDiscussionListFormats?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteSiteWideDiscussionListFormatsArgs>>;
-  deleteSubredditSidebars?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteSubredditSidebarsArgs>>;
   deleteTags?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteTagsArgs>>;
   deleteUsers?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteUsersArgs>>;
   removeEmojiFromComment?: Resolver<Maybe<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<MutationRemoveEmojiFromCommentArgs, 'commentId' | 'emojiLabel' | 'username'>>;
@@ -33204,12 +32804,12 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   updateDiscussions?: Resolver<ResolversTypes['UpdateDiscussionsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateDiscussionsArgs>>;
   updateEmails?: Resolver<ResolversTypes['UpdateEmailsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateEmailsArgs>>;
   updateEmojis?: Resolver<ResolversTypes['UpdateEmojisMutationResponse'], ParentType, ContextType, Partial<MutationUpdateEmojisArgs>>;
+  updateEnvironmentInfos?: Resolver<ResolversTypes['UpdateEnvironmentInfosMutationResponse'], ParentType, ContextType, Partial<MutationUpdateEnvironmentInfosArgs>>;
   updateEventChannels?: Resolver<ResolversTypes['UpdateEventChannelsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateEventChannelsArgs>>;
   updateEventCommentsFormats?: Resolver<ResolversTypes['UpdateEventCommentsFormatsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateEventCommentsFormatsArgs>>;
   updateEventWithChannelConnections?: Resolver<Maybe<ResolversTypes['Event']>, ParentType, ContextType, RequireFields<MutationUpdateEventWithChannelConnectionsArgs, 'eventUpdateInput' | 'where'>>;
   updateEvents?: Resolver<ResolversTypes['UpdateEventsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateEventsArgs>>;
   updateFeeds?: Resolver<ResolversTypes['UpdateFeedsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateFeedsArgs>>;
-  updateGetSubredditResponses?: Resolver<ResolversTypes['UpdateGetSubredditResponsesMutationResponse'], ParentType, ContextType, Partial<MutationUpdateGetSubredditResponsesArgs>>;
   updateImages?: Resolver<ResolversTypes['UpdateImagesMutationResponse'], ParentType, ContextType, Partial<MutationUpdateImagesArgs>>;
   updateIssues?: Resolver<ResolversTypes['UpdateIssuesMutationResponse'], ParentType, ContextType, Partial<MutationUpdateIssuesArgs>>;
   updateLinkFlairs?: Resolver<ResolversTypes['UpdateLinkFlairsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateLinkFlairsArgs>>;
@@ -33218,14 +32818,13 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   updateModerationActions?: Resolver<ResolversTypes['UpdateModerationActionsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateModerationActionsArgs>>;
   updateModerationProfiles?: Resolver<ResolversTypes['UpdateModerationProfilesMutationResponse'], ParentType, ContextType, Partial<MutationUpdateModerationProfilesArgs>>;
   updateRecurringEvents?: Resolver<ResolversTypes['UpdateRecurringEventsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateRecurringEventsArgs>>;
-  updateRedditSubmissions?: Resolver<ResolversTypes['UpdateRedditSubmissionsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateRedditSubmissionsArgs>>;
   updateRepeatEnds?: Resolver<ResolversTypes['UpdateRepeatEndsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateRepeatEndsArgs>>;
   updateRepeatEveries?: Resolver<ResolversTypes['UpdateRepeatEveriesMutationResponse'], ParentType, ContextType, Partial<MutationUpdateRepeatEveriesArgs>>;
+  updateSafetyCheckResponses?: Resolver<ResolversTypes['UpdateSafetyCheckResponsesMutationResponse'], ParentType, ContextType, Partial<MutationUpdateSafetyCheckResponsesArgs>>;
   updateServerConfigs?: Resolver<ResolversTypes['UpdateServerConfigsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateServerConfigsArgs>>;
   updateServerRoles?: Resolver<ResolversTypes['UpdateServerRolesMutationResponse'], ParentType, ContextType, Partial<MutationUpdateServerRolesArgs>>;
   updateSignedUrls?: Resolver<ResolversTypes['UpdateSignedUrlsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateSignedUrlsArgs>>;
   updateSiteWideDiscussionListFormats?: Resolver<ResolversTypes['UpdateSiteWideDiscussionListFormatsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateSiteWideDiscussionListFormatsArgs>>;
-  updateSubredditSidebars?: Resolver<ResolversTypes['UpdateSubredditSidebarsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateSubredditSidebarsArgs>>;
   updateTags?: Resolver<ResolversTypes['UpdateTagsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateTagsArgs>>;
   updateUsers?: Resolver<ResolversTypes['UpdateUsersMutationResponse'], ParentType, ContextType, Partial<MutationUpdateUsersArgs>>;
   upvoteComment?: Resolver<Maybe<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<MutationUpvoteCommentArgs, 'commentId' | 'username'>>;
@@ -33283,6 +32882,9 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   emojis?: Resolver<Array<ResolversTypes['Emoji']>, ParentType, ContextType, Partial<QueryEmojisArgs>>;
   emojisAggregate?: Resolver<ResolversTypes['EmojiAggregateSelection'], ParentType, ContextType, Partial<QueryEmojisAggregateArgs>>;
   emojisConnection?: Resolver<ResolversTypes['EmojisConnection'], ParentType, ContextType, Partial<QueryEmojisConnectionArgs>>;
+  environmentInfos?: Resolver<Array<ResolversTypes['EnvironmentInfo']>, ParentType, ContextType, Partial<QueryEnvironmentInfosArgs>>;
+  environmentInfosAggregate?: Resolver<ResolversTypes['EnvironmentInfoAggregateSelection'], ParentType, ContextType, Partial<QueryEnvironmentInfosAggregateArgs>>;
+  environmentInfosConnection?: Resolver<ResolversTypes['EnvironmentInfosConnection'], ParentType, ContextType, Partial<QueryEnvironmentInfosConnectionArgs>>;
   eventChannels?: Resolver<Array<ResolversTypes['EventChannel']>, ParentType, ContextType, Partial<QueryEventChannelsArgs>>;
   eventChannelsAggregate?: Resolver<ResolversTypes['EventChannelAggregateSelection'], ParentType, ContextType, Partial<QueryEventChannelsAggregateArgs>>;
   eventChannelsConnection?: Resolver<ResolversTypes['EventChannelsConnection'], ParentType, ContextType, Partial<QueryEventChannelsConnectionArgs>>;
@@ -33300,11 +32902,6 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   getDiscussionsInChannel?: Resolver<Maybe<ResolversTypes['DiscussionChannelListFormat']>, ParentType, ContextType, RequireFields<QueryGetDiscussionsInChannelArgs, 'channelUniqueName'>>;
   getEventComments?: Resolver<Maybe<ResolversTypes['EventCommentsFormat']>, ParentType, ContextType, RequireFields<QueryGetEventCommentsArgs, 'eventId'>>;
   getSiteWideDiscussionList?: Resolver<Maybe<ResolversTypes['SiteWideDiscussionListFormat']>, ParentType, ContextType, Partial<QueryGetSiteWideDiscussionListArgs>>;
-  getSubreddit?: Resolver<Maybe<ResolversTypes['GetSubredditResponse']>, ParentType, ContextType, RequireFields<QueryGetSubredditArgs, 'subredditName'>>;
-  getSubredditResponses?: Resolver<Array<ResolversTypes['GetSubredditResponse']>, ParentType, ContextType, Partial<QueryGetSubredditResponsesArgs>>;
-  getSubredditResponsesAggregate?: Resolver<ResolversTypes['GetSubredditResponseAggregateSelection'], ParentType, ContextType, Partial<QueryGetSubredditResponsesAggregateArgs>>;
-  getSubredditResponsesConnection?: Resolver<ResolversTypes['GetSubredditResponsesConnection'], ParentType, ContextType, Partial<QueryGetSubredditResponsesConnectionArgs>>;
-  getSubredditSidebar?: Resolver<Maybe<ResolversTypes['SubredditSidebar']>, ParentType, ContextType, RequireFields<QueryGetSubredditSidebarArgs, 'subredditName'>>;
   images?: Resolver<Array<ResolversTypes['Image']>, ParentType, ContextType, Partial<QueryImagesArgs>>;
   imagesAggregate?: Resolver<ResolversTypes['ImageAggregateSelection'], ParentType, ContextType, Partial<QueryImagesAggregateArgs>>;
   imagesConnection?: Resolver<ResolversTypes['ImagesConnection'], ParentType, ContextType, Partial<QueryImagesConnectionArgs>>;
@@ -33329,15 +32926,16 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   recurringEvents?: Resolver<Array<ResolversTypes['RecurringEvent']>, ParentType, ContextType, Partial<QueryRecurringEventsArgs>>;
   recurringEventsAggregate?: Resolver<ResolversTypes['RecurringEventAggregateSelection'], ParentType, ContextType, Partial<QueryRecurringEventsAggregateArgs>>;
   recurringEventsConnection?: Resolver<ResolversTypes['RecurringEventsConnection'], ParentType, ContextType, Partial<QueryRecurringEventsConnectionArgs>>;
-  redditSubmissions?: Resolver<Array<ResolversTypes['RedditSubmission']>, ParentType, ContextType, Partial<QueryRedditSubmissionsArgs>>;
-  redditSubmissionsAggregate?: Resolver<ResolversTypes['RedditSubmissionAggregateSelection'], ParentType, ContextType, Partial<QueryRedditSubmissionsAggregateArgs>>;
-  redditSubmissionsConnection?: Resolver<ResolversTypes['RedditSubmissionsConnection'], ParentType, ContextType, Partial<QueryRedditSubmissionsConnectionArgs>>;
   repeatEnds?: Resolver<Array<ResolversTypes['RepeatEnds']>, ParentType, ContextType, Partial<QueryRepeatEndsArgs>>;
   repeatEndsAggregate?: Resolver<ResolversTypes['RepeatEndsAggregateSelection'], ParentType, ContextType, Partial<QueryRepeatEndsAggregateArgs>>;
   repeatEndsConnection?: Resolver<ResolversTypes['RepeatEndsConnection'], ParentType, ContextType, Partial<QueryRepeatEndsConnectionArgs>>;
   repeatEveries?: Resolver<Array<ResolversTypes['RepeatEvery']>, ParentType, ContextType, Partial<QueryRepeatEveriesArgs>>;
   repeatEveriesAggregate?: Resolver<ResolversTypes['RepeatEveryAggregateSelection'], ParentType, ContextType, Partial<QueryRepeatEveriesAggregateArgs>>;
   repeatEveriesConnection?: Resolver<ResolversTypes['RepeatEveriesConnection'], ParentType, ContextType, Partial<QueryRepeatEveriesConnectionArgs>>;
+  safetyCheck?: Resolver<Maybe<ResolversTypes['SafetyCheckResponse']>, ParentType, ContextType>;
+  safetyCheckResponses?: Resolver<Array<ResolversTypes['SafetyCheckResponse']>, ParentType, ContextType, Partial<QuerySafetyCheckResponsesArgs>>;
+  safetyCheckResponsesAggregate?: Resolver<ResolversTypes['SafetyCheckResponseAggregateSelection'], ParentType, ContextType, Partial<QuerySafetyCheckResponsesAggregateArgs>>;
+  safetyCheckResponsesConnection?: Resolver<ResolversTypes['SafetyCheckResponsesConnection'], ParentType, ContextType, Partial<QuerySafetyCheckResponsesConnectionArgs>>;
   serverConfigs?: Resolver<Array<ResolversTypes['ServerConfig']>, ParentType, ContextType, Partial<QueryServerConfigsArgs>>;
   serverConfigsAggregate?: Resolver<ResolversTypes['ServerConfigAggregateSelection'], ParentType, ContextType, Partial<QueryServerConfigsAggregateArgs>>;
   serverConfigsConnection?: Resolver<ResolversTypes['ServerConfigsConnection'], ParentType, ContextType, Partial<QueryServerConfigsConnectionArgs>>;
@@ -33350,9 +32948,6 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   siteWideDiscussionListFormats?: Resolver<Array<ResolversTypes['SiteWideDiscussionListFormat']>, ParentType, ContextType, Partial<QuerySiteWideDiscussionListFormatsArgs>>;
   siteWideDiscussionListFormatsAggregate?: Resolver<ResolversTypes['SiteWideDiscussionListFormatAggregateSelection'], ParentType, ContextType, Partial<QuerySiteWideDiscussionListFormatsAggregateArgs>>;
   siteWideDiscussionListFormatsConnection?: Resolver<ResolversTypes['SiteWideDiscussionListFormatsConnection'], ParentType, ContextType, Partial<QuerySiteWideDiscussionListFormatsConnectionArgs>>;
-  subredditSidebars?: Resolver<Array<ResolversTypes['SubredditSidebar']>, ParentType, ContextType, Partial<QuerySubredditSidebarsArgs>>;
-  subredditSidebarsAggregate?: Resolver<ResolversTypes['SubredditSidebarAggregateSelection'], ParentType, ContextType, Partial<QuerySubredditSidebarsAggregateArgs>>;
-  subredditSidebarsConnection?: Resolver<ResolversTypes['SubredditSidebarsConnection'], ParentType, ContextType, Partial<QuerySubredditSidebarsConnectionArgs>>;
   tags?: Resolver<Array<ResolversTypes['Tag']>, ParentType, ContextType, Partial<QueryTagsArgs>>;
   tagsAggregate?: Resolver<ResolversTypes['TagAggregateSelection'], ParentType, ContextType, Partial<QueryTagsAggregateArgs>>;
   tagsConnection?: Resolver<ResolversTypes['TagsConnection'], ParentType, ContextType, Partial<QueryTagsConnectionArgs>>;
@@ -33428,56 +33023,6 @@ export type RecurringEventsConnectionResolvers<ContextType = any, ParentType ext
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type RedditSubmissionResolvers<ContextType = any, ParentType extends ResolversParentTypes['RedditSubmission'] = ResolversParentTypes['RedditSubmission']> = {
-  author?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  commentCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  createdUTC?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  flair?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  media?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
-  numCrossposts?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  permalink?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  preview?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
-  stickied?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  subreddit?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  text?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  thumbnail?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  upvoteCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  url?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type RedditSubmissionAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['RedditSubmissionAggregateSelection'] = ResolversParentTypes['RedditSubmissionAggregateSelection']> = {
-  author?: Resolver<ResolversTypes['StringAggregateSelectionNonNullable'], ParentType, ContextType>;
-  commentCount?: Resolver<ResolversTypes['IntAggregateSelectionNonNullable'], ParentType, ContextType>;
-  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  createdUTC?: Resolver<ResolversTypes['IntAggregateSelectionNonNullable'], ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['IDAggregateSelectionNonNullable'], ParentType, ContextType>;
-  numCrossposts?: Resolver<ResolversTypes['IntAggregateSelectionNonNullable'], ParentType, ContextType>;
-  permalink?: Resolver<ResolversTypes['StringAggregateSelectionNonNullable'], ParentType, ContextType>;
-  subreddit?: Resolver<ResolversTypes['StringAggregateSelectionNonNullable'], ParentType, ContextType>;
-  text?: Resolver<ResolversTypes['StringAggregateSelectionNonNullable'], ParentType, ContextType>;
-  thumbnail?: Resolver<ResolversTypes['StringAggregateSelectionNonNullable'], ParentType, ContextType>;
-  title?: Resolver<ResolversTypes['StringAggregateSelectionNonNullable'], ParentType, ContextType>;
-  upvoteCount?: Resolver<ResolversTypes['IntAggregateSelectionNonNullable'], ParentType, ContextType>;
-  url?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type RedditSubmissionEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['RedditSubmissionEdge'] = ResolversParentTypes['RedditSubmissionEdge']> = {
-  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  node?: Resolver<ResolversTypes['RedditSubmission'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type RedditSubmissionsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['RedditSubmissionsConnection'] = ResolversParentTypes['RedditSubmissionsConnection']> = {
-  edges?: Resolver<Array<ResolversTypes['RedditSubmissionEdge']>, ParentType, ContextType>;
-  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
-  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
 export type RepeatEndsResolvers<ContextType = any, ParentType extends ResolversParentTypes['RepeatEnds'] = ResolversParentTypes['RepeatEnds']> = {
   count?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   type?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -33527,6 +33072,29 @@ export type RepeatEveryAggregateSelectionResolvers<ContextType = any, ParentType
 export type RepeatEveryEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['RepeatEveryEdge'] = ResolversParentTypes['RepeatEveryEdge']> = {
   cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   node?: Resolver<ResolversTypes['RepeatEvery'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type SafetyCheckResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['SafetyCheckResponse'] = ResolversParentTypes['SafetyCheckResponse']> = {
+  environment?: Resolver<Maybe<ResolversTypes['EnvironmentInfo']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type SafetyCheckResponseAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['SafetyCheckResponseAggregateSelection'] = ResolversParentTypes['SafetyCheckResponseAggregateSelection']> = {
+  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type SafetyCheckResponseEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['SafetyCheckResponseEdge'] = ResolversParentTypes['SafetyCheckResponseEdge']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['SafetyCheckResponse'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type SafetyCheckResponsesConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['SafetyCheckResponsesConnection'] = ResolversParentTypes['SafetyCheckResponsesConnection']> = {
+  edges?: Resolver<Array<ResolversTypes['SafetyCheckResponseEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -33765,45 +33333,6 @@ export type StringAggregateSelectionNonNullableResolvers<ContextType = any, Pare
 export type StringAggregateSelectionNullableResolvers<ContextType = any, ParentType extends ResolversParentTypes['StringAggregateSelectionNullable'] = ResolversParentTypes['StringAggregateSelectionNullable']> = {
   longest?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   shortest?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type SubredditSidebarResolvers<ContextType = any, ParentType extends ResolversParentTypes['SubredditSidebar'] = ResolversParentTypes['SubredditSidebar']> = {
-  allowGalleries?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
-  allowImages?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
-  bannerImg?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  communityIcon?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  displayName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  linkFlairs?: Resolver<Maybe<Array<Maybe<ResolversTypes['LinkFlair']>>>, ParentType, ContextType>;
-  longDescription?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  rules?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
-  shortDescription?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  showMediaPreview?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
-  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type SubredditSidebarAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['SubredditSidebarAggregateSelection'] = ResolversParentTypes['SubredditSidebarAggregateSelection']> = {
-  bannerImg?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
-  communityIcon?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
-  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  displayName?: Resolver<ResolversTypes['StringAggregateSelectionNonNullable'], ParentType, ContextType>;
-  longDescription?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
-  shortDescription?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
-  title?: Resolver<ResolversTypes['StringAggregateSelectionNonNullable'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type SubredditSidebarEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['SubredditSidebarEdge'] = ResolversParentTypes['SubredditSidebarEdge']> = {
-  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  node?: Resolver<ResolversTypes['SubredditSidebar'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type SubredditSidebarsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['SubredditSidebarsConnection'] = ResolversParentTypes['SubredditSidebarsConnection']> = {
-  edges?: Resolver<Array<ResolversTypes['SubredditSidebarEdge']>, ParentType, ContextType>;
-  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
-  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -34061,6 +33590,12 @@ export type UpdateEmojisMutationResponseResolvers<ContextType = any, ParentType 
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type UpdateEnvironmentInfosMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateEnvironmentInfosMutationResponse'] = ResolversParentTypes['UpdateEnvironmentInfosMutationResponse']> = {
+  environmentInfos?: Resolver<Array<ResolversTypes['EnvironmentInfo']>, ParentType, ContextType>;
+  info?: Resolver<ResolversTypes['UpdateInfo'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type UpdateEventChannelsMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateEventChannelsMutationResponse'] = ResolversParentTypes['UpdateEventChannelsMutationResponse']> = {
   eventChannels?: Resolver<Array<ResolversTypes['EventChannel']>, ParentType, ContextType>;
   info?: Resolver<ResolversTypes['UpdateInfo'], ParentType, ContextType>;
@@ -34081,12 +33616,6 @@ export type UpdateEventsMutationResponseResolvers<ContextType = any, ParentType 
 
 export type UpdateFeedsMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateFeedsMutationResponse'] = ResolversParentTypes['UpdateFeedsMutationResponse']> = {
   feeds?: Resolver<Array<ResolversTypes['Feed']>, ParentType, ContextType>;
-  info?: Resolver<ResolversTypes['UpdateInfo'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type UpdateGetSubredditResponsesMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateGetSubredditResponsesMutationResponse'] = ResolversParentTypes['UpdateGetSubredditResponsesMutationResponse']> = {
-  getSubredditResponses?: Resolver<Array<ResolversTypes['GetSubredditResponse']>, ParentType, ContextType>;
   info?: Resolver<ResolversTypes['UpdateInfo'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -34148,12 +33677,6 @@ export type UpdateRecurringEventsMutationResponseResolvers<ContextType = any, Pa
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type UpdateRedditSubmissionsMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateRedditSubmissionsMutationResponse'] = ResolversParentTypes['UpdateRedditSubmissionsMutationResponse']> = {
-  info?: Resolver<ResolversTypes['UpdateInfo'], ParentType, ContextType>;
-  redditSubmissions?: Resolver<Array<ResolversTypes['RedditSubmission']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
 export type UpdateRepeatEndsMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateRepeatEndsMutationResponse'] = ResolversParentTypes['UpdateRepeatEndsMutationResponse']> = {
   info?: Resolver<ResolversTypes['UpdateInfo'], ParentType, ContextType>;
   repeatEnds?: Resolver<Array<ResolversTypes['RepeatEnds']>, ParentType, ContextType>;
@@ -34163,6 +33686,12 @@ export type UpdateRepeatEndsMutationResponseResolvers<ContextType = any, ParentT
 export type UpdateRepeatEveriesMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateRepeatEveriesMutationResponse'] = ResolversParentTypes['UpdateRepeatEveriesMutationResponse']> = {
   info?: Resolver<ResolversTypes['UpdateInfo'], ParentType, ContextType>;
   repeatEveries?: Resolver<Array<ResolversTypes['RepeatEvery']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type UpdateSafetyCheckResponsesMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateSafetyCheckResponsesMutationResponse'] = ResolversParentTypes['UpdateSafetyCheckResponsesMutationResponse']> = {
+  info?: Resolver<ResolversTypes['UpdateInfo'], ParentType, ContextType>;
+  safetyCheckResponses?: Resolver<Array<ResolversTypes['SafetyCheckResponse']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -34187,12 +33716,6 @@ export type UpdateSignedUrlsMutationResponseResolvers<ContextType = any, ParentT
 export type UpdateSiteWideDiscussionListFormatsMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateSiteWideDiscussionListFormatsMutationResponse'] = ResolversParentTypes['UpdateSiteWideDiscussionListFormatsMutationResponse']> = {
   info?: Resolver<ResolversTypes['UpdateInfo'], ParentType, ContextType>;
   siteWideDiscussionListFormats?: Resolver<Array<ResolversTypes['SiteWideDiscussionListFormat']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type UpdateSubredditSidebarsMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateSubredditSidebarsMutationResponse'] = ResolversParentTypes['UpdateSubredditSidebarsMutationResponse']> = {
-  info?: Resolver<ResolversTypes['UpdateInfo'], ParentType, ContextType>;
-  subredditSidebars?: Resolver<Array<ResolversTypes['SubredditSidebar']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -35020,11 +34543,11 @@ export type Resolvers<ContextType = any> = {
   CreateDiscussionsMutationResponse?: CreateDiscussionsMutationResponseResolvers<ContextType>;
   CreateEmailsMutationResponse?: CreateEmailsMutationResponseResolvers<ContextType>;
   CreateEmojisMutationResponse?: CreateEmojisMutationResponseResolvers<ContextType>;
+  CreateEnvironmentInfosMutationResponse?: CreateEnvironmentInfosMutationResponseResolvers<ContextType>;
   CreateEventChannelsMutationResponse?: CreateEventChannelsMutationResponseResolvers<ContextType>;
   CreateEventCommentsFormatsMutationResponse?: CreateEventCommentsFormatsMutationResponseResolvers<ContextType>;
   CreateEventsMutationResponse?: CreateEventsMutationResponseResolvers<ContextType>;
   CreateFeedsMutationResponse?: CreateFeedsMutationResponseResolvers<ContextType>;
-  CreateGetSubredditResponsesMutationResponse?: CreateGetSubredditResponsesMutationResponseResolvers<ContextType>;
   CreateImagesMutationResponse?: CreateImagesMutationResponseResolvers<ContextType>;
   CreateInfo?: CreateInfoResolvers<ContextType>;
   CreateIssuesMutationResponse?: CreateIssuesMutationResponseResolvers<ContextType>;
@@ -35034,14 +34557,13 @@ export type Resolvers<ContextType = any> = {
   CreateModerationActionsMutationResponse?: CreateModerationActionsMutationResponseResolvers<ContextType>;
   CreateModerationProfilesMutationResponse?: CreateModerationProfilesMutationResponseResolvers<ContextType>;
   CreateRecurringEventsMutationResponse?: CreateRecurringEventsMutationResponseResolvers<ContextType>;
-  CreateRedditSubmissionsMutationResponse?: CreateRedditSubmissionsMutationResponseResolvers<ContextType>;
   CreateRepeatEndsMutationResponse?: CreateRepeatEndsMutationResponseResolvers<ContextType>;
   CreateRepeatEveriesMutationResponse?: CreateRepeatEveriesMutationResponseResolvers<ContextType>;
+  CreateSafetyCheckResponsesMutationResponse?: CreateSafetyCheckResponsesMutationResponseResolvers<ContextType>;
   CreateServerConfigsMutationResponse?: CreateServerConfigsMutationResponseResolvers<ContextType>;
   CreateServerRolesMutationResponse?: CreateServerRolesMutationResponseResolvers<ContextType>;
   CreateSignedUrlsMutationResponse?: CreateSignedUrlsMutationResponseResolvers<ContextType>;
   CreateSiteWideDiscussionListFormatsMutationResponse?: CreateSiteWideDiscussionListFormatsMutationResponseResolvers<ContextType>;
-  CreateSubredditSidebarsMutationResponse?: CreateSubredditSidebarsMutationResponseResolvers<ContextType>;
   CreateTagsMutationResponse?: CreateTagsMutationResponseResolvers<ContextType>;
   CreateUsersMutationResponse?: CreateUsersMutationResponseResolvers<ContextType>;
   DateTime?: GraphQLScalarType;
@@ -35116,6 +34638,10 @@ export type Resolvers<ContextType = any> = {
   EmojiUserPostedByUserAggregationSelection?: EmojiUserPostedByUserAggregationSelectionResolvers<ContextType>;
   EmojiUserPostedByUserNodeAggregateSelection?: EmojiUserPostedByUserNodeAggregateSelectionResolvers<ContextType>;
   EmojisConnection?: EmojisConnectionResolvers<ContextType>;
+  EnvironmentInfo?: EnvironmentInfoResolvers<ContextType>;
+  EnvironmentInfoAggregateSelection?: EnvironmentInfoAggregateSelectionResolvers<ContextType>;
+  EnvironmentInfoEdge?: EnvironmentInfoEdgeResolvers<ContextType>;
+  EnvironmentInfosConnection?: EnvironmentInfosConnectionResolvers<ContextType>;
   Event?: EventResolvers<ContextType>;
   EventAggregateSelection?: EventAggregateSelectionResolvers<ContextType>;
   EventChannel?: EventChannelResolvers<ContextType>;
@@ -35181,10 +34707,6 @@ export type Resolvers<ContextType = any> = {
   FeedUserOwnerNodeAggregateSelection?: FeedUserOwnerNodeAggregateSelectionResolvers<ContextType>;
   FeedsConnection?: FeedsConnectionResolvers<ContextType>;
   FloatAggregateSelectionNullable?: FloatAggregateSelectionNullableResolvers<ContextType>;
-  GetSubredditResponse?: GetSubredditResponseResolvers<ContextType>;
-  GetSubredditResponseAggregateSelection?: GetSubredditResponseAggregateSelectionResolvers<ContextType>;
-  GetSubredditResponseEdge?: GetSubredditResponseEdgeResolvers<ContextType>;
-  GetSubredditResponsesConnection?: GetSubredditResponsesConnectionResolvers<ContextType>;
   IDAggregateSelectionNonNullable?: IdAggregateSelectionNonNullableResolvers<ContextType>;
   IDAggregateSelectionNullable?: IdAggregateSelectionNullableResolvers<ContextType>;
   Image?: ImageResolvers<ContextType>;
@@ -35277,10 +34799,6 @@ export type Resolvers<ContextType = any> = {
   RecurringEventEventsConnection?: RecurringEventEventsConnectionResolvers<ContextType>;
   RecurringEventEventsRelationship?: RecurringEventEventsRelationshipResolvers<ContextType>;
   RecurringEventsConnection?: RecurringEventsConnectionResolvers<ContextType>;
-  RedditSubmission?: RedditSubmissionResolvers<ContextType>;
-  RedditSubmissionAggregateSelection?: RedditSubmissionAggregateSelectionResolvers<ContextType>;
-  RedditSubmissionEdge?: RedditSubmissionEdgeResolvers<ContextType>;
-  RedditSubmissionsConnection?: RedditSubmissionsConnectionResolvers<ContextType>;
   RepeatEnds?: RepeatEndsResolvers<ContextType>;
   RepeatEndsAggregateSelection?: RepeatEndsAggregateSelectionResolvers<ContextType>;
   RepeatEndsConnection?: RepeatEndsConnectionResolvers<ContextType>;
@@ -35289,6 +34807,10 @@ export type Resolvers<ContextType = any> = {
   RepeatEvery?: RepeatEveryResolvers<ContextType>;
   RepeatEveryAggregateSelection?: RepeatEveryAggregateSelectionResolvers<ContextType>;
   RepeatEveryEdge?: RepeatEveryEdgeResolvers<ContextType>;
+  SafetyCheckResponse?: SafetyCheckResponseResolvers<ContextType>;
+  SafetyCheckResponseAggregateSelection?: SafetyCheckResponseAggregateSelectionResolvers<ContextType>;
+  SafetyCheckResponseEdge?: SafetyCheckResponseEdgeResolvers<ContextType>;
+  SafetyCheckResponsesConnection?: SafetyCheckResponsesConnectionResolvers<ContextType>;
   ServerConfig?: ServerConfigResolvers<ContextType>;
   ServerConfigAggregateSelection?: ServerConfigAggregateSelectionResolvers<ContextType>;
   ServerConfigChannelRoleDefaultChannelRoleAggregationSelection?: ServerConfigChannelRoleDefaultChannelRoleAggregationSelectionResolvers<ContextType>;
@@ -35323,10 +34845,6 @@ export type Resolvers<ContextType = any> = {
   SiteWideDiscussionListFormatsConnection?: SiteWideDiscussionListFormatsConnectionResolvers<ContextType>;
   StringAggregateSelectionNonNullable?: StringAggregateSelectionNonNullableResolvers<ContextType>;
   StringAggregateSelectionNullable?: StringAggregateSelectionNullableResolvers<ContextType>;
-  SubredditSidebar?: SubredditSidebarResolvers<ContextType>;
-  SubredditSidebarAggregateSelection?: SubredditSidebarAggregateSelectionResolvers<ContextType>;
-  SubredditSidebarEdge?: SubredditSidebarEdgeResolvers<ContextType>;
-  SubredditSidebarsConnection?: SubredditSidebarsConnectionResolvers<ContextType>;
   Tag?: TagResolvers<ContextType>;
   TagAggregateSelection?: TagAggregateSelectionResolvers<ContextType>;
   TagChannelChannelsAggregationSelection?: TagChannelChannelsAggregationSelectionResolvers<ContextType>;
@@ -35362,11 +34880,11 @@ export type Resolvers<ContextType = any> = {
   UpdateDiscussionsMutationResponse?: UpdateDiscussionsMutationResponseResolvers<ContextType>;
   UpdateEmailsMutationResponse?: UpdateEmailsMutationResponseResolvers<ContextType>;
   UpdateEmojisMutationResponse?: UpdateEmojisMutationResponseResolvers<ContextType>;
+  UpdateEnvironmentInfosMutationResponse?: UpdateEnvironmentInfosMutationResponseResolvers<ContextType>;
   UpdateEventChannelsMutationResponse?: UpdateEventChannelsMutationResponseResolvers<ContextType>;
   UpdateEventCommentsFormatsMutationResponse?: UpdateEventCommentsFormatsMutationResponseResolvers<ContextType>;
   UpdateEventsMutationResponse?: UpdateEventsMutationResponseResolvers<ContextType>;
   UpdateFeedsMutationResponse?: UpdateFeedsMutationResponseResolvers<ContextType>;
-  UpdateGetSubredditResponsesMutationResponse?: UpdateGetSubredditResponsesMutationResponseResolvers<ContextType>;
   UpdateImagesMutationResponse?: UpdateImagesMutationResponseResolvers<ContextType>;
   UpdateInfo?: UpdateInfoResolvers<ContextType>;
   UpdateIssuesMutationResponse?: UpdateIssuesMutationResponseResolvers<ContextType>;
@@ -35376,14 +34894,13 @@ export type Resolvers<ContextType = any> = {
   UpdateModerationActionsMutationResponse?: UpdateModerationActionsMutationResponseResolvers<ContextType>;
   UpdateModerationProfilesMutationResponse?: UpdateModerationProfilesMutationResponseResolvers<ContextType>;
   UpdateRecurringEventsMutationResponse?: UpdateRecurringEventsMutationResponseResolvers<ContextType>;
-  UpdateRedditSubmissionsMutationResponse?: UpdateRedditSubmissionsMutationResponseResolvers<ContextType>;
   UpdateRepeatEndsMutationResponse?: UpdateRepeatEndsMutationResponseResolvers<ContextType>;
   UpdateRepeatEveriesMutationResponse?: UpdateRepeatEveriesMutationResponseResolvers<ContextType>;
+  UpdateSafetyCheckResponsesMutationResponse?: UpdateSafetyCheckResponsesMutationResponseResolvers<ContextType>;
   UpdateServerConfigsMutationResponse?: UpdateServerConfigsMutationResponseResolvers<ContextType>;
   UpdateServerRolesMutationResponse?: UpdateServerRolesMutationResponseResolvers<ContextType>;
   UpdateSignedUrlsMutationResponse?: UpdateSignedUrlsMutationResponseResolvers<ContextType>;
   UpdateSiteWideDiscussionListFormatsMutationResponse?: UpdateSiteWideDiscussionListFormatsMutationResponseResolvers<ContextType>;
-  UpdateSubredditSidebarsMutationResponse?: UpdateSubredditSidebarsMutationResponseResolvers<ContextType>;
   UpdateTagsMutationResponse?: UpdateTagsMutationResponseResolvers<ContextType>;
   UpdateUsersMutationResponse?: UpdateUsersMutationResponseResolvers<ContextType>;
   User?: UserResolvers<ContextType>;

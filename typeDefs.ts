@@ -428,44 +428,10 @@ const typeDefinitions = gql`
     aggregateChildCommentCount: Int!
   }
 
-
-  type RedditSubmission {
-    id: ID!
-    subreddit: String!
-    title: String!
-    createdUTC: Int!
-    author: String!
-    commentCount: Int!
-    text: String!
-    media: JSON
-    flair: JSON
-    numCrossposts: Int!
-    permalink: String!
-    thumbnail: String!
-    upvoteCount: Int!
-    url: String
-    preview: JSON
-    stickied: Boolean!
-  }
-
   type LinkFlair {
     id: String
     text: String
     cssClass: String
-  }
-
-  type SubredditSidebar {
-    title: String!
-    displayName: String!
-    shortDescription: String # 500 characters max
-    longDescription: String # 5120 characters max
-    allowGalleries: Boolean
-    communityIcon: String
-    showMediaPreview: Boolean
-    bannerImg: String
-    allowImages: Boolean
-    linkFlairs: [LinkFlair]
-    rules: JSON
   }
 
   type ServerRole {
@@ -528,15 +494,13 @@ const typeDefinitions = gql`
     DefaultModChannelRole: ModChannelRole @relationship(type: "HAS_DEFAULT_MOD_ROLE", direction: OUT)
   }
 
-  input RedditPostOptions {
-    limit: Int
-    sort: String
-    after: String
+  type EnvironmentInfo {
+    isTestEnvironment: Boolean
+    currentDatabase: String
   }
 
-  type GetSubredditResponse {
-    posts: [RedditSubmission]
-    after: String
+  type SafetyCheckResponse {
+      environment: EnvironmentInfo
   }
 
   type Query {
@@ -573,12 +537,7 @@ const typeDefinitions = gql`
       limit: Int
       sort: SortType
     ): CommentRepliesFormat
-    getSubreddit(
-      subredditName: String!, 
-      options: RedditPostOptions,
-      flair: String
-    ): GetSubredditResponse
-    getSubredditSidebar(subredditName: String!, options: JSON): SubredditSidebar
+    safetyCheck: SafetyCheckResponse
   }
 `;
 
