@@ -1,5 +1,6 @@
 import { and, shield, allow, deny, or } from "graphql-shield";
 import rules from "./rules/rules.js";
+import safetyCheck from './customResolvers/queries/safetyCheck';
 
 const permissionList = shield({
     Query: {
@@ -8,6 +9,7 @@ const permissionList = shield({
     },
     Mutation: {
       "*": deny,
+      safetyCheck: allow,
       createServerRoles: rules.isAdmin,
       createChannelRoles: rules.isAdmin,
       createModServerRoles: rules.isAdmin,
