@@ -7,6 +7,7 @@ const permissionList = shield({
     },
     Mutation: {
         "*": deny,
+        safetyCheck: allow,
         createServerRoles: rules.isAdmin,
         createChannelRoles: rules.isAdmin,
         createModServerRoles: rules.isAdmin,
