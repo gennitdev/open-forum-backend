@@ -63,7 +63,7 @@ export const setUserDataOnContext = async (input: SetUserDataInput) => {
     throw new Error("No AUTH0_SECRET_KEY found in environment variables");
   }
 
-  let decoded;
+  let decoded: any;
 
   try {
     console.log("verifying token");
@@ -82,7 +82,7 @@ export const setUserDataOnContext = async (input: SetUserDataInput) => {
         }
       );
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error verifying token:", error.message);
     throw new Error("Token verification failed");
   }
@@ -91,7 +91,7 @@ export const setUserDataOnContext = async (input: SetUserDataInput) => {
     throw new Error("Invalid token payload");
   }
 
-  const email = decoded?.email || decoded?.username;
+  let email = decoded?.email || decoded?.username;
   console.log("decoded email: ", email);
 
   if (!email) {
@@ -106,7 +106,7 @@ export const setUserDataOnContext = async (input: SetUserDataInput) => {
         }
       );
       email = userInfoResponse.data.email;
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching email from Auth0:", error.message);
       throw new Error("Failed to fetch email from Auth0");
     }
@@ -168,7 +168,7 @@ export const setUserDataOnContext = async (input: SetUserDataInput) => {
       where: { username },
       selectionSet,
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error fetching user data:", error.message);
     throw new Error("Failed to fetch user data");
   }
