@@ -135,6 +135,14 @@ async function initializeServer() {
           ogm,
         };
       },
+      formatError: (error: any) => {
+        return {
+          message: error.message,
+          locations: error.locations,
+          path: error.path,
+          code: error.extensions?.code,
+        }
+      }
     });
 
     server.listen({ port }).then((input: any) => {

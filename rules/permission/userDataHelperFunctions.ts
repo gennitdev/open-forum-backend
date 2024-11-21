@@ -52,6 +52,11 @@ export const getUserFromEmail = async (
   email: string,
   EmailModel: EmailModel
 ) => {
+  if (email === process.env.CYPRESS_ADMIN_TEST_EMAIL) {
+    // Prevent a catch-22 in which the user data can't be created
+    // because no one has permission to create the user data.
+    return process.env.CYPRESS_ADMIN_TEST_USERNAME;
+  }
   try {
     const emailDataWithUser = await EmailModel.find({
       where: { address: email },
@@ -77,6 +82,34 @@ export const getUserDataFromUsername = async (
   input: GetUserDataFromUsernameInput
 ): Promise<UserDataOnContext> => {
   const { username, emailVerified, ogm, checkSpecificChannel } = input;
+
+  if (username === process.env.CYPRESS_ADMIN_TEST_USERNAME) {
+    // Mock the response for the Cypress admin user
+    // because the user data is not created in the database
+    return {
+      username,
+      email: input.email,
+      email_verified: emailVerified || false,
+      data: {
+        ServerRoles: [
+          {
+            name: "Admin Role",
+            showAdminTag: true,
+            canCreateChannel: true,
+            canCreateComment: true,
+            canCreateDiscussion: true,
+            canCreateEvent: true,
+            canGiveFeedback: true,
+            canUploadFile: true,
+            canUpvoteComment: true,
+            canUpvoteDiscussion: true,
+          },
+        ],
+        ChannelRoles: [],
+        ModerationProfile: null
+      },
+    };
+  }
   const User = ogm.model("User");
   let userData = null;
   try {
@@ -164,6 +197,7 @@ export const setUserDataOnContext = async (input: SetUserDataInput): Promise<Use
   const { context, getPermissionInfo } = input;
   const { ogm, req } = context;
   const token = req?.headers?.authorization?.replace("Bearer ", "");
+
   if (!token) {
     console.log("No token found; setting user data to null.");
     return {
@@ -203,6 +237,7 @@ export const setUserDataOnContext = async (input: SetUserDataInput): Promise<Use
       }
     );
     email = userInfoResponse.data.email;
+    console.log("Fetched email from Auth0 userinfo:", email);
   }
 
   const Email = ogm.model("Email");

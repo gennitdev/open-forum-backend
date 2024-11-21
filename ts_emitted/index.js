@@ -113,6 +113,15 @@ async function initializeServer() {
                     ogm,
                 };
             },
+            formatError: (error) => {
+                var _a;
+                return {
+                    message: error.message,
+                    locations: error.locations,
+                    path: error.path,
+                    code: (_a = error.extensions) === null || _a === void 0 ? void 0 : _a.code,
+                };
+            }
         });
         server.listen({ port }).then((input) => {
             const { url } = input;
