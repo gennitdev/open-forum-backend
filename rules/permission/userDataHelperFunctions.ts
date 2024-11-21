@@ -53,134 +53,130 @@ export const setUserDataOnContext = async (input: SetUserDataInput) => {
   const { ogm, req } = context;
   const token = req?.headers?.authorization?.replace("Bearer ", "");
   console.log("token: ", token);
-
-  if (!token) {
-    console.log("No token found in headers");
-    return null;
-  }
-
-  if (!process.env.AUTH0_SECRET_KEY) {
-    throw new Error("No AUTH0_SECRET_KEY found in environment variables");
-  }
+  console.log("headers: ", req.headers);
 
   let decoded: any;
 
-  try {
-    console.log("verifying token");
-    decoded = await new Promise((resolve, reject) => {
-      jwt.verify(
-        token,
-        getKey,
-        {
-          algorithms: ["RS256"],
-        },
-        (err, decoded) => {
-          if (err) {
-            return reject(err);
-          }
-          resolve(decoded);
-        }
+  if (token && process.env.AUTH0_DOMAIN) {
+    try {
+      console.log("verifying token");
+      console.log(
+        "JWKS URI:",
+        `https://${process.env.AUTH0_DOMAIN}/.well-known/jwks.json`
       );
-    });
-  } catch (error: any) {
-    console.error("Error verifying token:", error.message);
-    throw new Error("Token verification failed");
+      decoded = await new Promise((resolve, reject) => {
+        jwt.verify(
+          token,
+          getKey,
+          {
+            algorithms: ["RS256"],
+          },
+          (err, decoded) => {
+            if (err) {
+              console.error("JWT Verification Error:", err);
+              return reject(err);
+            }
+            resolve(decoded);
+          }
+        );
+      });
+    } catch (error: any) {
+      console.error("Error verifying token:", error.message);
+      throw new Error("Token verification failed");
+    }
   }
 
-  if (!decoded || typeof decoded === "string") {
-    throw new Error("Invalid token payload");
-  }
+  console.log("Decoded token:", decoded);
 
   let email = decoded?.email || decoded?.username;
   console.log("decoded email: ", email);
 
-  if (!email) {
-    try {
-      console.log("Fetching email from Auth0 userinfo");
-      const userInfoResponse = await axios.get(
-        `https://${process.env.AUTH0_DOMAIN}/userinfo`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      email = userInfoResponse.data.email;
-    } catch (error: any) {
-      console.error("Error fetching email from Auth0:", error.message);
-      throw new Error("Failed to fetch email from Auth0");
-    }
-  }
-
-  if (!email) {
-    throw new Error("User email could not be determined");
-  }
+  // if (!email) {
+  //   try {
+  //     console.log("Fetching email from Auth0 userinfo");
+  //     const userInfoResponse = await axios.get(
+  //       `https://${process.env.AUTH0_DOMAIN}/userinfo`,
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       }
+  //     );
+  //     email = userInfoResponse.data.email;
+  //   } catch (error: any) {
+  //     console.error("Error fetching email from Auth0:", error.message);
+  //     throw new Error("Failed to fetch email from Auth0");
+  //   }
+  // }
 
   console.log("email: ", email);
   const Email = ogm.model("Email");
   const User = ogm.model("User");
 
-  const username = await getUserFromEmail(email, Email);
+  if (email) {
+    const username = await getUserFromEmail(email, Email);
 
-  let userData;
-  try {
-    const selectionSet = getPermissionInfo
-      ? `{ 
-          ModerationProfile {
-            displayName
-            ModServerRoles {
-              canGiveFeedback
+    let userData;
+    try {
+      const selectionSet = getPermissionInfo
+        ? `{ 
+            ModerationProfile {
+              displayName
+              ModServerRoles {
+                canGiveFeedback
+              }
+              ModChannelRoles ${
+                input.checkSpecificChannel
+                  ? `(where: { channelUniqueName: "${input.checkSpecificChannel}" })`
+                  : ""
+              } {
+                canGiveFeedback
+              }
             }
-            ModChannelRoles ${
+            ServerRoles { 
+              name
+              showAdminTag
+              canCreateChannel
+              canCreateComment
+              canCreateDiscussion
+              canCreateEvent
+              canGiveFeedback
+              canUploadFile
+              canUpvoteComment
+              canUpvoteDiscussion
+            }
+            ChannelRoles ${
               input.checkSpecificChannel
                 ? `(where: { channelUniqueName: "${input.checkSpecificChannel}" })`
                 : ""
             } {
-              canGiveFeedback
+              name
+              canCreateEvent
+              canCreateDiscussion
+              canCreateComment
             }
-          }
-          ServerRoles { 
-            name
-            showAdminTag
-            canCreateChannel
-            canCreateComment
-            canCreateDiscussion
-            canCreateEvent
-            canGiveFeedback
-            canUploadFile
-            canUpvoteComment
-            canUpvoteDiscussion
-          }
-          ChannelRoles ${
-            input.checkSpecificChannel
-              ? `(where: { channelUniqueName: "${input.checkSpecificChannel}" })`
-              : ""
-          } {
-            name
-            canCreateEvent
-            canCreateDiscussion
-            canCreateComment
-          }
-        }`
-      : undefined;
+          }`
+        : undefined;
 
-    userData = await User.find({
-      where: { username },
-      selectionSet,
-    });
-  } catch (error: any) {
-    console.error("Error fetching user data:", error.message);
-    throw new Error("Failed to fetch user data");
-  }
-
-  if (!userData || !userData[0]) {
-    throw new Error("User not found");
+      userData = await User.find({
+        where: { username },
+        selectionSet,
+      });
+      return {
+        username,
+        email_verified: decoded?.email_verified || false,
+        data: userData[0],
+      };
+    } catch (error: any) {
+      console.error("Error fetching user data:", error.message);
+      throw new Error("Failed to fetch user data");
+    }
   }
 
   return {
-    username,
-    email_verified: decoded?.email_verified || false,
-    data: userData[0],
+    username: null,
+    email_verified: false,
+    data: null,
   };
 };
 
