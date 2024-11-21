@@ -38,8 +38,6 @@ const getResolver = (input: Input) => {
     });
   
     const loggedInUsername = context.user?.username || null;
-    console.log('get discussions in channel')
-    console.log("loggedInUser", context.user?.username);
 
     const session = driver.session();
     let titleRegex = `(?i).*${searchInput}.*`;

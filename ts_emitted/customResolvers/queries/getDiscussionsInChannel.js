@@ -11,7 +11,7 @@ var timeFrameOptionKeys;
 const getResolver = (input) => {
     const { driver, DiscussionChannel } = input;
     return async (parent, args, context, info) => {
-        var _a, _b;
+        var _a;
         const { channelUniqueName, options, selectedTags, searchInput } = args;
         const { offset, limit, sort, timeFrame } = options || {};
         // Set loggedInUsername to null explicitly if not present
@@ -20,8 +20,6 @@ const getResolver = (input) => {
             getPermissionInfo: false
         });
         const loggedInUsername = ((_a = context.user) === null || _a === void 0 ? void 0 : _a.username) || null;
-        console.log('get discussions in channel');
-        console.log("loggedInUser", (_b = context.user) === null || _b === void 0 ? void 0 : _b.username);
         const session = driver.session();
         let titleRegex = `(?i).*${searchInput}.*`;
         let bodyRegex = `(?i).*${searchInput}.*`;

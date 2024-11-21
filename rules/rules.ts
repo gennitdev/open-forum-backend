@@ -151,7 +151,6 @@ export const canCreateComment = rule({ cache: "contextual" })(
 
 const isAdmin = rule({ cache: "contextual" })(
   async (parent: any, args: any, ctx: any, info: any) => {
-    console.log("Checking if user is admin");
 
     // set user on context
     ctx.user = await setUserDataOnContext({
@@ -161,7 +160,7 @@ const isAdmin = rule({ cache: "contextual" })(
 
 
     if (!ctx.user) {
-      console.log("no user");
+      console.log("No user");
       return false;
     }
     let isAdmin = false

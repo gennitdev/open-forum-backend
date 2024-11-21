@@ -16,13 +16,12 @@ const getJwksClient = () => {
     client = jwksClient({
       jwksUri: `https://${process.env.AUTH0_DOMAIN}/.well-known/jwks.json`,
     });
-    console.log("Initialized JWKS Client:", client);
+    console.log("Initialized JWKS Client");
   }
   return client;
 };
 
 const getKey = (header: any, callback: any) => {
-  console.log("JWT Header:", header); // Debug the JWT header
   if (!header || !header.kid) {
     return callback(new Error("Missing 'kid' in JWT header"), null);
   }
@@ -40,7 +39,7 @@ const getKey = (header: any, callback: any) => {
         return callback(err, null);
       }
       const signingKey = key.getPublicKey();
-      console.log("Retrieved Signing Key:", signingKey);
+      console.log("Retrieved Signing Key");
       callback(null, signingKey);
     });
   } catch (error) {
@@ -164,18 +163,7 @@ export const setUserDataOnContext = async (input: SetUserDataInput): Promise<Use
   console.log("Setting user data on context...");
   const { context, getPermissionInfo } = input;
   const { ogm, req } = context;
-
-  const userData: UserDataOnContext = {
-    username: null,
-    email: null,
-    email_verified: false,
-    data: null,
-  }
-
-  // Extract token from the request headers
   const token = req?.headers?.authorization?.replace("Bearer ", "");
-
-  // If no token is provided, set null user data and return
   if (!token) {
     console.log("No token found; setting user data to null.");
     return {
@@ -185,9 +173,6 @@ export const setUserDataOnContext = async (input: SetUserDataInput): Promise<Use
       data: null,
     };
   }
-
-  // Log the Auth0 domain for debugging
-  console.log("Auth0 domain:", process.env.AUTH0_DOMAIN);
 
   if (!process.env.AUTH0_DOMAIN) {
     throw new Error("AUTH0_DOMAIN environment variable is not defined.");
@@ -217,11 +202,8 @@ export const setUserDataOnContext = async (input: SetUserDataInput): Promise<Use
         },
       }
     );
-    console.log("Userinfo response:", userInfoResponse.data);
     email = userInfoResponse.data.email;
   }
-
-  console.log("Email found:", email);
 
   const Email = ogm.model("Email");
 
