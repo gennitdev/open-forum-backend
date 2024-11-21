@@ -2,6 +2,7 @@ import { ERROR_MESSAGES } from "../errorMessages.js";
 import { EmailModel } from "../../ogm-types.js";
 import { rule } from "graphql-shield";
 import jwt from "jsonwebtoken";
+import axios from "axios";
 
 export const getUserFromEmail = async (
   email: string,
@@ -27,101 +28,129 @@ type SetUserDataInput = {
   getPermissionInfo: boolean;
   checkSpecificChannel?: string;
 };
+
 export const setUserDataOnContext = async (input: SetUserDataInput) => {
   console.log("setting user data on context");
   const { context, getPermissionInfo } = input;
   const { ogm, req } = context;
   const token = req?.headers?.authorization || "";
-  
+
   if (!token) {
     console.log("No token found in headers");
     return null;
   }
 
-  const decoded = jwt.decode(token.replace("Bearer ", ""));
-  if (!decoded) {
-    console.error("No decoded token found");
-    throw new Error(ERROR_MESSAGES.channel.notAuthenticated);
-  }
-  console.log("decoded: ", decoded);
+  try {
+    // Verify the token
+    if (!process.env.AUTH0_SECRET_KEY) {
+      throw new Error("No AUTH0_SECRET_KEY found in environment variables");
+    }
 
-  // @ts-ignore
-  if (!decoded?.email) {
-    throw new Error(ERROR_MESSAGES.channel.notAuthenticated);
-  }
+    const decoded = jwt.verify(
+      token.replace("Bearer ", ""),
+      process.env.AUTH0_SECRET_KEY
+    );
 
-  // @ts-ignore
-  const { email, email_verified } = decoded;
-  console.log("email: ", email);
-  const Email = ogm.model("Email");
-  const User = ogm.model("User");
+    // Check for email in the token
+    if (typeof decoded === "string") {
+      throw new Error("Token is a string");
+    }
 
-  const username = await getUserFromEmail(email, Email);
+    let decodedEmail = decoded?.username; // The username is the email
 
-  // Set the user data on the context so we can use it in other rules.
-  let userData;
+    if (!decodedEmail) {
+      console.log("No email in token, fetching from Auth0");
+      const userInfoResponse = await axios.get(
+        `https://${process.env.AUTH0_DOMAIN}/userinfo`,
+        {
+          headers: {
+            Authorization: `Bearer ${token.replace("Bearer ", "")}`,
+          },
+        }
+      );
+      decodedEmail = userInfoResponse.data.email;
+    }
 
-  if (!getPermissionInfo) {
-    userData = await User.find({
-      where: { username },
-    });
-  } else {
-    try {
+    if (!decodedEmail) {
+      throw new Error(ERROR_MESSAGES.channel.notAuthenticated);
+    }
+
+    // Log email and set up models
+    const email = decodedEmail;
+    console.log("email: ", email);
+    const Email = ogm.model("Email");
+    const User = ogm.model("User");
+
+    const username = await getUserFromEmail(email, Email);
+
+    // Set the user data on the context
+    let userData;
+
+    if (!getPermissionInfo) {
       userData = await User.find({
         where: { username },
-        selectionSet: `{ 
-            ModerationProfile {
-              displayName
-              ModServerRoles {
-                canGiveFeedback
+      });
+    } else {
+      try {
+        userData = await User.find({
+          where: { username },
+          selectionSet: `{ 
+              ModerationProfile {
+                displayName
+                ModServerRoles {
+                  canGiveFeedback
+                }
+                ModChannelRoles ${
+                  input.checkSpecificChannel
+                    ? `(where: { channelUniqueName: "${input.checkSpecificChannel}" })`
+                    : ""
+                } {
+                  canGiveFeedback
+                }
               }
-              ModChannelRoles ${
+              ServerRoles { 
+                name
+                showAdminTag
+                canCreateChannel
+                canCreateComment
+                canCreateDiscussion
+                canCreateEvent
+                canGiveFeedback
+                canUploadFile
+                canUpvoteComment
+                canUpvoteDiscussion
+              }
+              ChannelRoles ${
                 input.checkSpecificChannel
                   ? `(where: { channelUniqueName: "${input.checkSpecificChannel}" })`
                   : ""
               } {
-                canGiveFeedback
+                name
+                canCreateEvent
+                canCreateDiscussion
+                canCreateComment
               }
-            }
-            ServerRoles { 
-              name
-              canCreateChannel
-              canCreateComment
-              canCreateDiscussion
-              canCreateEvent
-              canGiveFeedback
-              canUploadFile
-              canUpvoteComment
-              canUpvoteDiscussion
-            }
-            ChannelRoles ${
-              input.checkSpecificChannel
-                ? `(where: { channelUniqueName: "${input.checkSpecificChannel}" })`
-                : ""
-            } {
-              name
-              canCreateEvent
-              canCreateDiscussion
-              canCreateComment
-            }
           }`,
-      });
-    } catch (error) {
-      console.error("Error fetching user data:", error);
-      return null;
+        });
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        return null;
+      }
     }
-  }
 
-  if (userData && userData[0]) {
-    return {
-      username,
-      email_verified,
-      data: userData[0],
-    };
+    if (userData && userData[0]) {
+      return {
+        username,
+        email_verified: decoded.email_verified,
+        data: userData[0],
+      };
+    }
+    return null;
+  } catch (error) {
+    console.error("Error setting user data on context:", error);
+    throw new Error(ERROR_MESSAGES.channel.notAuthenticated);
   }
-  return null;
 };
-
 
 export const isAuthenticatedAndVerified = rule({ cache: "contextual" })(
   async (parent: any, args: any, context: any, info: any) => {

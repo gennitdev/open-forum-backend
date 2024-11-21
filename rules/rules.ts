@@ -26,6 +26,7 @@ import { createDiscussionInputIsValid, updateDiscussionInputIsValid } from "./va
 import { createCommentInputIsValid, updateCommentInputIsValid } from "./validation/commentIsValid.js";
 import { createEventInputIsValid, updateEventInputIsValid } from "./validation/eventIsValid.js";
 import { createChannelInputIsValid, updateChannelInputIsValid } from "./validation/channelIsValid.js";
+import { setUserDataOnContext } from "./permission/userDataHelperFunctions.js";
 
 const canCreateChannel = rule({ cache: "contextual" })(
   async (parent: any, args: any, ctx: any, info: any) => {
@@ -150,10 +151,28 @@ export const canCreateComment = rule({ cache: "contextual" })(
 
 const isAdmin = rule({ cache: "contextual" })(
   async (parent: any, args: any, ctx: any, info: any) => {
+    console.log("Checking if user is admin");
+
+    // set user on context
+    ctx.user = await setUserDataOnContext({
+      context: ctx,
+      getPermissionInfo: true
+    });
+
+
     if (!ctx.user) {
+      console.log("no user");
       return false;
     }
-    const { isAdmin } = ctx.user;
+    let isAdmin = false
+    const serverRoles = ctx.user?.data?.ServerRoles;
+    console.log('server roles', serverRoles)
+    for (const role of serverRoles) {
+      if (role.showAdminTag) {
+        isAdmin = true;
+      }
+    }
+    console.log('user data', ctx.user)
     return isAdmin;
   }
 );
