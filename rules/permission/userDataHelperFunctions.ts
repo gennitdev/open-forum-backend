@@ -3,34 +3,51 @@ import { EmailModel } from "../../ogm-types.js";
 import { rule } from "graphql-shield";
 import jwt from "jsonwebtoken";
 import jwksClient from "jwks-rsa";
+import axios from "axios";
 
-const client = jwksClient({
-  jwksUri: `https://${process.env.AUTH0_DOMAIN}/.well-known/jwks.json`,
-});
-console.log("JWKS Client Config:", client);
+// Lazy initialization of the JWKS client
+let client: any = null;
 
+const getJwksClient = () => {
+  if (!client) {
+    if (!process.env.AUTH0_DOMAIN) {
+      throw new Error("AUTH0_DOMAIN environment variable is not defined");
+    }
+    client = jwksClient({
+      jwksUri: `https://${process.env.AUTH0_DOMAIN}/.well-known/jwks.json`,
+    });
+    console.log("Initialized JWKS Client:", client);
+  }
+  return client;
+};
 
 const getKey = (header: any, callback: any) => {
-  console.log("JWT Header:", header); 
+  console.log("JWT Header:", header); // Debug the JWT header
   if (!header || !header.kid) {
     return callback(new Error("Missing 'kid' in JWT header"), null);
   }
 
-  client.getSigningKey(header.kid, (err, key) => {
-    if (err) {
-      console.error("Error retrieving signing key:", err);
-      if ((err as any)?.code === "ENOTFOUND") {
-        console.error(`DNS resolution failed for domain: ${process.env.AUTH0_DOMAIN}`);
+  try {
+    const jwksClientInstance = getJwksClient(); // Lazily initialize the JWKS client
+    jwksClientInstance.getSigningKey(header.kid, (err: any, key: any) => {
+      if (err) {
+        console.error("Error retrieving signing key:", err);
+        if (err.code === "ENOTFOUND") {
+          console.error(
+            `DNS resolution failed for domain: ${process.env.AUTH0_DOMAIN}`
+          );
+        }
+        return callback(err, null);
       }
-      return callback(err, null);
-    }
-    const signingKey = key?.getPublicKey();
-    console.log("Retrieved Signing Key:", signingKey);
-    callback(null, signingKey);
-  });
+      const signingKey = key.getPublicKey();
+      console.log("Retrieved Signing Key:", signingKey);
+      callback(null, signingKey);
+    });
+  } catch (error) {
+    console.error("Error initializing JWKS client or retrieving key:", error);
+    return callback(error, null);
+  }
 };
-
-
 
 export const getUserFromEmail = async (
   email: string,
@@ -48,114 +65,31 @@ export const getUserFromEmail = async (
   }
 };
 
-type SetUserDataInput = {
-  context: {
-    ogm: any;
-    req: any;
-  };
-  getPermissionInfo: boolean;
+type GetUserDataFromUsernameInput = {
+  username: string;
   checkSpecificChannel?: string;
+  ogm: any;
+  emailVerified?: boolean;
 };
 
-export const setUserDataOnContext = async (input: SetUserDataInput) => {
-  console.log("Setting user data on context...");
-  const { context, getPermissionInfo } = input;
-  const { ogm, req } = context;
-
-  // Extract token from the request headers
-  const token = req?.headers?.authorization?.replace("Bearer ", "");
-  console.log("Token:", token);
-
-  // If no token is provided, set null user data and return
-  if (!token) {
-    console.log("No token found; setting user data to null.");
-    return {
-      username: null,
-      email_verified: false,
-      data: null,
-    };
-  }
-
-  // Log the Auth0 domain for debugging
-  console.log("Auth0 domain:", process.env.AUTH0_DOMAIN);
-
-  if (!process.env.AUTH0_DOMAIN) {
-    throw new Error("AUTH0_DOMAIN environment variable is not defined.");
-  }
-
-  let decoded: any;
-
-  try {
-    console.log("Verifying token...");
-    decoded = await new Promise((resolve, reject) => {
-      jwt.verify(
-        token,
-        getKey,
-        { algorithms: ["RS256"] },
-        (err, decoded) => {
-          if (err) {
-            console.error("JWT Verification Error:", err);
-            return reject(err);
-          }
-          resolve(decoded);
-        }
-      );
-    });
-  } catch (error: any) {
-    console.error("Error verifying token:", error.message);
-    // If token verification fails, return null user data
-    return {
-      username: null,
-      email_verified: false,
-      data: null,
-    };
-  }
-
-  console.log("Decoded token:", decoded);
-
-  // Extract email or username from the decoded token
-  const email = decoded?.email || decoded?.username;
-  console.log("Decoded email:", email);
-
-  if (!email) {
-    console.log("No email found in the token; setting user data to null.");
-    return {
-      username: null,
-      email_verified: false,
-      data: null,
-    };
-  }
-
-  console.log("Email found:", email);
-
-  const Email = ogm.model("Email");
+export const getUserDataFromUsername = async (
+  input: GetUserDataFromUsernameInput
+) => {
+  const { username, emailVerified, ogm, checkSpecificChannel } = input;
   const User = ogm.model("User");
-
-  // Fetch username from the database using email
-  const username = await getUserFromEmail(email, Email);
-
-  // If the username is not found, set null user data
-  if (!username) {
-    console.log("No username found for the email; setting user data to null.");
-    return {
-      username: null,
-      email_verified: false,
-      data: null,
-    };
-  }
-
-  let userData;
+  let userData = null;
   try {
-    const selectionSet = getPermissionInfo
-      ? `{ 
+    userData = await User.find({
+      where: { username },
+      selectionSet: `{ 
           ModerationProfile {
             displayName
             ModServerRoles {
               canGiveFeedback
             }
             ModChannelRoles ${
-              input.checkSpecificChannel
-                ? `(where: { channelUniqueName: "${input.checkSpecificChannel}" })`
+              checkSpecificChannel
+                ? `(where: { channelUniqueName: "${checkSpecificChannel}" })`
                 : ""
             } {
               canGiveFeedback
@@ -183,18 +117,13 @@ export const setUserDataOnContext = async (input: SetUserDataInput) => {
             canCreateDiscussion
             canCreateComment
           }
-        }`
-      : undefined;
-
-    userData = await User.find({
-      where: { username },
-      selectionSet,
+        }`,
     });
 
     console.log("User data fetched:", userData);
     return {
       username,
-      email_verified: decoded?.email_verified || false,
+      email_verified: emailVerified || false,
       data: userData[0],
     };
   } catch (error: any) {
@@ -202,11 +131,107 @@ export const setUserDataOnContext = async (input: SetUserDataInput) => {
     return {
       username: null,
       email_verified: false,
-      data: null,
+      data: {
+        ServerRoles: [],
+        ChannelRoles: [],
+        ModerationProfile: null,
+      },
     };
   }
 };
 
+type SetUserDataInput = {
+  context: {
+    ogm: any;
+    req: any;
+  };
+  getPermissionInfo: boolean;
+  checkSpecificChannel?: string;
+};
+
+export const setUserDataOnContext = async (input: SetUserDataInput) => {
+  console.log("Setting user data on context...");
+  const { context, getPermissionInfo } = input;
+  const { ogm, req } = context;
+
+  // Extract token from the request headers
+  const token = req?.headers?.authorization?.replace("Bearer ", "");
+
+  // If no token is provided, set null user data and return
+  if (!token) {
+    console.log("No token found; setting user data to null.");
+    return {
+      username: null,
+      email_verified: false,
+      data: null,
+    };
+  }
+
+  // Log the Auth0 domain for debugging
+  console.log("Auth0 domain:", process.env.AUTH0_DOMAIN);
+
+  if (!process.env.AUTH0_DOMAIN) {
+    throw new Error("AUTH0_DOMAIN environment variable is not defined.");
+  }
+
+  let email: string | null = null;
+  let decoded: any;
+
+  if (token) {
+    console.log("Verifying token...");
+    decoded = await new Promise((resolve, reject) => {
+      jwt.verify(token, getKey, { algorithms: ["RS256"] }, (err, decoded) => {
+        if (err) {
+          console.error("JWT Verification Error:", err);
+          return reject(err);
+        }
+        resolve(decoded);
+      });
+    });
+
+    console.log("Fetching email from Auth0 userinfo");
+    const userInfoResponse = await axios.get(
+      `https://${process.env.AUTH0_DOMAIN}/userinfo`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    console.log("Userinfo response:", userInfoResponse.data);
+    email = userInfoResponse.data.email;
+  }
+
+  console.log("Email found:", email);
+
+  const Email = ogm.model("Email");
+
+  // Fetch username from the database using email
+  const username = email ? await getUserFromEmail(email, Email) : null;
+
+  // If the username is not found, set null user data
+  if (!username) {
+    console.log("No username found for the email; setting user data to null.");
+    return {
+      username: null,
+      email_verified: false,
+      data: {
+        ServerRoles: [],
+        ChannelRoles: [],
+        ModerationProfile: null,
+      },
+    };
+  }
+
+  console.log("decoded email: ", email);
+
+  return getUserDataFromUsername({
+    username,
+    checkSpecificChannel: input.checkSpecificChannel,
+    ogm,
+    emailVerified: decoded?.email_verified,
+  });
+};
 
 export const isAuthenticatedAndVerified = rule({ cache: "contextual" })(
   async (parent: any, args: any, context: any, info: any) => {
