@@ -1,6 +1,5 @@
-import { EmailModel, UserModel } from "../../ogm-types";
+import { EmailModel, UserModel, UserCreateInput } from "../../ogm-types";
 import { generateSlug } from "random-word-slugs";
-
 type Args = {
   emailAddress: string;
   username: string;
@@ -47,27 +46,40 @@ const getCreateEmailAndUserResolver = (input: Input) => {
         // Create a new email and user
 
         const randomWords = generateSlug(4, { format: "camel" });
-
-        await User.create({
-          input: [
-            {
-              username,
-              Email: {
-                create: {
-                  node: {
-                    address: emailAddress,
-                  },
-                },
-              },
-              ModerationProfile: {
-                create: {
-                  node: {
-                    displayName: randomWords,
-                  },
-                },
+        const userCreateInput: UserCreateInput = {
+          username,
+          Email: {
+            create: {
+              node: {
+                address: emailAddress,
               },
             },
-          ],
+          },
+          ModerationProfile: {
+            create: {
+              node: {
+                displayName: randomWords,
+              },
+            },
+          },
+        };
+
+        if (emailAddress === process.env.CYPRESS_ADMIN_TEST_EMAIL) {
+          userCreateInput.ServerRoles = {
+            connect: [
+              {
+                where: {
+                  node: {
+                    name: "Admin Role",
+                  },
+                },
+              },
+            ],
+          };
+        }
+
+        await User.create({
+          input: [userCreateInput],
         });
       }
 

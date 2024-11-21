@@ -6289,6 +6289,12 @@ export type CreateDiscussionsMutationResponse = {
   info: CreateInfo;
 };
 
+export type CreateDropDataResponsesMutationResponse = {
+  __typename?: 'CreateDropDataResponsesMutationResponse';
+  dropDataResponses: Array<DropDataResponse>;
+  info: CreateInfo;
+};
+
 export type CreateEmailsMutationResponse = {
   __typename?: 'CreateEmailsMutationResponse';
   emails: Array<Email>;
@@ -8977,6 +8983,67 @@ export type DiscussionWhere = {
 export type DiscussionsConnection = {
   __typename?: 'DiscussionsConnection';
   edges: Array<DiscussionEdge>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type DropDataResponse = {
+  __typename?: 'DropDataResponse';
+  message?: Maybe<Scalars['String']['output']>;
+  success?: Maybe<Scalars['Boolean']['output']>;
+};
+
+export type DropDataResponseAggregateSelection = {
+  __typename?: 'DropDataResponseAggregateSelection';
+  count: Scalars['Int']['output'];
+  message: StringAggregateSelectionNullable;
+};
+
+export type DropDataResponseCreateInput = {
+  message?: InputMaybe<Scalars['String']['input']>;
+  success?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+export type DropDataResponseEdge = {
+  __typename?: 'DropDataResponseEdge';
+  cursor: Scalars['String']['output'];
+  node: DropDataResponse;
+};
+
+export type DropDataResponseOptions = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  /** Specify one or more DropDataResponseSort objects to sort DropDataResponses by. The sorts will be applied in the order in which they are arranged in the array. */
+  sort?: InputMaybe<Array<DropDataResponseSort>>;
+};
+
+/** Fields to sort DropDataResponses by. The order in which sorts are applied is not guaranteed when specifying many fields in one DropDataResponseSort object. */
+export type DropDataResponseSort = {
+  message?: InputMaybe<SortDirection>;
+  success?: InputMaybe<SortDirection>;
+};
+
+export type DropDataResponseUpdateInput = {
+  message?: InputMaybe<Scalars['String']['input']>;
+  success?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+export type DropDataResponseWhere = {
+  AND?: InputMaybe<Array<DropDataResponseWhere>>;
+  NOT?: InputMaybe<DropDataResponseWhere>;
+  OR?: InputMaybe<Array<DropDataResponseWhere>>;
+  message?: InputMaybe<Scalars['String']['input']>;
+  message_CONTAINS?: InputMaybe<Scalars['String']['input']>;
+  message_ENDS_WITH?: InputMaybe<Scalars['String']['input']>;
+  message_IN?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  message_MATCHES?: InputMaybe<Scalars['String']['input']>;
+  message_STARTS_WITH?: InputMaybe<Scalars['String']['input']>;
+  success?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+export type DropDataResponsesConnection = {
+  __typename?: 'DropDataResponsesConnection';
+  edges: Array<DropDataResponseEdge>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int']['output'];
 };
@@ -16373,6 +16440,7 @@ export type Mutation = {
   createDiscussionChannels: CreateDiscussionChannelsMutationResponse;
   createDiscussionWithChannelConnections?: Maybe<Discussion>;
   createDiscussions: CreateDiscussionsMutationResponse;
+  createDropDataResponses: CreateDropDataResponsesMutationResponse;
   createEmailAndUser?: Maybe<User>;
   createEmails: CreateEmailsMutationResponse;
   createEmojis: CreateEmojisMutationResponse;
@@ -16409,6 +16477,7 @@ export type Mutation = {
   deleteDiscussionChannelListFormats: DeleteInfo;
   deleteDiscussionChannels: DeleteInfo;
   deleteDiscussions: DeleteInfo;
+  deleteDropDataResponses: DeleteInfo;
   deleteEmails: DeleteInfo;
   deleteEmojis: DeleteInfo;
   deleteEnvironmentInfos: DeleteInfo;
@@ -16433,6 +16502,7 @@ export type Mutation = {
   deleteSiteWideDiscussionListFormats: DeleteInfo;
   deleteTags: DeleteInfo;
   deleteUsers: DeleteInfo;
+  dropDataForCypressTests?: Maybe<DropDataResponse>;
   removeEmojiFromComment?: Maybe<Comment>;
   removeEmojiFromDiscussionChannel?: Maybe<DiscussionChannel>;
   undoUpvoteComment?: Maybe<Comment>;
@@ -16447,6 +16517,7 @@ export type Mutation = {
   updateDiscussionChannels: UpdateDiscussionChannelsMutationResponse;
   updateDiscussionWithChannelConnections?: Maybe<Discussion>;
   updateDiscussions: UpdateDiscussionsMutationResponse;
+  updateDropDataResponses: UpdateDropDataResponsesMutationResponse;
   updateEmails: UpdateEmailsMutationResponse;
   updateEmojis: UpdateEmojisMutationResponse;
   updateEnvironmentInfos: UpdateEnvironmentInfosMutationResponse;
@@ -16541,6 +16612,11 @@ export type MutationCreateDiscussionWithChannelConnectionsArgs = {
 
 export type MutationCreateDiscussionsArgs = {
   input: Array<DiscussionCreateInput>;
+};
+
+
+export type MutationCreateDropDataResponsesArgs = {
+  input: Array<DropDataResponseCreateInput>;
 };
 
 
@@ -16729,6 +16805,11 @@ export type MutationDeleteDiscussionChannelsArgs = {
 export type MutationDeleteDiscussionsArgs = {
   delete?: InputMaybe<DiscussionDeleteInput>;
   where?: InputMaybe<DiscussionWhere>;
+};
+
+
+export type MutationDeleteDropDataResponsesArgs = {
+  where?: InputMaybe<DropDataResponseWhere>;
 };
 
 
@@ -16975,6 +17056,12 @@ export type MutationUpdateDiscussionsArgs = {
   disconnect?: InputMaybe<DiscussionDisconnectInput>;
   update?: InputMaybe<DiscussionUpdateInput>;
   where?: InputMaybe<DiscussionWhere>;
+};
+
+
+export type MutationUpdateDropDataResponsesArgs = {
+  update?: InputMaybe<DropDataResponseUpdateInput>;
+  where?: InputMaybe<DropDataResponseWhere>;
 };
 
 
@@ -17266,6 +17353,9 @@ export type Query = {
   discussions: Array<Discussion>;
   discussionsAggregate: DiscussionAggregateSelection;
   discussionsConnection: DiscussionsConnection;
+  dropDataResponses: Array<DropDataResponse>;
+  dropDataResponsesAggregate: DropDataResponseAggregateSelection;
+  dropDataResponsesConnection: DropDataResponsesConnection;
   emails: Array<Email>;
   emailsAggregate: EmailAggregateSelection;
   emailsConnection: EmailsConnection;
@@ -17514,6 +17604,25 @@ export type QueryDiscussionsConnectionArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<Array<InputMaybe<DiscussionSort>>>;
   where?: InputMaybe<DiscussionWhere>;
+};
+
+
+export type QueryDropDataResponsesArgs = {
+  options?: InputMaybe<DropDataResponseOptions>;
+  where?: InputMaybe<DropDataResponseWhere>;
+};
+
+
+export type QueryDropDataResponsesAggregateArgs = {
+  where?: InputMaybe<DropDataResponseWhere>;
+};
+
+
+export type QueryDropDataResponsesConnectionArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<DropDataResponseSort>>>;
+  where?: InputMaybe<DropDataResponseWhere>;
 };
 
 
@@ -21016,6 +21125,12 @@ export type UpdateDiscussionChannelsMutationResponse = {
 export type UpdateDiscussionsMutationResponse = {
   __typename?: 'UpdateDiscussionsMutationResponse';
   discussions: Array<Discussion>;
+  info: UpdateInfo;
+};
+
+export type UpdateDropDataResponsesMutationResponse = {
+  __typename?: 'UpdateDropDataResponsesMutationResponse';
+  dropDataResponses: Array<DropDataResponse>;
   info: UpdateInfo;
 };
 
@@ -26271,6 +26386,7 @@ export type ResolversTypes = {
   CreateDiscussionChannelListFormatsMutationResponse: ResolverTypeWrapper<CreateDiscussionChannelListFormatsMutationResponse>;
   CreateDiscussionChannelsMutationResponse: ResolverTypeWrapper<CreateDiscussionChannelsMutationResponse>;
   CreateDiscussionsMutationResponse: ResolverTypeWrapper<CreateDiscussionsMutationResponse>;
+  CreateDropDataResponsesMutationResponse: ResolverTypeWrapper<CreateDropDataResponsesMutationResponse>;
   CreateEmailsMutationResponse: ResolverTypeWrapper<CreateEmailsMutationResponse>;
   CreateEmojisMutationResponse: ResolverTypeWrapper<CreateEmojisMutationResponse>;
   CreateEnvironmentInfosMutationResponse: ResolverTypeWrapper<CreateEnvironmentInfosMutationResponse>;
@@ -26498,6 +26614,15 @@ export type ResolversTypes = {
   DiscussionUserAuthorNodeAggregateSelection: ResolverTypeWrapper<DiscussionUserAuthorNodeAggregateSelection>;
   DiscussionWhere: DiscussionWhere;
   DiscussionsConnection: ResolverTypeWrapper<DiscussionsConnection>;
+  DropDataResponse: ResolverTypeWrapper<DropDataResponse>;
+  DropDataResponseAggregateSelection: ResolverTypeWrapper<DropDataResponseAggregateSelection>;
+  DropDataResponseCreateInput: DropDataResponseCreateInput;
+  DropDataResponseEdge: ResolverTypeWrapper<DropDataResponseEdge>;
+  DropDataResponseOptions: DropDataResponseOptions;
+  DropDataResponseSort: DropDataResponseSort;
+  DropDataResponseUpdateInput: DropDataResponseUpdateInput;
+  DropDataResponseWhere: DropDataResponseWhere;
+  DropDataResponsesConnection: ResolverTypeWrapper<DropDataResponsesConnection>;
   Email: ResolverTypeWrapper<Email>;
   EmailAggregateSelection: ResolverTypeWrapper<EmailAggregateSelection>;
   EmailConnectInput: EmailConnectInput;
@@ -27415,6 +27540,7 @@ export type ResolversTypes = {
   UpdateDiscussionChannelListFormatsMutationResponse: ResolverTypeWrapper<UpdateDiscussionChannelListFormatsMutationResponse>;
   UpdateDiscussionChannelsMutationResponse: ResolverTypeWrapper<UpdateDiscussionChannelsMutationResponse>;
   UpdateDiscussionsMutationResponse: ResolverTypeWrapper<UpdateDiscussionsMutationResponse>;
+  UpdateDropDataResponsesMutationResponse: ResolverTypeWrapper<UpdateDropDataResponsesMutationResponse>;
   UpdateEmailsMutationResponse: ResolverTypeWrapper<UpdateEmailsMutationResponse>;
   UpdateEmojisMutationResponse: ResolverTypeWrapper<UpdateEmojisMutationResponse>;
   UpdateEnvironmentInfosMutationResponse: ResolverTypeWrapper<UpdateEnvironmentInfosMutationResponse>;
@@ -28278,6 +28404,7 @@ export type ResolversParentTypes = {
   CreateDiscussionChannelListFormatsMutationResponse: CreateDiscussionChannelListFormatsMutationResponse;
   CreateDiscussionChannelsMutationResponse: CreateDiscussionChannelsMutationResponse;
   CreateDiscussionsMutationResponse: CreateDiscussionsMutationResponse;
+  CreateDropDataResponsesMutationResponse: CreateDropDataResponsesMutationResponse;
   CreateEmailsMutationResponse: CreateEmailsMutationResponse;
   CreateEmojisMutationResponse: CreateEmojisMutationResponse;
   CreateEnvironmentInfosMutationResponse: CreateEnvironmentInfosMutationResponse;
@@ -28505,6 +28632,15 @@ export type ResolversParentTypes = {
   DiscussionUserAuthorNodeAggregateSelection: DiscussionUserAuthorNodeAggregateSelection;
   DiscussionWhere: DiscussionWhere;
   DiscussionsConnection: DiscussionsConnection;
+  DropDataResponse: DropDataResponse;
+  DropDataResponseAggregateSelection: DropDataResponseAggregateSelection;
+  DropDataResponseCreateInput: DropDataResponseCreateInput;
+  DropDataResponseEdge: DropDataResponseEdge;
+  DropDataResponseOptions: DropDataResponseOptions;
+  DropDataResponseSort: DropDataResponseSort;
+  DropDataResponseUpdateInput: DropDataResponseUpdateInput;
+  DropDataResponseWhere: DropDataResponseWhere;
+  DropDataResponsesConnection: DropDataResponsesConnection;
   Email: Email;
   EmailAggregateSelection: EmailAggregateSelection;
   EmailConnectInput: EmailConnectInput;
@@ -29418,6 +29554,7 @@ export type ResolversParentTypes = {
   UpdateDiscussionChannelListFormatsMutationResponse: UpdateDiscussionChannelListFormatsMutationResponse;
   UpdateDiscussionChannelsMutationResponse: UpdateDiscussionChannelsMutationResponse;
   UpdateDiscussionsMutationResponse: UpdateDiscussionsMutationResponse;
+  UpdateDropDataResponsesMutationResponse: UpdateDropDataResponsesMutationResponse;
   UpdateEmailsMutationResponse: UpdateEmailsMutationResponse;
   UpdateEmojisMutationResponse: UpdateEmojisMutationResponse;
   UpdateEnvironmentInfosMutationResponse: UpdateEnvironmentInfosMutationResponse;
@@ -30818,6 +30955,12 @@ export type CreateDiscussionsMutationResponseResolvers<ContextType = any, Parent
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type CreateDropDataResponsesMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateDropDataResponsesMutationResponse'] = ResolversParentTypes['CreateDropDataResponsesMutationResponse']> = {
+  dropDataResponses?: Resolver<Array<ResolversTypes['DropDataResponse']>, ParentType, ContextType>;
+  info?: Resolver<ResolversTypes['CreateInfo'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type CreateEmailsMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateEmailsMutationResponse'] = ResolversParentTypes['CreateEmailsMutationResponse']> = {
   emails?: Resolver<Array<ResolversTypes['Email']>, ParentType, ContextType>;
   info?: Resolver<ResolversTypes['CreateInfo'], ParentType, ContextType>;
@@ -31401,6 +31544,31 @@ export type DiscussionUserAuthorNodeAggregateSelectionResolvers<ContextType = an
 
 export type DiscussionsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscussionsConnection'] = ResolversParentTypes['DiscussionsConnection']> = {
   edges?: Resolver<Array<ResolversTypes['DiscussionEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DropDataResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['DropDataResponse'] = ResolversParentTypes['DropDataResponse']> = {
+  message?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  success?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DropDataResponseAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['DropDataResponseAggregateSelection'] = ResolversParentTypes['DropDataResponseAggregateSelection']> = {
+  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  message?: Resolver<ResolversTypes['StringAggregateSelectionNullable'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DropDataResponseEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['DropDataResponseEdge'] = ResolversParentTypes['DropDataResponseEdge']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['DropDataResponse'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DropDataResponsesConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['DropDataResponsesConnection'] = ResolversParentTypes['DropDataResponsesConnection']> = {
+  edges?: Resolver<Array<ResolversTypes['DropDataResponseEdge']>, ParentType, ContextType>;
   pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
   totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -32728,6 +32896,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createDiscussionChannels?: Resolver<ResolversTypes['CreateDiscussionChannelsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateDiscussionChannelsArgs, 'input'>>;
   createDiscussionWithChannelConnections?: Resolver<Maybe<ResolversTypes['Discussion']>, ParentType, ContextType, Partial<MutationCreateDiscussionWithChannelConnectionsArgs>>;
   createDiscussions?: Resolver<ResolversTypes['CreateDiscussionsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateDiscussionsArgs, 'input'>>;
+  createDropDataResponses?: Resolver<ResolversTypes['CreateDropDataResponsesMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateDropDataResponsesArgs, 'input'>>;
   createEmailAndUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationCreateEmailAndUserArgs, 'emailAddress' | 'username'>>;
   createEmails?: Resolver<ResolversTypes['CreateEmailsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateEmailsArgs, 'input'>>;
   createEmojis?: Resolver<ResolversTypes['CreateEmojisMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateEmojisArgs, 'input'>>;
@@ -32764,6 +32933,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteDiscussionChannelListFormats?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteDiscussionChannelListFormatsArgs>>;
   deleteDiscussionChannels?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteDiscussionChannelsArgs>>;
   deleteDiscussions?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteDiscussionsArgs>>;
+  deleteDropDataResponses?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteDropDataResponsesArgs>>;
   deleteEmails?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteEmailsArgs>>;
   deleteEmojis?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteEmojisArgs>>;
   deleteEnvironmentInfos?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteEnvironmentInfosArgs>>;
@@ -32788,6 +32958,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteSiteWideDiscussionListFormats?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteSiteWideDiscussionListFormatsArgs>>;
   deleteTags?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteTagsArgs>>;
   deleteUsers?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteUsersArgs>>;
+  dropDataForCypressTests?: Resolver<Maybe<ResolversTypes['DropDataResponse']>, ParentType, ContextType>;
   removeEmojiFromComment?: Resolver<Maybe<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<MutationRemoveEmojiFromCommentArgs, 'commentId' | 'emojiLabel' | 'username'>>;
   removeEmojiFromDiscussionChannel?: Resolver<Maybe<ResolversTypes['DiscussionChannel']>, ParentType, ContextType, RequireFields<MutationRemoveEmojiFromDiscussionChannelArgs, 'discussionChannelId' | 'emojiLabel' | 'username'>>;
   undoUpvoteComment?: Resolver<Maybe<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<MutationUndoUpvoteCommentArgs, 'commentId' | 'username'>>;
@@ -32802,6 +32973,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   updateDiscussionChannels?: Resolver<ResolversTypes['UpdateDiscussionChannelsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateDiscussionChannelsArgs>>;
   updateDiscussionWithChannelConnections?: Resolver<Maybe<ResolversTypes['Discussion']>, ParentType, ContextType, RequireFields<MutationUpdateDiscussionWithChannelConnectionsArgs, 'discussionUpdateInput' | 'where'>>;
   updateDiscussions?: Resolver<ResolversTypes['UpdateDiscussionsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateDiscussionsArgs>>;
+  updateDropDataResponses?: Resolver<ResolversTypes['UpdateDropDataResponsesMutationResponse'], ParentType, ContextType, Partial<MutationUpdateDropDataResponsesArgs>>;
   updateEmails?: Resolver<ResolversTypes['UpdateEmailsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateEmailsArgs>>;
   updateEmojis?: Resolver<ResolversTypes['UpdateEmojisMutationResponse'], ParentType, ContextType, Partial<MutationUpdateEmojisArgs>>;
   updateEnvironmentInfos?: Resolver<ResolversTypes['UpdateEnvironmentInfosMutationResponse'], ParentType, ContextType, Partial<MutationUpdateEnvironmentInfosArgs>>;
@@ -32876,6 +33048,9 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   discussions?: Resolver<Array<ResolversTypes['Discussion']>, ParentType, ContextType, Partial<QueryDiscussionsArgs>>;
   discussionsAggregate?: Resolver<ResolversTypes['DiscussionAggregateSelection'], ParentType, ContextType, Partial<QueryDiscussionsAggregateArgs>>;
   discussionsConnection?: Resolver<ResolversTypes['DiscussionsConnection'], ParentType, ContextType, Partial<QueryDiscussionsConnectionArgs>>;
+  dropDataResponses?: Resolver<Array<ResolversTypes['DropDataResponse']>, ParentType, ContextType, Partial<QueryDropDataResponsesArgs>>;
+  dropDataResponsesAggregate?: Resolver<ResolversTypes['DropDataResponseAggregateSelection'], ParentType, ContextType, Partial<QueryDropDataResponsesAggregateArgs>>;
+  dropDataResponsesConnection?: Resolver<ResolversTypes['DropDataResponsesConnection'], ParentType, ContextType, Partial<QueryDropDataResponsesConnectionArgs>>;
   emails?: Resolver<Array<ResolversTypes['Email']>, ParentType, ContextType, Partial<QueryEmailsArgs>>;
   emailsAggregate?: Resolver<ResolversTypes['EmailAggregateSelection'], ParentType, ContextType, Partial<QueryEmailsAggregateArgs>>;
   emailsConnection?: Resolver<ResolversTypes['EmailsConnection'], ParentType, ContextType, Partial<QueryEmailsConnectionArgs>>;
@@ -33574,6 +33749,12 @@ export type UpdateDiscussionChannelsMutationResponseResolvers<ContextType = any,
 
 export type UpdateDiscussionsMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateDiscussionsMutationResponse'] = ResolversParentTypes['UpdateDiscussionsMutationResponse']> = {
   discussions?: Resolver<Array<ResolversTypes['Discussion']>, ParentType, ContextType>;
+  info?: Resolver<ResolversTypes['UpdateInfo'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type UpdateDropDataResponsesMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateDropDataResponsesMutationResponse'] = ResolversParentTypes['UpdateDropDataResponsesMutationResponse']> = {
+  dropDataResponses?: Resolver<Array<ResolversTypes['DropDataResponse']>, ParentType, ContextType>;
   info?: Resolver<ResolversTypes['UpdateInfo'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -34541,6 +34722,7 @@ export type Resolvers<ContextType = any> = {
   CreateDiscussionChannelListFormatsMutationResponse?: CreateDiscussionChannelListFormatsMutationResponseResolvers<ContextType>;
   CreateDiscussionChannelsMutationResponse?: CreateDiscussionChannelsMutationResponseResolvers<ContextType>;
   CreateDiscussionsMutationResponse?: CreateDiscussionsMutationResponseResolvers<ContextType>;
+  CreateDropDataResponsesMutationResponse?: CreateDropDataResponsesMutationResponseResolvers<ContextType>;
   CreateEmailsMutationResponse?: CreateEmailsMutationResponseResolvers<ContextType>;
   CreateEmojisMutationResponse?: CreateEmojisMutationResponseResolvers<ContextType>;
   CreateEnvironmentInfosMutationResponse?: CreateEnvironmentInfosMutationResponseResolvers<ContextType>;
@@ -34622,6 +34804,10 @@ export type Resolvers<ContextType = any> = {
   DiscussionUserAuthorAggregationSelection?: DiscussionUserAuthorAggregationSelectionResolvers<ContextType>;
   DiscussionUserAuthorNodeAggregateSelection?: DiscussionUserAuthorNodeAggregateSelectionResolvers<ContextType>;
   DiscussionsConnection?: DiscussionsConnectionResolvers<ContextType>;
+  DropDataResponse?: DropDataResponseResolvers<ContextType>;
+  DropDataResponseAggregateSelection?: DropDataResponseAggregateSelectionResolvers<ContextType>;
+  DropDataResponseEdge?: DropDataResponseEdgeResolvers<ContextType>;
+  DropDataResponsesConnection?: DropDataResponsesConnectionResolvers<ContextType>;
   Email?: EmailResolvers<ContextType>;
   EmailAggregateSelection?: EmailAggregateSelectionResolvers<ContextType>;
   EmailEdge?: EmailEdgeResolvers<ContextType>;
@@ -34878,6 +35064,7 @@ export type Resolvers<ContextType = any> = {
   UpdateDiscussionChannelListFormatsMutationResponse?: UpdateDiscussionChannelListFormatsMutationResponseResolvers<ContextType>;
   UpdateDiscussionChannelsMutationResponse?: UpdateDiscussionChannelsMutationResponseResolvers<ContextType>;
   UpdateDiscussionsMutationResponse?: UpdateDiscussionsMutationResponseResolvers<ContextType>;
+  UpdateDropDataResponsesMutationResponse?: UpdateDropDataResponsesMutationResponseResolvers<ContextType>;
   UpdateEmailsMutationResponse?: UpdateEmailsMutationResponseResolvers<ContextType>;
   UpdateEmojisMutationResponse?: UpdateEmojisMutationResponseResolvers<ContextType>;
   UpdateEnvironmentInfosMutationResponse?: UpdateEnvironmentInfosMutationResponseResolvers<ContextType>;

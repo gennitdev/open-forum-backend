@@ -29,6 +29,7 @@ import safetyCheck from "./customResolvers/queries/safetyCheck.js";
 
 import { ModelMap } from "./ogm-types.js";
 import getCreateEmailAndUserResolver from "./customResolvers/mutations/createEmailAndUser.js";
+import dropDataForCypressTestsResolver from "./customResolvers/mutations/dropDataForCypressTests.js";
 
 const { OGM } = pkg;
 
@@ -139,6 +140,7 @@ export default function (driver: any) {
         User,
         Email,
       }),
+      dropDataForCypressTests: dropDataForCypressTestsResolver({ driver }),
     },
   };
   return {

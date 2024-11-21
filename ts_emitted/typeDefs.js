@@ -326,6 +326,11 @@ const typeDefinitions = gql `
     url: String
   }
 
+  type DropDataResponse {
+    success: Boolean
+    message: String
+  }
+
   type Mutation {
     addEmojiToComment(
       commentId: ID!
@@ -375,6 +380,7 @@ const typeDefinitions = gql `
     undoUpvoteDiscussionChannel(discussionChannelId: ID!, username: String!): DiscussionChannel
     createSignedStorageURL(filename: String!, contentType: String!): SignedURL
     createEmailAndUser(emailAddress: String!, username: String!): User
+    dropDataForCypressTests: DropDataResponse
   }
 
   input SiteWideDiscussionSortOrder {

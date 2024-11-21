@@ -67,14 +67,16 @@ export const getUserFromEmail = async (
 
 type GetUserDataFromUsernameInput = {
   username: string;
+  email: string | null;
   checkSpecificChannel?: string;
   ogm: any;
   emailVerified?: boolean;
 };
 
+
 export const getUserDataFromUsername = async (
   input: GetUserDataFromUsernameInput
-) => {
+): Promise<UserDataOnContext> => {
   const { username, emailVerified, ogm, checkSpecificChannel } = input;
   const User = ogm.model("User");
   let userData = null;
@@ -123,6 +125,7 @@ export const getUserDataFromUsername = async (
     console.log("User data fetched:", userData);
     return {
       username,
+      email: input.email,
       email_verified: emailVerified || false,
       data: userData[0],
     };
@@ -130,6 +133,7 @@ export const getUserDataFromUsername = async (
     console.error("Error fetching user data:", error.message);
     return {
       username: null,
+      email: null,
       email_verified: false,
       data: {
         ServerRoles: [],
@@ -149,10 +153,24 @@ type SetUserDataInput = {
   checkSpecificChannel?: string;
 };
 
-export const setUserDataOnContext = async (input: SetUserDataInput) => {
+export type UserDataOnContext = {
+  username: string | null;
+  email: string | null;
+  email_verified: boolean;
+  data: any;
+};
+
+export const setUserDataOnContext = async (input: SetUserDataInput): Promise<UserDataOnContext> => {
   console.log("Setting user data on context...");
   const { context, getPermissionInfo } = input;
   const { ogm, req } = context;
+
+  const userData: UserDataOnContext = {
+    username: null,
+    email: null,
+    email_verified: false,
+    data: null,
+  }
 
   // Extract token from the request headers
   const token = req?.headers?.authorization?.replace("Bearer ", "");
@@ -162,6 +180,7 @@ export const setUserDataOnContext = async (input: SetUserDataInput) => {
     console.log("No token found; setting user data to null.");
     return {
       username: null,
+      email: null,
       email_verified: false,
       data: null,
     };
@@ -214,6 +233,7 @@ export const setUserDataOnContext = async (input: SetUserDataInput) => {
     console.log("No username found for the email; setting user data to null.");
     return {
       username: null,
+      email: null,
       email_verified: false,
       data: {
         ServerRoles: [],
@@ -226,6 +246,7 @@ export const setUserDataOnContext = async (input: SetUserDataInput) => {
   console.log("decoded email: ", email);
 
   return getUserDataFromUsername({
+    email,
     username,
     checkSpecificChannel: input.checkSpecificChannel,
     ogm,

@@ -9,6 +9,7 @@ const permissionList = shield({
     },
     Mutation: {
       "*": deny,
+      dropDataForCypressTests: rules.isAdmin,
       createServerRoles: rules.isAdmin,
       createChannelRoles: rules.isAdmin,
       createModServerRoles: rules.isAdmin,
@@ -22,25 +23,25 @@ const permissionList = shield({
       
       createChannels: and(rules.createChannelInputIsValid, rules.canCreateChannel),
       updateChannels: and(rules.updateChannelInputIsValid, or(rules.isChannelOwner, rules.isAdmin)),
-      deleteChannels: or(rules.isChannelOwner, rules.isAdmin),
+      deleteChannels: or(rules.isAdmin, rules.isChannelOwner),
 
       deleteEmails: or(rules.isAccountOwner, rules.isAdmin),
-      deleteUsers: or(rules.isAccountOwner, rules.isAdmin),
+      deleteUsers: or(rules.isAdmin, rules.isAccountOwner),
     
       createDiscussionWithChannelConnections:  and(rules.createDiscussionInputIsValid, or(rules.canCreateDiscussion, rules.isAdmin)),
       updateDiscussionWithChannelConnections:  and(rules.updateDiscussionInputIsValid, or(rules.isDiscussionOwner, rules.isAdmin)),
-      deleteDiscussions: or(rules.isDiscussionOwner, rules.isAdmin),
+      deleteDiscussions: or(rules.isAdmin, rules.isDiscussionOwner),
       deleteDiscussionChannels: rules.isAdmin,
       
       createEventWithChannelConnections: and(rules.createEventInputIsValid, rules.canCreateEvent),
       updateEventWithChannelConnections: and(rules.updateEventInputIsValid, or(rules.isEventOwner, rules.isAdmin)),
-      deleteEvents: or(rules.isEventOwner, rules.isAdmin),
+      deleteEvents: or(rules.isAdmin, rules.isEventOwner),
       updateEvents: or(rules.isEventOwner, rules.isAdmin),
       deleteEventChannels: rules.isAdmin,
 
       createComments: and(rules.createCommentInputIsValid,rules.canCreateComment),
       updateComments: and(rules.updateCommentInputIsValid, or(rules.isCommentAuthor, rules.isAdmin)),
-      deleteComments: or(rules.isCommentAuthor, rules.isAdmin),
+      deleteComments: or(rules.isAdmin, rules.isCommentAuthor),
       
       createSignedStorageURL: rules.canUploadFile,
       addEmojiToComment: rules.canUpvoteComment,

@@ -21,6 +21,7 @@ import undoUpvoteDiscussionChannel from "./customResolvers/mutations/undoUpvoteD
 import createSignedStorageURL from "./customResolvers/mutations/createSignedStorageURL.js";
 import safetyCheck from "./customResolvers/queries/safetyCheck.js";
 import getCreateEmailAndUserResolver from "./customResolvers/mutations/createEmailAndUser.js";
+import dropDataForCypressTestsResolver from "./customResolvers/mutations/dropDataForCypressTests.js";
 const { OGM } = pkg;
 export default function (driver) {
     const ogm = new OGM({
@@ -125,6 +126,7 @@ export default function (driver) {
                 User,
                 Email,
             }),
+            dropDataForCypressTests: dropDataForCypressTestsResolver({ driver }),
         },
     };
     return {
