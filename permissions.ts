@@ -18,6 +18,7 @@ const permissionList = shield({
       createModServerRoles: allow,//rules.isAdmin,
       createServerRoles: allow,//rules.isAdmin,
       createServerConfigs: allow,//rules.isAdmin,
+      deleteServerConfigs: allow,//rules.isAdmin,
 
       updateServerConfigs: rules.isAdmin,
       deleteChannelRoles: or(rules.isAdmin, rules.isChannelOwner),

@@ -106,7 +106,7 @@ async function initializeServer() {
     await ogm.init();
     await driver.session().run(ensureUniqueDiscussionChannelRelationship);
     await driver.session().run(ensureUniqueEventChannelRelationship);
-    await neoSchema.assertIndexesAndConstraints({ options: { create: true } });
+    await neoSchema.assertIndexesAndConstraints();
 
     const server = new ApolloServer({
       persistedQueries: false,

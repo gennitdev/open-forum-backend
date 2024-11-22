@@ -36,6 +36,9 @@ export const updateEventInputIsValid = rule({ cache: "contextual" })(
     if (!args.eventUpdateInput) {
       return "Missing eventUpdateInput in args.";
     }
-    return validateEventInput(args.eventUpdateInput, false);
+    return validateEventInput({
+      title: args.eventUpdateInput?.title_SET || null,
+      description: args.eventUpdateInput?.description_SET || null,
+    }, false);
   }
 );
