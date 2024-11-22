@@ -266,13 +266,14 @@ export const setUserDataOnContext = async (input: SetUserDataInput): Promise<Use
 
   // Fetch username from the database using email
   const username = email ? await getUserFromEmail(email, Email) : null;
+  console.log("Username fetched from the database:", username);
 
   // If the username is not found, set null user data
   if (!username) {
     console.log("No username found for the email; setting user data to null.");
     return {
       username: null,
-      email: null,
+      email,
       email_verified: false,
       data: {
         ServerRoles: [],
@@ -285,7 +286,7 @@ export const setUserDataOnContext = async (input: SetUserDataInput): Promise<Use
   return {
     username,
     email,
-    email_verified: true, // Adjust based on your actual logic
+    email_verified: false,
     data: {
       ServerRoles: [],
       ChannelRoles: [],

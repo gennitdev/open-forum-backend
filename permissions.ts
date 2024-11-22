@@ -1,6 +1,5 @@
 import { and, shield, allow, deny, or } from "graphql-shield";
 import rules from "./rules/rules.js";
-import safetyCheck from './customResolvers/queries/safetyCheck';
 
 const permissionList = shield({
     Query: {
@@ -11,10 +10,15 @@ const permissionList = shield({
       "*": deny,
       dropDataForCypressTests: rules.isAdmin,
       createTags: allow,
-      createServerRoles: rules.isAdmin,
+      
+      
       createChannelRoles: rules.isAdmin,
-      createModServerRoles: rules.isAdmin,
-      createServerConfigs: rules.isAdmin,
+      createModChannelRoles: rules.isAdmin,
+
+      createModServerRoles: allow,//rules.isAdmin,
+      createServerRoles: allow,//rules.isAdmin,
+      createServerConfigs: allow,//rules.isAdmin,
+
       updateServerConfigs: rules.isAdmin,
       deleteChannelRoles: or(rules.isAdmin, rules.isChannelOwner),
       deleteServerRoles: rules.isAdmin,

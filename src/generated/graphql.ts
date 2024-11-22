@@ -18758,7 +18758,7 @@ export type ServerConfig = {
   DefaultModRole?: Maybe<ModServerRole>;
   DefaultModRoleAggregate?: Maybe<ServerConfigModServerRoleDefaultModRoleAggregationSelection>;
   DefaultModRoleConnection: ServerConfigDefaultModRoleConnection;
-  DefaultServerRole: ServerRole;
+  DefaultServerRole?: Maybe<ServerRole>;
   DefaultServerRoleAggregate?: Maybe<ServerConfigServerRoleDefaultServerRoleAggregationSelection>;
   DefaultServerRoleConnection: ServerConfigDefaultServerRoleConnection;
   serverDescription?: Maybe<Scalars['String']['output']>;
@@ -33283,7 +33283,7 @@ export type ServerConfigResolvers<ContextType = any, ParentType extends Resolver
   DefaultModRole?: Resolver<Maybe<ResolversTypes['ModServerRole']>, ParentType, ContextType, RequireFields<ServerConfigDefaultModRoleArgs, 'directed'>>;
   DefaultModRoleAggregate?: Resolver<Maybe<ResolversTypes['ServerConfigModServerRoleDefaultModRoleAggregationSelection']>, ParentType, ContextType, RequireFields<ServerConfigDefaultModRoleAggregateArgs, 'directed'>>;
   DefaultModRoleConnection?: Resolver<ResolversTypes['ServerConfigDefaultModRoleConnection'], ParentType, ContextType, RequireFields<ServerConfigDefaultModRoleConnectionArgs, 'directed'>>;
-  DefaultServerRole?: Resolver<ResolversTypes['ServerRole'], ParentType, ContextType, RequireFields<ServerConfigDefaultServerRoleArgs, 'directed'>>;
+  DefaultServerRole?: Resolver<Maybe<ResolversTypes['ServerRole']>, ParentType, ContextType, RequireFields<ServerConfigDefaultServerRoleArgs, 'directed'>>;
   DefaultServerRoleAggregate?: Resolver<Maybe<ResolversTypes['ServerConfigServerRoleDefaultServerRoleAggregationSelection']>, ParentType, ContextType, RequireFields<ServerConfigDefaultServerRoleAggregateArgs, 'directed'>>;
   DefaultServerRoleConnection?: Resolver<ResolversTypes['ServerConfigDefaultServerRoleConnection'], ParentType, ContextType, RequireFields<ServerConfigDefaultServerRoleConnectionArgs, 'directed'>>;
   serverDescription?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;

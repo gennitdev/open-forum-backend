@@ -164,7 +164,7 @@ const isAdmin = rule({ cache: "contextual" })(
       return false;
     }
     let isAdmin = false
-    const serverRoles = ctx.user?.data?.ServerRoles;
+    const serverRoles = ctx.user?.data?.ServerRoles || [];
     const email = ctx.user?.email;
 
     if (email === process.env.CYPRESS_ADMIN_TEST_EMAIL) {
