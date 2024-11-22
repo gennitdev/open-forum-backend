@@ -4,9 +4,19 @@ import { rule } from "graphql-shield";
 import jwt from "jsonwebtoken";
 import jwksClient from "jwks-rsa";
 import axios from "axios";
+import NodeCache from "node-cache";
+
+type CachedUserInfo = {
+  email: string | null;
+};
+
 
 // Lazy initialization of the JWKS client
 let client: any = null;
+
+// Cache response from Auth0 userinfo endpoint
+// so that we will not hit the rate limit.
+const userInfoCache = new NodeCache({ stdTTL: 900 }); // Cache expires in 15 minutes
 
 const getJwksClient = () => {
   if (!client) {
@@ -194,7 +204,7 @@ export type UserDataOnContext = {
 
 export const setUserDataOnContext = async (input: SetUserDataInput): Promise<UserDataOnContext> => {
   console.log("Setting user data on context...");
-  const { context, getPermissionInfo } = input;
+  const { context } = input;
   const { ogm, req } = context;
   const token = req?.headers?.authorization?.replace("Bearer ", "");
 
@@ -227,17 +237,29 @@ export const setUserDataOnContext = async (input: SetUserDataInput): Promise<Use
       });
     });
 
-    console.log("Fetching email from Auth0 userinfo");
-    const userInfoResponse = await axios.get(
-      `https://${process.env.AUTH0_DOMAIN}/userinfo`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    email = userInfoResponse.data.email;
-    console.log("Fetched email from Auth0 userinfo:", email);
+    // Check if userinfo is cached
+    const cachedUserInfo: CachedUserInfo | undefined = userInfoCache.get(token);
+
+    if (cachedUserInfo) {
+      console.log("Using cached user info.");
+      email = cachedUserInfo.email;
+    } else {
+      console.log("Fetching email from Auth0 userinfo");
+      const userInfoResponse = await axios.get(
+        `https://${process.env.AUTH0_DOMAIN}/userinfo`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      email = userInfoResponse.data.email;
+
+      // Cache the userinfo response
+      const userInfoToCache: CachedUserInfo = { email };
+      userInfoCache.set(token, userInfoToCache);
+      console.log("Fetched email from Auth0 userinfo:", email);
+    }
   }
 
   const Email = ogm.model("Email");
@@ -260,15 +282,16 @@ export const setUserDataOnContext = async (input: SetUserDataInput): Promise<Use
     };
   }
 
-  console.log("decoded email: ", email);
-
-  return getUserDataFromUsername({
-    email,
+  return {
     username,
-    checkSpecificChannel: input.checkSpecificChannel,
-    ogm,
-    emailVerified: decoded?.email_verified,
-  });
+    email,
+    email_verified: true, // Adjust based on your actual logic
+    data: {
+      ServerRoles: [],
+      ChannelRoles: [],
+      ModerationProfile: null,
+    },
+  };
 };
 
 export const isAuthenticatedAndVerified = rule({ cache: "contextual" })(

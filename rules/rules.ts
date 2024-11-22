@@ -165,13 +165,8 @@ const isAdmin = rule({ cache: "contextual" })(
     }
     let isAdmin = false
     const serverRoles = ctx.user?.data?.ServerRoles;
-    console.log('server roles', serverRoles)
     const email = ctx.user?.email;
-    console.log({
-      email,
-      user: ctx.user,
-      cypressEmail: process.env.CYPRESS_ADMIN_TEST_EMAIL
-    })
+
     if (email === process.env.CYPRESS_ADMIN_TEST_EMAIL) {
       // This email is used only for cypress tests. We need 
       // to whitelist it as an admin so that we don't have the catch-22

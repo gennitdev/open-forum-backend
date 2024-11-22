@@ -37,9 +37,9 @@
     "mathjs": "^11.11.0",
     "ncp": "^2.0.0",
     "neo4j-driver": "^5.15.0",
+    "node-cache": "^5.1.2",
     "nodemailer": "^6.9.14",
-    "random-word-slugs": "^0.1.7",
-    "snoowrap": "^1.23.0"
+    "random-word-slugs": "^0.1.7"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "5.0.0",
