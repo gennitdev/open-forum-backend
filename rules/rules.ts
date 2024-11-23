@@ -118,7 +118,7 @@ export const canCreateComment = rule({ cache: "contextual" })(
       throw new Error("No discussion channel found.");
     }
 
-    const discussionChannelId = DiscussionChannel.connect?.where?.node?.id_EQ
+    const discussionChannelId = DiscussionChannel.connect?.where?.node?.id
 
     if (!discussionChannelId) {
       throw new Error("No discussion channel ID found.");

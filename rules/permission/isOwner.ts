@@ -32,7 +32,7 @@ export const isChannelOwner = rule({ cache: "contextual" })(
 
     let ogm = ctx.ogm;
     const { where } = args;
-    const uniqueName = where.uniqueName_EQ;
+    const uniqueName = where.uniqueName;
 
     if (!uniqueName) {
       throw new Error(ERROR_MESSAGES.channel.notFound);
@@ -85,7 +85,7 @@ export const isDiscussionOwner = rule({ cache: "contextual" })(
 
     const { where } = args;
     if (where) {
-      discussionId = where.id_EQ;
+      discussionId = where.id;
     }
 
     // set user data
@@ -147,7 +147,7 @@ export const isEventOwner = rule({ cache: "contextual" })(
 
     const { where } = args;
     if (where) {
-      eventId = where.id_EQ;
+      eventId = where.id;
     }
 
     // set user data
@@ -204,7 +204,7 @@ export const isCommentAuthor = rule({ cache: "contextual" })(
   async (parent: any, args: IsCommentAuthorInput, ctx: any, info: any) => {
     console.log("isCommentAuthor rule");
     const { where } = args;
-    const commentId  = where.id_EQ
+    const commentId  = where.id
 
     // set user data
     ctx.user = await setUserDataOnContext({
@@ -285,7 +285,7 @@ type IsAccountOwnerArgs = {
 // Check if the user is the owner of the account.
 export const isAccountOwner = rule({ cache: "contextual" })(
   async (parent: any, args: IsAccountOwnerArgs, ctx: any, info: any) => {
-    const username  = args.where?.username_EQ;
+    const username  = args.where?.username;
 
     // set user data
     ctx.user = await setUserDataOnContext({

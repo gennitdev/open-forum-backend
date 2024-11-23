@@ -3,6 +3,8 @@ const getResolver = (input) => {
     const { Event, driver } = input;
     return async (parent, args, context, info) => {
         const { eventCreateInput, channelConnections } = args;
+        console.log("eventCreateInput", eventCreateInput);
+        console.log("channelConnections", channelConnections);
         if (!channelConnections || channelConnections.length === 0) {
             console.error("At least one channel must be selected");
             throw new Error("At least one channel must be selected");

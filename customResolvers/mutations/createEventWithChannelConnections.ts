@@ -1,4 +1,5 @@
 import { createEventChannelQuery } from "../cypher/cypherQueries.js";
+import { EventCreateInput } from "../../src/generated/graphql.js";
 
 type Input = {
   Event: any;
@@ -6,7 +7,7 @@ type Input = {
 };
 
 type Args = {
-  eventCreateInput: any;
+  eventCreateInput: EventCreateInput;
   channelConnections: string[];
 };
 
@@ -14,6 +15,8 @@ const getResolver = (input: Input) => {
   const { Event, driver } = input;
   return async (parent: any, args: Args, context: any, info: any) => {
     const { eventCreateInput, channelConnections } = args;
+    console.log("eventCreateInput", eventCreateInput);
+    console.log("channelConnections", channelConnections);
 
     if (!channelConnections || channelConnections.length === 0) {
       console.error("At least one channel must be selected");

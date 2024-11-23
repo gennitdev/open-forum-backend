@@ -42,7 +42,7 @@ export const hasServerPermission: (
 
     if (!serverConfig || !serverConfig[0]) {
       return new Error(
-        "Could not find the server config, which contains the default server role. Therefore could not check the user's permissions."
+        "While checking server permissions, could not find the server config, which contains the default server role. Therefore could not check the user's permissions."
       );
     }
 

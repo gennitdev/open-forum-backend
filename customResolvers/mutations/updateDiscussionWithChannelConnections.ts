@@ -29,7 +29,7 @@ const getResolver = (input: Input) => {
         where: where,
         update: discussionUpdateInput,
       });
-      const updatedDiscussionId = where.id_EQ;
+      const updatedDiscussionId = where.id;
 
       const session = driver.session();
 
