@@ -9,7 +9,7 @@ const getResolver = (input) => {
                 where: where,
                 update: discussionUpdateInput,
             });
-            const updatedDiscussionId = where.id_EQ;
+            const updatedDiscussionId = where.id;
             const session = driver.session();
             // Update the channel connections
             for (let i = 0; i < channelConnections.length; i++) {

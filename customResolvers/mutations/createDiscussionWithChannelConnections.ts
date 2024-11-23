@@ -11,9 +11,6 @@ type Input = {
   driver: any;
 };
 
-const getResolver = (input: Input) => {
-  const {Discussion, driver} = input;
-  return async (parent: any, args: Args, context: any, info: any) => {
     // The reason why we cannot use the auto-generated resolver
     // to create a Discussion with DiscussionChannels already linked
     // is because the creation of the DiscussionChannel nodes
@@ -43,6 +40,10 @@ const getResolver = (input: Input) => {
     //   Channel: Channel @relationship(type: "POSTED_IN_CHANNEL", direction: OUT)
     //    ...other fields
     // }
+
+const getResolver = (input: Input) => {
+  const {Discussion, driver} = input;
+  return async (parent: any, args: Args, context: any, info: any) => {
 
     const { discussionCreateInput, channelConnections } = args;
 

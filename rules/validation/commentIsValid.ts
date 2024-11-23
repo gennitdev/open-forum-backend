@@ -31,6 +31,6 @@ export const updateCommentInputIsValid = rule({ cache: "contextual" })(
     if (!args.update) {
       return "Missing update input in args.";
     }
-    return validateCommentText(args.update?.text_SET || "");
+    return validateCommentText(args.update?.text || "");
   }
 );
