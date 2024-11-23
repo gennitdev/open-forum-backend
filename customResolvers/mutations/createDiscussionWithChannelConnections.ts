@@ -82,26 +82,35 @@ const getResolver = (input: Input) => {
         }
       `;
 
+    const response = await Discussion.create({
+      input: [discussionCreateInput],
+      selectionSet: `{ discussions ${selectionSet} }`
+    });
+
     try {
-      const response = await Discussion.create({
-        input: [discussionCreateInput],
-        selectionSet: `{ discussions ${selectionSet} }`
-      });
       const newDiscussion = response.discussions[0];
-
       const newDiscussionId = newDiscussion.id;
-
       const session = driver.session();
 
-      for (let i = 0; i < channelConnections.length; i++) {
-        const channelUniqueName = channelConnections[i];
-
-        await session.run(createDiscussionChannelQuery, {
-          discussionId: newDiscussionId,
-          channelUniqueName: channelUniqueName,
-          upvotedBy: newDiscussion.Author.username,
-        });
+      for (const channelUniqueName of channelConnections) {
+        try {
+          await session.run(createDiscussionChannelQuery, {
+            discussionId: newDiscussionId,
+            channelUniqueName,
+            upvotedBy: newDiscussion.Author.username,
+          });
+        } catch (error: any) {
+          if (error.message.includes("Constraint validation failed")) {
+            console.warn(
+              `Skipping duplicate DiscussionChannel: ${channelUniqueName}`
+            );
+            continue;
+          } else {
+            throw error;
+          }
+        }
       }
+      
 
       // Refetch the newly created discussion with the channel connections
       // so that we can return it.

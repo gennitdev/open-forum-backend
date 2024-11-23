@@ -1,3 +1,4 @@
+import { createDiscussionChannelQuery } from "../cypher/cypherQueries.js";
 // The reason why we cannot use the auto-generated resolver
 // to create a Discussion with DiscussionChannels already linked
 // is because the creation of the DiscussionChannel nodes
@@ -31,100 +32,75 @@ const getResolver = (input) => {
             throw new Error("At least one channel must be selected");
         }
         const selectionSet = `
-            {
-              id
-              title
-              body
-              Author {
-                username
-              }
-              DiscussionChannels {
-                id
-                createdAt
-                channelUniqueName
-                discussionId
-                UpvotedByUsers {
-                  username
-                }
-                Channel {
-                  uniqueName
-                }
-                Discussion {
-                  id
-                }
-              }
-              createdAt
-              updatedAt
-              Tags {
-                text
-              }
+        {
+          id
+          title
+          body
+          Author {
+            username
+          }
+          DiscussionChannels {
+            id
+            createdAt
+            channelUniqueName
+            discussionId
+            UpvotedByUsers {
+              username
             }
-          `;
-        const session = driver.session();
+            Channel {
+              uniqueName
+            }
+            Discussion {
+              id
+            }
+          }
+          createdAt
+          updatedAt
+          Tags {
+            text
+          }
+        }
+      `;
+        const response = await Discussion.create({
+            input: [discussionCreateInput],
+            selectionSet: `{ discussions ${selectionSet} }`
+        });
         try {
-            // Start a new transaction
-            const txResult = await session.executeWrite(async (tx) => {
-                // First create the discussion
-                const response = await Discussion.create({
-                    input: [discussionCreateInput],
-                    selectionSet: `{ discussions ${selectionSet} }`,
-                });
-                const newDiscussion = response.discussions[0];
-                const newDiscussionId = newDiscussion.id;
-                // Create each channel connection in the same transaction
-                for (const channelUniqueName of channelConnections) {
-                    try {
-                        // First check if the DiscussionChannel already exists
-                        const checkExisting = await tx.run(`
-                  MATCH (dc:DiscussionChannel {discussionId: $discussionId, channelUniqueName: $channelUniqueName})
-                  RETURN dc
-                  `, { discussionId: newDiscussionId, channelUniqueName });
-                        if (checkExisting.records.length === 0) {
-                            // Only create if it doesn't exist
-                            await tx.run(`
-                    MATCH (d:Discussion {id: $discussionId}), (c:Channel {uniqueName: $channelUniqueName}), (u:User {username: $upvotedBy})
-                    CREATE (dc:DiscussionChannel {
-                      id: apoc.create.uuid(),
-                      discussionId: $discussionId,
-                      channelUniqueName: $channelUniqueName,
-                      createdAt: datetime(),
-                      locked: false,
-                      weightedVotesCount: 0.0
-                    })
-                    MERGE (dc)-[:POSTED_IN_CHANNEL]->(d)
-                    MERGE (dc)-[:POSTED_IN_CHANNEL]->(c)
-                    MERGE (u)-[:UPVOTED_DISCUSSION]->(dc)
-                    MERGE (dc)-[:UPVOTED_DISCUSSION]->(u)
-                    RETURN dc
-                    `, {
-                                discussionId: newDiscussionId,
-                                channelUniqueName: channelUniqueName,
-                                upvotedBy: newDiscussion.Author.username,
-                            });
-                        }
+            const newDiscussion = response.discussions[0];
+            const newDiscussionId = newDiscussion.id;
+            const session = driver.session();
+            for (const channelUniqueName of channelConnections) {
+                try {
+                    await session.run(createDiscussionChannelQuery, {
+                        discussionId: newDiscussionId,
+                        channelUniqueName,
+                        upvotedBy: newDiscussion.Author.username,
+                    });
+                }
+                catch (error) {
+                    if (error.message.includes("Constraint validation failed")) {
+                        console.warn(`Skipping duplicate DiscussionChannel: ${channelUniqueName}`);
+                        continue;
                     }
-                    catch (channelError) {
-                        console.warn(`Skipping duplicate channel connection for ${channelUniqueName}:`, channelError.message);
-                        continue; // Skip this channel and continue with others
+                    else {
+                        throw error;
                     }
                 }
-                return newDiscussion;
-            });
-            // Refetch the newly created discussion with all its connections
+            }
+            // Refetch the newly created discussion with the channel connections
+            // so that we can return it.
             const result = await Discussion.find({
                 where: {
-                    id: txResult.id,
+                    id: newDiscussionId,
                 },
                 selectionSet,
             });
+            session.close();
             return result[0];
         }
         catch (error) {
             console.error("Error creating discussion:", error);
             throw new Error(`Failed to create discussion. ${error.message}`);
-        }
-        finally {
-            await session.close();
         }
     };
 };
