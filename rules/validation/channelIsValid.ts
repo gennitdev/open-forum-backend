@@ -65,6 +65,7 @@ const validateChannelInput = (input: ChannelInput): true | string => {
       return "The rules must be a valid JSON array.";
     }
   }
+  console.log("channel input is valid");
 
   return true;
 };
@@ -85,6 +86,7 @@ export const createChannelInputIsValid = rule({ cache: "contextual" })(
 type UpdateChannelInput = { update: ChannelUpdateInput };
 export const updateChannelInputIsValid = rule({ cache: "contextual" })(
   async (parent: any, args: UpdateChannelInput, ctx: any, info: any) => {
+    console.log("checking if update channel input is valid", args);
     if (!args.update) {
       return "Missing update input in args.";
     }

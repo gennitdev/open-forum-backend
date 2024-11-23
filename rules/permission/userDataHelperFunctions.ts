@@ -10,7 +10,6 @@ type CachedUserInfo = {
   email: string | null;
 };
 
-
 // Lazy initialization of the JWKS client
 let client: any = null;
 
@@ -87,7 +86,6 @@ type GetUserDataFromUsernameInput = {
   emailVerified?: boolean;
 };
 
-
 export const getUserDataFromUsername = async (
   input: GetUserDataFromUsernameInput
 ): Promise<UserDataOnContext> => {
@@ -116,7 +114,7 @@ export const getUserDataFromUsername = async (
           },
         ],
         ChannelRoles: [],
-        ModerationProfile: null
+        ModerationProfile: null,
       },
     };
   }
@@ -202,7 +200,9 @@ export type UserDataOnContext = {
   data: any;
 };
 
-export const setUserDataOnContext = async (input: SetUserDataInput): Promise<UserDataOnContext> => {
+export const setUserDataOnContext = async (
+  input: SetUserDataInput
+): Promise<UserDataOnContext> => {
   console.log("Setting user data on context...");
   const { context } = input;
   const { ogm, req } = context;
@@ -245,15 +245,28 @@ export const setUserDataOnContext = async (input: SetUserDataInput): Promise<Use
       email = cachedUserInfo.email;
     } else {
       console.log("Fetching email from Auth0 userinfo");
-      const userInfoResponse = await axios.get(
-        `https://${process.env.AUTH0_DOMAIN}/userinfo`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+
+      try {
+        const userInfoResponse = await axios.get(
+          `https://${process.env.AUTH0_DOMAIN}/userinfo`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        email = userInfoResponse?.data?.email;
+        console.log("Fetched email from Auth0 userinfo:", email);
+        // if userInfoResponse has an error, log it.
+        if (!email) {
+          console.error(
+            "Error fetching email from Auth0 userinfo:",
+            userInfoResponse.data
+          );
         }
-      );
-      email = userInfoResponse.data.email;
+      } catch (error) {
+        console.error("Error fetching email from Auth0 userinfo:", error);
+      }
 
       // Cache the userinfo response
       const userInfoToCache: CachedUserInfo = { email };
