@@ -230,11 +230,10 @@ export const setUserDataOnContext = async (
     console.log("Verifying token...");
     decoded = await new Promise((resolve, reject) => {
       jwt.verify(token, getKey, { algorithms: ["RS256"] }, (err, decoded) => {
-        if (err) {
-          console.error("JWT Verification Error:", err);
-          return reject(err);
-        }
-        resolve(decoded);
+        if (!err) {
+          resolve(decoded);
+        } 
+        console.error("JWT Verification Error:", err);
       });
     });
     console.log("The decoded token is:", decoded);
