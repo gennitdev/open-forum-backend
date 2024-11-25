@@ -224,7 +224,7 @@ export const setUserDataOnContext = async (
 
   let email: string | null = null;
   let decoded: any;
-  let username: string | null = null;
+  let username: string | null | undefined = null;
 
   if (token) {
     console.log("Verifying token...");
@@ -240,8 +240,16 @@ export const setUserDataOnContext = async (
 
     // Check the audience of the token
     const audience = decoded?.aud;
+    console.log({
+      audience,
+      clientId: process.env.AUTH0_CLIENT_ID,
+    })
 
-    if (
+    if (audience === process.env.AUTH0_CLIENT_ID) {
+      // UI-based token
+      console.log("Token is a UI-based token, extracting email directly.");
+      email = decoded?.email;
+    } else if (
       Array.isArray(audience) &&
       audience.includes("https://gennit.us.auth0.com/api/v2/")
     ) {
@@ -276,17 +284,18 @@ export const setUserDataOnContext = async (
         const userInfoToCache: CachedUserInfo = { email };
         userInfoCache.set(token, userInfoToCache);
       }
-    } else if (audience === process.env.AUTH0_CLIENT_ID) {
-      // UI-based token
-      console.log("Token is a UI-based token, extracting email directly.");
-      email = decoded?.email;
-    } else {
+    }  else {
       console.error("Token audience is unrecognized.");
+    }
+
+    // Get the username from the email by calling getUserFromEmail
+    if (email) {
+      username = await getUserFromEmail(email, ogm.model("Email"));
     }
   }
 
   return {
-    username,
+    username: username || null,
     email,
     email_verified: false,
     data: {
