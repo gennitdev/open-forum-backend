@@ -224,6 +224,7 @@ export const setUserDataOnContext = async (
 
   let email: string | null = null;
   let decoded: any;
+  let username: string | null = null;
 
   if (token) {
     console.log("Verifying token...");
@@ -236,64 +237,53 @@ export const setUserDataOnContext = async (
         resolve(decoded);
       });
     });
+    console.log("The decoded token is:", decoded);
 
-    // Check if userinfo is cached
-    const cachedUserInfo: CachedUserInfo | undefined = userInfoCache.get(token);
+    // Check the audience of the token
+    const audience = decoded?.aud;
 
-    if (cachedUserInfo) {
-      console.log("Using cached user info.");
-      email = cachedUserInfo.email;
-    } else {
-      console.log("Fetching email from Auth0 userinfo");
+    if (
+      Array.isArray(audience) &&
+      audience.includes("https://gennit.us.auth0.com/api/v2/")
+    ) {
+      // Programmatic token
+      console.log("Token is a programmatic token, using Auth0 Management API.");
 
-      try {
-        const userInfoResponse = await axios.get(
-          `https://${process.env.AUTH0_DOMAIN}/userinfo`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        email = userInfoResponse?.data?.email;
-        console.log("Fetched email from Auth0 userinfo:", email);
-        // if userInfoResponse has an error, log it.
-        if (!email) {
-          console.error(
-            "Error fetching email from Auth0 userinfo:",
-            userInfoResponse.data
+      // Check if userinfo is cached
+      const cachedUserInfo: CachedUserInfo | undefined =
+        userInfoCache.get(token);
+
+      if (cachedUserInfo) {
+        console.log("Using cached user info.");
+        email = cachedUserInfo.email;
+      } else {
+        console.log("Fetching email from Auth0 userinfo");
+        try {
+          const userInfoResponse = await axios.get(
+            `https://${process.env.AUTH0_DOMAIN}/userinfo`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
           );
+          email = userInfoResponse?.data?.email;
+          console.log("Fetched email from Auth0 userinfo:", email);
+        } catch (error) {
+          console.error("Error fetching email from Auth0 userinfo:", error);
         }
-      } catch (error) {
-        console.error("Error fetching email from Auth0 userinfo:", error);
+
+        // Cache the userinfo response
+        const userInfoToCache: CachedUserInfo = { email };
+        userInfoCache.set(token, userInfoToCache);
       }
-
-      // Cache the userinfo response
-      const userInfoToCache: CachedUserInfo = { email };
-      userInfoCache.set(token, userInfoToCache);
-      console.log("Fetched email from Auth0 userinfo:", email);
+    } else if (audience === process.env.AUTH0_CLIENT_ID) {
+      // UI-based token
+      console.log("Token is a UI-based token, extracting email directly.");
+      email = decoded?.email;
+    } else {
+      console.error("Token audience is unrecognized.");
     }
-  }
-
-  const Email = ogm.model("Email");
-
-  // Fetch username from the database using email
-  const username = email ? await getUserFromEmail(email, Email) : null;
-  console.log("Username fetched from the database:", username);
-
-  // If the username is not found, set null user data
-  if (!username) {
-    console.log("No username found for the email; setting user data to null.");
-    return {
-      username: null,
-      email,
-      email_verified: false,
-      data: {
-        ServerRoles: [],
-        ChannelRoles: [],
-        ModerationProfile: null,
-      },
-    };
   }
 
   return {
