@@ -51,45 +51,57 @@ export const createEventsFromInput = async (Event, driver, input) => {
     try {
         for (const { eventCreateInput, channelConnections } of input) {
             if (!channelConnections || channelConnections.length === 0) {
-                throw new Error("At least one channel must be selected");
+                console.warn("Skipping event creation: No channels provided");
+                continue;
             }
-            const response = await Event.create({
-                input: [eventCreateInput],
-                selectionSet: `{ events ${selectionSet} }`,
-            });
-            const newEvent = response.events[0];
-            const newEventId = newEvent.id;
-            // Link the event to channels
-            for (const channelUniqueName of channelConnections) {
-                try {
-                    await session.run(createEventChannelQuery, {
-                        eventId: newEventId,
-                        channelUniqueName,
-                    });
+            try {
+                const response = await Event.create({
+                    input: [eventCreateInput],
+                    selectionSet: `{ events ${selectionSet} }`,
+                });
+                const newEvent = response.events[0];
+                const newEventId = newEvent.id;
+                // Link the event to channels
+                for (const channelUniqueName of channelConnections) {
+                    try {
+                        await session.run(createEventChannelQuery, {
+                            eventId: newEventId,
+                            channelUniqueName,
+                        });
+                    }
+                    catch (error) {
+                        if (error.message.includes("Constraint validation failed")) {
+                            console.warn(`Skipping duplicate EventChannel: ${channelUniqueName}`);
+                            continue;
+                        }
+                        else {
+                            throw error;
+                        }
+                    }
                 }
-                catch (error) {
-                    if (error.message.includes("Constraint validation failed")) {
-                        console.warn(`Skipping duplicate EventChannel: ${channelUniqueName}`);
-                        continue;
-                    }
-                    else {
-                        throw error;
-                    }
+                // Refetch the event with all related data
+                const fetchedEvent = await Event.find({
+                    where: {
+                        id: newEventId,
+                    },
+                    selectionSet,
+                });
+                events.push(fetchedEvent[0]);
+            }
+            catch (error) {
+                if (error.message.includes("Constraint validation failed")) {
+                    console.warn("Skipping event creation due to constraint validation failure");
+                    continue;
+                }
+                else {
+                    console.error("Error creating event, skipping:", error.message);
+                    continue;
                 }
             }
-            // Refetch the event with all related data
-            const fetchedEvent = await Event.find({
-                where: {
-                    id: newEventId,
-                },
-                selectionSet,
-            });
-            events.push(fetchedEvent[0]);
         }
     }
     catch (error) {
-        console.error("Error creating events:", error);
-        throw new Error(`Failed to create events: ${error.message}`);
+        console.error("Unexpected error during event creation:", error.message);
     }
     finally {
         session.close();
