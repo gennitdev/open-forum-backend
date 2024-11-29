@@ -14,61 +14,57 @@ import { createDiscussionChannelQuery } from "../cypher/cypherQueries.js";
 // requires the IDs.
 // Therefore, we have to create the Discussion first, then create the
 // DiscussionChannel nodes that are linked to the Discussion and Channel nodes.
-// DiscussionChannel schema for reference:
-// type DiscussionChannel {
-//   id: ID! @id
-//   discussionId: ID! # used for uniqueness constraint
-//   channelUniqueName: String! # used for uniqueness constraint
-//   Discussion: Discussion
-//     @relationship(type: "POSTED_IN_CHANNEL", direction: OUT)
-//   Channel: Channel @relationship(type: "POSTED_IN_CHANNEL", direction: OUT)
-//    ...other fields
-// }
-const getResolver = (input) => {
-    const { Discussion, driver } = input;
-    return async (parent, args, context, info) => {
-        const { discussionCreateInput, channelConnections } = args;
-        if (!channelConnections || channelConnections.length === 0) {
-            throw new Error("At least one channel must be selected");
-        }
-        const selectionSet = `
-        {
-          id
-          title
-          body
-          Author {
-            username
-          }
-          DiscussionChannels {
-            id
-            createdAt
-            channelUniqueName
-            discussionId
-            UpvotedByUsers {
-              username
+const selectionSet = `
+  {
+    id
+    title
+    body
+    Author {
+      username
+    }
+    DiscussionChannels {
+      id
+      createdAt
+      channelUniqueName
+      discussionId
+      UpvotedByUsers {
+        username
+      }
+      Channel {
+        uniqueName
+      }
+      Discussion {
+        id
+      }
+    }
+    createdAt
+    updatedAt
+    Tags {
+      text
+    }
+  }
+`;
+/**
+ * Function to create discussions from an input array.
+ */
+export const createDiscussionsFromInput = async (Discussion, driver, input) => {
+    if (!input || input.length === 0) {
+        throw new Error("Input cannot be empty");
+    }
+    const session = driver.session();
+    const discussions = [];
+    try {
+        for (const { discussionCreateInput, channelConnections } of input) {
+            if (!channelConnections || channelConnections.length === 0) {
+                throw new Error("At least one channel must be selected");
             }
-            Channel {
-              uniqueName
-            }
-            Discussion {
-              id
-            }
-          }
-          createdAt
-          updatedAt
-          Tags {
-            text
-          }
-        }
-      `;
-        const response = await Discussion.create({
-            input: [discussionCreateInput],
-            selectionSet: `{ discussions ${selectionSet} }`
-        });
-        try {
+            const response = await Discussion.create({
+                input: [discussionCreateInput],
+                selectionSet: `{ discussions ${selectionSet} }`,
+            });
             const newDiscussion = response.discussions[0];
             const newDiscussionId = newDiscussion.id;
-            const session = driver.session();
+            // Link the discussion to channels
             for (const channelUniqueName of channelConnections) {
                 try {
                     await session.run(createDiscussionChannelQuery, {
@@ -87,20 +83,40 @@ const getResolver = (input) => {
                     }
                 }
             }
-            // Refetch the newly created discussion with the channel connections
-            // so that we can return it.
-            const result = await Discussion.find({
+            // Refetch the discussion with all related data
+            const fetchedDiscussion = await Discussion.find({
                 where: {
                     id: newDiscussionId,
                 },
                 selectionSet,
             });
-            session.close();
-            return result[0];
+            discussions.push(fetchedDiscussion[0]);
+        }
+    }
+    catch (error) {
+        console.error("Error creating discussions:", error);
+        throw new Error(`Failed to create discussions: ${error.message}`);
+    }
+    finally {
+        session.close();
+    }
+    return discussions;
+};
+/**
+ * Main resolver that uses createDiscussionsFromInput
+ */
+const getResolver = (input) => {
+    const { Discussion, driver } = input;
+    return async (parent, args, context, info) => {
+        const { input } = args;
+        try {
+            // Use the extracted function to create discussions
+            const discussions = await createDiscussionsFromInput(Discussion, driver, input);
+            return discussions;
         }
         catch (error) {
-            console.error("Error creating discussion:", error);
-            throw new Error(`Failed to create discussion. ${error.message}`);
+            console.error(error);
+            throw new Error(`An error occurred while creating discussions: ${error.message}`);
         }
     };
 };

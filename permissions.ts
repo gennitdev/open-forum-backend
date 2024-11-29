@@ -9,6 +9,7 @@ const permissionList = shield({
     Mutation: {
       "*": deny,
       dropDataForCypressTests: rules.isAdmin,
+      seedDataForCypressTests: rules.isAdmin,
       createTags: allow,
       
       

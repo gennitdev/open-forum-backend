@@ -6417,6 +6417,12 @@ export type CreateSafetyCheckResponsesMutationResponse = {
   safetyCheckResponses: Array<SafetyCheckResponse>;
 };
 
+export type CreateSeedDataResponsesMutationResponse = {
+  __typename?: 'CreateSeedDataResponsesMutationResponse';
+  info: CreateInfo;
+  seedDataResponses: Array<SeedDataResponse>;
+};
+
 export type CreateServerConfigsMutationResponse = {
   __typename?: 'CreateServerConfigsMutationResponse';
   info: CreateInfo;
@@ -8198,6 +8204,11 @@ export type DiscussionCreateInput = {
   deleted?: InputMaybe<Scalars['Boolean']['input']>;
   title: Scalars['String']['input'];
   updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
+};
+
+export type DiscussionCreateInputWithChannels = {
+  channelConnections: Array<Scalars['String']['input']>;
+  discussionCreateInput: DiscussionCreateInput;
 };
 
 export type DiscussionDeleteInput = {
@@ -11314,6 +11325,11 @@ export type EventCreateInput = {
   title: Scalars['String']['input'];
   updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
   virtualEventUrl?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type EventCreateInputWithChannels = {
+  channelConnections: Array<Scalars['String']['input']>;
+  eventCreateInput: EventCreateInput;
 };
 
 export type EventDeleteInput = {
@@ -16466,6 +16482,7 @@ export type Mutation = {
   createRepeatEnds: CreateRepeatEndsMutationResponse;
   createRepeatEveries: CreateRepeatEveriesMutationResponse;
   createSafetyCheckResponses: CreateSafetyCheckResponsesMutationResponse;
+  createSeedDataResponses: CreateSeedDataResponsesMutationResponse;
   createServerConfigs: CreateServerConfigsMutationResponse;
   createServerRoles: CreateServerRolesMutationResponse;
   createSignedStorageURL?: Maybe<SignedUrl>;
@@ -16501,6 +16518,7 @@ export type Mutation = {
   deleteRepeatEnds: DeleteInfo;
   deleteRepeatEveries: DeleteInfo;
   deleteSafetyCheckResponses: DeleteInfo;
+  deleteSeedDataResponses: DeleteInfo;
   deleteServerConfigs: DeleteInfo;
   deleteServerRoles: DeleteInfo;
   deleteSignedUrls: DeleteInfo;
@@ -16510,6 +16528,7 @@ export type Mutation = {
   dropDataForCypressTests?: Maybe<DropDataResponse>;
   removeEmojiFromComment?: Maybe<Comment>;
   removeEmojiFromDiscussionChannel?: Maybe<DiscussionChannel>;
+  seedDataForCypressTests?: Maybe<SeedDataResponse>;
   undoUpvoteComment?: Maybe<Comment>;
   undoUpvoteDiscussionChannel?: Maybe<DiscussionChannel>;
   updateAlbums: UpdateAlbumsMutationResponse;
@@ -16542,6 +16561,7 @@ export type Mutation = {
   updateRepeatEnds: UpdateRepeatEndsMutationResponse;
   updateRepeatEveries: UpdateRepeatEveriesMutationResponse;
   updateSafetyCheckResponses: UpdateSafetyCheckResponsesMutationResponse;
+  updateSeedDataResponses: UpdateSeedDataResponsesMutationResponse;
   updateServerConfigs: UpdateServerConfigsMutationResponse;
   updateServerRoles: UpdateServerRolesMutationResponse;
   updateSignedUrls: UpdateSignedUrlsMutationResponse;
@@ -16610,8 +16630,7 @@ export type MutationCreateDiscussionChannelsArgs = {
 
 
 export type MutationCreateDiscussionWithChannelConnectionsArgs = {
-  channelConnections?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  discussionCreateInput?: InputMaybe<DiscussionCreateInput>;
+  input: Array<DiscussionCreateInputWithChannels>;
 };
 
 
@@ -16657,8 +16676,7 @@ export type MutationCreateEventCommentsFormatsArgs = {
 
 
 export type MutationCreateEventWithChannelConnectionsArgs = {
-  channelConnections?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  eventCreateInput?: InputMaybe<EventCreateInput>;
+  input: Array<EventCreateInputWithChannels>;
 };
 
 
@@ -16724,6 +16742,11 @@ export type MutationCreateRepeatEveriesArgs = {
 
 export type MutationCreateSafetyCheckResponsesArgs = {
   input: Array<SafetyCheckResponseCreateInput>;
+};
+
+
+export type MutationCreateSeedDataResponsesArgs = {
+  input: Array<SeedDataResponseCreateInput>;
 };
 
 
@@ -16918,6 +16941,11 @@ export type MutationDeleteSafetyCheckResponsesArgs = {
 };
 
 
+export type MutationDeleteSeedDataResponsesArgs = {
+  where?: InputMaybe<SeedDataResponseWhere>;
+};
+
+
 export type MutationDeleteServerConfigsArgs = {
   delete?: InputMaybe<ServerConfigDeleteInput>;
   where?: InputMaybe<ServerConfigWhere>;
@@ -16962,6 +16990,21 @@ export type MutationRemoveEmojiFromDiscussionChannelArgs = {
   discussionChannelId: Scalars['ID']['input'];
   emojiLabel: Scalars['String']['input'];
   username: Scalars['String']['input'];
+};
+
+
+export type MutationSeedDataForCypressTestsArgs = {
+  channelRoles: Array<ChannelRoleCreateInput>;
+  channels: Array<ChannelCreateInput>;
+  comments: Array<CommentCreateInput>;
+  discussions: Array<DiscussionCreateInputWithChannels>;
+  events: Array<EventCreateInputWithChannels>;
+  modChannelRoles: Array<ModChannelRoleCreateInput>;
+  modServerRoles: Array<ModServerRoleCreateInput>;
+  serverConfigs: Array<ServerConfigCreateInput>;
+  serverRoles: Array<ServerRoleCreateInput>;
+  tags: Array<TagCreateInput>;
+  users: Array<NewUserInput>;
 };
 
 
@@ -17161,6 +17204,12 @@ export type MutationUpdateSafetyCheckResponsesArgs = {
 };
 
 
+export type MutationUpdateSeedDataResponsesArgs = {
+  update?: InputMaybe<SeedDataResponseUpdateInput>;
+  where?: InputMaybe<SeedDataResponseWhere>;
+};
+
+
 export type MutationUpdateServerConfigsArgs = {
   update?: InputMaybe<ServerConfigUpdateInput>;
   where?: InputMaybe<ServerConfigWhere>;
@@ -17205,6 +17254,11 @@ export type MutationUpvoteCommentArgs = {
 
 export type MutationUpvoteDiscussionChannelArgs = {
   discussionChannelId: Scalars['ID']['input'];
+  username: Scalars['String']['input'];
+};
+
+export type NewUserInput = {
+  emailAddress: Scalars['String']['input'];
   username: Scalars['String']['input'];
 };
 
@@ -17336,6 +17390,9 @@ export type Query = {
   safetyCheckResponses: Array<SafetyCheckResponse>;
   safetyCheckResponsesAggregate: SafetyCheckResponseAggregateSelection;
   safetyCheckResponsesConnection: SafetyCheckResponsesConnection;
+  seedDataResponses: Array<SeedDataResponse>;
+  seedDataResponsesAggregate: SeedDataResponseAggregateSelection;
+  seedDataResponsesConnection: SeedDataResponsesConnection;
   serverConfigs: Array<ServerConfig>;
   serverConfigsAggregate: ServerConfigAggregateSelection;
   serverConfigsConnection: ServerConfigsConnection;
@@ -17944,6 +18001,25 @@ export type QuerySafetyCheckResponsesConnectionArgs = {
   after?: InputMaybe<Scalars['String']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
   where?: InputMaybe<SafetyCheckResponseWhere>;
+};
+
+
+export type QuerySeedDataResponsesArgs = {
+  options?: InputMaybe<SeedDataResponseOptions>;
+  where?: InputMaybe<SeedDataResponseWhere>;
+};
+
+
+export type QuerySeedDataResponsesAggregateArgs = {
+  where?: InputMaybe<SeedDataResponseWhere>;
+};
+
+
+export type QuerySeedDataResponsesConnectionArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<SeedDataResponseSort>>>;
+  where?: InputMaybe<SeedDataResponseWhere>;
 };
 
 
@@ -18681,6 +18757,67 @@ export type SafetyCheckResponseWhere = {
 export type SafetyCheckResponsesConnection = {
   __typename?: 'SafetyCheckResponsesConnection';
   edges: Array<SafetyCheckResponseEdge>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type SeedDataResponse = {
+  __typename?: 'SeedDataResponse';
+  message?: Maybe<Scalars['String']['output']>;
+  success?: Maybe<Scalars['Boolean']['output']>;
+};
+
+export type SeedDataResponseAggregateSelection = {
+  __typename?: 'SeedDataResponseAggregateSelection';
+  count: Scalars['Int']['output'];
+  message: StringAggregateSelection;
+};
+
+export type SeedDataResponseCreateInput = {
+  message?: InputMaybe<Scalars['String']['input']>;
+  success?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+export type SeedDataResponseEdge = {
+  __typename?: 'SeedDataResponseEdge';
+  cursor: Scalars['String']['output'];
+  node: SeedDataResponse;
+};
+
+export type SeedDataResponseOptions = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  /** Specify one or more SeedDataResponseSort objects to sort SeedDataResponses by. The sorts will be applied in the order in which they are arranged in the array. */
+  sort?: InputMaybe<Array<SeedDataResponseSort>>;
+};
+
+/** Fields to sort SeedDataResponses by. The order in which sorts are applied is not guaranteed when specifying many fields in one SeedDataResponseSort object. */
+export type SeedDataResponseSort = {
+  message?: InputMaybe<SortDirection>;
+  success?: InputMaybe<SortDirection>;
+};
+
+export type SeedDataResponseUpdateInput = {
+  message?: InputMaybe<Scalars['String']['input']>;
+  success?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+export type SeedDataResponseWhere = {
+  AND?: InputMaybe<Array<SeedDataResponseWhere>>;
+  NOT?: InputMaybe<SeedDataResponseWhere>;
+  OR?: InputMaybe<Array<SeedDataResponseWhere>>;
+  message?: InputMaybe<Scalars['String']['input']>;
+  message_CONTAINS?: InputMaybe<Scalars['String']['input']>;
+  message_ENDS_WITH?: InputMaybe<Scalars['String']['input']>;
+  message_IN?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  message_MATCHES?: InputMaybe<Scalars['String']['input']>;
+  message_STARTS_WITH?: InputMaybe<Scalars['String']['input']>;
+  success?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+export type SeedDataResponsesConnection = {
+  __typename?: 'SeedDataResponsesConnection';
+  edges: Array<SeedDataResponseEdge>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int']['output'];
 };
@@ -21183,6 +21320,12 @@ export type UpdateSafetyCheckResponsesMutationResponse = {
   __typename?: 'UpdateSafetyCheckResponsesMutationResponse';
   info: UpdateInfo;
   safetyCheckResponses: Array<SafetyCheckResponse>;
+};
+
+export type UpdateSeedDataResponsesMutationResponse = {
+  __typename?: 'UpdateSeedDataResponsesMutationResponse';
+  info: UpdateInfo;
+  seedDataResponses: Array<SeedDataResponse>;
 };
 
 export type UpdateServerConfigsMutationResponse = {
@@ -26340,6 +26483,7 @@ export type ResolversTypes = {
   CreateRepeatEndsMutationResponse: ResolverTypeWrapper<CreateRepeatEndsMutationResponse>;
   CreateRepeatEveriesMutationResponse: ResolverTypeWrapper<CreateRepeatEveriesMutationResponse>;
   CreateSafetyCheckResponsesMutationResponse: ResolverTypeWrapper<CreateSafetyCheckResponsesMutationResponse>;
+  CreateSeedDataResponsesMutationResponse: ResolverTypeWrapper<CreateSeedDataResponsesMutationResponse>;
   CreateServerConfigsMutationResponse: ResolverTypeWrapper<CreateServerConfigsMutationResponse>;
   CreateServerRolesMutationResponse: ResolverTypeWrapper<CreateServerRolesMutationResponse>;
   CreateSignedUrlsMutationResponse: ResolverTypeWrapper<CreateSignedUrlsMutationResponse>;
@@ -26475,6 +26619,7 @@ export type ResolversTypes = {
   DiscussionConnectOrCreateInput: DiscussionConnectOrCreateInput;
   DiscussionConnectWhere: DiscussionConnectWhere;
   DiscussionCreateInput: DiscussionCreateInput;
+  DiscussionCreateInputWithChannels: DiscussionCreateInputWithChannels;
   DiscussionDeleteInput: DiscussionDeleteInput;
   DiscussionDisconnectInput: DiscussionDisconnectInput;
   DiscussionDiscussionChannelDiscussionChannelsAggregationSelection: ResolverTypeWrapper<DiscussionDiscussionChannelDiscussionChannelsAggregationSelection>;
@@ -26724,6 +26869,7 @@ export type ResolversTypes = {
   EventConnectOrCreateInput: EventConnectOrCreateInput;
   EventConnectWhere: EventConnectWhere;
   EventCreateInput: EventCreateInput;
+  EventCreateInputWithChannels: EventCreateInputWithChannels;
   EventDeleteInput: EventDeleteInput;
   EventDisconnectInput: EventDisconnectInput;
   EventEdge: ResolverTypeWrapper<EventEdge>;
@@ -27188,6 +27334,7 @@ export type ResolversTypes = {
   ModerationProfileWhere: ModerationProfileWhere;
   ModerationProfilesConnection: ResolverTypeWrapper<ModerationProfilesConnection>;
   Mutation: ResolverTypeWrapper<{}>;
+  NewUserInput: NewUserInput;
   PageInfo: ResolverTypeWrapper<PageInfo>;
   Point: ResolverTypeWrapper<Point>;
   PointDistance: PointDistance;
@@ -27250,6 +27397,15 @@ export type ResolversTypes = {
   SafetyCheckResponseUpdateInput: SafetyCheckResponseUpdateInput;
   SafetyCheckResponseWhere: SafetyCheckResponseWhere;
   SafetyCheckResponsesConnection: ResolverTypeWrapper<SafetyCheckResponsesConnection>;
+  SeedDataResponse: ResolverTypeWrapper<SeedDataResponse>;
+  SeedDataResponseAggregateSelection: ResolverTypeWrapper<SeedDataResponseAggregateSelection>;
+  SeedDataResponseCreateInput: SeedDataResponseCreateInput;
+  SeedDataResponseEdge: ResolverTypeWrapper<SeedDataResponseEdge>;
+  SeedDataResponseOptions: SeedDataResponseOptions;
+  SeedDataResponseSort: SeedDataResponseSort;
+  SeedDataResponseUpdateInput: SeedDataResponseUpdateInput;
+  SeedDataResponseWhere: SeedDataResponseWhere;
+  SeedDataResponsesConnection: ResolverTypeWrapper<SeedDataResponsesConnection>;
   ServerConfig: ResolverTypeWrapper<ServerConfig>;
   ServerConfigAggregateSelection: ResolverTypeWrapper<ServerConfigAggregateSelection>;
   ServerConfigChannelRoleDefaultChannelRoleAggregationSelection: ResolverTypeWrapper<ServerConfigChannelRoleDefaultChannelRoleAggregationSelection>;
@@ -27492,6 +27648,7 @@ export type ResolversTypes = {
   UpdateRepeatEndsMutationResponse: ResolverTypeWrapper<UpdateRepeatEndsMutationResponse>;
   UpdateRepeatEveriesMutationResponse: ResolverTypeWrapper<UpdateRepeatEveriesMutationResponse>;
   UpdateSafetyCheckResponsesMutationResponse: ResolverTypeWrapper<UpdateSafetyCheckResponsesMutationResponse>;
+  UpdateSeedDataResponsesMutationResponse: ResolverTypeWrapper<UpdateSeedDataResponsesMutationResponse>;
   UpdateServerConfigsMutationResponse: ResolverTypeWrapper<UpdateServerConfigsMutationResponse>;
   UpdateServerRolesMutationResponse: ResolverTypeWrapper<UpdateServerRolesMutationResponse>;
   UpdateSignedUrlsMutationResponse: ResolverTypeWrapper<UpdateSignedUrlsMutationResponse>;
@@ -28356,6 +28513,7 @@ export type ResolversParentTypes = {
   CreateRepeatEndsMutationResponse: CreateRepeatEndsMutationResponse;
   CreateRepeatEveriesMutationResponse: CreateRepeatEveriesMutationResponse;
   CreateSafetyCheckResponsesMutationResponse: CreateSafetyCheckResponsesMutationResponse;
+  CreateSeedDataResponsesMutationResponse: CreateSeedDataResponsesMutationResponse;
   CreateServerConfigsMutationResponse: CreateServerConfigsMutationResponse;
   CreateServerRolesMutationResponse: CreateServerRolesMutationResponse;
   CreateSignedUrlsMutationResponse: CreateSignedUrlsMutationResponse;
@@ -28491,6 +28649,7 @@ export type ResolversParentTypes = {
   DiscussionConnectOrCreateInput: DiscussionConnectOrCreateInput;
   DiscussionConnectWhere: DiscussionConnectWhere;
   DiscussionCreateInput: DiscussionCreateInput;
+  DiscussionCreateInputWithChannels: DiscussionCreateInputWithChannels;
   DiscussionDeleteInput: DiscussionDeleteInput;
   DiscussionDisconnectInput: DiscussionDisconnectInput;
   DiscussionDiscussionChannelDiscussionChannelsAggregationSelection: DiscussionDiscussionChannelDiscussionChannelsAggregationSelection;
@@ -28740,6 +28899,7 @@ export type ResolversParentTypes = {
   EventConnectOrCreateInput: EventConnectOrCreateInput;
   EventConnectWhere: EventConnectWhere;
   EventCreateInput: EventCreateInput;
+  EventCreateInputWithChannels: EventCreateInputWithChannels;
   EventDeleteInput: EventDeleteInput;
   EventDisconnectInput: EventDisconnectInput;
   EventEdge: EventEdge;
@@ -29204,6 +29364,7 @@ export type ResolversParentTypes = {
   ModerationProfileWhere: ModerationProfileWhere;
   ModerationProfilesConnection: ModerationProfilesConnection;
   Mutation: {};
+  NewUserInput: NewUserInput;
   PageInfo: PageInfo;
   Point: Point;
   PointDistance: PointDistance;
@@ -29265,6 +29426,15 @@ export type ResolversParentTypes = {
   SafetyCheckResponseUpdateInput: SafetyCheckResponseUpdateInput;
   SafetyCheckResponseWhere: SafetyCheckResponseWhere;
   SafetyCheckResponsesConnection: SafetyCheckResponsesConnection;
+  SeedDataResponse: SeedDataResponse;
+  SeedDataResponseAggregateSelection: SeedDataResponseAggregateSelection;
+  SeedDataResponseCreateInput: SeedDataResponseCreateInput;
+  SeedDataResponseEdge: SeedDataResponseEdge;
+  SeedDataResponseOptions: SeedDataResponseOptions;
+  SeedDataResponseSort: SeedDataResponseSort;
+  SeedDataResponseUpdateInput: SeedDataResponseUpdateInput;
+  SeedDataResponseWhere: SeedDataResponseWhere;
+  SeedDataResponsesConnection: SeedDataResponsesConnection;
   ServerConfig: ServerConfig;
   ServerConfigAggregateSelection: ServerConfigAggregateSelection;
   ServerConfigChannelRoleDefaultChannelRoleAggregationSelection: ServerConfigChannelRoleDefaultChannelRoleAggregationSelection;
@@ -29504,6 +29674,7 @@ export type ResolversParentTypes = {
   UpdateRepeatEndsMutationResponse: UpdateRepeatEndsMutationResponse;
   UpdateRepeatEveriesMutationResponse: UpdateRepeatEveriesMutationResponse;
   UpdateSafetyCheckResponsesMutationResponse: UpdateSafetyCheckResponsesMutationResponse;
+  UpdateSeedDataResponsesMutationResponse: UpdateSeedDataResponsesMutationResponse;
   UpdateServerConfigsMutationResponse: UpdateServerConfigsMutationResponse;
   UpdateServerRolesMutationResponse: UpdateServerRolesMutationResponse;
   UpdateSignedUrlsMutationResponse: UpdateSignedUrlsMutationResponse;
@@ -31003,6 +31174,12 @@ export type CreateRepeatEveriesMutationResponseResolvers<ContextType = any, Pare
 export type CreateSafetyCheckResponsesMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateSafetyCheckResponsesMutationResponse'] = ResolversParentTypes['CreateSafetyCheckResponsesMutationResponse']> = {
   info?: Resolver<ResolversTypes['CreateInfo'], ParentType, ContextType>;
   safetyCheckResponses?: Resolver<Array<ResolversTypes['SafetyCheckResponse']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CreateSeedDataResponsesMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateSeedDataResponsesMutationResponse'] = ResolversParentTypes['CreateSeedDataResponsesMutationResponse']> = {
+  info?: Resolver<ResolversTypes['CreateInfo'], ParentType, ContextType>;
+  seedDataResponses?: Resolver<Array<ResolversTypes['SeedDataResponse']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -32808,7 +32985,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createComments?: Resolver<ResolversTypes['CreateCommentsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateCommentsArgs, 'input'>>;
   createDiscussionChannelListFormats?: Resolver<ResolversTypes['CreateDiscussionChannelListFormatsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateDiscussionChannelListFormatsArgs, 'input'>>;
   createDiscussionChannels?: Resolver<ResolversTypes['CreateDiscussionChannelsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateDiscussionChannelsArgs, 'input'>>;
-  createDiscussionWithChannelConnections?: Resolver<Maybe<ResolversTypes['Discussion']>, ParentType, ContextType, Partial<MutationCreateDiscussionWithChannelConnectionsArgs>>;
+  createDiscussionWithChannelConnections?: Resolver<Maybe<ResolversTypes['Discussion']>, ParentType, ContextType, RequireFields<MutationCreateDiscussionWithChannelConnectionsArgs, 'input'>>;
   createDiscussions?: Resolver<ResolversTypes['CreateDiscussionsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateDiscussionsArgs, 'input'>>;
   createDropDataResponses?: Resolver<ResolversTypes['CreateDropDataResponsesMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateDropDataResponsesArgs, 'input'>>;
   createEmailAndUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationCreateEmailAndUserArgs, 'emailAddress' | 'username'>>;
@@ -32817,7 +32994,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createEnvironmentInfos?: Resolver<ResolversTypes['CreateEnvironmentInfosMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateEnvironmentInfosArgs, 'input'>>;
   createEventChannels?: Resolver<ResolversTypes['CreateEventChannelsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateEventChannelsArgs, 'input'>>;
   createEventCommentsFormats?: Resolver<ResolversTypes['CreateEventCommentsFormatsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateEventCommentsFormatsArgs, 'input'>>;
-  createEventWithChannelConnections?: Resolver<Maybe<ResolversTypes['Event']>, ParentType, ContextType, Partial<MutationCreateEventWithChannelConnectionsArgs>>;
+  createEventWithChannelConnections?: Resolver<Maybe<ResolversTypes['Event']>, ParentType, ContextType, RequireFields<MutationCreateEventWithChannelConnectionsArgs, 'input'>>;
   createEvents?: Resolver<ResolversTypes['CreateEventsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateEventsArgs, 'input'>>;
   createFeeds?: Resolver<ResolversTypes['CreateFeedsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateFeedsArgs, 'input'>>;
   createImages?: Resolver<ResolversTypes['CreateImagesMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateImagesArgs, 'input'>>;
@@ -32831,6 +33008,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createRepeatEnds?: Resolver<ResolversTypes['CreateRepeatEndsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateRepeatEndsArgs, 'input'>>;
   createRepeatEveries?: Resolver<ResolversTypes['CreateRepeatEveriesMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateRepeatEveriesArgs, 'input'>>;
   createSafetyCheckResponses?: Resolver<ResolversTypes['CreateSafetyCheckResponsesMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateSafetyCheckResponsesArgs, 'input'>>;
+  createSeedDataResponses?: Resolver<ResolversTypes['CreateSeedDataResponsesMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateSeedDataResponsesArgs, 'input'>>;
   createServerConfigs?: Resolver<ResolversTypes['CreateServerConfigsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateServerConfigsArgs, 'input'>>;
   createServerRoles?: Resolver<ResolversTypes['CreateServerRolesMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateServerRolesArgs, 'input'>>;
   createSignedStorageURL?: Resolver<Maybe<ResolversTypes['SignedURL']>, ParentType, ContextType, RequireFields<MutationCreateSignedStorageUrlArgs, 'contentType' | 'filename'>>;
@@ -32866,6 +33044,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteRepeatEnds?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteRepeatEndsArgs>>;
   deleteRepeatEveries?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteRepeatEveriesArgs>>;
   deleteSafetyCheckResponses?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteSafetyCheckResponsesArgs>>;
+  deleteSeedDataResponses?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteSeedDataResponsesArgs>>;
   deleteServerConfigs?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteServerConfigsArgs>>;
   deleteServerRoles?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteServerRolesArgs>>;
   deleteSignedUrls?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteSignedUrlsArgs>>;
@@ -32875,6 +33054,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   dropDataForCypressTests?: Resolver<Maybe<ResolversTypes['DropDataResponse']>, ParentType, ContextType>;
   removeEmojiFromComment?: Resolver<Maybe<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<MutationRemoveEmojiFromCommentArgs, 'commentId' | 'emojiLabel' | 'username'>>;
   removeEmojiFromDiscussionChannel?: Resolver<Maybe<ResolversTypes['DiscussionChannel']>, ParentType, ContextType, RequireFields<MutationRemoveEmojiFromDiscussionChannelArgs, 'discussionChannelId' | 'emojiLabel' | 'username'>>;
+  seedDataForCypressTests?: Resolver<Maybe<ResolversTypes['SeedDataResponse']>, ParentType, ContextType, RequireFields<MutationSeedDataForCypressTestsArgs, 'channelRoles' | 'channels' | 'comments' | 'discussions' | 'events' | 'modChannelRoles' | 'modServerRoles' | 'serverConfigs' | 'serverRoles' | 'tags' | 'users'>>;
   undoUpvoteComment?: Resolver<Maybe<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<MutationUndoUpvoteCommentArgs, 'commentId' | 'username'>>;
   undoUpvoteDiscussionChannel?: Resolver<Maybe<ResolversTypes['DiscussionChannel']>, ParentType, ContextType, RequireFields<MutationUndoUpvoteDiscussionChannelArgs, 'discussionChannelId' | 'username'>>;
   updateAlbums?: Resolver<ResolversTypes['UpdateAlbumsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateAlbumsArgs>>;
@@ -32907,6 +33087,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   updateRepeatEnds?: Resolver<ResolversTypes['UpdateRepeatEndsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateRepeatEndsArgs>>;
   updateRepeatEveries?: Resolver<ResolversTypes['UpdateRepeatEveriesMutationResponse'], ParentType, ContextType, Partial<MutationUpdateRepeatEveriesArgs>>;
   updateSafetyCheckResponses?: Resolver<ResolversTypes['UpdateSafetyCheckResponsesMutationResponse'], ParentType, ContextType, Partial<MutationUpdateSafetyCheckResponsesArgs>>;
+  updateSeedDataResponses?: Resolver<ResolversTypes['UpdateSeedDataResponsesMutationResponse'], ParentType, ContextType, Partial<MutationUpdateSeedDataResponsesArgs>>;
   updateServerConfigs?: Resolver<ResolversTypes['UpdateServerConfigsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateServerConfigsArgs>>;
   updateServerRoles?: Resolver<ResolversTypes['UpdateServerRolesMutationResponse'], ParentType, ContextType, Partial<MutationUpdateServerRolesArgs>>;
   updateSignedUrls?: Resolver<ResolversTypes['UpdateSignedUrlsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateSignedUrlsArgs>>;
@@ -33028,6 +33209,9 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   safetyCheckResponses?: Resolver<Array<ResolversTypes['SafetyCheckResponse']>, ParentType, ContextType, Partial<QuerySafetyCheckResponsesArgs>>;
   safetyCheckResponsesAggregate?: Resolver<ResolversTypes['SafetyCheckResponseAggregateSelection'], ParentType, ContextType, Partial<QuerySafetyCheckResponsesAggregateArgs>>;
   safetyCheckResponsesConnection?: Resolver<ResolversTypes['SafetyCheckResponsesConnection'], ParentType, ContextType, Partial<QuerySafetyCheckResponsesConnectionArgs>>;
+  seedDataResponses?: Resolver<Array<ResolversTypes['SeedDataResponse']>, ParentType, ContextType, Partial<QuerySeedDataResponsesArgs>>;
+  seedDataResponsesAggregate?: Resolver<ResolversTypes['SeedDataResponseAggregateSelection'], ParentType, ContextType, Partial<QuerySeedDataResponsesAggregateArgs>>;
+  seedDataResponsesConnection?: Resolver<ResolversTypes['SeedDataResponsesConnection'], ParentType, ContextType, Partial<QuerySeedDataResponsesConnectionArgs>>;
   serverConfigs?: Resolver<Array<ResolversTypes['ServerConfig']>, ParentType, ContextType, Partial<QueryServerConfigsArgs>>;
   serverConfigsAggregate?: Resolver<ResolversTypes['ServerConfigAggregateSelection'], ParentType, ContextType, Partial<QueryServerConfigsAggregateArgs>>;
   serverConfigsConnection?: Resolver<ResolversTypes['ServerConfigsConnection'], ParentType, ContextType, Partial<QueryServerConfigsConnectionArgs>>;
@@ -33185,6 +33369,31 @@ export type SafetyCheckResponseEdgeResolvers<ContextType = any, ParentType exten
 
 export type SafetyCheckResponsesConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['SafetyCheckResponsesConnection'] = ResolversParentTypes['SafetyCheckResponsesConnection']> = {
   edges?: Resolver<Array<ResolversTypes['SafetyCheckResponseEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type SeedDataResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['SeedDataResponse'] = ResolversParentTypes['SeedDataResponse']> = {
+  message?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  success?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type SeedDataResponseAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['SeedDataResponseAggregateSelection'] = ResolversParentTypes['SeedDataResponseAggregateSelection']> = {
+  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  message?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type SeedDataResponseEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['SeedDataResponseEdge'] = ResolversParentTypes['SeedDataResponseEdge']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['SeedDataResponse'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type SeedDataResponsesConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['SeedDataResponsesConnection'] = ResolversParentTypes['SeedDataResponsesConnection']> = {
+  edges?: Resolver<Array<ResolversTypes['SeedDataResponseEdge']>, ParentType, ContextType>;
   pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
   totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -33784,6 +33993,12 @@ export type UpdateRepeatEveriesMutationResponseResolvers<ContextType = any, Pare
 export type UpdateSafetyCheckResponsesMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateSafetyCheckResponsesMutationResponse'] = ResolversParentTypes['UpdateSafetyCheckResponsesMutationResponse']> = {
   info?: Resolver<ResolversTypes['UpdateInfo'], ParentType, ContextType>;
   safetyCheckResponses?: Resolver<Array<ResolversTypes['SafetyCheckResponse']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type UpdateSeedDataResponsesMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateSeedDataResponsesMutationResponse'] = ResolversParentTypes['UpdateSeedDataResponsesMutationResponse']> = {
+  info?: Resolver<ResolversTypes['UpdateInfo'], ParentType, ContextType>;
+  seedDataResponses?: Resolver<Array<ResolversTypes['SeedDataResponse']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -34653,6 +34868,7 @@ export type Resolvers<ContextType = any> = {
   CreateRepeatEndsMutationResponse?: CreateRepeatEndsMutationResponseResolvers<ContextType>;
   CreateRepeatEveriesMutationResponse?: CreateRepeatEveriesMutationResponseResolvers<ContextType>;
   CreateSafetyCheckResponsesMutationResponse?: CreateSafetyCheckResponsesMutationResponseResolvers<ContextType>;
+  CreateSeedDataResponsesMutationResponse?: CreateSeedDataResponsesMutationResponseResolvers<ContextType>;
   CreateServerConfigsMutationResponse?: CreateServerConfigsMutationResponseResolvers<ContextType>;
   CreateServerRolesMutationResponse?: CreateServerRolesMutationResponseResolvers<ContextType>;
   CreateSignedUrlsMutationResponse?: CreateSignedUrlsMutationResponseResolvers<ContextType>;
@@ -34906,6 +35122,10 @@ export type Resolvers<ContextType = any> = {
   SafetyCheckResponseAggregateSelection?: SafetyCheckResponseAggregateSelectionResolvers<ContextType>;
   SafetyCheckResponseEdge?: SafetyCheckResponseEdgeResolvers<ContextType>;
   SafetyCheckResponsesConnection?: SafetyCheckResponsesConnectionResolvers<ContextType>;
+  SeedDataResponse?: SeedDataResponseResolvers<ContextType>;
+  SeedDataResponseAggregateSelection?: SeedDataResponseAggregateSelectionResolvers<ContextType>;
+  SeedDataResponseEdge?: SeedDataResponseEdgeResolvers<ContextType>;
+  SeedDataResponsesConnection?: SeedDataResponsesConnectionResolvers<ContextType>;
   ServerConfig?: ServerConfigResolvers<ContextType>;
   ServerConfigAggregateSelection?: ServerConfigAggregateSelectionResolvers<ContextType>;
   ServerConfigChannelRoleDefaultChannelRoleAggregationSelection?: ServerConfigChannelRoleDefaultChannelRoleAggregationSelectionResolvers<ContextType>;
@@ -34992,6 +35212,7 @@ export type Resolvers<ContextType = any> = {
   UpdateRepeatEndsMutationResponse?: UpdateRepeatEndsMutationResponseResolvers<ContextType>;
   UpdateRepeatEveriesMutationResponse?: UpdateRepeatEveriesMutationResponseResolvers<ContextType>;
   UpdateSafetyCheckResponsesMutationResponse?: UpdateSafetyCheckResponsesMutationResponseResolvers<ContextType>;
+  UpdateSeedDataResponsesMutationResponse?: UpdateSeedDataResponsesMutationResponseResolvers<ContextType>;
   UpdateServerConfigsMutationResponse?: UpdateServerConfigsMutationResponseResolvers<ContextType>;
   UpdateServerRolesMutationResponse?: UpdateServerRolesMutationResponseResolvers<ContextType>;
   UpdateSignedUrlsMutationResponse?: UpdateSignedUrlsMutationResponseResolvers<ContextType>;

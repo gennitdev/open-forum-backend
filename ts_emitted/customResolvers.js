@@ -22,6 +22,7 @@ import createSignedStorageURL from "./customResolvers/mutations/createSignedStor
 import safetyCheck from "./customResolvers/queries/safetyCheck.js";
 import getCreateEmailAndUserResolver from "./customResolvers/mutations/createEmailAndUser.js";
 import dropDataForCypressTestsResolver from "./customResolvers/mutations/dropDataForCypressTests.js";
+import seedDataForCypressTestsResolver from "./customResolvers/mutations/seedDataForCypressTests.js";
 const { OGM } = pkg;
 export default function (driver) {
     const ogm = new OGM({
@@ -34,6 +35,13 @@ export default function (driver) {
     const Comment = ogm.model("Comment");
     const User = ogm.model("User");
     const Email = ogm.model("Email");
+    const Channel = ogm.model("Channel");
+    const Tag = ogm.model("Tag");
+    const ChannelRole = ogm.model("ChannelRole");
+    const ModChannelRole = ogm.model("ModChannelRole");
+    const ServerRole = ogm.model("ServerRole");
+    const ModServerRole = ogm.model("ModServerRole");
+    const ServerConfig = ogm.model("ServerConfig");
     const resolvers = {
         JSON: GraphQLJSON,
         CommentAuthor: {
@@ -127,6 +135,21 @@ export default function (driver) {
                 Email,
             }),
             dropDataForCypressTests: dropDataForCypressTestsResolver({ driver }),
+            seedDataForCypressTests: seedDataForCypressTestsResolver({
+                driver,
+                Channel,
+                Discussion,
+                Event,
+                Comment,
+                User,
+                Email,
+                Tag,
+                ChannelRole,
+                ModChannelRole,
+                ServerRole,
+                ModServerRole,
+                ServerConfig,
+            })
         },
     };
     return {

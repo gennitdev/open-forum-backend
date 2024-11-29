@@ -78,7 +78,6 @@ const typeDefinitions = gql `
       @relationship(type: "HAS_SERVER_ROLE", direction: OUT)
   }
 
-
   type Channel {
     description: String
     displayName: String
@@ -101,7 +100,8 @@ const typeDefinitions = gql `
     DiscussionChannels: [DiscussionChannel!]!
       @relationship(type: "POSTED_IN_CHANNEL", direction: IN)
     Comments: [Comment!]! @relationship(type: "HAS_COMMENT", direction: OUT) # used for aggregated comment counts
-    DefaultChannelRole: ChannelRole @relationship(type: "HAS_DEFAULT_CHANNEL_ROLE", direction: OUT)
+    DefaultChannelRole: ChannelRole
+      @relationship(type: "HAS_DEFAULT_CHANNEL_ROLE", direction: OUT)
     Issues: [Issue!]! @relationship(type: "HAS_ISSUE", direction: OUT)
   }
 
@@ -134,7 +134,8 @@ const typeDefinitions = gql `
     # PastVersions:            [DiscussionVersion]     @relationship(type: "HAS_VERSION", direction: OUT)
     DiscussionChannels: [DiscussionChannel!]!
       @relationship(type: "POSTED_IN_CHANNEL", direction: IN)
-    FeedbackComments: [Comment!]! @relationship(type: "HAS_FEEDBACK_COMMENT", direction: IN)
+    FeedbackComments: [Comment!]!
+      @relationship(type: "HAS_FEEDBACK_COMMENT", direction: IN)
     RelatedIssues: [Issue!]! @relationship(type: "CITED_ISSUE", direction: IN)
     Album: Album @relationship(type: "HAS_ALBUM", direction: OUT)
   }
@@ -207,8 +208,7 @@ const typeDefinitions = gql `
     isAllDay: Boolean
     coverImageURL: String
     locked: Boolean
-    Comments: [Comment!]!
-      @relationship(type: "HAS_COMMENT", direction: OUT)
+    Comments: [Comment!]! @relationship(type: "HAS_COMMENT", direction: OUT)
     RecurringEvent: RecurringEvent
       @relationship(type: "HAS_RECURRING_EVENT", direction: OUT)
     Poster: User @relationship(type: "POSTED_BY", direction: IN)
@@ -217,7 +217,8 @@ const typeDefinitions = gql `
     EventChannels: [EventChannel!]!
       @relationship(type: "POSTED_IN_CHANNEL", direction: IN)
     RelatedIssues: [Issue!]! @relationship(type: "CITED_ISSUE", direction: IN)
-    FeedbackComments: [Comment!]! @relationship(type: "HAS_FEEDBACK_COMMENT", direction: IN)
+    FeedbackComments: [Comment!]!
+      @relationship(type: "HAS_FEEDBACK_COMMENT", direction: IN)
   }
 
   type Comment {
@@ -242,10 +243,14 @@ const typeDefinitions = gql `
       @relationship(type: "UPVOTED_COMMENT", direction: IN)
     # PastVersions:            [CommentVersion]        @relationship(type: "HAS_VERSION", direction: OUT)
     emoji: JSON
-    GivesFeedbackOnDiscussion: Discussion @relationship(type: "HAS_FEEDBACK_COMMENT", direction: OUT)
-    GivesFeedbackOnEvent: Event @relationship(type: "HAS_FEEDBACK_COMMENT", direction: OUT)
-    GivesFeedbackOnComment: Comment @relationship(type: "HAS_FEEDBACK_COMMENT", direction: OUT)
-    FeedbackComments: [Comment!]! @relationship(type: "HAS_FEEDBACK_COMMENT", direction: IN)
+    GivesFeedbackOnDiscussion: Discussion
+      @relationship(type: "HAS_FEEDBACK_COMMENT", direction: OUT)
+    GivesFeedbackOnEvent: Event
+      @relationship(type: "HAS_FEEDBACK_COMMENT", direction: OUT)
+    GivesFeedbackOnComment: Comment
+      @relationship(type: "HAS_FEEDBACK_COMMENT", direction: OUT)
+    FeedbackComments: [Comment!]!
+      @relationship(type: "HAS_FEEDBACK_COMMENT", direction: IN)
   }
 
   type Emoji {
@@ -270,7 +275,8 @@ const typeDefinitions = gql `
       @relationship(type: "AUTHORED_COMMENT", direction: OUT)
     ModChannelRoles: [ModChannelRole!]!
       @relationship(type: "HAS_MOD_ROLE", direction: OUT)
-    ModServerRoles: [ModServerRole!]! @relationship(type: "HAS_MOD_ROLE", direction: OUT)
+    ModServerRoles: [ModServerRole!]!
+      @relationship(type: "HAS_MOD_ROLE", direction: OUT)
     ActivityFeed: [ModerationAction!]!
       @relationship(type: "ACTIVITY_ON_ISSUE", direction: OUT)
   }
@@ -303,7 +309,6 @@ const typeDefinitions = gql `
       @relationship(type: "ACTIVITY_ON_ISSUE", direction: OUT)
   }
 
-
   type Feed {
     id: ID! @id
     title: String
@@ -331,6 +336,26 @@ const typeDefinitions = gql `
     message: String
   }
 
+  type SeedDataResponse {
+    success: Boolean
+    message: String
+  }
+
+  input EventCreateInputWithChannels {
+    eventCreateInput: EventCreateInput!
+    channelConnections: [String!]!
+  }
+
+  input DiscussionCreateInputWithChannels {
+    discussionCreateInput: DiscussionCreateInput!
+    channelConnections: [String!]!
+  }
+
+  input NewUserInput {
+    emailAddress: String!
+    username: String!
+  }
+
   type Mutation {
     addEmojiToComment(
       commentId: ID!
@@ -355,8 +380,7 @@ const typeDefinitions = gql `
       username: String!
     ): DiscussionChannel
     createDiscussionWithChannelConnections(
-      discussionCreateInput: DiscussionCreateInput
-      channelConnections: [String]
+      input: [DiscussionCreateInputWithChannels!]!
     ): Discussion
     updateDiscussionWithChannelConnections(
       where: DiscussionWhere!
@@ -365,8 +389,7 @@ const typeDefinitions = gql `
       channelDisconnections: [String]
     ): Discussion
     createEventWithChannelConnections(
-      eventCreateInput: EventCreateInput
-      channelConnections: [String]
+      input: [EventCreateInputWithChannels!]!
     ): Event
     updateEventWithChannelConnections(
       where: EventWhere!
@@ -376,11 +399,30 @@ const typeDefinitions = gql `
     ): Event
     upvoteComment(commentId: ID!, username: String!): Comment
     undoUpvoteComment(commentId: ID!, username: String!): Comment
-    upvoteDiscussionChannel(discussionChannelId: ID!, username: String!): DiscussionChannel
-    undoUpvoteDiscussionChannel(discussionChannelId: ID!, username: String!): DiscussionChannel
+    upvoteDiscussionChannel(
+      discussionChannelId: ID!
+      username: String!
+    ): DiscussionChannel
+    undoUpvoteDiscussionChannel(
+      discussionChannelId: ID!
+      username: String!
+    ): DiscussionChannel
     createSignedStorageURL(filename: String!, contentType: String!): SignedURL
     createEmailAndUser(emailAddress: String!, username: String!): User
     dropDataForCypressTests: DropDataResponse
+    seedDataForCypressTests(
+      channels: [ChannelCreateInput!]!
+      users: [NewUserInput!]!
+      tags: [TagCreateInput!]!
+      discussions: [DiscussionCreateInputWithChannels!]!
+      events: [EventCreateInputWithChannels!]!
+      comments: [CommentCreateInput!]!
+      channelRoles: [ChannelRoleCreateInput!]!
+      modChannelRoles: [ModChannelRoleCreateInput!]!
+      serverRoles: [ServerRoleCreateInput!]!
+      modServerRoles: [ModServerRoleCreateInput!]!
+      serverConfigs: [ServerConfigCreateInput!]!
+    ): SeedDataResponse
   }
 
   input SiteWideDiscussionSortOrder {
@@ -400,7 +442,7 @@ const typeDefinitions = gql `
     year
     all
   }
-  
+
   input DiscussionListOptions {
     offset: Int
     limit: Int
@@ -493,10 +535,14 @@ const typeDefinitions = gql `
     serverName: String @unique
     serverDescription: String
     serverIconURL: String
-    DefaultServerRole: ServerRole @relationship(type: "HAS_DEFAULT_SERVER_ROLE", direction: OUT)
-    DefaultModRole: ModServerRole @relationship(type: "HAS_DEFAULT_MOD_ROLE", direction: OUT)
-    DefaultChannelRole: ChannelRole @relationship(type: "HAS_DEFAULT_CHANNEL_ROLE", direction: OUT)
-    DefaultModChannelRole: ModChannelRole @relationship(type: "HAS_DEFAULT_MOD_ROLE", direction: OUT)
+    DefaultServerRole: ServerRole
+      @relationship(type: "HAS_DEFAULT_SERVER_ROLE", direction: OUT)
+    DefaultModRole: ModServerRole
+      @relationship(type: "HAS_DEFAULT_MOD_ROLE", direction: OUT)
+    DefaultChannelRole: ChannelRole
+      @relationship(type: "HAS_DEFAULT_CHANNEL_ROLE", direction: OUT)
+    DefaultModChannelRole: ModChannelRole
+      @relationship(type: "HAS_DEFAULT_MOD_ROLE", direction: OUT)
   }
 
   type EnvironmentInfo {
@@ -505,7 +551,7 @@ const typeDefinitions = gql `
   }
 
   type SafetyCheckResponse {
-      environment: EnvironmentInfo
+    environment: EnvironmentInfo
   }
 
   type Query {
