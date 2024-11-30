@@ -12,14 +12,13 @@ const permissionList = shield({
       seedDataForCypressTests: rules.isAdmin,
       createTags: allow,
       
-      
       createChannelRoles: rules.isAdmin,
       createModChannelRoles: rules.isAdmin,
 
-      createModServerRoles: allow,//rules.isAdmin,
-      createServerRoles: allow,//rules.isAdmin,
-      createServerConfigs: allow,//rules.isAdmin,
-      deleteServerConfigs: allow,//rules.isAdmin,
+      createModServerRoles: rules.isAdmin,
+      createServerRoles: rules.isAdmin,
+      createServerConfigs: rules.isAdmin,
+      deleteServerConfigs: rules.isAdmin,
 
       updateServerConfigs: rules.isAdmin,
       deleteChannelRoles: or(rules.isAdmin, rules.isChannelOwner),
