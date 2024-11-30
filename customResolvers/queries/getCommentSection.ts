@@ -81,7 +81,11 @@ const getResolver = (input: Input) => {
       });
 
       if (result.length === 0) {
-        throw new Error("DiscussionChannel not found");
+        // If no DiscussionChannel is found, return null and an empty array
+        return {
+          DiscussionChannel: null,
+          Comments: [],
+        };
       }
 
       const discussionChannel = result[0];
