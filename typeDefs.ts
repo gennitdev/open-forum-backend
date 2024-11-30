@@ -462,7 +462,7 @@ const typeDefinitions = gql`
   }
 
   type CommentSectionFormat {
-    DiscussionChannel: DiscussionChannel!
+    DiscussionChannel: DiscussionChannel
     Comments: [Comment!]!
   }
 
