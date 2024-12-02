@@ -381,7 +381,7 @@ const typeDefinitions = gql `
     ): DiscussionChannel
     createDiscussionWithChannelConnections(
       input: [DiscussionCreateInputWithChannels!]!
-    ): Discussion
+    ): [Discussion!]!
     updateDiscussionWithChannelConnections(
       where: DiscussionWhere!
       discussionUpdateInput: DiscussionUpdateInput!
@@ -461,7 +461,7 @@ const typeDefinitions = gql `
   }
 
   type CommentSectionFormat {
-    DiscussionChannel: DiscussionChannel!
+    DiscussionChannel: DiscussionChannel
     Comments: [Comment!]!
   }
 

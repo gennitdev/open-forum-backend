@@ -43,10 +43,14 @@ const canCreateChannel = rule({ cache: "contextual" })(
   }
 );
 
-export type CanCreateDiscussionArgs = {
+export type CreateDiscussionItem = {
   discussionCreateInput: DiscussionCreateInput;
   channelConnections: string[];
-};
+}
+
+export type CanCreateDiscussionArgs = {
+  input: CreateDiscussionItem[];
+}
 
 export type CanUpdateDiscussionArgs = {
   discussionUpdateInput: DiscussionCreateInput;
@@ -55,13 +59,23 @@ export type CanUpdateDiscussionArgs = {
 
 export const canCreateDiscussion = rule({ cache: "contextual" })(
   async (parent: any, args: CanCreateDiscussionArgs, ctx: any, info: any) => {
-    const channelConnections = args.channelConnections;
 
-    return checkChannelPermissions({
-      channelConnections,
-      context: ctx,
-      permissionCheck: ChannelPermissionChecks.CREATE_DISCUSSION,
-    });
+    const inputItems = args.input;
+    for (let i = 0; i < inputItems.length; i++) {
+      const item = inputItems[i];
+      const { channelConnections } = item;
+
+      const channelPermissions = await checkChannelPermissions({
+        channelConnections,
+        context: ctx,
+        permissionCheck: ChannelPermissionChecks.CREATE_DISCUSSION,
+      });
+
+      if (channelPermissions instanceof Error) {
+        return channelPermissions;
+      }
+    }
+    return true;
   }
 );
 

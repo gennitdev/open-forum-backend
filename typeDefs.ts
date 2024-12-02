@@ -382,7 +382,7 @@ const typeDefinitions = gql`
     ): DiscussionChannel
     createDiscussionWithChannelConnections(
       input: [DiscussionCreateInputWithChannels!]!
-    ): Discussion
+    ): [Discussion!]!
     updateDiscussionWithChannelConnections(
       where: DiscussionWhere!
       discussionUpdateInput: DiscussionUpdateInput!

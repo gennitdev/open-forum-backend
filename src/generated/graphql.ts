@@ -5585,7 +5585,7 @@ export type CommentRepliesFormatsConnection = {
 export type CommentSectionFormat = {
   __typename?: 'CommentSectionFormat';
   Comments: Array<Comment>;
-  DiscussionChannel: DiscussionChannel;
+  DiscussionChannel?: Maybe<DiscussionChannel>;
 };
 
 export type CommentSectionFormatAggregateSelection = {
@@ -16459,7 +16459,7 @@ export type Mutation = {
   createComments: CreateCommentsMutationResponse;
   createDiscussionChannelListFormats: CreateDiscussionChannelListFormatsMutationResponse;
   createDiscussionChannels: CreateDiscussionChannelsMutationResponse;
-  createDiscussionWithChannelConnections?: Maybe<Discussion>;
+  createDiscussionWithChannelConnections: Array<Discussion>;
   createDiscussions: CreateDiscussionsMutationResponse;
   createDropDataResponses: CreateDropDataResponsesMutationResponse;
   createEmailAndUser?: Maybe<User>;
@@ -30914,7 +30914,7 @@ export type CommentRepliesFormatsConnectionResolvers<ContextType = any, ParentTy
 
 export type CommentSectionFormatResolvers<ContextType = any, ParentType extends ResolversParentTypes['CommentSectionFormat'] = ResolversParentTypes['CommentSectionFormat']> = {
   Comments?: Resolver<Array<ResolversTypes['Comment']>, ParentType, ContextType>;
-  DiscussionChannel?: Resolver<ResolversTypes['DiscussionChannel'], ParentType, ContextType>;
+  DiscussionChannel?: Resolver<Maybe<ResolversTypes['DiscussionChannel']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -32985,7 +32985,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createComments?: Resolver<ResolversTypes['CreateCommentsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateCommentsArgs, 'input'>>;
   createDiscussionChannelListFormats?: Resolver<ResolversTypes['CreateDiscussionChannelListFormatsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateDiscussionChannelListFormatsArgs, 'input'>>;
   createDiscussionChannels?: Resolver<ResolversTypes['CreateDiscussionChannelsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateDiscussionChannelsArgs, 'input'>>;
-  createDiscussionWithChannelConnections?: Resolver<Maybe<ResolversTypes['Discussion']>, ParentType, ContextType, RequireFields<MutationCreateDiscussionWithChannelConnectionsArgs, 'input'>>;
+  createDiscussionWithChannelConnections?: Resolver<Array<ResolversTypes['Discussion']>, ParentType, ContextType, RequireFields<MutationCreateDiscussionWithChannelConnectionsArgs, 'input'>>;
   createDiscussions?: Resolver<ResolversTypes['CreateDiscussionsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateDiscussionsArgs, 'input'>>;
   createDropDataResponses?: Resolver<ResolversTypes['CreateDropDataResponsesMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateDropDataResponsesArgs, 'input'>>;
   createEmailAndUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationCreateEmailAndUserArgs, 'emailAddress' | 'username'>>;

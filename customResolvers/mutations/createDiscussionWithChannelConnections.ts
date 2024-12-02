@@ -75,12 +75,14 @@ export const createDiscussionsFromInput = async (
   if (!input || input.length === 0) {
     throw new Error("Input cannot be empty");
   }
+  console.log("Creating discussions with input:", input);
 
   const session = driver.session();
   const discussions: any[] = [];
 
   try {
     for (const { discussionCreateInput, channelConnections } of input) {
+      console.log("Creating discussion with channels:", discussionCreateInput, channelConnections);
       if (!channelConnections || channelConnections.length === 0) {
         throw new Error("At least one channel must be selected");
       }
@@ -89,6 +91,7 @@ export const createDiscussionsFromInput = async (
         input: [discussionCreateInput],
         selectionSet: `{ discussions ${selectionSet} }`,
       });
+      console.log("Discussion created:", response);
 
       const newDiscussion = response.discussions[0];
       const newDiscussionId = newDiscussion.id;
@@ -118,6 +121,7 @@ export const createDiscussionsFromInput = async (
         },
         selectionSet,
       });
+      console.log("Fetched discussion:", fetchedDiscussion[0]);
 
       discussions.push(fetchedDiscussion[0]);
     }
@@ -143,6 +147,7 @@ const getResolver = (input: Input) => {
     try {
       // Use the extracted function to create discussions
       const discussions = await createDiscussionsFromInput(Discussion, driver, input);
+      console.log("Discussions created in resolver:", discussions);
       return discussions;
     } catch (error: any) {
       console.error(error);
