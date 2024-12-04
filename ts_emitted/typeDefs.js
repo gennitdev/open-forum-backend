@@ -116,7 +116,7 @@ const typeDefinitions = gql `
       @relationship(type: "POSTED_IN_CHANNEL", direction: OUT)
     Channel: Channel @relationship(type: "POSTED_IN_CHANNEL", direction: OUT)
     UpvotedByUsers: [User!]!
-      @relationship(type: "UPVOTED_DISCUSSION", direction: OUT)
+      @relationship(type: "UPVOTED_DISCUSSION", direction: IN)
     Comments: [Comment!]!
       @relationship(type: "CONTAINS_COMMENT", direction: OUT)
     emoji: JSON

@@ -27,14 +27,17 @@ const selectionSet = `
       createdAt
       channelUniqueName
       discussionId
-      UpvotedByUsers {
-        username
-      }
       Channel {
         uniqueName
       }
       Discussion {
         id
+      }
+      UpvotedByUsers {
+        username
+      }
+      UpvotedByUsersAggregate {
+        count
       }
     }
     createdAt
@@ -70,6 +73,11 @@ export const createDiscussionsFromInput = async (Discussion, driver, input) => {
             // Link the discussion to channels
             for (const channelUniqueName of channelConnections) {
                 try {
+                    console.log('running create DC with arguments ,', {
+                        discussionId: newDiscussionId,
+                        channelUniqueName,
+                        upvotedBy: newDiscussion.Author.username,
+                    });
                     await session.run(createDiscussionChannelQuery, {
                         discussionId: newDiscussionId,
                         channelUniqueName,
