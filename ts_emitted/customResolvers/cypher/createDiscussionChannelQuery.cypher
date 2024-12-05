@@ -10,7 +10,7 @@ CREATE (newDc:DiscussionChannel {
 })
 MERGE (newDc)-[:POSTED_IN_CHANNEL]->(d)
 MERGE (newDc)-[:POSTED_IN_CHANNEL]->(c)
-MERGE (u)-[:UPVOTED_DISCUSSION]->(newDc)
+MERGE (u)-[:UPVOTED_DISCUSSION]->(newDc) 
 WITH newDc, d, c, u
 WITH newDc, d, c, collect(u {username: u.username}) as upvotedByUsers
 RETURN {

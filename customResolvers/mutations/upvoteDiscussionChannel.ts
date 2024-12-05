@@ -101,7 +101,7 @@ const upvoteDiscussionChannelResolver = (input: Input) => {
       const updateDiscussionChannelQuery = `
         MATCH (dc:DiscussionChannel { id: $discussionChannelId }), (u:User { username: $username })
         SET dc.weightedVotesCount = coalesce(dc.weightedVotesCount, 0) + 1 + $weightedVoteBonus
-        CREATE (dc)-[:UPVOTED_DISCUSSION]->(u)
+        CREATE (u)-[:UPVOTED_DISCUSSION]->(dc) 
         RETURN dc
       `;
 

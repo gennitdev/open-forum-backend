@@ -73,7 +73,7 @@ const undoUpvoteDiscussionChannelResolver = (input) => {
             let weightedVoteBonus = getWeightedVoteBonus(voterUser);
             // Update weighted votes count on the discussionChannel and remove the relationship
             const undoUpvoteDiscussionChannelQuery = `
-        MATCH (dc:DiscussionChannel { id: $discussionChannelId })-[r:UPVOTED_DISCUSSION]->(u:User { username: $username })
+        MATCH (u:User { username: $username })-[r:UPVOTED_DISCUSSION]->(dc:DiscussionChannel { id: $discussionChannelId })
         SET dc.weightedVotesCount = coalesce(dc.weightedVotesCount, 0) - 1 - $weightedVoteBonus
         DELETE r
         RETURN dc
