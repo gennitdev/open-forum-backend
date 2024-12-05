@@ -20,6 +20,7 @@ const getResolver = (input) => {
             getPermissionInfo: false
         });
         const loggedInUsername = ((_a = context.user) === null || _a === void 0 ? void 0 : _a.username) || null;
+        console.log("loggedInUsername", loggedInUsername);
         const session = driver.session();
         let titleRegex = `(?i).*${searchInput}.*`;
         let bodyRegex = `(?i).*${searchInput}.*`;
@@ -37,6 +38,7 @@ const getResolver = (input) => {
                 sortOption: "new",
                 loggedInUsername
             };
+            console.log('queryParams', queryParams);
             switch (sort) {
                 case "new":
                     const newDiscussionChannelsResult = await session.run(getDiscussionChannelsQuery, queryParams);

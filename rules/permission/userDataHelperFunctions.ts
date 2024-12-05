@@ -236,7 +236,6 @@ export const setUserDataOnContext = async (
         console.error("JWT Verification Error:", err);
       });
     });
-    console.log("The decoded token is:", decoded);
 
     // Check the audience of the token
     const audience = decoded?.aud;

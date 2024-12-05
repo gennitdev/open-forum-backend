@@ -41,7 +41,7 @@ OPTIONAL MATCH (author)-[:HAS_SERVER_ROLE]->(serverRole:ServerRole)
 OPTIONAL MATCH (author)-[:HAS_CHANNEL_ROLE]->(channelRole:ChannelRole)
 
 // Modified upvoter collection to only get count and logged-in user if they upvoted
-OPTIONAL MATCH (dc)-[:UPVOTED_DISCUSSION]->(upvoter:User)
+OPTIONAL MATCH (upvoter:User)-[:UPVOTED_DISCUSSION]->(dc)
 WITH dc, d, author, serverRole, channelRole, tagsText, 
      COLLECT(DISTINCT upvoter) AS allUpvoters,
      COUNT(DISTINCT upvoter) AS totalUpvoters,
@@ -49,7 +49,7 @@ WITH dc, d, author, serverRole, channelRole, tagsText,
      totalCount
 
 // Filter for logged-in user's upvote
-OPTIONAL MATCH (dc)-[:UPVOTED_DISCUSSION]->(loggedInUser:User {username: loggedInUsername})
+OPTIONAL MATCH (loggedInUser:User {username: loggedInUsername})-[:UPVOTED_DISCUSSION]->(dc)
 WITH dc, d, author, serverRole, channelRole, tagsText, 
      CASE 
          WHEN loggedInUsername = "" THEN []
