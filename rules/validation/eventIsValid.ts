@@ -1,10 +1,20 @@
 import { rule } from "graphql-shield";
-import { CanCreateEventArgs, CanUpdateEventArgs } from "../rules";
-import { MAX_CHARS_IN_EVENT_DESCRIPTION, MAX_CHARS_IN_EVENT_TITLE } from "./constants.js";
+import {
+  CanCreateEventArgs,
+  CanUpdateEventArgs,
+  SingleEventInput,
+} from "../rules";
+import {
+  MAX_CHARS_IN_EVENT_DESCRIPTION,
+  MAX_CHARS_IN_EVENT_TITLE,
+} from "./constants.js";
 
 type EventInput = { title?: string | null; description?: string | null };
 
-const validateEventInput = (input: EventInput, createMode: boolean): true | string => {
+const validateEventInput = (
+  input: EventInput,
+  createMode: boolean
+): true | string => {
   const { title, description } = input;
 
   if (!title && createMode) {
@@ -24,10 +34,23 @@ const validateEventInput = (input: EventInput, createMode: boolean): true | stri
 
 export const createEventInputIsValid = rule({ cache: "contextual" })(
   async (parent: any, args: CanCreateEventArgs, ctx: any, info: any) => {
-    if (!args.eventCreateInput) {
-      return "Missing eventCreateInput in args.";
+    if (!args.input) {
+      return "Missing input in args.";
     }
-    return validateEventInput(args.eventCreateInput, true);
+    const eventsToCreate = args.input as SingleEventInput[];
+    for (const event of eventsToCreate) {
+      const validation = validateEventInput(
+        {
+          title: event.eventCreateInput.title || null,
+          description: event.eventCreateInput.description || null,
+        },
+        true
+      );
+      if (validation !== true) {
+        return validation;
+      }
+    }
+    return true;
   }
 );
 
@@ -36,9 +59,12 @@ export const updateEventInputIsValid = rule({ cache: "contextual" })(
     if (!args.eventUpdateInput) {
       return "Missing eventUpdateInput in args.";
     }
-    return validateEventInput({
-      title: args.eventUpdateInput?.title || null,
-      description: args.eventUpdateInput?.description || null,
-    }, false);
+    return validateEventInput(
+      {
+        title: args.eventUpdateInput?.title || null,
+        description: args.eventUpdateInput?.description || null,
+      },
+      false
+    );
   }
 );

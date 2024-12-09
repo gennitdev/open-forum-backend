@@ -128,6 +128,7 @@ export const createEventsFromInput = async (
   } finally {
     session.close();
   }
+  console.log("Created events:", events);
 
   return events;
 };

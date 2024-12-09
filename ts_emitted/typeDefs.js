@@ -390,7 +390,7 @@ const typeDefinitions = gql `
     ): Discussion
     createEventWithChannelConnections(
       input: [EventCreateInputWithChannels!]!
-    ): Event
+    ): [Event!]!
     updateEventWithChannelConnections(
       where: EventWhere!
       eventUpdateInput: EventUpdateInput!

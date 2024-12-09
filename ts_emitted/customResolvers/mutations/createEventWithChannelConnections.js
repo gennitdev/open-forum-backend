@@ -106,6 +106,7 @@ export const createEventsFromInput = async (Event, driver, input) => {
     finally {
         session.close();
     }
+    console.log("Created events:", events);
     return events;
 };
 /**

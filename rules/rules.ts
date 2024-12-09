@@ -20,12 +20,24 @@ import {
   CommentCreateInput,
   DiscussionCreateInput,
   EventCreateInput,
-  EventUpdateInput
+  EventUpdateInput,
 } from "../src/generated/graphql.js";
-import { createDiscussionInputIsValid, updateDiscussionInputIsValid } from "./validation/discussionIsValid.js";
-import { createCommentInputIsValid, updateCommentInputIsValid } from "./validation/commentIsValid.js";
-import { createEventInputIsValid, updateEventInputIsValid } from "./validation/eventIsValid.js";
-import { createChannelInputIsValid, updateChannelInputIsValid } from "./validation/channelIsValid.js";
+import {
+  createDiscussionInputIsValid,
+  updateDiscussionInputIsValid,
+} from "./validation/discussionIsValid.js";
+import {
+  createCommentInputIsValid,
+  updateCommentInputIsValid,
+} from "./validation/commentIsValid.js";
+import {
+  createEventInputIsValid,
+  updateEventInputIsValid,
+} from "./validation/eventIsValid.js";
+import {
+  createChannelInputIsValid,
+  updateChannelInputIsValid,
+} from "./validation/channelIsValid.js";
 import { setUserDataOnContext } from "./permission/userDataHelperFunctions.js";
 
 const canCreateChannel = rule({ cache: "contextual" })(
@@ -46,11 +58,11 @@ const canCreateChannel = rule({ cache: "contextual" })(
 export type CreateDiscussionItem = {
   discussionCreateInput: DiscussionCreateInput;
   channelConnections: string[];
-}
+};
 
 export type CanCreateDiscussionArgs = {
   input: CreateDiscussionItem[];
-}
+};
 
 export type CanUpdateDiscussionArgs = {
   discussionUpdateInput: DiscussionCreateInput;
@@ -59,7 +71,6 @@ export type CanUpdateDiscussionArgs = {
 
 export const canCreateDiscussion = rule({ cache: "contextual" })(
   async (parent: any, args: CanCreateDiscussionArgs, ctx: any, info: any) => {
-
     const inputItems = args.input;
     for (let i = 0; i < inputItems.length; i++) {
       const item = inputItems[i];
@@ -96,17 +107,23 @@ export const canUpdateEvent = rule({ cache: "contextual" })(
   }
 );
 
-export type CanCreateEventArgs = {
+export type SingleEventInput = {
   eventCreateInput: EventCreateInput;
   channelConnections: string[];
+}
+
+export type CanCreateEventArgs = {
+  input: SingleEventInput[];
 };
 
 export const canCreateEvent = rule({ cache: "contextual" })(
   async (parent: any, args: CanCreateEventArgs, ctx: any, info: any) => {
-    const channelConnections = args.channelConnections;
-
+    const dedupedChannelConnections = args.input.map((item) => item.channelConnections);
+    const channelConnections = [...new Set(dedupedChannelConnections)];
+    const flattenedChannelConnections = channelConnections.flat();
+    
     return checkChannelPermissions({
-      channelConnections,
+      channelConnections: flattenedChannelConnections,
       context: ctx,
       permissionCheck: ChannelPermissionChecks.CREATE_EVENT,
     });
@@ -132,7 +149,7 @@ export const canCreateComment = rule({ cache: "contextual" })(
       throw new Error("No discussion channel found.");
     }
 
-    const discussionChannelId = DiscussionChannel.connect?.where?.node?.id
+    const discussionChannelId = DiscussionChannel.connect?.where?.node?.id;
 
     if (!discussionChannelId) {
       throw new Error("No discussion channel ID found.");
@@ -165,24 +182,22 @@ export const canCreateComment = rule({ cache: "contextual" })(
 
 const isAdmin = rule({ cache: "contextual" })(
   async (parent: any, args: any, ctx: any, info: any) => {
-
     // set user on context
     ctx.user = await setUserDataOnContext({
       context: ctx,
-      getPermissionInfo: true
+      getPermissionInfo: true,
     });
-
 
     if (!ctx.user) {
       console.log("No user");
       return false;
     }
-    let isAdmin = false
+    let isAdmin = false;
     const serverRoles = ctx.user?.data?.ServerRoles || [];
     const email = ctx.user?.email;
 
     if (email === process.env.CYPRESS_ADMIN_TEST_EMAIL) {
-      // This email is used only for cypress tests. We need 
+      // This email is used only for cypress tests. We need
       // to whitelist it as an admin so that we don't have the catch-22
       // of needing an admin to create an admin.
       isAdmin = true;
@@ -192,7 +207,7 @@ const isAdmin = rule({ cache: "contextual" })(
         isAdmin = true;
       }
     }
-    console.log('user data', ctx.user)
+    console.log("user data", ctx.user);
     return isAdmin;
   }
 );
@@ -211,7 +226,7 @@ const canUploadFile = rule({ cache: "contextual" })(
     }
 
     if (permissionResult instanceof Error) {
-      console.log("permission error")
+      console.log("permission error");
       return permissionResult;
     }
 
@@ -361,7 +376,6 @@ const canReportContent = rule({ cache: "contextual" })(
 
 const issueIsValid = rule({ cache: "contextual" })(
   async (parent: any, args: any, ctx: any, info: any) => {
-
     return true;
   }
 );
