@@ -89,12 +89,16 @@ export const createEventsFromInput = async (Event, driver, input) => {
                 events.push(fetchedEvent[0]);
             }
             catch (error) {
+                console.warn("Event creation error details:", {
+                    message: error.message,
+                    code: error.code,
+                    details: error.stack,
+                    neo4jError: error.neo4jError,
+                    fullError: JSON.stringify(error, Object.getOwnPropertyNames(error))
+                });
                 if (error.message.includes("Constraint validation failed")) {
-                    console.warn("Skipping event creation due to constraint validation failure");
-                    continue;
-                }
-                else {
-                    console.error("Error creating event, skipping:", error.message);
+                    console.warn("Constraint validation details:");
+                    console.log('Input:', JSON.stringify(eventCreateInput, null, 2));
                     continue;
                 }
             }
@@ -106,7 +110,6 @@ export const createEventsFromInput = async (Event, driver, input) => {
     finally {
         session.close();
     }
-    console.log("Created events:", events);
     return events;
 };
 /**
