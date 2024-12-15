@@ -1,12 +1,3 @@
-// type EnvironmentInfo {
-//     isTestEnvironment
-//     currentDatabase
-// }
-
-// type SafetyCheckResponse {
-//   environment: EnvironmentInfo
-// }
-
 const safetyCheck = async (
   parent: any,
   args: any,

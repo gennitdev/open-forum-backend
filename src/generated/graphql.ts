@@ -16468,7 +16468,7 @@ export type Mutation = {
   createEnvironmentInfos: CreateEnvironmentInfosMutationResponse;
   createEventChannels: CreateEventChannelsMutationResponse;
   createEventCommentsFormats: CreateEventCommentsFormatsMutationResponse;
-  createEventWithChannelConnections?: Maybe<Event>;
+  createEventWithChannelConnections: Array<Event>;
   createEvents: CreateEventsMutationResponse;
   createFeeds: CreateFeedsMutationResponse;
   createImages: CreateImagesMutationResponse;
@@ -32994,7 +32994,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createEnvironmentInfos?: Resolver<ResolversTypes['CreateEnvironmentInfosMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateEnvironmentInfosArgs, 'input'>>;
   createEventChannels?: Resolver<ResolversTypes['CreateEventChannelsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateEventChannelsArgs, 'input'>>;
   createEventCommentsFormats?: Resolver<ResolversTypes['CreateEventCommentsFormatsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateEventCommentsFormatsArgs, 'input'>>;
-  createEventWithChannelConnections?: Resolver<Maybe<ResolversTypes['Event']>, ParentType, ContextType, RequireFields<MutationCreateEventWithChannelConnectionsArgs, 'input'>>;
+  createEventWithChannelConnections?: Resolver<Array<ResolversTypes['Event']>, ParentType, ContextType, RequireFields<MutationCreateEventWithChannelConnectionsArgs, 'input'>>;
   createEvents?: Resolver<ResolversTypes['CreateEventsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateEventsArgs, 'input'>>;
   createFeeds?: Resolver<ResolversTypes['CreateFeedsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateFeedsArgs, 'input'>>;
   createImages?: Resolver<ResolversTypes['CreateImagesMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateImagesArgs, 'input'>>;

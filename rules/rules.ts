@@ -143,30 +143,66 @@ export const canCreateComment = rule({ cache: "contextual" })(
       throw new Error("No comment create input found.");
     }
 
-    const { DiscussionChannel } = firstItemInInput;
+    const { DiscussionChannel, Event, Channel } = firstItemInInput;
 
-    if (!DiscussionChannel) {
-      throw new Error("No discussion channel found.");
+    // Throw an error if no Channel is provided; all comments must be in the context of a channel.
+    if (!Channel || !Channel.connect?.where?.node?.uniqueName) {
+      throw new Error("Comment must be connected to a Channel.");
     }
 
-    const discussionChannelId = DiscussionChannel.connect?.where?.node?.id;
-
-    if (!discussionChannelId) {
-      throw new Error("No discussion channel ID found.");
+    if (!DiscussionChannel && !Event) {
+      throw new Error("Comment must be connected to a DiscussionChannel or an Event.");
     }
 
-    // Look up the channelUniqueName from the discussion channel ID.
-    const discussionChannelModel = ctx.ogm.model("DiscussionChannel");
-    const discussionChannel = await discussionChannelModel.find({
-      where: { id: discussionChannelId },
-      selectionSet: `{ channelUniqueName }`,
-    });
+    let channelName = ''
 
-    if (!discussionChannel || !discussionChannel[0]) {
-      throw new Error("No discussion channel found.");
+    if (DiscussionChannel){
+      const discussionChannelId = DiscussionChannel.connect?.where?.node?.id;
+
+      if (!discussionChannelId) {
+        throw new Error("No discussion channel ID found.");
+      }
+  
+      // Look up the channelUniqueName from the discussion channel ID.
+      const discussionChannelModel = ctx.ogm.model("DiscussionChannel");
+      const discussionChannel = await discussionChannelModel.find({
+        where: { id: discussionChannelId },
+        selectionSet: `{ channelUniqueName }`,
+      });
+  
+      if (!discussionChannel || !discussionChannel[0]) {
+        throw new Error("No discussion channel found.");
+      }
+  
+      channelName = discussionChannel[0]?.channelUniqueName;
     }
 
-    const channelName = discussionChannel[0]?.channelUniqueName;
+    if (Event) {
+      const eventId = Event.connect?.where?.node?.id;
+
+      if (!eventId) {
+        throw new Error("No event ID found.");
+      }
+
+      // Validate that the user has permission to comment on the event.
+      // The channel that they are posting in needs to match one of the
+      // channels that the event is connected to.
+      const eventChannelModel = ctx.ogm.model("EventChannel");
+      const event = await eventChannelModel.find({
+        where: { 
+          eventId,
+          channelUniqueName: Channel?.connect?.where?.node?.uniqueName
+        },
+        selectionSet: `{ id }`,
+      });
+
+      if (!event || !event[0]) {
+        throw new Error("Could not find the event submission in the given channel.");
+      }
+
+      channelName = Channel?.connect?.where?.node?.uniqueName
+    }
+   
 
     if (!channelName) {
       throw new Error("No channel name found.");
