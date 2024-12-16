@@ -1,7 +1,6 @@
 import { rule } from "graphql-shield";
 import {
   CanCreateEventArgs,
-  CanUpdateEventArgs,
   SingleEventInput,
 } from "../rules";
 import {
@@ -53,6 +52,10 @@ export const createEventInputIsValid = rule({ cache: "contextual" })(
     return true;
   }
 );
+
+type CanUpdateEventArgs = {
+  eventUpdateInput: EventInput;
+};
 
 export const updateEventInputIsValid = rule({ cache: "contextual" })(
   async (parent: any, args: CanUpdateEventArgs, ctx: any, info: any) => {

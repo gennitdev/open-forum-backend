@@ -1,6 +1,5 @@
 import { setUserDataOnContext } from "./userDataHelperFunctions.js";
 import { ERROR_MESSAGES } from "../errorMessages.js";
-import { ServerPermissionChecks } from "./hasChannelPermission.js";
 import { ServerRole } from "../../ogm-types.js";
 
 export const hasServerPermission: (
@@ -67,11 +66,11 @@ export const hasServerPermission: (
   //    server role.
 
   const serverRoleToCheck = usersServerRoles[0];
-  if (permission === ServerPermissionChecks.CREATE_CHANNEL) {
+  if (permission === "canCreateChannel") {
     console.log("Checking if user can create channel");
     return serverRoleToCheck.canCreateChannel;
   }
-  if (permission === ServerPermissionChecks.UPLOAD_FILE) {
+  if (permission === "canUploadFile") {
     console.log("Checking if user can upload file");
     return serverRoleToCheck.canUploadFile;
   }

@@ -1,48 +1,9 @@
 import { setUserDataOnContext } from "./userDataHelperFunctions.js";
 import { ERROR_MESSAGES } from "../errorMessages.js";
-
-export const ServerPermissionChecks = {
-  CREATE_CHANNEL: "createChannel",
-  CREATE_SERVER_ROLE: "createServerRole",
-  CREATE_SERVER_CONFIGS: "createServerConfigs",
-  UPDATE_SERVER_CONFIGS: "updateServerConfigs",
-  UPLOAD_FILE: "uploadFile",
-};
-
-export const ServerModPermissionChecks = {
-  OPEN_SUPPORT_TICKETS: "openSupportTickets",
-  LOCK_CHANNEL: "lockChannel",
-  CLOSE_SUPPORT_TICKETS: "closeSupportTickets",
-  GIVE_FEEDBACK: "giveFeedback",
-}
-
-export const ChannelPermissionChecks = {
-  CREATE_EVENT: "createEvent",
-  CREATE_DISCUSSION: "createDiscussion",
-  CREATE_COMMENT: "createComment",
-  UPDATE_EVENT: "updateEvent",
-  UPDATE_DISCUSSION: "updateDiscussion",
-  UPDATE_COMMENT: "updateComment",
-  UPVOTE_COMMENT: "upvoteComment",
-  UPVOTE_DISCUSSION: "upvoteDiscussion",
-  GIVE_FEEDBACK_COMMENT: "giveFeedbackComment",
-  VOTE_WITH_EMOJI: "voteWithEmoji",
-  CREATE_CHANNEL_ROLE: "createChannelRole",
-  UPDATE_CHANNEL_ROLE: "updateChannelRole",
-};
-
-export const ChannelModPermissionChecks = {
-  HIDE_COMMENTS: "hideComments",
-  GIVE_FEEDBACK: "giveFeedback",
-  OPEN_CHANNEL_SUPPORT_TICKET: "openChannelSupportTicket",
-  CLOSE_CHANNEL_SUPPORT_TICKET: "closeChannelSupportTicket",
-  OPEN_SERVER_SUPPORT_TICKET: "openServerSupportTicket",
-  CLOSE_SERVER_SUPPORT_TICKET: "closeServerSupportTicket",
-  REPORT_CONTENT: "reportContent",
-};
+import { ChannelRole } from "../../ogm-types.js";
 
 type HasChannelPermissionInput = {
-  permission: string;
+  permission: keyof ChannelRole;
   channelName: string;
   context: any;
 };
@@ -172,19 +133,19 @@ export const hasChannelPermission: (
   //    server role.
   const serverRoleToCheck = usersServerRoles[0];
 
-  if (permission === ChannelPermissionChecks.CREATE_DISCUSSION) {
+  if (permission === "canCreateDiscussion") {
     return !!serverRoleToCheck.canCreateDiscussion;
   }
-  if (permission === ChannelPermissionChecks.CREATE_EVENT) {
+  if (permission === "canCreateEvent") {
     return !!serverRoleToCheck.canCreateEvent;
   }
-  if (permission === ChannelPermissionChecks.CREATE_COMMENT) {
+  if (permission === "canCreateComment") {
     return !!serverRoleToCheck.canCreateComment;
   }
-  if (permission === ChannelPermissionChecks.UPVOTE_COMMENT) {
+  if (permission === "canUpvoteComment") {
     return !!serverRoleToCheck.canUpvoteComment;
   }
-  if (permission === ChannelPermissionChecks.UPVOTE_DISCUSSION) {
+  if (permission === "canUpvoteDiscussion") {
     return !!serverRoleToCheck.canUpvoteDiscussion;
   }
   return new Error(ERROR_MESSAGES.generic.noPermission);
@@ -193,7 +154,7 @@ export const hasChannelPermission: (
 type CheckChannelPermissionInput = {
   channelConnections: string[];
   context: any;
-  permissionCheck: string;
+  permissionCheck: keyof ChannelRole;
 };
 
 

@@ -1,16 +1,9 @@
 import { setUserDataOnContext } from "./userDataHelperFunctions.js";
 import { ERROR_MESSAGES } from "../errorMessages.js";
-import { ServerModPermissionChecks } from "./hasChannelPermission.js";
-
-
-// The moderation profile has these fields:
-
-// ModChannelRoles: [ModChannelRole!]!
-//       @relationship(type: "HAS_MOD_ROLE", direction: OUT)
-//     ModServerRoles: [ModServerRole!]! @relationship(type: "HAS_MOD_ROLE", direction: OUT)
+import { ModServerRole } from "../../ogm-types.js";
 
 export const hasServerModPermission: (
-  permission: string,
+  permission: keyof ModServerRole,
   context: any
 ) => Promise<Error | boolean> = async (permission, context) => {
 
@@ -74,7 +67,7 @@ export const hasServerModPermission: (
   // 3. Check if the permission is allowed by the default
   //    server role.
   const serverRoleToCheck = modServerRoles[0];
-  if (permission === ServerModPermissionChecks.GIVE_FEEDBACK) {
+  if (permission === "canGiveFeedback") {
     return serverRoleToCheck.canGiveFeedback;
   }
   throw new Error(ERROR_MESSAGES.channel.noChannelPermission);

@@ -10,9 +10,6 @@ import {
   isCommentAuthor,
 } from "./permission/isOwner.js";
 import {
-  ChannelPermissionChecks,
-  ServerPermissionChecks,
-  ServerModPermissionChecks,
   hasChannelPermission,
 } from "./permission/hasChannelPermission.js";
 import { checkChannelPermissions } from "./permission/hasChannelPermission.js";
@@ -79,7 +76,7 @@ export const canCreateDiscussion = rule({ cache: "contextual" })(
       const channelPermissions = await checkChannelPermissions({
         channelConnections,
         context: ctx,
-        permissionCheck: ChannelPermissionChecks.CREATE_DISCUSSION,
+        permissionCheck: "canCreateDiscussion",
       });
 
       if (channelPermissions instanceof Error) {
@@ -87,23 +84,6 @@ export const canCreateDiscussion = rule({ cache: "contextual" })(
       }
     }
     return true;
-  }
-);
-
-export type CanUpdateEventArgs = {
-  eventUpdateInput: EventUpdateInput;
-  channelConnections: string[];
-};
-
-export const canUpdateEvent = rule({ cache: "contextual" })(
-  async (parent: any, args: CanUpdateEventArgs, ctx: any, info: any) => {
-    const channelConnections = args.channelConnections;
-
-    return checkChannelPermissions({
-      channelConnections,
-      context: ctx,
-      permissionCheck: ChannelPermissionChecks.UPDATE_EVENT,
-    });
   }
 );
 
@@ -125,7 +105,7 @@ export const canCreateEvent = rule({ cache: "contextual" })(
     return checkChannelPermissions({
       channelConnections: flattenedChannelConnections,
       context: ctx,
-      permissionCheck: ChannelPermissionChecks.CREATE_EVENT,
+      permissionCheck: "canCreateEvent",
     });
   }
 );
@@ -211,7 +191,7 @@ export const canCreateComment = rule({ cache: "contextual" })(
     return checkChannelPermissions({
       channelConnections: [channelName],
       context: ctx,
-      permissionCheck: ChannelPermissionChecks.CREATE_COMMENT,
+      permissionCheck: "canCreateComment",
     });
   }
 );
@@ -307,7 +287,7 @@ const canUpvoteComment = rule({ cache: "contextual" })(
     }
 
     const permissionResult = await hasChannelPermission({
-      permission: ChannelPermissionChecks.UPVOTE_COMMENT,
+      permission: "canUpvoteComment",
       channelName: channelThatCommentIsIn,
       context: ctx,
     });
@@ -366,7 +346,7 @@ const canUpvoteDiscussion = rule({ cache: "contextual" })(
     }
 
     const permissionResult = await hasChannelPermission({
-      permission: ChannelPermissionChecks.UPVOTE_DISCUSSION,
+      permission: "canUpvoteDiscussion",
       channelName,
       context: ctx,
     });
@@ -386,7 +366,7 @@ const canUpvoteDiscussion = rule({ cache: "contextual" })(
 const canGiveFeedback = rule({ cache: "contextual" })(
   async (parent: any, args: any, ctx: any, info: any) => {
     const permissionResult = await hasServerModPermission(
-      ServerModPermissionChecks.GIVE_FEEDBACK,
+      "canGiveFeedback",
       ctx
     );
 
