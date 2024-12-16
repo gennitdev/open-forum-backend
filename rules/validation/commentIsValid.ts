@@ -2,7 +2,17 @@ import { rule } from "graphql-shield";
 import { CommentCreateInput, CommentUpdateInput } from "../../src/generated/graphql.js";
 import { MAX_CHARS_IN_COMMENT_TEXT } from "./constants.js";
 
-const validateCommentText = (text: string): true | string => {
+type CommentTextValidationInput = {
+  text: string;
+  modProfileName?: string;
+  username?: string;
+}
+
+const validateCommentInput = (input: CommentTextValidationInput): true | string => {
+  const { text, modProfileName, username } = input;
+  if (!username || !modProfileName) {
+    return "Comment author is required.";
+  }
   if (!text) {
     return "Comment text is required.";
   }
@@ -21,7 +31,11 @@ export const createCommentInputIsValid = rule({ cache: "contextual" })(
       return "Missing or empty input in args.";
     }
     const createCommentInput: CommentCreateInput = args.input[0]
-    return validateCommentText(createCommentInput.text || "");
+    return validateCommentInput({
+      text: createCommentInput.text || "",
+      modProfileName: createCommentInput?.CommentAuthor?.ModerationProfile?.connect?.where?.node?.displayName || "",
+      username: createCommentInput?.CommentAuthor?.User?.connect?.where?.node?.username || ""
+    });
   }
 );
 
@@ -31,6 +45,10 @@ export const updateCommentInputIsValid = rule({ cache: "contextual" })(
     if (!args.update) {
       return "Missing update input in args.";
     }
-    return validateCommentText(args.update?.text || "");
+    return validateCommentInput({
+      text: args.update?.text || "",
+      modProfileName: args.update?.CommentAuthor?.ModerationProfile?.connect?.where?.node?.displayName || "",
+      username: args.update?.CommentAuthor?.User?.connect?.where?.node?.username || ""
+    });
   }
 );
