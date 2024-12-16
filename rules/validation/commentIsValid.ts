@@ -10,7 +10,7 @@ type CommentTextValidationInput = {
 
 const validateCommentInput = (input: CommentTextValidationInput): true | string => {
   const { text, modProfileName, username } = input;
-  if (!username || !modProfileName) {
+  if (!username && !modProfileName) {
     return "Comment author is required.";
   }
   if (!text) {
