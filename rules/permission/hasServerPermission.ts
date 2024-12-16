@@ -1,9 +1,10 @@
 import { setUserDataOnContext } from "./userDataHelperFunctions.js";
 import { ERROR_MESSAGES } from "../errorMessages.js";
 import { ServerPermissionChecks } from "./hasChannelPermission.js";
+import { ServerRole } from "../../ogm-types.js";
 
 export const hasServerPermission: (
-  permission: string,
+  permission: keyof ServerRole,
   context: any
 ) => Promise<Error | boolean> = async (permission, context) => {
   // 1. Check for server roles on the user object.
@@ -12,8 +13,6 @@ export const hasServerPermission: (
     getPermissionInfo: true,
   });
   const usersServerRoles = context.user?.data?.ServerRoles || [];
-  console.log("usersServerRoles", usersServerRoles);
-  console.log("permission", permission);
 
   // 2. If there is at least one server role on the user
   //    object, loop over them. All of them must explicitly

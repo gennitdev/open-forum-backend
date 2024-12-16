@@ -252,7 +252,7 @@ const canUploadFile = rule({ cache: "contextual" })(
   async (parent: any, args: any, ctx: any, info: any) => {
     console.log("Checking if user can upload file");
     const permissionResult = await hasServerPermission(
-      ServerPermissionChecks.UPLOAD_FILE,
+      "canUploadFile",
       ctx
     );
 
