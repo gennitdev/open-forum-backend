@@ -234,6 +234,7 @@ const typeDefinitions = gql`
     ParentComment: Comment @relationship(type: "IS_REPLY_TO", direction: OUT)
     text: String
     isRootComment: Boolean!
+    isFeedbackComment: Boolean
     ChildComments: [Comment!]! @relationship(type: "IS_REPLY_TO", direction: IN)
     deleted: Boolean
     updatedAt: DateTime @timestamp(operations: [UPDATE])

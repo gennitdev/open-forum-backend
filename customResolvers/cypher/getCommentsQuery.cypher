@@ -1,5 +1,6 @@
 MATCH (dc:DiscussionChannel { id: $discussionChannelId })-[:CONTAINS_COMMENT]->(c:Comment)
 WHERE c.isRootComment = true
+AND NOT EXISTS((c)-[:HAS_FEEDBACK_COMMENT]->(:Discussion)) 
 
 OPTIONAL MATCH (c)<-[:AUTHORED_COMMENT]-(author:User)
 OPTIONAL MATCH (author)-[:HAS_SERVER_ROLE]->(serverRole:ServerRole)

@@ -1,5 +1,6 @@
 MATCH (dc:DiscussionChannel { id: $discussionChannelId })-[:CONTAINS_COMMENT]->(c:Comment)
 WHERE c.isRootComment = true
+AND NOT EXISTS((c)-[:HAS_FEEDBACK_COMMENT]->(:Discussion)) 
 
 OPTIONAL MATCH (c)<-[:AUTHORED_COMMENT]-(author:User)
 OPTIONAL MATCH (author)-[:HAS_SERVER_ROLE]->(serverRole:ServerRole)
@@ -48,7 +49,7 @@ RETURN {
     emoji: c.emoji,
     createdAt: c.createdAt,
     updatedAt: c.updatedAt,
-    CommentAuthor: {
+    CommentAuthor: CASE WHEN author IS NULL THEN null ELSE {
         username: author.username,
         displayName: author.displayName,
         profilePicURL: author.profilePicURL,
@@ -57,7 +58,7 @@ RETURN {
         createdAt: author.createdAt,
         ServerRoles: serverRoles,
         ChannelRoles: channelRoles
-    },
+    } END,
     ParentComment: CASE WHEN SIZE(parentIds) > 0 THEN {id: parentIds[0]} ELSE null END,
     UpvotedByUsers: UpvotedByUsers,
     UpvotedByUsersAggregate: {
