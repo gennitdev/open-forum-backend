@@ -30,7 +30,7 @@ const discussionChannelSelectionSet = `
               }
         }
     }
-    CommentsAggregate {
+    CommentsAggregate(where: { isFeedbackComment: false }) {
         count
     }
     UpvotedByUsers {
