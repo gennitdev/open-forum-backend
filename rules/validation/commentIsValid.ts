@@ -6,11 +6,12 @@ type CommentTextValidationInput = {
   text: string;
   modProfileName?: string;
   username?: string;
+  editMode?: boolean;
 }
 
 const validateCommentInput = (input: CommentTextValidationInput): true | string => {
-  const { text, modProfileName, username } = input;
-  if (!username && !modProfileName) {
+  const { text, modProfileName, username, editMode } = input;
+  if (!editMode && (!username && !modProfileName)) {
     return "Comment author is required.";
   }
   if (!text) {
@@ -34,7 +35,8 @@ export const createCommentInputIsValid = rule({ cache: "contextual" })(
     return validateCommentInput({
       text: createCommentInput.text || "",
       modProfileName: createCommentInput?.CommentAuthor?.ModerationProfile?.connect?.where?.node?.displayName || "",
-      username: createCommentInput?.CommentAuthor?.User?.connect?.where?.node?.username || ""
+      username: createCommentInput?.CommentAuthor?.User?.connect?.where?.node?.username || "",
+      editMode: false
     });
   }
 );
@@ -48,7 +50,8 @@ export const updateCommentInputIsValid = rule({ cache: "contextual" })(
     return validateCommentInput({
       text: args.update?.text || "",
       modProfileName: args.update?.CommentAuthor?.ModerationProfile?.connect?.where?.node?.displayName || "",
-      username: args.update?.CommentAuthor?.User?.connect?.where?.node?.username || ""
+      username: args.update?.CommentAuthor?.User?.connect?.where?.node?.username || "",
+      editMode: true
     });
   }
 );
