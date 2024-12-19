@@ -123,14 +123,19 @@ export const canCreateComment = rule({ cache: "contextual" })(
       throw new Error("No comment create input found.");
     }
 
-    const { DiscussionChannel, Event, Channel } = firstItemInInput;
+    const { 
+      DiscussionChannel, 
+      Event,
+      GivesFeedbackOnEvent,
+      Channel
+    } = firstItemInInput;
 
     // Throw an error if no Channel is provided; all comments must be in the context of a channel.
     if (!Channel || !Channel.connect?.where?.node?.uniqueName) {
       throw new Error("Comment must be connected to a Channel.");
     }
 
-    if (!DiscussionChannel && !Event) {
+    if (!DiscussionChannel && !Event && !GivesFeedbackOnEvent) {
       throw new Error("Comment must be connected to a DiscussionChannel or an Event.");
     }
 
