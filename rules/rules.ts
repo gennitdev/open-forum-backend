@@ -187,8 +187,33 @@ export const canCreateComment = rule({ cache: "contextual" })(
 
       channelName = Channel?.connect?.where?.node?.uniqueName
     }
-   
 
+    if (GivesFeedbackOnEvent) {
+      const eventId = GivesFeedbackOnEvent.connect?.where?.node?.id;
+
+      if (!eventId) {
+        throw new Error("No event ID found.");
+      }
+
+      // Validate that the user has permission to comment on the event.
+      // The channel that they are posting in needs to match one of the
+      // channels that the event is connected to.
+      const eventChannelModel = ctx.ogm.model("EventChannel");
+      const event = await eventChannelModel.find({
+        where: { 
+          eventId,
+          channelUniqueName: Channel?.connect?.where?.node?.uniqueName
+        },
+        selectionSet: `{ id }`,
+      });
+
+      if (!event || !event[0]) {
+        throw new Error("Could not find the event submission in the given channel.");
+      }
+
+      channelName = Channel?.connect?.where?.node?.uniqueName
+    }
+    
     if (!channelName) {
       throw new Error("No channel name found.");
     }
