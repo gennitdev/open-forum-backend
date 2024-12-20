@@ -4,6 +4,7 @@ import { hasServerPermission } from "./rules/hasServerPermission.js";
 import { isChannelOwner, isAccountOwner } from "./rules/isOwner.js";
 import { hasChannelPermission } from "./rules/hasChannelPermission.js";
 import { ChannelPermissionChecks } from "./rules/hasChannelPermission.js";
+
 const canCreateChannel = rule({ cache: "contextual" })(async (parent, args, ctx, info) => {
     console.log(" can create channel rule is running ");
     const hasPermissionToCreateChannels = hasServerPermission("createChannel", ctx);

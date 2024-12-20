@@ -42,7 +42,6 @@ const permissionList = shield({
       createEventWithChannelConnections: and(rules.createEventInputIsValid, rules.canCreateEvent),
       updateEventWithChannelConnections: and(rules.updateEventInputIsValid, or(rules.isEventOwner, rules.isAdmin)),
       deleteEvents: or(rules.isAdmin, rules.isEventOwner),
-      updateEvents: or(rules.isEventOwner, rules.isAdmin),
       deleteEventChannels: rules.isAdmin,
 
       createComments: and(rules.createCommentInputIsValid,rules.canCreateComment),
