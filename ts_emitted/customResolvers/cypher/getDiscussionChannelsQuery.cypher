@@ -1,7 +1,8 @@
 // First, calculate the total count of discussion channels matching the criteria
 MATCH (dc:DiscussionChannel {channelUniqueName: $channelUniqueName})
 WHERE 
-    ($searchInput = "" OR EXISTS { 
+    EXISTS((dc)-[:POSTED_IN_CHANNEL]->(:Discussion))
+    AND ($searchInput = "" OR EXISTS { 
         MATCH (dc)-[:POSTED_IN_CHANNEL]->(d:Discussion) 
         WHERE d.title =~ $titleRegex OR d.body =~ $bodyRegex
     })

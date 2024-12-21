@@ -70,7 +70,7 @@ export const createEventInputIsValid = rule({ cache: "contextual" })(
         true
       );
       if (validation !== true) {
-        return validation;
+        throw new Error(validation);
       }
     }
     return true;
@@ -84,9 +84,10 @@ type CanUpdateEventArgs = {
 export const updateEventInputIsValid = rule({ cache: "contextual" })(
   async (parent: any, args: CanUpdateEventArgs, ctx: any, info: any) => {
     if (!args.eventUpdateInput) {
-      return "Missing eventUpdateInput in args.";
+      throw new Error("Missing eventUpdateInput in args.");
     }
-    return validateEventInput(
+    
+    const validationResult = validateEventInput(
       {
         title: args.eventUpdateInput?.title || null,
         description: args.eventUpdateInput?.description || null,
@@ -94,5 +95,11 @@ export const updateEventInputIsValid = rule({ cache: "contextual" })(
       },
       false
     );
+
+    if (validationResult !== true) {
+      throw new Error(validationResult);
+    }
+
+    return true;
   }
 );
