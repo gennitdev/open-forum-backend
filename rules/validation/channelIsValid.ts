@@ -55,10 +55,10 @@ const validateChannelInput = (input: ChannelInput): true | string => {
       if (!Array.isArray(rules)) {
         return "The rules must be an array.";
       }
-      // Make sure each rule has a summary and detail.
+      // Make sure each rule has a summary.
       for (const rule of rules) {
-        if (!rule.summary || !rule.detail) {
-          return "Each rule must have a summary and detail.";
+        if (!rule.summary) {
+          return "Each rule must have a summary.";
         }
       }
     } catch (e) {
