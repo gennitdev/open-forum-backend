@@ -90,6 +90,19 @@ WITH totalCount, dc, d, author, tagsText, loggedInUserUpvote, totalUpvoters, wei
 SKIP toInteger($offset)
 LIMIT toInteger($limit)
 
+OPTIONAL MATCH (d)-[:HAS_ALBUM]->(album:Album)
+OPTIONAL MATCH (album)-[:HAS_IMAGE]->(image:Image)
+
+WITH totalCount, dc, d, author, tagsText, loggedInUserUpvote, totalUpvoters, 
+     weightedVotesCount, comments, hotRank, serverRoles, channelRoles,
+     album,
+     COLLECT(DISTINCT {
+         id: image.id,
+         url: image.url,
+         alt: image.alt,
+         caption: image.caption
+     }) AS albumImages
+
 // Return the results with modified UpvotedByUsers
 RETURN {
     id: dc.id,
@@ -123,6 +136,13 @@ RETURN {
                       ChannelRoles: channelRoles
                   }
                 END,
+        Album: CASE 
+                WHEN album IS NULL THEN null 
+                ELSE {
+                    id: album.id,
+                    Images: albumImages
+                }
+              END,
         Tags: [t IN tagsText | {text: t}]
     },
     Channel: {
