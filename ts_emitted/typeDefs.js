@@ -229,7 +229,6 @@ const typeDefinitions = gql `
       @relationship(type: "CONTAINS_COMMENT", direction: IN)
     Event: Event @relationship(type: "HAS_COMMENT", direction: IN)
     Channel: Channel @relationship(type: "HAS_COMMENT", direction: IN)
-    Issue: Issue @relationship(type: "ACTIVITY_ON_ISSUE", direction: IN)
     ParentComment: Comment @relationship(type: "IS_REPLY_TO", direction: OUT)
     text: String
     isRootComment: Boolean!
@@ -250,8 +249,10 @@ const typeDefinitions = gql `
       @relationship(type: "HAS_FEEDBACK_COMMENT", direction: OUT)
     GivesFeedbackOnComment: Comment
       @relationship(type: "HAS_FEEDBACK_COMMENT", direction: OUT)
+    Issue: Issue @relationship(type: "ACTIVITY_ON_ISSUE", direction: OUT)
     FeedbackComments: [Comment!]!
       @relationship(type: "HAS_FEEDBACK_COMMENT", direction: IN)
+    ModerationAction: ModerationAction @relationship(type: "MODERATED_COMMENT", direction: IN)
   }
 
   type Emoji {
@@ -306,6 +307,7 @@ const typeDefinitions = gql `
     relatedEventId: ID
     createdAt: DateTime! @timestamp(operations: [CREATE])
     updatedAt: DateTime @timestamp(operations: [UPDATE])
+    flaggedServerRuleViolation: Boolean
     ActivityFeed: [ModerationAction!]!
       @relationship(type: "ACTIVITY_ON_ISSUE", direction: OUT)
   }
@@ -536,6 +538,7 @@ const typeDefinitions = gql `
     serverName: String @unique
     serverDescription: String
     serverIconURL: String
+    rules: JSON
     DefaultServerRole: ServerRole
       @relationship(type: "HAS_DEFAULT_SERVER_ROLE", direction: OUT)
     DefaultModRole: ModServerRole
