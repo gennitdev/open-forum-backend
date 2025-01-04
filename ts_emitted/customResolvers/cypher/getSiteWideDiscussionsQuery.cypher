@@ -102,6 +102,17 @@ WITH totalCount, d, tagsText, author, discussionChannels, score, rank, serverRol
 SKIP toInteger($offset)
 LIMIT toInteger($limit)
 
+OPTIONAL MATCH (d)-[:HAS_ALBUM]->(album:Album)
+OPTIONAL MATCH (album)-[:HAS_IMAGE]->(image:Image)
+
+WITH totalCount, d, tagsText, author, discussionChannels, score, rank, serverRoles, album,
+     COLLECT(DISTINCT {
+         id: image.id,
+         url: image.url,
+         alt: image.alt,
+         caption: image.caption
+     }) AS albumImages
+
 // Return the results
 RETURN {
     id: d.id,
@@ -122,5 +133,12 @@ RETURN {
                 }
               END,
     DiscussionChannels: discussionChannels,
-    Tags: [t IN tagsText | {text: t}]
+    Tags: [t IN tagsText | {text: t}],
+    Album: CASE 
+      WHEN album IS NULL THEN null 
+      ELSE {
+        id: album.id,
+        Images: albumImages
+      }
+    END
 } AS discussion, totalCount
