@@ -32,6 +32,8 @@ import getCreateEmailAndUserResolver from "./customResolvers/mutations/createEma
 import dropDataForCypressTestsResolver from "./customResolvers/mutations/dropDataForCypressTests.js";
 import seedDataForCypressTestsResolver from "./customResolvers/mutations/seedDataForCypressTests.js";
 
+import getSortedChannels from './customResolvers/queries/getSortedChannels.js';
+
 const { OGM } = pkg;
 
 export default function (driver: any) {
@@ -89,6 +91,9 @@ export default function (driver: any) {
       getCommentReplies: getCommentReplies({
         driver,
         Comment,
+      }),
+      getSortedChannels: getSortedChannels({
+        driver,
       }),
       safetyCheck: safetyCheck
     },

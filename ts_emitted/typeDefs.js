@@ -592,6 +592,10 @@ const typeDefinitions = gql `
       limit: Int
       sort: SortType
     ): CommentRepliesFormat
+    getSortedChannels(
+      offset: Int
+      limit: Int
+    ): [Channel!]!
     safetyCheck: SafetyCheckResponse
   }
 `;

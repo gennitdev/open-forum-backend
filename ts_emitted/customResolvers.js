@@ -23,6 +23,7 @@ import safetyCheck from "./customResolvers/queries/safetyCheck.js";
 import getCreateEmailAndUserResolver from "./customResolvers/mutations/createEmailAndUser.js";
 import dropDataForCypressTestsResolver from "./customResolvers/mutations/dropDataForCypressTests.js";
 import seedDataForCypressTestsResolver from "./customResolvers/mutations/seedDataForCypressTests.js";
+import getSortedChannels from './customResolvers/queries/getSortedChannels.js';
 const { OGM } = pkg;
 export default function (driver) {
     const ogm = new OGM({
@@ -77,6 +78,9 @@ export default function (driver) {
             getCommentReplies: getCommentReplies({
                 driver,
                 Comment,
+            }),
+            getSortedChannels: getSortedChannels({
+                driver,
             }),
             safetyCheck: safetyCheck
         },
