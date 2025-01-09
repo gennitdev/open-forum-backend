@@ -22,8 +22,9 @@ const getSortedChannelsResolver = (input: Input) => {
         WHERE EXISTS((dc)-[:POSTED_IN_CHANNEL]->(:Discussion))
         WITH c, COUNT(dc) AS validDiscussionChannelsCount
 
-        // Count EventChannels
+        // Count all EventChannels with a valid Event
         OPTIONAL MATCH (c)<-[:POSTED_IN_CHANNEL]-(ec:EventChannel)
+        WHERE EXISTS((ec)-[:POSTED_IN_CHANNEL]->(:Event))
         WITH c, validDiscussionChannelsCount, COUNT(ec) AS eventChannelsCount
 
         // Collect Tags
