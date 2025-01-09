@@ -597,6 +597,7 @@ const typeDefinitions = gql`
       offset: Int
       limit: Int
       tags: [String]
+      searchInput: String
     ): [Channel!]!
     safetyCheck: SafetyCheckResponse
   }
