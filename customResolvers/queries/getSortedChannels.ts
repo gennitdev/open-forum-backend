@@ -31,7 +31,7 @@ const getSortedChannelsResolver = (input: Input) => {
 
         // Collect Tags
         OPTIONAL MATCH (c)-[:HAS_TAG]->(tag:Tag)
-        WITH c, validDiscussionChannelsCount, eventChannelsCount, COLLECT(tag.text) AS tags
+        WITH c, validDiscussionChannelsCount, eventChannelsCount, COLLECT(tag) AS tags
 
         // Order and paginate results
         ORDER BY validDiscussionChannelsCount DESC
@@ -44,7 +44,7 @@ const getSortedChannelsResolver = (input: Input) => {
           displayName: c.displayName,
           channelIconURL: c.channelIconURL,
           description: c.description,
-          Tags: tags,
+          Tags: [tag IN tags | { text: tag.text }],
           EventChannelsAggregate: {
             count: eventChannelsCount
           },
