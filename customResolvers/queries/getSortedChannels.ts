@@ -11,12 +11,14 @@ const getSortedChannelsResolver = (input: Input) => {
   return async (_parent: any, args: any, _context: any) => {
     const limit = args.limit || DEFAULT_LIMIT;
     const offset = args.offset || DEFAULT_OFFSET;
+    const tags = args.tags || [];
     const session = driver.session();
 
     try {
       const result = await session.run(
         `
-        MATCH (c:Channel)
+        MATCH (c:Channel)-[:HAS_TAG]->(t:Tag)
+        WHERE SIZE($tags) = 0 OR t.text IN $tags
         // Count all DiscussionChannels with a valid Discussion
         OPTIONAL MATCH (c)<-[:POSTED_IN_CHANNEL]-(dc:DiscussionChannel)
         WHERE EXISTS((dc)-[:POSTED_IN_CHANNEL]->(:Discussion))
@@ -54,6 +56,7 @@ const getSortedChannelsResolver = (input: Input) => {
         {
           limit,
           offset,
+          tags,
         }
       );
 

@@ -596,6 +596,7 @@ const typeDefinitions = gql`
     getSortedChannels(
       offset: Int
       limit: Int
+      tags: [String]
     ): [Channel!]!
     safetyCheck: SafetyCheckResponse
   }
