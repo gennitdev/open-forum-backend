@@ -49,13 +49,8 @@ const getSortedChannelsResolver = (input: Input) => {
         // Collect tags again for the final output
         WITH c, tags, validDiscussionChannelsCount, eventChannelsCount
         
-        // Order and paginate
-        ORDER BY validDiscussionChannelsCount DESC
-        SKIP toInteger($offset)
-        LIMIT toInteger($limit)
-        
-        // Return the results
-        RETURN {
+        // Aggregate channel count
+        WITH collect({
           uniqueName: c.uniqueName,
           displayName: c.displayName,
           channelIconURL: c.channelIconURL,
@@ -63,7 +58,15 @@ const getSortedChannelsResolver = (input: Input) => {
           Tags: [tag IN tags | { text: tag.text }],
           EventChannelsAggregate: { count: eventChannelsCount },
           DiscussionChannelsAggregate: { count: validDiscussionChannelsCount }
-        } AS channel
+        }) AS channels, COUNT(c) AS aggregateChannelCount
+        
+        // Paginate results
+        UNWIND channels AS channel
+        RETURN 
+          channel, 
+          aggregateChannelCount
+        SKIP toInteger($offset)
+        LIMIT toInteger($limit)
         `,
         {
           limit,
@@ -76,7 +79,13 @@ const getSortedChannelsResolver = (input: Input) => {
       const channels = result.records.map((record: any) =>
         record.get("channel")
       );
-      return channels;
+
+      const aggregateChannelCount =
+        result.records.length > 0
+          ? result.records[0].get("aggregateChannelCount")
+          : 0;
+
+      return { channels, aggregateChannelCount };
     } catch (error) {
       console.error("Error fetching sorted channels:", error);
       throw new Error("Failed to fetch sorted channels");

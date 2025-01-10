@@ -559,6 +559,11 @@ const typeDefinitions = gql`
     environment: EnvironmentInfo
   }
 
+  type GetSortedChannelsResponse {
+    channels: [Channel]
+    aggregateChannelCount: Int
+  }
+
   type Query {
     getDiscussionsInChannel(
       channelUniqueName: String!
@@ -598,7 +603,7 @@ const typeDefinitions = gql`
       limit: Int
       tags: [String]
       searchInput: String
-    ): [Channel!]!
+    ): GetSortedChannelsResponse
     safetyCheck: SafetyCheckResponse
   }
 `;
