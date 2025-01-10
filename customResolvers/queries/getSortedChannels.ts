@@ -37,11 +37,12 @@ const getSortedChannelsResolver = (input: Input) => {
           RETURN COUNT(DISTINCT dc) AS validDiscussionChannelsCount
         }
         
-        // Count EventChannels
+        // Count EventChannels with valid endTime
         CALL {
           WITH c
           MATCH (c)<-[:POSTED_IN_CHANNEL]-(ec:EventChannel)
-          WHERE EXISTS((ec)-[:POSTED_IN_CHANNEL]->(:Event))
+          MATCH (ec)-[:POSTED_IN_CHANNEL]->(e:Event)
+          WHERE e.endTime > datetime()
           RETURN COUNT(DISTINCT ec) AS eventChannelsCount
         }
         
