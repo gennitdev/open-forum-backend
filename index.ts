@@ -43,9 +43,6 @@ if (process.env.GOOGLE_CREDENTIALS_BASE64) {
   const credentials = Buffer.from(process.env.GOOGLE_CREDENTIALS_BASE64, 'base64').toString('utf8');
   const credentialsPath = path.join(__dirname, 'listical-dev-gcp.json');
   fs.writeFileSync(credentialsPath, credentials);
-  // This environment variable, GOOGLE_APPLICATION_CREDENTIALS,
-  // is used by the Google Cloud Storage SDK to authenticate requests.
-  // It is required in order for the getSignedUrl to work for image uploads.
   process.env.GOOGLE_APPLICATION_CREDENTIALS = credentialsPath;
 }
 
@@ -86,7 +83,6 @@ const features = {
   },
 };
 
-// We're passing customResolvers to the Neo4jGraphQL constructor
 const neoSchema = new Neo4jGraphQL({
   typeDefs: typesDefinitions,
   driver,
@@ -94,17 +90,11 @@ const neoSchema = new Neo4jGraphQL({
   features,
 });
 
-// The DiscussionChannel represents the relationship between a Discussion and a Channel.
-// Because the same Discussion should not be submitted to the same Channel twice,
-// we need to create a uniqueness constraint on the DiscussionChannel relationship.
 const ensureUniqueDiscussionChannelRelationship = `
 CREATE CONSTRAINT discussion_channel_unique IF NOT EXISTS FOR (dc:DiscussionChannel)
 REQUIRE (dc.discussionId, dc.channelUniqueName) IS NODE KEY
 `;
 
-// The EventChannel represents the relationship between an Event and a Channel.
-// Because the same Event should not be submitted to the same Channel twice,
-// we need to create a uniqueness constraint on the EventChannel relationship.
 const ensureUniqueEventChannelRelationship = `
 CREATE CONSTRAINT event_channel_unique IF NOT EXISTS FOR (ec:EventChannel)
 REQUIRE (ec.eventId, ec.channelUniqueName) IS NODE KEY
@@ -115,6 +105,17 @@ async function initializeServer() {
     console.log("Initializing server...");
 
     await connectToNeo4jWithRetry(driver);
+
+    const session = driver.session();
+    const result = await session.run("CALL dbms.components()");
+    const edition = result.records[0].get("edition");
+    console.log(`Connected to Neo4j Edition: ${edition}`);
+    session.close();
+
+    if (edition === "enterprise") {
+      await driver.session().run(ensureUniqueDiscussionChannelRelationship);
+      await driver.session().run(ensureUniqueEventChannelRelationship);
+    }
 
     if (process.env.GENERATE_OGM_TYPES === "true") {
       const outFile = path.join(__dirname, "ogm-types.ts");
@@ -131,8 +132,6 @@ async function initializeServer() {
     let schema = await neoSchema.getSchema();
     schema = applyMiddleware(schema, permissions);
     await ogm.init();
-    await driver.session().run(ensureUniqueDiscussionChannelRelationship);
-    await driver.session().run(ensureUniqueEventChannelRelationship);
     await neoSchema.assertIndexesAndConstraints();
 
     const server = new ApolloServer({
@@ -162,18 +161,15 @@ async function initializeServer() {
           ogm,
         };
       },
-      formatError: (error: any) => {
-        return {
-          message: error.message,
-          locations: error.locations,
-          path: error.path,
-          code: error.extensions?.code,
-        }
-      }
+      formatError: (error: any) => ({
+        message: error.message,
+        locations: error.locations,
+        path: error.path,
+        code: error.extensions?.code,
+      }),
     });
 
-    server.listen({ port }).then((input: any) => {
-      const { url } = input;
+    server.listen({ port }).then(({ url }) => {
       console.log(`🚀  Server ready at ${url}`);
     });
   } catch (e) {
