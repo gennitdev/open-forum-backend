@@ -113,6 +113,9 @@ async function initializeServer() {
     session.close();
 
     if (edition === "enterprise") {
+      // These constraints are needed for data integrity, but can be skipped
+      // for the purpose of running Cypress tests against a local backend and
+      // a local instance of neo4j community edition.
       await driver.session().run(ensureUniqueDiscussionChannelRelationship);
       await driver.session().run(ensureUniqueEventChannelRelationship);
     }
