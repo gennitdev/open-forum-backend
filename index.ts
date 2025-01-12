@@ -135,7 +135,9 @@ async function initializeServer() {
     let schema = await neoSchema.getSchema();
     schema = applyMiddleware(schema, permissions);
     await ogm.init();
-    await neoSchema.assertIndexesAndConstraints();
+    if (edition === "enterprise") {
+      await neoSchema.assertIndexesAndConstraints();
+    }
 
     const server = new ApolloServer({
       persistedQueries: false,
