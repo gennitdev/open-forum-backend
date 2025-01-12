@@ -16,9 +16,9 @@ const { generate } = pkg;
 
 dotenv.config();
 
-import neo4j from "neo4j-driver";
+import neo4j, { Driver } from "neo4j-driver";
 
-async function connectToNeo4jWithRetry(driver: neo4j.Driver, maxRetries = 10, retryDelay = 5000) {
+async function connectToNeo4jWithRetry(driver: Driver, maxRetries = 10, retryDelay = 5000) {
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
       console.log(`Attempting to connect to Neo4j (Attempt ${attempt}/${maxRetries})...`);
@@ -28,7 +28,7 @@ async function connectToNeo4jWithRetry(driver: neo4j.Driver, maxRetries = 10, re
       session.close();
       return; // Exit loop on successful connection
     } catch (error) {
-      console.error(`Neo4j connection attempt ${attempt} failed: ${error.message}`);
+      console.error(`Neo4j connection attempt ${attempt} failed: ${(error as any).message}`);
       if (attempt === maxRetries) {
         console.error("Max retries reached. Could not connect to Neo4j.");
         throw error;
