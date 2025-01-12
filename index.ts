@@ -18,10 +18,34 @@ dotenv.config();
 
 import neo4j from "neo4j-driver";
 
+async function connectToNeo4jWithRetry(driver: neo4j.Driver, maxRetries = 10, retryDelay = 5000) {
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      console.log(`Attempting to connect to Neo4j (Attempt ${attempt}/${maxRetries})...`);
+      const session = driver.session();
+      await session.run("RETURN 1");
+      console.log("Connected to Neo4j!");
+      session.close();
+      return; // Exit loop on successful connection
+    } catch (error) {
+      console.error(`Neo4j connection attempt ${attempt} failed: ${error.message}`);
+      if (attempt === maxRetries) {
+        console.error("Max retries reached. Could not connect to Neo4j.");
+        throw error;
+      }
+      console.log(`Retrying in ${retryDelay / 1000} seconds...`);
+      await new Promise((resolve) => setTimeout(resolve, retryDelay));
+    }
+  }
+}
+
 if (process.env.GOOGLE_CREDENTIALS_BASE64) {
   const credentials = Buffer.from(process.env.GOOGLE_CREDENTIALS_BASE64, 'base64').toString('utf8');
   const credentialsPath = path.join(__dirname, 'listical-dev-gcp.json');
   fs.writeFileSync(credentialsPath, credentials);
+  // This environment variable, GOOGLE_APPLICATION_CREDENTIALS,
+  // is used by the Google Cloud Storage SDK to authenticate requests.
+  // It is required in order for the getSignedUrl to work for image uploads.
   process.env.GOOGLE_APPLICATION_CREDENTIALS = credentialsPath;
 }
 
@@ -88,6 +112,10 @@ REQUIRE (ec.eventId, ec.channelUniqueName) IS NODE KEY
 
 async function initializeServer() {
   try {
+    console.log("Initializing server...");
+
+    await connectToNeo4jWithRetry(driver);
+
     if (process.env.GENERATE_OGM_TYPES === "true") {
       const outFile = path.join(__dirname, "ogm-types.ts");
 
