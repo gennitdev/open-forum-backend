@@ -97,6 +97,9 @@ async function initializeServer() {
         console.log(`Connected to Neo4j Edition: ${edition}`);
         session.close();
         if (edition === "enterprise") {
+            // These constraints are needed for data integrity, but can be skipped
+            // for the purpose of running Cypress tests against a local backend and
+            // a local instance of neo4j community edition.
             await driver.session().run(ensureUniqueDiscussionChannelRelationship);
             await driver.session().run(ensureUniqueEventChannelRelationship);
         }
@@ -112,7 +115,9 @@ async function initializeServer() {
         let schema = await neoSchema.getSchema();
         schema = applyMiddleware(schema, permissions);
         await ogm.init();
-        await neoSchema.assertIndexesAndConstraints();
+        if (edition === "enterprise") {
+            await neoSchema.assertIndexesAndConstraints();
+        }
         const server = new ApolloServer({
             persistedQueries: false,
             schema,

@@ -1,17 +1,30 @@
 import { rule } from "graphql-shield";
-import { CanCreateDiscussionArgs, CreateDiscussionItem, CanUpdateDiscussionArgs } from "../rules";
-import { MAX_CHARS_IN_DISCUSSION_BODY, MAX_CHARS_IN_DISCUSSION_TITLE } from "./constants.js";
+import {
+  CanCreateDiscussionArgs,
+  CreateDiscussionItem,
+  CanUpdateDiscussionArgs,
+} from "../rules";
+import {
+  MAX_CHARS_IN_DISCUSSION_BODY,
+  MAX_CHARS_IN_DISCUSSION_TITLE,
+} from "./constants.js";
 
-type DiscussionInput = { title?: string; body?: string | null };
+type DiscussionInput = {
+  title?: string;
+  body?: string | null;
+  editMode: boolean;
+};
 
 const validateDiscussionInput = (input: DiscussionInput): true | string => {
-  const { title, body } = input;
+  const { title, body, editMode } = input;
 
-  if (!title) {
-    return "A title is required.";
+  if (!editMode) {
+    if (!title) {
+      return "A title is required.";
+    }
   }
 
-  if (title.length > MAX_CHARS_IN_DISCUSSION_TITLE) {
+  if (title && title.length > MAX_CHARS_IN_DISCUSSION_TITLE) {
     return `The discussion title cannot exceed ${MAX_CHARS_IN_DISCUSSION_TITLE} characters.`;
   }
 
@@ -31,7 +44,11 @@ export const createDiscussionInputIsValid = rule({ cache: "contextual" })(
     const items: CreateDiscussionItem[] = args.input;
     for (let i = 0; i < items.length; i++) {
       const item = items[i];
-      isValid = validateDiscussionInput(item.discussionCreateInput) === true;
+      isValid =
+        validateDiscussionInput({
+          ...item.discussionCreateInput,
+          editMode: false,
+        }) === true;
       if (!isValid) {
         return isValid;
       }
@@ -45,6 +62,9 @@ export const updateDiscussionInputIsValid = rule({ cache: "contextual" })(
     if (!args.discussionUpdateInput) {
       return "Missing discussionUpdateInput in args.";
     }
-    return validateDiscussionInput(args.discussionUpdateInput);
+    return validateDiscussionInput({
+      ...args.discussionUpdateInput,
+      editMode: true,
+    });
   }
 );
