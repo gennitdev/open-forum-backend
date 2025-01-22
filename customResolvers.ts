@@ -27,7 +27,7 @@ import createSignedStorageURL from "./customResolvers/mutations/createSignedStor
 
 import safetyCheck from "./customResolvers/queries/safetyCheck.js";
 
-import { ModelMap } from "./ogm-types.js";
+import { ModelMap } from "./ts_emitted/ogm-types";
 import getCreateEmailAndUserResolver from "./customResolvers/mutations/createEmailAndUser.js";
 import dropDataForCypressTestsResolver from "./customResolvers/mutations/dropDataForCypressTests.js";
 import seedDataForCypressTestsResolver from "./customResolvers/mutations/seedDataForCypressTests.js";
@@ -38,6 +38,8 @@ import acceptForumOwnerInvite from './customResolvers/mutations/acceptForumOwner
 import inviteForumMod from './customResolvers/mutations/inviteForumMod.js';
 import removeForumMod from './customResolvers/mutations/removeForumMod.js';
 import acceptForumModInvite from './customResolvers/mutations/acceptForumModInvite.js';
+import cancelInviteForumMod from './customResolvers/mutations/cancelInviteForumMod.js';
+import cancelInviteOwner from './customResolvers/mutations/cancelInviteForumOwner.js';
 
 import getSortedChannels from './customResolvers/queries/getSortedChannels.js';
 
@@ -163,20 +165,28 @@ export default function (driver: any) {
       inviteForumOwner: inviteForumOwner({
         Channel
       }),
+      cancelInviteForumOwner: cancelInviteOwner({
+        Channel
+      }),
       removeForumOwner: removeForumOwner({
         Channel
       }),
       acceptForumOwnerInvite: acceptForumOwnerInvite({
-        Channel
+        Channel,
+        User
       }),
       inviteForumMod: inviteForumMod({
         Channel
       }),
-      removeForumMod: removeForumMod({
+      cancelInviteForumMod: cancelInviteForumMod({
         Channel
       }),
+      removeForumMod: removeForumMod({
+        Channel,
+      }),
       acceptForumModInvite: acceptForumModInvite({
-        Channel
+        Channel,
+        User
       }),
       dropDataForCypressTests: dropDataForCypressTestsResolver({ driver }),
       seedDataForCypressTests: seedDataForCypressTestsResolver({

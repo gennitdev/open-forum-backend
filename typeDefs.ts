@@ -84,6 +84,10 @@ const typeDefinitions = gql`
       @relationship(type: "HAS_CHANNEL_ROLE", direction: OUT)
     ServerRoles: [ServerRole!]!
       @relationship(type: "HAS_SERVER_ROLE", direction: OUT)
+    PendingModInvites: [Channel!]!
+      @relationship(type: "HAS_PENDING_MOD_INVITE", direction: IN)
+    PendingOwnerInvites: [Channel!]!
+      @relationship(type: "HAS_PENDING_INVITE", direction: IN)
   }
 
   type Channel {
@@ -100,9 +104,11 @@ const typeDefinitions = gql`
     rules: JSON
     Admins: [User!]! @relationship(type: "ADMIN_OF_CHANNEL", direction: IN)
     PendingOwnerInvites: [User!]!
+      @relationship(type: "HAS_PENDING_INVITE", direction: OUT)
     Moderators: [ModerationProfile!]!
       @relationship(type: "MODERATOR_OF_CHANNEL", direction: IN)
     PendingModInvites: [User!]!
+      @relationship(type: "HAS_PENDING_MOD_INVITE", direction: OUT)
     RelatedChannels: [Channel!]!
       @relationship(type: "RELATED_CHANNEL", direction: OUT)
     EventChannels: [EventChannel!]!
@@ -440,14 +446,16 @@ const typeDefinitions = gql`
       inviteeUsername: String!
       channelUniqueName: String!
     ): Boolean
+    cancelInviteForumOwner(channelUniqueName: String!): Boolean
     removeForumOwner(channelUniqueName: String!, username: String!): Boolean
     acceptForumOwnerInvite(channelUniqueName: String!): Boolean
     inviteForumMod(
       inviteeUsername: String!
       channelUniqueName: String!
     ): Boolean
+    cancelInviteForumMod(channelUniqueName: String!): Boolean
     removeForumMod(channelUniqueName: String!, username: String!): Boolean
-    acceptModInvite(channelUniqueName: String!): Boolean
+    acceptForumModInvite(channelUniqueName: String!): Boolean
   }
 
   input SiteWideDiscussionSortOrder {

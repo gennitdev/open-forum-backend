@@ -1,7 +1,7 @@
 import type { ChannelUpdateInput, ChannelModel } from "../../ts_emitted/ogm-types";
 
 type Args = {
-  modDisplayName: string;
+  inviteeUsername: string;
   channelUniqueName: string;
 };
 
@@ -12,22 +12,22 @@ type Input = {
 const getResolver = (input: Input) => {
   const { Channel } = input;
   return async (parent: any, args: Args, context: any, resolveInfo: any) => {
-    const { channelUniqueName, modDisplayName } = args;
+    const { channelUniqueName, inviteeUsername } = args;
 
-    if (!channelUniqueName || !modDisplayName) {
+    if (!channelUniqueName || !inviteeUsername) {
       throw new Error(
         "All arguments (channelUniqueName, inviteeUsername) are required"
       );
     }
 
     const channelUpdateInput: ChannelUpdateInput = {
-      Moderators: [
+      PendingOwnerInvites: [
         {
           disconnect: [
             {
               where: {
                 node: {
-                  displayName: modDisplayName,
+                  username: inviteeUsername,
                 },
               },
             },

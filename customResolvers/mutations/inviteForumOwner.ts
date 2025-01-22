@@ -1,12 +1,12 @@
-import type { ChannelUpdateInput } from "../../ogm-types.js";
+import type { ChannelUpdateInput, ChannelModel } from "../../ts_emitted/ogm-types";
 
 type Args = {
   inviteeUsername: string;
   channelUniqueName: string;
 };
 
-type Input = { 
-  Channel: any 
+type Input = {
+  Channel: ChannelModel;
 };
 
 const getResolver = (input: Input) => {
@@ -20,26 +20,36 @@ const getResolver = (input: Input) => {
       );
     }
 
-    // const channelUpdateInput: ChannelUpdateInput = {
-    //     PendingOwnerInvites: {
-    //       connect: {
-    //         username: inviteeUsername,
-    //       },
-    //     },
-    //   },
+    const channelUpdateInput: ChannelUpdateInput = {
+      PendingOwnerInvites: [
+        {
+          connect: [
+            {
+              where: {
+                node: {
+                  username: inviteeUsername,
+                },
+              },
+            },
+          ],
+        },
+      ],
+    };
 
     try {
       const result = await Channel.update({
         where: {
           uniqueName: channelUniqueName,
         },
-        // update: 
+        update: channelUpdateInput,
       });
-      if (result.length === 0) {
+      if (!result.channels[0]) {
         throw new Error("Channel not found");
       }
+      return true;
     } catch (e) {
       console.error(e);
+      return false;
     }
   };
 };

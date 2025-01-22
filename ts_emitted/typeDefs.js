@@ -59,7 +59,7 @@ const typeDefinitions = gql `
     DefaultFeed: Feed @relationship(type: "DEFAULT_FEED", direction: OUT)
     createdAt: DateTime! @timestamp(operations: [CREATE])
     # WikiChangeProposals:     [WikiChangeProposal] @relationship(type: "AUTHORED_CHANGE_PROPOSAL", direction: OUT)
-    Notifications:           [Notification]       @relationship(type: "HAS_NOTIFICATION", direction: OUT)
+    Notifications:           [Notification!]!       @relationship(type: "HAS_NOTIFICATION", direction: OUT)
     Blocked: User @relationship(type: "BLOCKED", direction: OUT)
     IsBlockedBy: User @relationship(type: "BLOCKED", direction: IN)
     FavoriteChannels: [Channel!]!
@@ -83,6 +83,10 @@ const typeDefinitions = gql `
       @relationship(type: "HAS_CHANNEL_ROLE", direction: OUT)
     ServerRoles: [ServerRole!]!
       @relationship(type: "HAS_SERVER_ROLE", direction: OUT)
+    PendingModInvites: [Channel!]!
+      @relationship(type: "HAS_PENDING_MOD_INVITE", direction: IN)
+    PendingOwnerInvites: [Channel!]!
+      @relationship(type: "HAS_PENDING_INVITE", direction: IN)
   }
 
   type Channel {
@@ -99,9 +103,11 @@ const typeDefinitions = gql `
     rules: JSON
     Admins: [User!]! @relationship(type: "ADMIN_OF_CHANNEL", direction: IN)
     PendingOwnerInvites: [User!]!
+      @relationship(type: "HAS_PENDING_INVITE", direction: OUT)
     Moderators: [ModerationProfile!]!
       @relationship(type: "MODERATOR_OF_CHANNEL", direction: IN)
     PendingModInvites: [User!]!
+      @relationship(type: "HAS_PENDING_MOD_INVITE", direction: OUT)
     RelatedChannels: [Channel!]!
       @relationship(type: "RELATED_CHANNEL", direction: OUT)
     EventChannels: [EventChannel!]!
@@ -446,7 +452,7 @@ const typeDefinitions = gql `
       channelUniqueName: String!
     ): Boolean
     removeForumMod(channelUniqueName: String!, username: String!): Boolean
-    acceptModInvite(channelUniqueName: String!): Boolean
+    acceptForumModInvite(channelUniqueName: String!): Boolean
   }
 
   input SiteWideDiscussionSortOrder {

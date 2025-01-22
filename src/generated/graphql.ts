@@ -848,6 +848,12 @@ export type Channel = {
   Moderators: Array<ModerationProfile>;
   ModeratorsAggregate?: Maybe<ChannelModerationProfileModeratorsAggregationSelection>;
   ModeratorsConnection: ChannelModeratorsConnection;
+  PendingModInvites: Array<User>;
+  PendingModInvitesAggregate?: Maybe<ChannelUserPendingModInvitesAggregationSelection>;
+  PendingModInvitesConnection: ChannelPendingModInvitesConnection;
+  PendingOwnerInvites: Array<User>;
+  PendingOwnerInvitesAggregate?: Maybe<ChannelUserPendingOwnerInvitesAggregationSelection>;
+  PendingOwnerInvitesConnection: ChannelPendingOwnerInvitesConnection;
   RelatedChannels: Array<Channel>;
   RelatedChannelsAggregate?: Maybe<ChannelChannelRelatedChannelsAggregationSelection>;
   RelatedChannelsConnection: ChannelRelatedChannelsConnection;
@@ -1017,6 +1023,50 @@ export type ChannelModeratorsConnectionArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<Array<ChannelModeratorsConnectionSort>>;
   where?: InputMaybe<ChannelModeratorsConnectionWhere>;
+};
+
+
+export type ChannelPendingModInvitesArgs = {
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  options?: InputMaybe<UserOptions>;
+  where?: InputMaybe<UserWhere>;
+};
+
+
+export type ChannelPendingModInvitesAggregateArgs = {
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  where?: InputMaybe<UserWhere>;
+};
+
+
+export type ChannelPendingModInvitesConnectionArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<Array<ChannelPendingModInvitesConnectionSort>>;
+  where?: InputMaybe<ChannelPendingModInvitesConnectionWhere>;
+};
+
+
+export type ChannelPendingOwnerInvitesArgs = {
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  options?: InputMaybe<UserOptions>;
+  where?: InputMaybe<UserWhere>;
+};
+
+
+export type ChannelPendingOwnerInvitesAggregateArgs = {
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  where?: InputMaybe<UserWhere>;
+};
+
+
+export type ChannelPendingOwnerInvitesConnectionArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<Array<ChannelPendingOwnerInvitesConnectionSort>>;
+  where?: InputMaybe<ChannelPendingOwnerInvitesConnectionWhere>;
 };
 
 
@@ -1539,6 +1589,8 @@ export type ChannelConnectInput = {
   EventChannels?: InputMaybe<Array<ChannelEventChannelsConnectFieldInput>>;
   Issues?: InputMaybe<Array<ChannelIssuesConnectFieldInput>>;
   Moderators?: InputMaybe<Array<ChannelModeratorsConnectFieldInput>>;
+  PendingModInvites?: InputMaybe<Array<ChannelPendingModInvitesConnectFieldInput>>;
+  PendingOwnerInvites?: InputMaybe<Array<ChannelPendingOwnerInvitesConnectFieldInput>>;
   RelatedChannels?: InputMaybe<Array<ChannelRelatedChannelsConnectFieldInput>>;
   Tags?: InputMaybe<Array<ChannelTagsConnectFieldInput>>;
 };
@@ -1547,6 +1599,8 @@ export type ChannelConnectOrCreateInput = {
   Admins?: InputMaybe<Array<ChannelAdminsConnectOrCreateFieldInput>>;
   DefaultChannelRole?: InputMaybe<ChannelDefaultChannelRoleConnectOrCreateFieldInput>;
   Moderators?: InputMaybe<Array<ChannelModeratorsConnectOrCreateFieldInput>>;
+  PendingModInvites?: InputMaybe<Array<ChannelPendingModInvitesConnectOrCreateFieldInput>>;
+  PendingOwnerInvites?: InputMaybe<Array<ChannelPendingOwnerInvitesConnectOrCreateFieldInput>>;
   RelatedChannels?: InputMaybe<Array<ChannelRelatedChannelsConnectOrCreateFieldInput>>;
   Tags?: InputMaybe<Array<ChannelTagsConnectOrCreateFieldInput>>;
 };
@@ -1567,6 +1621,8 @@ export type ChannelCreateInput = {
   EventChannels?: InputMaybe<ChannelEventChannelsFieldInput>;
   Issues?: InputMaybe<ChannelIssuesFieldInput>;
   Moderators?: InputMaybe<ChannelModeratorsFieldInput>;
+  PendingModInvites?: InputMaybe<ChannelPendingModInvitesFieldInput>;
+  PendingOwnerInvites?: InputMaybe<ChannelPendingOwnerInvitesFieldInput>;
   RelatedChannels?: InputMaybe<ChannelRelatedChannelsFieldInput>;
   Tags?: InputMaybe<ChannelTagsFieldInput>;
   channelBannerURL?: InputMaybe<Scalars['String']['input']>;
@@ -1721,6 +1777,8 @@ export type ChannelDeleteInput = {
   EventChannels?: InputMaybe<Array<ChannelEventChannelsDeleteFieldInput>>;
   Issues?: InputMaybe<Array<ChannelIssuesDeleteFieldInput>>;
   Moderators?: InputMaybe<Array<ChannelModeratorsDeleteFieldInput>>;
+  PendingModInvites?: InputMaybe<Array<ChannelPendingModInvitesDeleteFieldInput>>;
+  PendingOwnerInvites?: InputMaybe<Array<ChannelPendingOwnerInvitesDeleteFieldInput>>;
   RelatedChannels?: InputMaybe<Array<ChannelRelatedChannelsDeleteFieldInput>>;
   Tags?: InputMaybe<Array<ChannelTagsDeleteFieldInput>>;
 };
@@ -1733,6 +1791,8 @@ export type ChannelDisconnectInput = {
   EventChannels?: InputMaybe<Array<ChannelEventChannelsDisconnectFieldInput>>;
   Issues?: InputMaybe<Array<ChannelIssuesDisconnectFieldInput>>;
   Moderators?: InputMaybe<Array<ChannelModeratorsDisconnectFieldInput>>;
+  PendingModInvites?: InputMaybe<Array<ChannelPendingModInvitesDisconnectFieldInput>>;
+  PendingOwnerInvites?: InputMaybe<Array<ChannelPendingOwnerInvitesDisconnectFieldInput>>;
   RelatedChannels?: InputMaybe<Array<ChannelRelatedChannelsDisconnectFieldInput>>;
   Tags?: InputMaybe<Array<ChannelTagsDisconnectFieldInput>>;
 };
@@ -2332,6 +2392,560 @@ export type ChannelOptions = {
   sort?: InputMaybe<Array<ChannelSort>>;
 };
 
+export type ChannelPendingModInvitesAggregateInput = {
+  AND?: InputMaybe<Array<ChannelPendingModInvitesAggregateInput>>;
+  NOT?: InputMaybe<ChannelPendingModInvitesAggregateInput>;
+  OR?: InputMaybe<Array<ChannelPendingModInvitesAggregateInput>>;
+  count?: InputMaybe<Scalars['Int']['input']>;
+  count_GT?: InputMaybe<Scalars['Int']['input']>;
+  count_GTE?: InputMaybe<Scalars['Int']['input']>;
+  count_LT?: InputMaybe<Scalars['Int']['input']>;
+  count_LTE?: InputMaybe<Scalars['Int']['input']>;
+  node?: InputMaybe<ChannelPendingModInvitesNodeAggregationWhereInput>;
+};
+
+export type ChannelPendingModInvitesConnectFieldInput = {
+  connect?: InputMaybe<Array<UserConnectInput>>;
+  /** Whether or not to overwrite any matching relationship with the new properties. */
+  overwrite?: Scalars['Boolean']['input'];
+  where?: InputMaybe<UserConnectWhere>;
+};
+
+export type ChannelPendingModInvitesConnectOrCreateFieldInput = {
+  onCreate: ChannelPendingModInvitesConnectOrCreateFieldInputOnCreate;
+  where: UserConnectOrCreateWhere;
+};
+
+export type ChannelPendingModInvitesConnectOrCreateFieldInputOnCreate = {
+  node: UserOnCreateInput;
+};
+
+export type ChannelPendingModInvitesConnection = {
+  __typename?: 'ChannelPendingModInvitesConnection';
+  edges: Array<ChannelPendingModInvitesRelationship>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type ChannelPendingModInvitesConnectionSort = {
+  node?: InputMaybe<UserSort>;
+};
+
+export type ChannelPendingModInvitesConnectionWhere = {
+  AND?: InputMaybe<Array<ChannelPendingModInvitesConnectionWhere>>;
+  NOT?: InputMaybe<ChannelPendingModInvitesConnectionWhere>;
+  OR?: InputMaybe<Array<ChannelPendingModInvitesConnectionWhere>>;
+  node?: InputMaybe<UserWhere>;
+};
+
+export type ChannelPendingModInvitesCreateFieldInput = {
+  node: UserCreateInput;
+};
+
+export type ChannelPendingModInvitesDeleteFieldInput = {
+  delete?: InputMaybe<UserDeleteInput>;
+  where?: InputMaybe<ChannelPendingModInvitesConnectionWhere>;
+};
+
+export type ChannelPendingModInvitesDisconnectFieldInput = {
+  disconnect?: InputMaybe<UserDisconnectInput>;
+  where?: InputMaybe<ChannelPendingModInvitesConnectionWhere>;
+};
+
+export type ChannelPendingModInvitesFieldInput = {
+  connect?: InputMaybe<Array<ChannelPendingModInvitesConnectFieldInput>>;
+  connectOrCreate?: InputMaybe<Array<ChannelPendingModInvitesConnectOrCreateFieldInput>>;
+  create?: InputMaybe<Array<ChannelPendingModInvitesCreateFieldInput>>;
+};
+
+export type ChannelPendingModInvitesNodeAggregationWhereInput = {
+  AND?: InputMaybe<Array<ChannelPendingModInvitesNodeAggregationWhereInput>>;
+  DefaultEmojiSkinTone_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  DefaultEmojiSkinTone_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  DefaultEmojiSkinTone_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  DefaultEmojiSkinTone_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  DefaultEmojiSkinTone_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  DefaultEmojiSkinTone_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  DefaultEmojiSkinTone_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  DefaultEmojiSkinTone_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  DefaultEmojiSkinTone_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  DefaultEmojiSkinTone_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  DefaultEmojiSkinTone_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  DefaultEmojiSkinTone_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  DefaultEmojiSkinTone_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  DefaultEmojiSkinTone_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  DefaultEmojiSkinTone_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  NOT?: InputMaybe<ChannelPendingModInvitesNodeAggregationWhereInput>;
+  NotificationBundleInterval_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  NotificationBundleInterval_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  NotificationBundleInterval_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  NotificationBundleInterval_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  NotificationBundleInterval_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  NotificationBundleInterval_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  NotificationBundleInterval_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  NotificationBundleInterval_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  NotificationBundleInterval_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  NotificationBundleInterval_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  NotificationBundleInterval_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  NotificationBundleInterval_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  NotificationBundleInterval_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  NotificationBundleInterval_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  NotificationBundleInterval_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  OR?: InputMaybe<Array<ChannelPendingModInvitesNodeAggregationWhereInput>>;
+  PreferredTimeZone_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  PreferredTimeZone_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  PreferredTimeZone_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  PreferredTimeZone_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  PreferredTimeZone_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  PreferredTimeZone_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  PreferredTimeZone_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  PreferredTimeZone_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  PreferredTimeZone_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  PreferredTimeZone_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  PreferredTimeZone_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  PreferredTimeZone_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  PreferredTimeZone_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  PreferredTimeZone_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  PreferredTimeZone_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  bio_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  bio_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  bio_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  bio_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  bio_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  bio_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  bio_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  bio_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  bio_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  bio_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  bio_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  bio_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  bio_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  bio_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  bio_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_AVERAGE_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  commentKarma_AVERAGE_GT?: InputMaybe<Scalars['Float']['input']>;
+  commentKarma_AVERAGE_GTE?: InputMaybe<Scalars['Float']['input']>;
+  commentKarma_AVERAGE_LT?: InputMaybe<Scalars['Float']['input']>;
+  commentKarma_AVERAGE_LTE?: InputMaybe<Scalars['Float']['input']>;
+  commentKarma_MAX_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_MAX_GT?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_MAX_GTE?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_MAX_LT?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_MAX_LTE?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_MIN_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_MIN_GT?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_MIN_GTE?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_MIN_LT?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_MIN_LTE?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_SUM_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_SUM_GT?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_SUM_GTE?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_SUM_LT?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_SUM_LTE?: InputMaybe<Scalars['Int']['input']>;
+  createdAt_MAX_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+  discussionKarma_AVERAGE_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  discussionKarma_AVERAGE_GT?: InputMaybe<Scalars['Float']['input']>;
+  discussionKarma_AVERAGE_GTE?: InputMaybe<Scalars['Float']['input']>;
+  discussionKarma_AVERAGE_LT?: InputMaybe<Scalars['Float']['input']>;
+  discussionKarma_AVERAGE_LTE?: InputMaybe<Scalars['Float']['input']>;
+  discussionKarma_MAX_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_MAX_GT?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_MAX_GTE?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_MAX_LT?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_MAX_LTE?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_MIN_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_MIN_GT?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_MIN_GTE?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_MIN_LT?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_MIN_LTE?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_SUM_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_SUM_GT?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_SUM_GTE?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_SUM_LT?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_SUM_LTE?: InputMaybe<Scalars['Int']['input']>;
+  displayName_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  displayName_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  displayName_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  displayName_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  displayName_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  displayName_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  displayName_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  displayName_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  displayName_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  displayName_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  displayName_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  displayName_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  displayName_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  displayName_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  displayName_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  location_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  location_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  location_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  location_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  location_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  location_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  location_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  location_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  location_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  location_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  location_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  location_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  location_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  location_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  location_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  profilePicURL_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  profilePicURL_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  profilePicURL_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  profilePicURL_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  profilePicURL_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  profilePicURL_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  profilePicURL_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  profilePicURL_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  profilePicURL_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  profilePicURL_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  profilePicURL_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  profilePicURL_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  profilePicURL_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  profilePicURL_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  profilePicURL_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  pronouns_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  pronouns_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  pronouns_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  pronouns_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  pronouns_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  pronouns_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  pronouns_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  pronouns_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  pronouns_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  pronouns_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  pronouns_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  pronouns_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  pronouns_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  pronouns_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  pronouns_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  username_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  username_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  username_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  username_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  username_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  username_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  username_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  username_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  username_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  username_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  username_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  username_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  username_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  username_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  username_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type ChannelPendingModInvitesRelationship = {
+  __typename?: 'ChannelPendingModInvitesRelationship';
+  cursor: Scalars['String']['output'];
+  node: User;
+};
+
+export type ChannelPendingModInvitesUpdateConnectionInput = {
+  node?: InputMaybe<UserUpdateInput>;
+};
+
+export type ChannelPendingModInvitesUpdateFieldInput = {
+  connect?: InputMaybe<Array<ChannelPendingModInvitesConnectFieldInput>>;
+  connectOrCreate?: InputMaybe<Array<ChannelPendingModInvitesConnectOrCreateFieldInput>>;
+  create?: InputMaybe<Array<ChannelPendingModInvitesCreateFieldInput>>;
+  delete?: InputMaybe<Array<ChannelPendingModInvitesDeleteFieldInput>>;
+  disconnect?: InputMaybe<Array<ChannelPendingModInvitesDisconnectFieldInput>>;
+  update?: InputMaybe<ChannelPendingModInvitesUpdateConnectionInput>;
+  where?: InputMaybe<ChannelPendingModInvitesConnectionWhere>;
+};
+
+export type ChannelPendingOwnerInvitesAggregateInput = {
+  AND?: InputMaybe<Array<ChannelPendingOwnerInvitesAggregateInput>>;
+  NOT?: InputMaybe<ChannelPendingOwnerInvitesAggregateInput>;
+  OR?: InputMaybe<Array<ChannelPendingOwnerInvitesAggregateInput>>;
+  count?: InputMaybe<Scalars['Int']['input']>;
+  count_GT?: InputMaybe<Scalars['Int']['input']>;
+  count_GTE?: InputMaybe<Scalars['Int']['input']>;
+  count_LT?: InputMaybe<Scalars['Int']['input']>;
+  count_LTE?: InputMaybe<Scalars['Int']['input']>;
+  node?: InputMaybe<ChannelPendingOwnerInvitesNodeAggregationWhereInput>;
+};
+
+export type ChannelPendingOwnerInvitesConnectFieldInput = {
+  connect?: InputMaybe<Array<UserConnectInput>>;
+  /** Whether or not to overwrite any matching relationship with the new properties. */
+  overwrite?: Scalars['Boolean']['input'];
+  where?: InputMaybe<UserConnectWhere>;
+};
+
+export type ChannelPendingOwnerInvitesConnectOrCreateFieldInput = {
+  onCreate: ChannelPendingOwnerInvitesConnectOrCreateFieldInputOnCreate;
+  where: UserConnectOrCreateWhere;
+};
+
+export type ChannelPendingOwnerInvitesConnectOrCreateFieldInputOnCreate = {
+  node: UserOnCreateInput;
+};
+
+export type ChannelPendingOwnerInvitesConnection = {
+  __typename?: 'ChannelPendingOwnerInvitesConnection';
+  edges: Array<ChannelPendingOwnerInvitesRelationship>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type ChannelPendingOwnerInvitesConnectionSort = {
+  node?: InputMaybe<UserSort>;
+};
+
+export type ChannelPendingOwnerInvitesConnectionWhere = {
+  AND?: InputMaybe<Array<ChannelPendingOwnerInvitesConnectionWhere>>;
+  NOT?: InputMaybe<ChannelPendingOwnerInvitesConnectionWhere>;
+  OR?: InputMaybe<Array<ChannelPendingOwnerInvitesConnectionWhere>>;
+  node?: InputMaybe<UserWhere>;
+};
+
+export type ChannelPendingOwnerInvitesCreateFieldInput = {
+  node: UserCreateInput;
+};
+
+export type ChannelPendingOwnerInvitesDeleteFieldInput = {
+  delete?: InputMaybe<UserDeleteInput>;
+  where?: InputMaybe<ChannelPendingOwnerInvitesConnectionWhere>;
+};
+
+export type ChannelPendingOwnerInvitesDisconnectFieldInput = {
+  disconnect?: InputMaybe<UserDisconnectInput>;
+  where?: InputMaybe<ChannelPendingOwnerInvitesConnectionWhere>;
+};
+
+export type ChannelPendingOwnerInvitesFieldInput = {
+  connect?: InputMaybe<Array<ChannelPendingOwnerInvitesConnectFieldInput>>;
+  connectOrCreate?: InputMaybe<Array<ChannelPendingOwnerInvitesConnectOrCreateFieldInput>>;
+  create?: InputMaybe<Array<ChannelPendingOwnerInvitesCreateFieldInput>>;
+};
+
+export type ChannelPendingOwnerInvitesNodeAggregationWhereInput = {
+  AND?: InputMaybe<Array<ChannelPendingOwnerInvitesNodeAggregationWhereInput>>;
+  DefaultEmojiSkinTone_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  DefaultEmojiSkinTone_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  DefaultEmojiSkinTone_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  DefaultEmojiSkinTone_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  DefaultEmojiSkinTone_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  DefaultEmojiSkinTone_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  DefaultEmojiSkinTone_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  DefaultEmojiSkinTone_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  DefaultEmojiSkinTone_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  DefaultEmojiSkinTone_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  DefaultEmojiSkinTone_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  DefaultEmojiSkinTone_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  DefaultEmojiSkinTone_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  DefaultEmojiSkinTone_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  DefaultEmojiSkinTone_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  NOT?: InputMaybe<ChannelPendingOwnerInvitesNodeAggregationWhereInput>;
+  NotificationBundleInterval_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  NotificationBundleInterval_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  NotificationBundleInterval_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  NotificationBundleInterval_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  NotificationBundleInterval_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  NotificationBundleInterval_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  NotificationBundleInterval_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  NotificationBundleInterval_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  NotificationBundleInterval_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  NotificationBundleInterval_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  NotificationBundleInterval_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  NotificationBundleInterval_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  NotificationBundleInterval_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  NotificationBundleInterval_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  NotificationBundleInterval_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  OR?: InputMaybe<Array<ChannelPendingOwnerInvitesNodeAggregationWhereInput>>;
+  PreferredTimeZone_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  PreferredTimeZone_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  PreferredTimeZone_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  PreferredTimeZone_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  PreferredTimeZone_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  PreferredTimeZone_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  PreferredTimeZone_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  PreferredTimeZone_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  PreferredTimeZone_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  PreferredTimeZone_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  PreferredTimeZone_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  PreferredTimeZone_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  PreferredTimeZone_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  PreferredTimeZone_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  PreferredTimeZone_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  bio_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  bio_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  bio_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  bio_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  bio_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  bio_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  bio_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  bio_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  bio_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  bio_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  bio_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  bio_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  bio_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  bio_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  bio_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_AVERAGE_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  commentKarma_AVERAGE_GT?: InputMaybe<Scalars['Float']['input']>;
+  commentKarma_AVERAGE_GTE?: InputMaybe<Scalars['Float']['input']>;
+  commentKarma_AVERAGE_LT?: InputMaybe<Scalars['Float']['input']>;
+  commentKarma_AVERAGE_LTE?: InputMaybe<Scalars['Float']['input']>;
+  commentKarma_MAX_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_MAX_GT?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_MAX_GTE?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_MAX_LT?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_MAX_LTE?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_MIN_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_MIN_GT?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_MIN_GTE?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_MIN_LT?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_MIN_LTE?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_SUM_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_SUM_GT?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_SUM_GTE?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_SUM_LT?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_SUM_LTE?: InputMaybe<Scalars['Int']['input']>;
+  createdAt_MAX_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+  discussionKarma_AVERAGE_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  discussionKarma_AVERAGE_GT?: InputMaybe<Scalars['Float']['input']>;
+  discussionKarma_AVERAGE_GTE?: InputMaybe<Scalars['Float']['input']>;
+  discussionKarma_AVERAGE_LT?: InputMaybe<Scalars['Float']['input']>;
+  discussionKarma_AVERAGE_LTE?: InputMaybe<Scalars['Float']['input']>;
+  discussionKarma_MAX_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_MAX_GT?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_MAX_GTE?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_MAX_LT?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_MAX_LTE?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_MIN_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_MIN_GT?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_MIN_GTE?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_MIN_LT?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_MIN_LTE?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_SUM_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_SUM_GT?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_SUM_GTE?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_SUM_LT?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_SUM_LTE?: InputMaybe<Scalars['Int']['input']>;
+  displayName_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  displayName_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  displayName_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  displayName_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  displayName_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  displayName_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  displayName_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  displayName_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  displayName_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  displayName_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  displayName_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  displayName_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  displayName_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  displayName_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  displayName_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  location_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  location_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  location_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  location_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  location_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  location_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  location_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  location_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  location_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  location_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  location_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  location_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  location_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  location_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  location_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  profilePicURL_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  profilePicURL_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  profilePicURL_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  profilePicURL_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  profilePicURL_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  profilePicURL_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  profilePicURL_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  profilePicURL_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  profilePicURL_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  profilePicURL_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  profilePicURL_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  profilePicURL_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  profilePicURL_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  profilePicURL_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  profilePicURL_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  pronouns_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  pronouns_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  pronouns_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  pronouns_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  pronouns_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  pronouns_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  pronouns_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  pronouns_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  pronouns_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  pronouns_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  pronouns_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  pronouns_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  pronouns_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  pronouns_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  pronouns_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  username_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  username_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  username_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  username_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  username_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  username_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  username_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  username_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  username_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  username_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  username_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  username_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  username_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  username_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  username_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type ChannelPendingOwnerInvitesRelationship = {
+  __typename?: 'ChannelPendingOwnerInvitesRelationship';
+  cursor: Scalars['String']['output'];
+  node: User;
+};
+
+export type ChannelPendingOwnerInvitesUpdateConnectionInput = {
+  node?: InputMaybe<UserUpdateInput>;
+};
+
+export type ChannelPendingOwnerInvitesUpdateFieldInput = {
+  connect?: InputMaybe<Array<ChannelPendingOwnerInvitesConnectFieldInput>>;
+  connectOrCreate?: InputMaybe<Array<ChannelPendingOwnerInvitesConnectOrCreateFieldInput>>;
+  create?: InputMaybe<Array<ChannelPendingOwnerInvitesCreateFieldInput>>;
+  delete?: InputMaybe<Array<ChannelPendingOwnerInvitesDeleteFieldInput>>;
+  disconnect?: InputMaybe<Array<ChannelPendingOwnerInvitesDisconnectFieldInput>>;
+  update?: InputMaybe<ChannelPendingOwnerInvitesUpdateConnectionInput>;
+  where?: InputMaybe<ChannelPendingOwnerInvitesConnectionWhere>;
+};
+
 export type ChannelRelatedChannelsAggregateInput = {
   AND?: InputMaybe<Array<ChannelRelatedChannelsAggregateInput>>;
   NOT?: InputMaybe<ChannelRelatedChannelsAggregateInput>;
@@ -2517,6 +3131,8 @@ export type ChannelRelationInput = {
   EventChannels?: InputMaybe<Array<ChannelEventChannelsCreateFieldInput>>;
   Issues?: InputMaybe<Array<ChannelIssuesCreateFieldInput>>;
   Moderators?: InputMaybe<Array<ChannelModeratorsCreateFieldInput>>;
+  PendingModInvites?: InputMaybe<Array<ChannelPendingModInvitesCreateFieldInput>>;
+  PendingOwnerInvites?: InputMaybe<Array<ChannelPendingOwnerInvitesCreateFieldInput>>;
   RelatedChannels?: InputMaybe<Array<ChannelRelatedChannelsCreateFieldInput>>;
   Tags?: InputMaybe<Array<ChannelTagsCreateFieldInput>>;
 };
@@ -2808,6 +3424,8 @@ export type ChannelUpdateInput = {
   EventChannels?: InputMaybe<Array<ChannelEventChannelsUpdateFieldInput>>;
   Issues?: InputMaybe<Array<ChannelIssuesUpdateFieldInput>>;
   Moderators?: InputMaybe<Array<ChannelModeratorsUpdateFieldInput>>;
+  PendingModInvites?: InputMaybe<Array<ChannelPendingModInvitesUpdateFieldInput>>;
+  PendingOwnerInvites?: InputMaybe<Array<ChannelPendingOwnerInvitesUpdateFieldInput>>;
   RelatedChannels?: InputMaybe<Array<ChannelRelatedChannelsUpdateFieldInput>>;
   Tags?: InputMaybe<Array<ChannelTagsUpdateFieldInput>>;
   channelBannerURL?: InputMaybe<Scalars['String']['input']>;
@@ -2829,6 +3447,50 @@ export type ChannelUserAdminsAggregationSelection = {
 
 export type ChannelUserAdminsNodeAggregateSelection = {
   __typename?: 'ChannelUserAdminsNodeAggregateSelection';
+  DefaultEmojiSkinTone: StringAggregateSelection;
+  NotificationBundleInterval: StringAggregateSelection;
+  PreferredTimeZone: StringAggregateSelection;
+  bio: StringAggregateSelection;
+  commentKarma: IntAggregateSelection;
+  createdAt: DateTimeAggregateSelection;
+  discussionKarma: IntAggregateSelection;
+  displayName: StringAggregateSelection;
+  location: StringAggregateSelection;
+  profilePicURL: StringAggregateSelection;
+  pronouns: StringAggregateSelection;
+  username: StringAggregateSelection;
+};
+
+export type ChannelUserPendingModInvitesAggregationSelection = {
+  __typename?: 'ChannelUserPendingModInvitesAggregationSelection';
+  count: Scalars['Int']['output'];
+  node?: Maybe<ChannelUserPendingModInvitesNodeAggregateSelection>;
+};
+
+export type ChannelUserPendingModInvitesNodeAggregateSelection = {
+  __typename?: 'ChannelUserPendingModInvitesNodeAggregateSelection';
+  DefaultEmojiSkinTone: StringAggregateSelection;
+  NotificationBundleInterval: StringAggregateSelection;
+  PreferredTimeZone: StringAggregateSelection;
+  bio: StringAggregateSelection;
+  commentKarma: IntAggregateSelection;
+  createdAt: DateTimeAggregateSelection;
+  discussionKarma: IntAggregateSelection;
+  displayName: StringAggregateSelection;
+  location: StringAggregateSelection;
+  profilePicURL: StringAggregateSelection;
+  pronouns: StringAggregateSelection;
+  username: StringAggregateSelection;
+};
+
+export type ChannelUserPendingOwnerInvitesAggregationSelection = {
+  __typename?: 'ChannelUserPendingOwnerInvitesAggregationSelection';
+  count: Scalars['Int']['output'];
+  node?: Maybe<ChannelUserPendingOwnerInvitesNodeAggregateSelection>;
+};
+
+export type ChannelUserPendingOwnerInvitesNodeAggregateSelection = {
+  __typename?: 'ChannelUserPendingOwnerInvitesNodeAggregateSelection';
   DefaultEmojiSkinTone: StringAggregateSelection;
   NotificationBundleInterval: StringAggregateSelection;
   PreferredTimeZone: StringAggregateSelection;
@@ -2954,6 +3616,40 @@ export type ChannelWhere = {
   Moderators_SOME?: InputMaybe<ModerationProfileWhere>;
   NOT?: InputMaybe<ChannelWhere>;
   OR?: InputMaybe<Array<ChannelWhere>>;
+  PendingModInvitesAggregate?: InputMaybe<ChannelPendingModInvitesAggregateInput>;
+  /** Return Channels where all of the related ChannelPendingModInvitesConnections match this filter */
+  PendingModInvitesConnection_ALL?: InputMaybe<ChannelPendingModInvitesConnectionWhere>;
+  /** Return Channels where none of the related ChannelPendingModInvitesConnections match this filter */
+  PendingModInvitesConnection_NONE?: InputMaybe<ChannelPendingModInvitesConnectionWhere>;
+  /** Return Channels where one of the related ChannelPendingModInvitesConnections match this filter */
+  PendingModInvitesConnection_SINGLE?: InputMaybe<ChannelPendingModInvitesConnectionWhere>;
+  /** Return Channels where some of the related ChannelPendingModInvitesConnections match this filter */
+  PendingModInvitesConnection_SOME?: InputMaybe<ChannelPendingModInvitesConnectionWhere>;
+  /** Return Channels where all of the related Users match this filter */
+  PendingModInvites_ALL?: InputMaybe<UserWhere>;
+  /** Return Channels where none of the related Users match this filter */
+  PendingModInvites_NONE?: InputMaybe<UserWhere>;
+  /** Return Channels where one of the related Users match this filter */
+  PendingModInvites_SINGLE?: InputMaybe<UserWhere>;
+  /** Return Channels where some of the related Users match this filter */
+  PendingModInvites_SOME?: InputMaybe<UserWhere>;
+  PendingOwnerInvitesAggregate?: InputMaybe<ChannelPendingOwnerInvitesAggregateInput>;
+  /** Return Channels where all of the related ChannelPendingOwnerInvitesConnections match this filter */
+  PendingOwnerInvitesConnection_ALL?: InputMaybe<ChannelPendingOwnerInvitesConnectionWhere>;
+  /** Return Channels where none of the related ChannelPendingOwnerInvitesConnections match this filter */
+  PendingOwnerInvitesConnection_NONE?: InputMaybe<ChannelPendingOwnerInvitesConnectionWhere>;
+  /** Return Channels where one of the related ChannelPendingOwnerInvitesConnections match this filter */
+  PendingOwnerInvitesConnection_SINGLE?: InputMaybe<ChannelPendingOwnerInvitesConnectionWhere>;
+  /** Return Channels where some of the related ChannelPendingOwnerInvitesConnections match this filter */
+  PendingOwnerInvitesConnection_SOME?: InputMaybe<ChannelPendingOwnerInvitesConnectionWhere>;
+  /** Return Channels where all of the related Users match this filter */
+  PendingOwnerInvites_ALL?: InputMaybe<UserWhere>;
+  /** Return Channels where none of the related Users match this filter */
+  PendingOwnerInvites_NONE?: InputMaybe<UserWhere>;
+  /** Return Channels where one of the related Users match this filter */
+  PendingOwnerInvites_SINGLE?: InputMaybe<UserWhere>;
+  /** Return Channels where some of the related Users match this filter */
+  PendingOwnerInvites_SOME?: InputMaybe<UserWhere>;
   RelatedChannelsAggregate?: InputMaybe<ChannelRelatedChannelsAggregateInput>;
   /** Return Channels where all of the related ChannelRelatedChannelsConnections match this filter */
   RelatedChannelsConnection_ALL?: InputMaybe<ChannelRelatedChannelsConnectionWhere>;
@@ -6573,6 +7269,12 @@ export type CreateModerationProfilesMutationResponse = {
   __typename?: 'CreateModerationProfilesMutationResponse';
   info: CreateInfo;
   moderationProfiles: Array<ModerationProfile>;
+};
+
+export type CreateNotificationsMutationResponse = {
+  __typename?: 'CreateNotificationsMutationResponse';
+  info: CreateInfo;
+  notifications: Array<Notification>;
 };
 
 export type CreateRecurringEventsMutationResponse = {
@@ -16695,6 +17397,8 @@ export type ModerationProfilesConnection = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  acceptForumModInvite?: Maybe<Scalars['Boolean']['output']>;
+  acceptForumOwnerInvite?: Maybe<Scalars['Boolean']['output']>;
   addEmojiToComment?: Maybe<Comment>;
   addEmojiToDiscussionChannel?: Maybe<DiscussionChannel>;
   createAlbums: CreateAlbumsMutationResponse;
@@ -16725,6 +17429,7 @@ export type Mutation = {
   createModServerRoles: CreateModServerRolesMutationResponse;
   createModerationActions: CreateModerationActionsMutationResponse;
   createModerationProfiles: CreateModerationProfilesMutationResponse;
+  createNotifications: CreateNotificationsMutationResponse;
   createRecurringEvents: CreateRecurringEventsMutationResponse;
   createRepeatEnds: CreateRepeatEndsMutationResponse;
   createRepeatEveries: CreateRepeatEveriesMutationResponse;
@@ -16762,6 +17467,7 @@ export type Mutation = {
   deleteModServerRoles: DeleteInfo;
   deleteModerationActions: DeleteInfo;
   deleteModerationProfiles: DeleteInfo;
+  deleteNotifications: DeleteInfo;
   deleteRecurringEvents: DeleteInfo;
   deleteRepeatEnds: DeleteInfo;
   deleteRepeatEveries: DeleteInfo;
@@ -16774,8 +17480,12 @@ export type Mutation = {
   deleteTags: DeleteInfo;
   deleteUsers: DeleteInfo;
   dropDataForCypressTests?: Maybe<DropDataResponse>;
+  inviteForumMod?: Maybe<Scalars['Boolean']['output']>;
+  inviteForumOwner?: Maybe<Scalars['Boolean']['output']>;
   removeEmojiFromComment?: Maybe<Comment>;
   removeEmojiFromDiscussionChannel?: Maybe<DiscussionChannel>;
+  removeForumMod?: Maybe<Scalars['Boolean']['output']>;
+  removeForumOwner?: Maybe<Scalars['Boolean']['output']>;
   seedDataForCypressTests?: Maybe<SeedDataResponse>;
   undoUpvoteComment?: Maybe<Comment>;
   undoUpvoteDiscussionChannel?: Maybe<DiscussionChannel>;
@@ -16806,6 +17516,7 @@ export type Mutation = {
   updateModServerRoles: UpdateModServerRolesMutationResponse;
   updateModerationActions: UpdateModerationActionsMutationResponse;
   updateModerationProfiles: UpdateModerationProfilesMutationResponse;
+  updateNotifications: UpdateNotificationsMutationResponse;
   updateRecurringEvents: UpdateRecurringEventsMutationResponse;
   updateRepeatEnds: UpdateRepeatEndsMutationResponse;
   updateRepeatEveries: UpdateRepeatEveriesMutationResponse;
@@ -16819,6 +17530,16 @@ export type Mutation = {
   updateUsers: UpdateUsersMutationResponse;
   upvoteComment?: Maybe<Comment>;
   upvoteDiscussionChannel?: Maybe<DiscussionChannel>;
+};
+
+
+export type MutationAcceptForumModInviteArgs = {
+  channelUniqueName: Scalars['String']['input'];
+};
+
+
+export type MutationAcceptForumOwnerInviteArgs = {
+  channelUniqueName: Scalars['String']['input'];
 };
 
 
@@ -16976,6 +17697,11 @@ export type MutationCreateModerationActionsArgs = {
 
 export type MutationCreateModerationProfilesArgs = {
   input: Array<ModerationProfileCreateInput>;
+};
+
+
+export type MutationCreateNotificationsArgs = {
+  input: Array<NotificationCreateInput>;
 };
 
 
@@ -17179,6 +17905,11 @@ export type MutationDeleteModerationProfilesArgs = {
 };
 
 
+export type MutationDeleteNotificationsArgs = {
+  where?: InputMaybe<NotificationWhere>;
+};
+
+
 export type MutationDeleteRecurringEventsArgs = {
   delete?: InputMaybe<RecurringEventDeleteInput>;
   where?: InputMaybe<RecurringEventWhere>;
@@ -17238,6 +17969,18 @@ export type MutationDeleteUsersArgs = {
 };
 
 
+export type MutationInviteForumModArgs = {
+  channelUniqueName: Scalars['String']['input'];
+  inviteeUsername: Scalars['String']['input'];
+};
+
+
+export type MutationInviteForumOwnerArgs = {
+  channelUniqueName: Scalars['String']['input'];
+  inviteeUsername: Scalars['String']['input'];
+};
+
+
 export type MutationRemoveEmojiFromCommentArgs = {
   commentId: Scalars['ID']['input'];
   emojiLabel: Scalars['String']['input'];
@@ -17248,6 +17991,18 @@ export type MutationRemoveEmojiFromCommentArgs = {
 export type MutationRemoveEmojiFromDiscussionChannelArgs = {
   discussionChannelId: Scalars['ID']['input'];
   emojiLabel: Scalars['String']['input'];
+  username: Scalars['String']['input'];
+};
+
+
+export type MutationRemoveForumModArgs = {
+  channelUniqueName: Scalars['String']['input'];
+  username: Scalars['String']['input'];
+};
+
+
+export type MutationRemoveForumOwnerArgs = {
+  channelUniqueName: Scalars['String']['input'];
   username: Scalars['String']['input'];
 };
 
@@ -17445,6 +18200,12 @@ export type MutationUpdateModerationProfilesArgs = {
 };
 
 
+export type MutationUpdateNotificationsArgs = {
+  update?: InputMaybe<NotificationUpdateInput>;
+  where?: InputMaybe<NotificationWhere>;
+};
+
+
 export type MutationUpdateRecurringEventsArgs = {
   update?: InputMaybe<RecurringEventUpdateInput>;
   where?: InputMaybe<RecurringEventWhere>;
@@ -17525,6 +18286,89 @@ export type MutationUpvoteDiscussionChannelArgs = {
 export type NewUserInput = {
   emailAddress: Scalars['String']['input'];
   username: Scalars['String']['input'];
+};
+
+export type Notification = {
+  __typename?: 'Notification';
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['ID']['output'];
+  read?: Maybe<Scalars['Boolean']['output']>;
+  text?: Maybe<Scalars['String']['output']>;
+};
+
+export type NotificationAggregateSelection = {
+  __typename?: 'NotificationAggregateSelection';
+  count: Scalars['Int']['output'];
+  createdAt: DateTimeAggregateSelection;
+  id: IdAggregateSelection;
+  text: StringAggregateSelection;
+};
+
+export type NotificationConnectWhere = {
+  node: NotificationWhere;
+};
+
+export type NotificationCreateInput = {
+  read?: InputMaybe<Scalars['Boolean']['input']>;
+  text?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type NotificationEdge = {
+  __typename?: 'NotificationEdge';
+  cursor: Scalars['String']['output'];
+  node: Notification;
+};
+
+export type NotificationOptions = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  /** Specify one or more NotificationSort objects to sort Notifications by. The sorts will be applied in the order in which they are arranged in the array. */
+  sort?: InputMaybe<Array<NotificationSort>>;
+};
+
+/** Fields to sort Notifications by. The order in which sorts are applied is not guaranteed when specifying many fields in one NotificationSort object. */
+export type NotificationSort = {
+  createdAt?: InputMaybe<SortDirection>;
+  id?: InputMaybe<SortDirection>;
+  read?: InputMaybe<SortDirection>;
+  text?: InputMaybe<SortDirection>;
+};
+
+export type NotificationUpdateInput = {
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
+  read?: InputMaybe<Scalars['Boolean']['input']>;
+  text?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type NotificationWhere = {
+  AND?: InputMaybe<Array<NotificationWhere>>;
+  NOT?: InputMaybe<NotificationWhere>;
+  OR?: InputMaybe<Array<NotificationWhere>>;
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_IN?: InputMaybe<Array<Scalars['DateTime']['input']>>;
+  createdAt_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  id_CONTAINS?: InputMaybe<Scalars['ID']['input']>;
+  id_ENDS_WITH?: InputMaybe<Scalars['ID']['input']>;
+  id_IN?: InputMaybe<Array<Scalars['ID']['input']>>;
+  id_STARTS_WITH?: InputMaybe<Scalars['ID']['input']>;
+  read?: InputMaybe<Scalars['Boolean']['input']>;
+  text?: InputMaybe<Scalars['String']['input']>;
+  text_CONTAINS?: InputMaybe<Scalars['String']['input']>;
+  text_ENDS_WITH?: InputMaybe<Scalars['String']['input']>;
+  text_IN?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  text_MATCHES?: InputMaybe<Scalars['String']['input']>;
+  text_STARTS_WITH?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type NotificationsConnection = {
+  __typename?: 'NotificationsConnection';
+  edges: Array<NotificationEdge>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
 };
 
 /** Pagination information (Relay) */
@@ -17646,6 +18490,9 @@ export type Query = {
   moderationProfiles: Array<ModerationProfile>;
   moderationProfilesAggregate: ModerationProfileAggregateSelection;
   moderationProfilesConnection: ModerationProfilesConnection;
+  notifications: Array<Notification>;
+  notificationsAggregate: NotificationAggregateSelection;
+  notificationsConnection: NotificationsConnection;
   recurringEvents: Array<RecurringEvent>;
   recurringEventsAggregate: RecurringEventAggregateSelection;
   recurringEventsConnection: RecurringEventsConnection;
@@ -18222,6 +19069,25 @@ export type QueryModerationProfilesConnectionArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<Array<InputMaybe<ModerationProfileSort>>>;
   where?: InputMaybe<ModerationProfileWhere>;
+};
+
+
+export type QueryNotificationsArgs = {
+  options?: InputMaybe<NotificationOptions>;
+  where?: InputMaybe<NotificationWhere>;
+};
+
+
+export type QueryNotificationsAggregateArgs = {
+  where?: InputMaybe<NotificationWhere>;
+};
+
+
+export type QueryNotificationsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<NotificationSort>>>;
+  where?: InputMaybe<NotificationWhere>;
 };
 
 
@@ -21606,6 +22472,12 @@ export type UpdateModerationProfilesMutationResponse = {
   moderationProfiles: Array<ModerationProfile>;
 };
 
+export type UpdateNotificationsMutationResponse = {
+  __typename?: 'UpdateNotificationsMutationResponse';
+  info: UpdateInfo;
+  notifications: Array<Notification>;
+};
+
 export type UpdateRecurringEventsMutationResponse = {
   __typename?: 'UpdateRecurringEventsMutationResponse';
   info: UpdateInfo;
@@ -21727,6 +22599,15 @@ export type User = {
   ModerationProfileAggregate?: Maybe<UserModerationProfileModerationProfileAggregationSelection>;
   ModerationProfileConnection: UserModerationProfileConnection;
   NotificationBundleInterval?: Maybe<Scalars['String']['output']>;
+  Notifications: Array<Notification>;
+  NotificationsAggregate?: Maybe<UserNotificationNotificationsAggregationSelection>;
+  NotificationsConnection: UserNotificationsConnection;
+  PendingModInvites: Array<Channel>;
+  PendingModInvitesAggregate?: Maybe<UserChannelPendingModInvitesAggregationSelection>;
+  PendingModInvitesConnection: UserPendingModInvitesConnection;
+  PendingOwnerInvites: Array<Channel>;
+  PendingOwnerInvitesAggregate?: Maybe<UserChannelPendingOwnerInvitesAggregationSelection>;
+  PendingOwnerInvitesConnection: UserPendingOwnerInvitesConnection;
   PreferredTimeZone?: Maybe<Scalars['String']['output']>;
   RecentlyVisitedChannels: Array<Channel>;
   RecentlyVisitedChannelsAggregate?: Maybe<UserChannelRecentlyVisitedChannelsAggregationSelection>;
@@ -22124,6 +23005,72 @@ export type UserModerationProfileConnectionArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<Array<UserModerationProfileConnectionSort>>;
   where?: InputMaybe<UserModerationProfileConnectionWhere>;
+};
+
+
+export type UserNotificationsArgs = {
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  options?: InputMaybe<NotificationOptions>;
+  where?: InputMaybe<NotificationWhere>;
+};
+
+
+export type UserNotificationsAggregateArgs = {
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  where?: InputMaybe<NotificationWhere>;
+};
+
+
+export type UserNotificationsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<Array<UserNotificationsConnectionSort>>;
+  where?: InputMaybe<UserNotificationsConnectionWhere>;
+};
+
+
+export type UserPendingModInvitesArgs = {
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  options?: InputMaybe<ChannelOptions>;
+  where?: InputMaybe<ChannelWhere>;
+};
+
+
+export type UserPendingModInvitesAggregateArgs = {
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  where?: InputMaybe<ChannelWhere>;
+};
+
+
+export type UserPendingModInvitesConnectionArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<Array<UserPendingModInvitesConnectionSort>>;
+  where?: InputMaybe<UserPendingModInvitesConnectionWhere>;
+};
+
+
+export type UserPendingOwnerInvitesArgs = {
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  options?: InputMaybe<ChannelOptions>;
+  where?: InputMaybe<ChannelWhere>;
+};
+
+
+export type UserPendingOwnerInvitesAggregateArgs = {
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  where?: InputMaybe<ChannelWhere>;
+};
+
+
+export type UserPendingOwnerInvitesConnectionArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<Array<UserPendingOwnerInvitesConnectionSort>>;
+  where?: InputMaybe<UserPendingOwnerInvitesConnectionWhere>;
 };
 
 
@@ -22825,6 +23772,38 @@ export type UserChannelModOfChannelsNodeAggregateSelection = {
   uniqueName: StringAggregateSelection;
 };
 
+export type UserChannelPendingModInvitesAggregationSelection = {
+  __typename?: 'UserChannelPendingModInvitesAggregationSelection';
+  count: Scalars['Int']['output'];
+  node?: Maybe<UserChannelPendingModInvitesNodeAggregateSelection>;
+};
+
+export type UserChannelPendingModInvitesNodeAggregateSelection = {
+  __typename?: 'UserChannelPendingModInvitesNodeAggregateSelection';
+  channelBannerURL: StringAggregateSelection;
+  channelIconURL: StringAggregateSelection;
+  createdAt: DateTimeAggregateSelection;
+  description: StringAggregateSelection;
+  displayName: StringAggregateSelection;
+  uniqueName: StringAggregateSelection;
+};
+
+export type UserChannelPendingOwnerInvitesAggregationSelection = {
+  __typename?: 'UserChannelPendingOwnerInvitesAggregationSelection';
+  count: Scalars['Int']['output'];
+  node?: Maybe<UserChannelPendingOwnerInvitesNodeAggregateSelection>;
+};
+
+export type UserChannelPendingOwnerInvitesNodeAggregateSelection = {
+  __typename?: 'UserChannelPendingOwnerInvitesNodeAggregateSelection';
+  channelBannerURL: StringAggregateSelection;
+  channelIconURL: StringAggregateSelection;
+  createdAt: DateTimeAggregateSelection;
+  description: StringAggregateSelection;
+  displayName: StringAggregateSelection;
+  uniqueName: StringAggregateSelection;
+};
+
 export type UserChannelRecentlyVisitedChannelsAggregationSelection = {
   __typename?: 'UserChannelRecentlyVisitedChannelsAggregationSelection';
   count: Scalars['Int']['output'];
@@ -23187,6 +24166,9 @@ export type UserConnectInput = {
   Issues?: InputMaybe<Array<UserIssuesConnectFieldInput>>;
   ModOfChannels?: InputMaybe<Array<UserModOfChannelsConnectFieldInput>>;
   ModerationProfile?: InputMaybe<UserModerationProfileConnectFieldInput>;
+  Notifications?: InputMaybe<Array<UserNotificationsConnectFieldInput>>;
+  PendingModInvites?: InputMaybe<Array<UserPendingModInvitesConnectFieldInput>>;
+  PendingOwnerInvites?: InputMaybe<Array<UserPendingOwnerInvitesConnectFieldInput>>;
   RecentlyVisitedChannels?: InputMaybe<Array<UserRecentlyVisitedChannelsConnectFieldInput>>;
   ServerRoles?: InputMaybe<Array<UserServerRolesConnectFieldInput>>;
   UpvotedComments?: InputMaybe<Array<UserUpvotedCommentsConnectFieldInput>>;
@@ -23202,6 +24184,8 @@ export type UserConnectOrCreateInput = {
   IsBlockedBy?: InputMaybe<UserIsBlockedByConnectOrCreateFieldInput>;
   ModOfChannels?: InputMaybe<Array<UserModOfChannelsConnectOrCreateFieldInput>>;
   ModerationProfile?: InputMaybe<UserModerationProfileConnectOrCreateFieldInput>;
+  PendingModInvites?: InputMaybe<Array<UserPendingModInvitesConnectOrCreateFieldInput>>;
+  PendingOwnerInvites?: InputMaybe<Array<UserPendingOwnerInvitesConnectOrCreateFieldInput>>;
   RecentlyVisitedChannels?: InputMaybe<Array<UserRecentlyVisitedChannelsConnectOrCreateFieldInput>>;
   ServerRoles?: InputMaybe<Array<UserServerRolesConnectOrCreateFieldInput>>;
 };
@@ -23234,6 +24218,9 @@ export type UserCreateInput = {
   ModOfChannels?: InputMaybe<UserModOfChannelsFieldInput>;
   ModerationProfile?: InputMaybe<UserModerationProfileFieldInput>;
   NotificationBundleInterval?: InputMaybe<Scalars['String']['input']>;
+  Notifications?: InputMaybe<UserNotificationsFieldInput>;
+  PendingModInvites?: InputMaybe<UserPendingModInvitesFieldInput>;
+  PendingOwnerInvites?: InputMaybe<UserPendingOwnerInvitesFieldInput>;
   PreferredTimeZone?: InputMaybe<Scalars['String']['input']>;
   RecentlyVisitedChannels?: InputMaybe<UserRecentlyVisitedChannelsFieldInput>;
   ServerRoles?: InputMaybe<UserServerRolesFieldInput>;
@@ -23490,6 +24477,9 @@ export type UserDeleteInput = {
   Issues?: InputMaybe<Array<UserIssuesDeleteFieldInput>>;
   ModOfChannels?: InputMaybe<Array<UserModOfChannelsDeleteFieldInput>>;
   ModerationProfile?: InputMaybe<UserModerationProfileDeleteFieldInput>;
+  Notifications?: InputMaybe<Array<UserNotificationsDeleteFieldInput>>;
+  PendingModInvites?: InputMaybe<Array<UserPendingModInvitesDeleteFieldInput>>;
+  PendingOwnerInvites?: InputMaybe<Array<UserPendingOwnerInvitesDeleteFieldInput>>;
   RecentlyVisitedChannels?: InputMaybe<Array<UserRecentlyVisitedChannelsDeleteFieldInput>>;
   ServerRoles?: InputMaybe<Array<UserServerRolesDeleteFieldInput>>;
   UpvotedComments?: InputMaybe<Array<UserUpvotedCommentsDeleteFieldInput>>;
@@ -23514,6 +24504,9 @@ export type UserDisconnectInput = {
   Issues?: InputMaybe<Array<UserIssuesDisconnectFieldInput>>;
   ModOfChannels?: InputMaybe<Array<UserModOfChannelsDisconnectFieldInput>>;
   ModerationProfile?: InputMaybe<UserModerationProfileDisconnectFieldInput>;
+  Notifications?: InputMaybe<Array<UserNotificationsDisconnectFieldInput>>;
+  PendingModInvites?: InputMaybe<Array<UserPendingModInvitesDisconnectFieldInput>>;
+  PendingOwnerInvites?: InputMaybe<Array<UserPendingOwnerInvitesDisconnectFieldInput>>;
   RecentlyVisitedChannels?: InputMaybe<Array<UserRecentlyVisitedChannelsDisconnectFieldInput>>;
   ServerRoles?: InputMaybe<Array<UserServerRolesDisconnectFieldInput>>;
   UpvotedComments?: InputMaybe<Array<UserUpvotedCommentsDisconnectFieldInput>>;
@@ -25333,6 +26326,122 @@ export type UserModerationProfileUpdateFieldInput = {
   where?: InputMaybe<UserModerationProfileConnectionWhere>;
 };
 
+export type UserNotificationNotificationsAggregationSelection = {
+  __typename?: 'UserNotificationNotificationsAggregationSelection';
+  count: Scalars['Int']['output'];
+  node?: Maybe<UserNotificationNotificationsNodeAggregateSelection>;
+};
+
+export type UserNotificationNotificationsNodeAggregateSelection = {
+  __typename?: 'UserNotificationNotificationsNodeAggregateSelection';
+  createdAt: DateTimeAggregateSelection;
+  id: IdAggregateSelection;
+  text: StringAggregateSelection;
+};
+
+export type UserNotificationsAggregateInput = {
+  AND?: InputMaybe<Array<UserNotificationsAggregateInput>>;
+  NOT?: InputMaybe<UserNotificationsAggregateInput>;
+  OR?: InputMaybe<Array<UserNotificationsAggregateInput>>;
+  count?: InputMaybe<Scalars['Int']['input']>;
+  count_GT?: InputMaybe<Scalars['Int']['input']>;
+  count_GTE?: InputMaybe<Scalars['Int']['input']>;
+  count_LT?: InputMaybe<Scalars['Int']['input']>;
+  count_LTE?: InputMaybe<Scalars['Int']['input']>;
+  node?: InputMaybe<UserNotificationsNodeAggregationWhereInput>;
+};
+
+export type UserNotificationsConnectFieldInput = {
+  /** Whether or not to overwrite any matching relationship with the new properties. */
+  overwrite?: Scalars['Boolean']['input'];
+  where?: InputMaybe<NotificationConnectWhere>;
+};
+
+export type UserNotificationsConnection = {
+  __typename?: 'UserNotificationsConnection';
+  edges: Array<UserNotificationsRelationship>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type UserNotificationsConnectionSort = {
+  node?: InputMaybe<NotificationSort>;
+};
+
+export type UserNotificationsConnectionWhere = {
+  AND?: InputMaybe<Array<UserNotificationsConnectionWhere>>;
+  NOT?: InputMaybe<UserNotificationsConnectionWhere>;
+  OR?: InputMaybe<Array<UserNotificationsConnectionWhere>>;
+  node?: InputMaybe<NotificationWhere>;
+};
+
+export type UserNotificationsCreateFieldInput = {
+  node: NotificationCreateInput;
+};
+
+export type UserNotificationsDeleteFieldInput = {
+  where?: InputMaybe<UserNotificationsConnectionWhere>;
+};
+
+export type UserNotificationsDisconnectFieldInput = {
+  where?: InputMaybe<UserNotificationsConnectionWhere>;
+};
+
+export type UserNotificationsFieldInput = {
+  connect?: InputMaybe<Array<UserNotificationsConnectFieldInput>>;
+  create?: InputMaybe<Array<UserNotificationsCreateFieldInput>>;
+};
+
+export type UserNotificationsNodeAggregationWhereInput = {
+  AND?: InputMaybe<Array<UserNotificationsNodeAggregationWhereInput>>;
+  NOT?: InputMaybe<UserNotificationsNodeAggregationWhereInput>;
+  OR?: InputMaybe<Array<UserNotificationsNodeAggregationWhereInput>>;
+  createdAt_MAX_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+  text_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  text_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  text_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  text_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  text_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  text_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  text_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  text_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  text_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  text_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  text_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  text_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  text_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  text_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  text_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type UserNotificationsRelationship = {
+  __typename?: 'UserNotificationsRelationship';
+  cursor: Scalars['String']['output'];
+  node: Notification;
+};
+
+export type UserNotificationsUpdateConnectionInput = {
+  node?: InputMaybe<NotificationUpdateInput>;
+};
+
+export type UserNotificationsUpdateFieldInput = {
+  connect?: InputMaybe<Array<UserNotificationsConnectFieldInput>>;
+  create?: InputMaybe<Array<UserNotificationsCreateFieldInput>>;
+  delete?: InputMaybe<Array<UserNotificationsDeleteFieldInput>>;
+  disconnect?: InputMaybe<Array<UserNotificationsDisconnectFieldInput>>;
+  update?: InputMaybe<UserNotificationsUpdateConnectionInput>;
+  where?: InputMaybe<UserNotificationsConnectionWhere>;
+};
+
 export type UserOnCreateInput = {
   DefaultEmojiSkinTone?: InputMaybe<Scalars['String']['input']>;
   NotificationBundleInterval?: InputMaybe<Scalars['String']['input']>;
@@ -25353,6 +26462,360 @@ export type UserOptions = {
   offset?: InputMaybe<Scalars['Int']['input']>;
   /** Specify one or more UserSort objects to sort Users by. The sorts will be applied in the order in which they are arranged in the array. */
   sort?: InputMaybe<Array<UserSort>>;
+};
+
+export type UserPendingModInvitesAggregateInput = {
+  AND?: InputMaybe<Array<UserPendingModInvitesAggregateInput>>;
+  NOT?: InputMaybe<UserPendingModInvitesAggregateInput>;
+  OR?: InputMaybe<Array<UserPendingModInvitesAggregateInput>>;
+  count?: InputMaybe<Scalars['Int']['input']>;
+  count_GT?: InputMaybe<Scalars['Int']['input']>;
+  count_GTE?: InputMaybe<Scalars['Int']['input']>;
+  count_LT?: InputMaybe<Scalars['Int']['input']>;
+  count_LTE?: InputMaybe<Scalars['Int']['input']>;
+  node?: InputMaybe<UserPendingModInvitesNodeAggregationWhereInput>;
+};
+
+export type UserPendingModInvitesConnectFieldInput = {
+  connect?: InputMaybe<Array<ChannelConnectInput>>;
+  /** Whether or not to overwrite any matching relationship with the new properties. */
+  overwrite?: Scalars['Boolean']['input'];
+  where?: InputMaybe<ChannelConnectWhere>;
+};
+
+export type UserPendingModInvitesConnectOrCreateFieldInput = {
+  onCreate: UserPendingModInvitesConnectOrCreateFieldInputOnCreate;
+  where: ChannelConnectOrCreateWhere;
+};
+
+export type UserPendingModInvitesConnectOrCreateFieldInputOnCreate = {
+  node: ChannelOnCreateInput;
+};
+
+export type UserPendingModInvitesConnection = {
+  __typename?: 'UserPendingModInvitesConnection';
+  edges: Array<UserPendingModInvitesRelationship>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type UserPendingModInvitesConnectionSort = {
+  node?: InputMaybe<ChannelSort>;
+};
+
+export type UserPendingModInvitesConnectionWhere = {
+  AND?: InputMaybe<Array<UserPendingModInvitesConnectionWhere>>;
+  NOT?: InputMaybe<UserPendingModInvitesConnectionWhere>;
+  OR?: InputMaybe<Array<UserPendingModInvitesConnectionWhere>>;
+  node?: InputMaybe<ChannelWhere>;
+};
+
+export type UserPendingModInvitesCreateFieldInput = {
+  node: ChannelCreateInput;
+};
+
+export type UserPendingModInvitesDeleteFieldInput = {
+  delete?: InputMaybe<ChannelDeleteInput>;
+  where?: InputMaybe<UserPendingModInvitesConnectionWhere>;
+};
+
+export type UserPendingModInvitesDisconnectFieldInput = {
+  disconnect?: InputMaybe<ChannelDisconnectInput>;
+  where?: InputMaybe<UserPendingModInvitesConnectionWhere>;
+};
+
+export type UserPendingModInvitesFieldInput = {
+  connect?: InputMaybe<Array<UserPendingModInvitesConnectFieldInput>>;
+  connectOrCreate?: InputMaybe<Array<UserPendingModInvitesConnectOrCreateFieldInput>>;
+  create?: InputMaybe<Array<UserPendingModInvitesCreateFieldInput>>;
+};
+
+export type UserPendingModInvitesNodeAggregationWhereInput = {
+  AND?: InputMaybe<Array<UserPendingModInvitesNodeAggregationWhereInput>>;
+  NOT?: InputMaybe<UserPendingModInvitesNodeAggregationWhereInput>;
+  OR?: InputMaybe<Array<UserPendingModInvitesNodeAggregationWhereInput>>;
+  channelBannerURL_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  channelBannerURL_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  channelBannerURL_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  channelBannerURL_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  channelBannerURL_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  channelBannerURL_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  channelBannerURL_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  channelBannerURL_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  channelBannerURL_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  channelBannerURL_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  channelBannerURL_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  channelBannerURL_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  channelBannerURL_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  channelBannerURL_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  channelBannerURL_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  channelIconURL_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  channelIconURL_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  channelIconURL_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  channelIconURL_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  channelIconURL_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  channelIconURL_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  channelIconURL_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  channelIconURL_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  channelIconURL_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  channelIconURL_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  channelIconURL_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  channelIconURL_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  channelIconURL_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  channelIconURL_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  channelIconURL_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  createdAt_MAX_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+  description_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  description_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  description_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  description_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  description_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  description_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  description_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  description_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  description_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  description_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  description_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  description_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  description_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  description_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  description_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  displayName_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  displayName_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  displayName_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  displayName_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  displayName_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  displayName_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  displayName_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  displayName_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  displayName_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  displayName_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  displayName_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  displayName_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  displayName_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  displayName_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  displayName_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  uniqueName_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  uniqueName_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  uniqueName_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  uniqueName_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  uniqueName_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  uniqueName_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  uniqueName_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  uniqueName_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  uniqueName_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  uniqueName_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  uniqueName_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  uniqueName_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  uniqueName_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  uniqueName_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  uniqueName_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type UserPendingModInvitesRelationship = {
+  __typename?: 'UserPendingModInvitesRelationship';
+  cursor: Scalars['String']['output'];
+  node: Channel;
+};
+
+export type UserPendingModInvitesUpdateConnectionInput = {
+  node?: InputMaybe<ChannelUpdateInput>;
+};
+
+export type UserPendingModInvitesUpdateFieldInput = {
+  connect?: InputMaybe<Array<UserPendingModInvitesConnectFieldInput>>;
+  connectOrCreate?: InputMaybe<Array<UserPendingModInvitesConnectOrCreateFieldInput>>;
+  create?: InputMaybe<Array<UserPendingModInvitesCreateFieldInput>>;
+  delete?: InputMaybe<Array<UserPendingModInvitesDeleteFieldInput>>;
+  disconnect?: InputMaybe<Array<UserPendingModInvitesDisconnectFieldInput>>;
+  update?: InputMaybe<UserPendingModInvitesUpdateConnectionInput>;
+  where?: InputMaybe<UserPendingModInvitesConnectionWhere>;
+};
+
+export type UserPendingOwnerInvitesAggregateInput = {
+  AND?: InputMaybe<Array<UserPendingOwnerInvitesAggregateInput>>;
+  NOT?: InputMaybe<UserPendingOwnerInvitesAggregateInput>;
+  OR?: InputMaybe<Array<UserPendingOwnerInvitesAggregateInput>>;
+  count?: InputMaybe<Scalars['Int']['input']>;
+  count_GT?: InputMaybe<Scalars['Int']['input']>;
+  count_GTE?: InputMaybe<Scalars['Int']['input']>;
+  count_LT?: InputMaybe<Scalars['Int']['input']>;
+  count_LTE?: InputMaybe<Scalars['Int']['input']>;
+  node?: InputMaybe<UserPendingOwnerInvitesNodeAggregationWhereInput>;
+};
+
+export type UserPendingOwnerInvitesConnectFieldInput = {
+  connect?: InputMaybe<Array<ChannelConnectInput>>;
+  /** Whether or not to overwrite any matching relationship with the new properties. */
+  overwrite?: Scalars['Boolean']['input'];
+  where?: InputMaybe<ChannelConnectWhere>;
+};
+
+export type UserPendingOwnerInvitesConnectOrCreateFieldInput = {
+  onCreate: UserPendingOwnerInvitesConnectOrCreateFieldInputOnCreate;
+  where: ChannelConnectOrCreateWhere;
+};
+
+export type UserPendingOwnerInvitesConnectOrCreateFieldInputOnCreate = {
+  node: ChannelOnCreateInput;
+};
+
+export type UserPendingOwnerInvitesConnection = {
+  __typename?: 'UserPendingOwnerInvitesConnection';
+  edges: Array<UserPendingOwnerInvitesRelationship>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type UserPendingOwnerInvitesConnectionSort = {
+  node?: InputMaybe<ChannelSort>;
+};
+
+export type UserPendingOwnerInvitesConnectionWhere = {
+  AND?: InputMaybe<Array<UserPendingOwnerInvitesConnectionWhere>>;
+  NOT?: InputMaybe<UserPendingOwnerInvitesConnectionWhere>;
+  OR?: InputMaybe<Array<UserPendingOwnerInvitesConnectionWhere>>;
+  node?: InputMaybe<ChannelWhere>;
+};
+
+export type UserPendingOwnerInvitesCreateFieldInput = {
+  node: ChannelCreateInput;
+};
+
+export type UserPendingOwnerInvitesDeleteFieldInput = {
+  delete?: InputMaybe<ChannelDeleteInput>;
+  where?: InputMaybe<UserPendingOwnerInvitesConnectionWhere>;
+};
+
+export type UserPendingOwnerInvitesDisconnectFieldInput = {
+  disconnect?: InputMaybe<ChannelDisconnectInput>;
+  where?: InputMaybe<UserPendingOwnerInvitesConnectionWhere>;
+};
+
+export type UserPendingOwnerInvitesFieldInput = {
+  connect?: InputMaybe<Array<UserPendingOwnerInvitesConnectFieldInput>>;
+  connectOrCreate?: InputMaybe<Array<UserPendingOwnerInvitesConnectOrCreateFieldInput>>;
+  create?: InputMaybe<Array<UserPendingOwnerInvitesCreateFieldInput>>;
+};
+
+export type UserPendingOwnerInvitesNodeAggregationWhereInput = {
+  AND?: InputMaybe<Array<UserPendingOwnerInvitesNodeAggregationWhereInput>>;
+  NOT?: InputMaybe<UserPendingOwnerInvitesNodeAggregationWhereInput>;
+  OR?: InputMaybe<Array<UserPendingOwnerInvitesNodeAggregationWhereInput>>;
+  channelBannerURL_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  channelBannerURL_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  channelBannerURL_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  channelBannerURL_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  channelBannerURL_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  channelBannerURL_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  channelBannerURL_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  channelBannerURL_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  channelBannerURL_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  channelBannerURL_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  channelBannerURL_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  channelBannerURL_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  channelBannerURL_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  channelBannerURL_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  channelBannerURL_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  channelIconURL_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  channelIconURL_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  channelIconURL_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  channelIconURL_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  channelIconURL_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  channelIconURL_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  channelIconURL_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  channelIconURL_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  channelIconURL_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  channelIconURL_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  channelIconURL_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  channelIconURL_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  channelIconURL_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  channelIconURL_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  channelIconURL_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  createdAt_MAX_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+  description_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  description_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  description_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  description_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  description_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  description_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  description_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  description_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  description_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  description_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  description_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  description_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  description_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  description_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  description_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  displayName_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  displayName_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  displayName_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  displayName_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  displayName_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  displayName_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  displayName_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  displayName_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  displayName_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  displayName_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  displayName_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  displayName_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  displayName_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  displayName_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  displayName_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  uniqueName_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  uniqueName_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  uniqueName_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  uniqueName_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  uniqueName_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  uniqueName_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  uniqueName_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  uniqueName_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  uniqueName_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  uniqueName_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  uniqueName_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  uniqueName_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  uniqueName_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  uniqueName_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  uniqueName_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type UserPendingOwnerInvitesRelationship = {
+  __typename?: 'UserPendingOwnerInvitesRelationship';
+  cursor: Scalars['String']['output'];
+  node: Channel;
+};
+
+export type UserPendingOwnerInvitesUpdateConnectionInput = {
+  node?: InputMaybe<ChannelUpdateInput>;
+};
+
+export type UserPendingOwnerInvitesUpdateFieldInput = {
+  connect?: InputMaybe<Array<UserPendingOwnerInvitesConnectFieldInput>>;
+  connectOrCreate?: InputMaybe<Array<UserPendingOwnerInvitesConnectOrCreateFieldInput>>;
+  create?: InputMaybe<Array<UserPendingOwnerInvitesCreateFieldInput>>;
+  delete?: InputMaybe<Array<UserPendingOwnerInvitesDeleteFieldInput>>;
+  disconnect?: InputMaybe<Array<UserPendingOwnerInvitesDisconnectFieldInput>>;
+  update?: InputMaybe<UserPendingOwnerInvitesUpdateConnectionInput>;
+  where?: InputMaybe<UserPendingOwnerInvitesConnectionWhere>;
 };
 
 export type UserRecentlyVisitedChannelsAggregateInput = {
@@ -25550,6 +27013,9 @@ export type UserRelationInput = {
   Issues?: InputMaybe<Array<UserIssuesCreateFieldInput>>;
   ModOfChannels?: InputMaybe<Array<UserModOfChannelsCreateFieldInput>>;
   ModerationProfile?: InputMaybe<UserModerationProfileCreateFieldInput>;
+  Notifications?: InputMaybe<Array<UserNotificationsCreateFieldInput>>;
+  PendingModInvites?: InputMaybe<Array<UserPendingModInvitesCreateFieldInput>>;
+  PendingOwnerInvites?: InputMaybe<Array<UserPendingOwnerInvitesCreateFieldInput>>;
   RecentlyVisitedChannels?: InputMaybe<Array<UserRecentlyVisitedChannelsCreateFieldInput>>;
   ServerRoles?: InputMaybe<Array<UserServerRolesCreateFieldInput>>;
   UpvotedComments?: InputMaybe<Array<UserUpvotedCommentsCreateFieldInput>>;
@@ -25728,6 +27194,9 @@ export type UserUpdateInput = {
   ModOfChannels?: InputMaybe<Array<UserModOfChannelsUpdateFieldInput>>;
   ModerationProfile?: InputMaybe<UserModerationProfileUpdateFieldInput>;
   NotificationBundleInterval?: InputMaybe<Scalars['String']['input']>;
+  Notifications?: InputMaybe<Array<UserNotificationsUpdateFieldInput>>;
+  PendingModInvites?: InputMaybe<Array<UserPendingModInvitesUpdateFieldInput>>;
+  PendingOwnerInvites?: InputMaybe<Array<UserPendingOwnerInvitesUpdateFieldInput>>;
   PreferredTimeZone?: InputMaybe<Scalars['String']['input']>;
   RecentlyVisitedChannels?: InputMaybe<Array<UserRecentlyVisitedChannelsUpdateFieldInput>>;
   ServerRoles?: InputMaybe<Array<UserServerRolesUpdateFieldInput>>;
@@ -26299,7 +27768,58 @@ export type UserWhere = {
   NotificationBundleInterval_IN?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   NotificationBundleInterval_MATCHES?: InputMaybe<Scalars['String']['input']>;
   NotificationBundleInterval_STARTS_WITH?: InputMaybe<Scalars['String']['input']>;
+  NotificationsAggregate?: InputMaybe<UserNotificationsAggregateInput>;
+  /** Return Users where all of the related UserNotificationsConnections match this filter */
+  NotificationsConnection_ALL?: InputMaybe<UserNotificationsConnectionWhere>;
+  /** Return Users where none of the related UserNotificationsConnections match this filter */
+  NotificationsConnection_NONE?: InputMaybe<UserNotificationsConnectionWhere>;
+  /** Return Users where one of the related UserNotificationsConnections match this filter */
+  NotificationsConnection_SINGLE?: InputMaybe<UserNotificationsConnectionWhere>;
+  /** Return Users where some of the related UserNotificationsConnections match this filter */
+  NotificationsConnection_SOME?: InputMaybe<UserNotificationsConnectionWhere>;
+  /** Return Users where all of the related Notifications match this filter */
+  Notifications_ALL?: InputMaybe<NotificationWhere>;
+  /** Return Users where none of the related Notifications match this filter */
+  Notifications_NONE?: InputMaybe<NotificationWhere>;
+  /** Return Users where one of the related Notifications match this filter */
+  Notifications_SINGLE?: InputMaybe<NotificationWhere>;
+  /** Return Users where some of the related Notifications match this filter */
+  Notifications_SOME?: InputMaybe<NotificationWhere>;
   OR?: InputMaybe<Array<UserWhere>>;
+  PendingModInvitesAggregate?: InputMaybe<UserPendingModInvitesAggregateInput>;
+  /** Return Users where all of the related UserPendingModInvitesConnections match this filter */
+  PendingModInvitesConnection_ALL?: InputMaybe<UserPendingModInvitesConnectionWhere>;
+  /** Return Users where none of the related UserPendingModInvitesConnections match this filter */
+  PendingModInvitesConnection_NONE?: InputMaybe<UserPendingModInvitesConnectionWhere>;
+  /** Return Users where one of the related UserPendingModInvitesConnections match this filter */
+  PendingModInvitesConnection_SINGLE?: InputMaybe<UserPendingModInvitesConnectionWhere>;
+  /** Return Users where some of the related UserPendingModInvitesConnections match this filter */
+  PendingModInvitesConnection_SOME?: InputMaybe<UserPendingModInvitesConnectionWhere>;
+  /** Return Users where all of the related Channels match this filter */
+  PendingModInvites_ALL?: InputMaybe<ChannelWhere>;
+  /** Return Users where none of the related Channels match this filter */
+  PendingModInvites_NONE?: InputMaybe<ChannelWhere>;
+  /** Return Users where one of the related Channels match this filter */
+  PendingModInvites_SINGLE?: InputMaybe<ChannelWhere>;
+  /** Return Users where some of the related Channels match this filter */
+  PendingModInvites_SOME?: InputMaybe<ChannelWhere>;
+  PendingOwnerInvitesAggregate?: InputMaybe<UserPendingOwnerInvitesAggregateInput>;
+  /** Return Users where all of the related UserPendingOwnerInvitesConnections match this filter */
+  PendingOwnerInvitesConnection_ALL?: InputMaybe<UserPendingOwnerInvitesConnectionWhere>;
+  /** Return Users where none of the related UserPendingOwnerInvitesConnections match this filter */
+  PendingOwnerInvitesConnection_NONE?: InputMaybe<UserPendingOwnerInvitesConnectionWhere>;
+  /** Return Users where one of the related UserPendingOwnerInvitesConnections match this filter */
+  PendingOwnerInvitesConnection_SINGLE?: InputMaybe<UserPendingOwnerInvitesConnectionWhere>;
+  /** Return Users where some of the related UserPendingOwnerInvitesConnections match this filter */
+  PendingOwnerInvitesConnection_SOME?: InputMaybe<UserPendingOwnerInvitesConnectionWhere>;
+  /** Return Users where all of the related Channels match this filter */
+  PendingOwnerInvites_ALL?: InputMaybe<ChannelWhere>;
+  /** Return Users where none of the related Channels match this filter */
+  PendingOwnerInvites_NONE?: InputMaybe<ChannelWhere>;
+  /** Return Users where one of the related Channels match this filter */
+  PendingOwnerInvites_SINGLE?: InputMaybe<ChannelWhere>;
+  /** Return Users where some of the related Channels match this filter */
+  PendingOwnerInvites_SOME?: InputMaybe<ChannelWhere>;
   PreferredTimeZone?: InputMaybe<Scalars['String']['input']>;
   PreferredTimeZone_CONTAINS?: InputMaybe<Scalars['String']['input']>;
   PreferredTimeZone_ENDS_WITH?: InputMaybe<Scalars['String']['input']>;
@@ -26701,6 +28221,36 @@ export type ResolversTypes = {
   ChannelModeratorsUpdateFieldInput: ChannelModeratorsUpdateFieldInput;
   ChannelOnCreateInput: ChannelOnCreateInput;
   ChannelOptions: ChannelOptions;
+  ChannelPendingModInvitesAggregateInput: ChannelPendingModInvitesAggregateInput;
+  ChannelPendingModInvitesConnectFieldInput: ChannelPendingModInvitesConnectFieldInput;
+  ChannelPendingModInvitesConnectOrCreateFieldInput: ChannelPendingModInvitesConnectOrCreateFieldInput;
+  ChannelPendingModInvitesConnectOrCreateFieldInputOnCreate: ChannelPendingModInvitesConnectOrCreateFieldInputOnCreate;
+  ChannelPendingModInvitesConnection: ResolverTypeWrapper<ChannelPendingModInvitesConnection>;
+  ChannelPendingModInvitesConnectionSort: ChannelPendingModInvitesConnectionSort;
+  ChannelPendingModInvitesConnectionWhere: ChannelPendingModInvitesConnectionWhere;
+  ChannelPendingModInvitesCreateFieldInput: ChannelPendingModInvitesCreateFieldInput;
+  ChannelPendingModInvitesDeleteFieldInput: ChannelPendingModInvitesDeleteFieldInput;
+  ChannelPendingModInvitesDisconnectFieldInput: ChannelPendingModInvitesDisconnectFieldInput;
+  ChannelPendingModInvitesFieldInput: ChannelPendingModInvitesFieldInput;
+  ChannelPendingModInvitesNodeAggregationWhereInput: ChannelPendingModInvitesNodeAggregationWhereInput;
+  ChannelPendingModInvitesRelationship: ResolverTypeWrapper<ChannelPendingModInvitesRelationship>;
+  ChannelPendingModInvitesUpdateConnectionInput: ChannelPendingModInvitesUpdateConnectionInput;
+  ChannelPendingModInvitesUpdateFieldInput: ChannelPendingModInvitesUpdateFieldInput;
+  ChannelPendingOwnerInvitesAggregateInput: ChannelPendingOwnerInvitesAggregateInput;
+  ChannelPendingOwnerInvitesConnectFieldInput: ChannelPendingOwnerInvitesConnectFieldInput;
+  ChannelPendingOwnerInvitesConnectOrCreateFieldInput: ChannelPendingOwnerInvitesConnectOrCreateFieldInput;
+  ChannelPendingOwnerInvitesConnectOrCreateFieldInputOnCreate: ChannelPendingOwnerInvitesConnectOrCreateFieldInputOnCreate;
+  ChannelPendingOwnerInvitesConnection: ResolverTypeWrapper<ChannelPendingOwnerInvitesConnection>;
+  ChannelPendingOwnerInvitesConnectionSort: ChannelPendingOwnerInvitesConnectionSort;
+  ChannelPendingOwnerInvitesConnectionWhere: ChannelPendingOwnerInvitesConnectionWhere;
+  ChannelPendingOwnerInvitesCreateFieldInput: ChannelPendingOwnerInvitesCreateFieldInput;
+  ChannelPendingOwnerInvitesDeleteFieldInput: ChannelPendingOwnerInvitesDeleteFieldInput;
+  ChannelPendingOwnerInvitesDisconnectFieldInput: ChannelPendingOwnerInvitesDisconnectFieldInput;
+  ChannelPendingOwnerInvitesFieldInput: ChannelPendingOwnerInvitesFieldInput;
+  ChannelPendingOwnerInvitesNodeAggregationWhereInput: ChannelPendingOwnerInvitesNodeAggregationWhereInput;
+  ChannelPendingOwnerInvitesRelationship: ResolverTypeWrapper<ChannelPendingOwnerInvitesRelationship>;
+  ChannelPendingOwnerInvitesUpdateConnectionInput: ChannelPendingOwnerInvitesUpdateConnectionInput;
+  ChannelPendingOwnerInvitesUpdateFieldInput: ChannelPendingOwnerInvitesUpdateFieldInput;
   ChannelRelatedChannelsAggregateInput: ChannelRelatedChannelsAggregateInput;
   ChannelRelatedChannelsConnectFieldInput: ChannelRelatedChannelsConnectFieldInput;
   ChannelRelatedChannelsConnectOrCreateFieldInput: ChannelRelatedChannelsConnectOrCreateFieldInput;
@@ -26752,6 +28302,10 @@ export type ResolversTypes = {
   ChannelUpdateInput: ChannelUpdateInput;
   ChannelUserAdminsAggregationSelection: ResolverTypeWrapper<ChannelUserAdminsAggregationSelection>;
   ChannelUserAdminsNodeAggregateSelection: ResolverTypeWrapper<ChannelUserAdminsNodeAggregateSelection>;
+  ChannelUserPendingModInvitesAggregationSelection: ResolverTypeWrapper<ChannelUserPendingModInvitesAggregationSelection>;
+  ChannelUserPendingModInvitesNodeAggregateSelection: ResolverTypeWrapper<ChannelUserPendingModInvitesNodeAggregateSelection>;
+  ChannelUserPendingOwnerInvitesAggregationSelection: ResolverTypeWrapper<ChannelUserPendingOwnerInvitesAggregationSelection>;
+  ChannelUserPendingOwnerInvitesNodeAggregateSelection: ResolverTypeWrapper<ChannelUserPendingOwnerInvitesNodeAggregateSelection>;
   ChannelWhere: ChannelWhere;
   ChannelsConnection: ResolverTypeWrapper<ChannelsConnection>;
   Comment: ResolverTypeWrapper<Omit<Comment, 'CommentAuthor'> & { CommentAuthor?: Maybe<ResolversTypes['CommentAuthor']> }>;
@@ -27045,6 +28599,7 @@ export type ResolversTypes = {
   CreateModServerRolesMutationResponse: ResolverTypeWrapper<CreateModServerRolesMutationResponse>;
   CreateModerationActionsMutationResponse: ResolverTypeWrapper<CreateModerationActionsMutationResponse>;
   CreateModerationProfilesMutationResponse: ResolverTypeWrapper<CreateModerationProfilesMutationResponse>;
+  CreateNotificationsMutationResponse: ResolverTypeWrapper<CreateNotificationsMutationResponse>;
   CreateRecurringEventsMutationResponse: ResolverTypeWrapper<CreateRecurringEventsMutationResponse>;
   CreateRepeatEndsMutationResponse: ResolverTypeWrapper<CreateRepeatEndsMutationResponse>;
   CreateRepeatEveriesMutationResponse: ResolverTypeWrapper<CreateRepeatEveriesMutationResponse>;
@@ -27910,6 +29465,16 @@ export type ResolversTypes = {
   ModerationProfilesConnection: ResolverTypeWrapper<ModerationProfilesConnection>;
   Mutation: ResolverTypeWrapper<{}>;
   NewUserInput: NewUserInput;
+  Notification: ResolverTypeWrapper<Notification>;
+  NotificationAggregateSelection: ResolverTypeWrapper<NotificationAggregateSelection>;
+  NotificationConnectWhere: NotificationConnectWhere;
+  NotificationCreateInput: NotificationCreateInput;
+  NotificationEdge: ResolverTypeWrapper<NotificationEdge>;
+  NotificationOptions: NotificationOptions;
+  NotificationSort: NotificationSort;
+  NotificationUpdateInput: NotificationUpdateInput;
+  NotificationWhere: NotificationWhere;
+  NotificationsConnection: ResolverTypeWrapper<NotificationsConnection>;
   PageInfo: ResolverTypeWrapper<PageInfo>;
   Point: ResolverTypeWrapper<Point>;
   PointDistance: PointDistance;
@@ -28220,6 +29785,7 @@ export type ResolversTypes = {
   UpdateModServerRolesMutationResponse: ResolverTypeWrapper<UpdateModServerRolesMutationResponse>;
   UpdateModerationActionsMutationResponse: ResolverTypeWrapper<UpdateModerationActionsMutationResponse>;
   UpdateModerationProfilesMutationResponse: ResolverTypeWrapper<UpdateModerationProfilesMutationResponse>;
+  UpdateNotificationsMutationResponse: ResolverTypeWrapper<UpdateNotificationsMutationResponse>;
   UpdateRecurringEventsMutationResponse: ResolverTypeWrapper<UpdateRecurringEventsMutationResponse>;
   UpdateRepeatEndsMutationResponse: ResolverTypeWrapper<UpdateRepeatEndsMutationResponse>;
   UpdateRepeatEveriesMutationResponse: ResolverTypeWrapper<UpdateRepeatEveriesMutationResponse>;
@@ -28284,6 +29850,10 @@ export type ResolversTypes = {
   UserChannelFavoriteChannelsNodeAggregateSelection: ResolverTypeWrapper<UserChannelFavoriteChannelsNodeAggregateSelection>;
   UserChannelModOfChannelsAggregationSelection: ResolverTypeWrapper<UserChannelModOfChannelsAggregationSelection>;
   UserChannelModOfChannelsNodeAggregateSelection: ResolverTypeWrapper<UserChannelModOfChannelsNodeAggregateSelection>;
+  UserChannelPendingModInvitesAggregationSelection: ResolverTypeWrapper<UserChannelPendingModInvitesAggregationSelection>;
+  UserChannelPendingModInvitesNodeAggregateSelection: ResolverTypeWrapper<UserChannelPendingModInvitesNodeAggregateSelection>;
+  UserChannelPendingOwnerInvitesAggregationSelection: ResolverTypeWrapper<UserChannelPendingOwnerInvitesAggregationSelection>;
+  UserChannelPendingOwnerInvitesNodeAggregateSelection: ResolverTypeWrapper<UserChannelPendingOwnerInvitesNodeAggregateSelection>;
   UserChannelRecentlyVisitedChannelsAggregationSelection: ResolverTypeWrapper<UserChannelRecentlyVisitedChannelsAggregationSelection>;
   UserChannelRecentlyVisitedChannelsNodeAggregateSelection: ResolverTypeWrapper<UserChannelRecentlyVisitedChannelsNodeAggregateSelection>;
   UserChannelRoleChannelRolesAggregationSelection: ResolverTypeWrapper<UserChannelRoleChannelRolesAggregationSelection>;
@@ -28514,8 +30084,53 @@ export type ResolversTypes = {
   UserModerationProfileRelationship: ResolverTypeWrapper<UserModerationProfileRelationship>;
   UserModerationProfileUpdateConnectionInput: UserModerationProfileUpdateConnectionInput;
   UserModerationProfileUpdateFieldInput: UserModerationProfileUpdateFieldInput;
+  UserNotificationNotificationsAggregationSelection: ResolverTypeWrapper<UserNotificationNotificationsAggregationSelection>;
+  UserNotificationNotificationsNodeAggregateSelection: ResolverTypeWrapper<UserNotificationNotificationsNodeAggregateSelection>;
+  UserNotificationsAggregateInput: UserNotificationsAggregateInput;
+  UserNotificationsConnectFieldInput: UserNotificationsConnectFieldInput;
+  UserNotificationsConnection: ResolverTypeWrapper<UserNotificationsConnection>;
+  UserNotificationsConnectionSort: UserNotificationsConnectionSort;
+  UserNotificationsConnectionWhere: UserNotificationsConnectionWhere;
+  UserNotificationsCreateFieldInput: UserNotificationsCreateFieldInput;
+  UserNotificationsDeleteFieldInput: UserNotificationsDeleteFieldInput;
+  UserNotificationsDisconnectFieldInput: UserNotificationsDisconnectFieldInput;
+  UserNotificationsFieldInput: UserNotificationsFieldInput;
+  UserNotificationsNodeAggregationWhereInput: UserNotificationsNodeAggregationWhereInput;
+  UserNotificationsRelationship: ResolverTypeWrapper<UserNotificationsRelationship>;
+  UserNotificationsUpdateConnectionInput: UserNotificationsUpdateConnectionInput;
+  UserNotificationsUpdateFieldInput: UserNotificationsUpdateFieldInput;
   UserOnCreateInput: UserOnCreateInput;
   UserOptions: UserOptions;
+  UserPendingModInvitesAggregateInput: UserPendingModInvitesAggregateInput;
+  UserPendingModInvitesConnectFieldInput: UserPendingModInvitesConnectFieldInput;
+  UserPendingModInvitesConnectOrCreateFieldInput: UserPendingModInvitesConnectOrCreateFieldInput;
+  UserPendingModInvitesConnectOrCreateFieldInputOnCreate: UserPendingModInvitesConnectOrCreateFieldInputOnCreate;
+  UserPendingModInvitesConnection: ResolverTypeWrapper<UserPendingModInvitesConnection>;
+  UserPendingModInvitesConnectionSort: UserPendingModInvitesConnectionSort;
+  UserPendingModInvitesConnectionWhere: UserPendingModInvitesConnectionWhere;
+  UserPendingModInvitesCreateFieldInput: UserPendingModInvitesCreateFieldInput;
+  UserPendingModInvitesDeleteFieldInput: UserPendingModInvitesDeleteFieldInput;
+  UserPendingModInvitesDisconnectFieldInput: UserPendingModInvitesDisconnectFieldInput;
+  UserPendingModInvitesFieldInput: UserPendingModInvitesFieldInput;
+  UserPendingModInvitesNodeAggregationWhereInput: UserPendingModInvitesNodeAggregationWhereInput;
+  UserPendingModInvitesRelationship: ResolverTypeWrapper<UserPendingModInvitesRelationship>;
+  UserPendingModInvitesUpdateConnectionInput: UserPendingModInvitesUpdateConnectionInput;
+  UserPendingModInvitesUpdateFieldInput: UserPendingModInvitesUpdateFieldInput;
+  UserPendingOwnerInvitesAggregateInput: UserPendingOwnerInvitesAggregateInput;
+  UserPendingOwnerInvitesConnectFieldInput: UserPendingOwnerInvitesConnectFieldInput;
+  UserPendingOwnerInvitesConnectOrCreateFieldInput: UserPendingOwnerInvitesConnectOrCreateFieldInput;
+  UserPendingOwnerInvitesConnectOrCreateFieldInputOnCreate: UserPendingOwnerInvitesConnectOrCreateFieldInputOnCreate;
+  UserPendingOwnerInvitesConnection: ResolverTypeWrapper<UserPendingOwnerInvitesConnection>;
+  UserPendingOwnerInvitesConnectionSort: UserPendingOwnerInvitesConnectionSort;
+  UserPendingOwnerInvitesConnectionWhere: UserPendingOwnerInvitesConnectionWhere;
+  UserPendingOwnerInvitesCreateFieldInput: UserPendingOwnerInvitesCreateFieldInput;
+  UserPendingOwnerInvitesDeleteFieldInput: UserPendingOwnerInvitesDeleteFieldInput;
+  UserPendingOwnerInvitesDisconnectFieldInput: UserPendingOwnerInvitesDisconnectFieldInput;
+  UserPendingOwnerInvitesFieldInput: UserPendingOwnerInvitesFieldInput;
+  UserPendingOwnerInvitesNodeAggregationWhereInput: UserPendingOwnerInvitesNodeAggregationWhereInput;
+  UserPendingOwnerInvitesRelationship: ResolverTypeWrapper<UserPendingOwnerInvitesRelationship>;
+  UserPendingOwnerInvitesUpdateConnectionInput: UserPendingOwnerInvitesUpdateConnectionInput;
+  UserPendingOwnerInvitesUpdateFieldInput: UserPendingOwnerInvitesUpdateFieldInput;
   UserRecentlyVisitedChannelsAggregateInput: UserRecentlyVisitedChannelsAggregateInput;
   UserRecentlyVisitedChannelsConnectFieldInput: UserRecentlyVisitedChannelsConnectFieldInput;
   UserRecentlyVisitedChannelsConnectOrCreateFieldInput: UserRecentlyVisitedChannelsConnectOrCreateFieldInput;
@@ -28774,6 +30389,36 @@ export type ResolversParentTypes = {
   ChannelModeratorsUpdateFieldInput: ChannelModeratorsUpdateFieldInput;
   ChannelOnCreateInput: ChannelOnCreateInput;
   ChannelOptions: ChannelOptions;
+  ChannelPendingModInvitesAggregateInput: ChannelPendingModInvitesAggregateInput;
+  ChannelPendingModInvitesConnectFieldInput: ChannelPendingModInvitesConnectFieldInput;
+  ChannelPendingModInvitesConnectOrCreateFieldInput: ChannelPendingModInvitesConnectOrCreateFieldInput;
+  ChannelPendingModInvitesConnectOrCreateFieldInputOnCreate: ChannelPendingModInvitesConnectOrCreateFieldInputOnCreate;
+  ChannelPendingModInvitesConnection: ChannelPendingModInvitesConnection;
+  ChannelPendingModInvitesConnectionSort: ChannelPendingModInvitesConnectionSort;
+  ChannelPendingModInvitesConnectionWhere: ChannelPendingModInvitesConnectionWhere;
+  ChannelPendingModInvitesCreateFieldInput: ChannelPendingModInvitesCreateFieldInput;
+  ChannelPendingModInvitesDeleteFieldInput: ChannelPendingModInvitesDeleteFieldInput;
+  ChannelPendingModInvitesDisconnectFieldInput: ChannelPendingModInvitesDisconnectFieldInput;
+  ChannelPendingModInvitesFieldInput: ChannelPendingModInvitesFieldInput;
+  ChannelPendingModInvitesNodeAggregationWhereInput: ChannelPendingModInvitesNodeAggregationWhereInput;
+  ChannelPendingModInvitesRelationship: ChannelPendingModInvitesRelationship;
+  ChannelPendingModInvitesUpdateConnectionInput: ChannelPendingModInvitesUpdateConnectionInput;
+  ChannelPendingModInvitesUpdateFieldInput: ChannelPendingModInvitesUpdateFieldInput;
+  ChannelPendingOwnerInvitesAggregateInput: ChannelPendingOwnerInvitesAggregateInput;
+  ChannelPendingOwnerInvitesConnectFieldInput: ChannelPendingOwnerInvitesConnectFieldInput;
+  ChannelPendingOwnerInvitesConnectOrCreateFieldInput: ChannelPendingOwnerInvitesConnectOrCreateFieldInput;
+  ChannelPendingOwnerInvitesConnectOrCreateFieldInputOnCreate: ChannelPendingOwnerInvitesConnectOrCreateFieldInputOnCreate;
+  ChannelPendingOwnerInvitesConnection: ChannelPendingOwnerInvitesConnection;
+  ChannelPendingOwnerInvitesConnectionSort: ChannelPendingOwnerInvitesConnectionSort;
+  ChannelPendingOwnerInvitesConnectionWhere: ChannelPendingOwnerInvitesConnectionWhere;
+  ChannelPendingOwnerInvitesCreateFieldInput: ChannelPendingOwnerInvitesCreateFieldInput;
+  ChannelPendingOwnerInvitesDeleteFieldInput: ChannelPendingOwnerInvitesDeleteFieldInput;
+  ChannelPendingOwnerInvitesDisconnectFieldInput: ChannelPendingOwnerInvitesDisconnectFieldInput;
+  ChannelPendingOwnerInvitesFieldInput: ChannelPendingOwnerInvitesFieldInput;
+  ChannelPendingOwnerInvitesNodeAggregationWhereInput: ChannelPendingOwnerInvitesNodeAggregationWhereInput;
+  ChannelPendingOwnerInvitesRelationship: ChannelPendingOwnerInvitesRelationship;
+  ChannelPendingOwnerInvitesUpdateConnectionInput: ChannelPendingOwnerInvitesUpdateConnectionInput;
+  ChannelPendingOwnerInvitesUpdateFieldInput: ChannelPendingOwnerInvitesUpdateFieldInput;
   ChannelRelatedChannelsAggregateInput: ChannelRelatedChannelsAggregateInput;
   ChannelRelatedChannelsConnectFieldInput: ChannelRelatedChannelsConnectFieldInput;
   ChannelRelatedChannelsConnectOrCreateFieldInput: ChannelRelatedChannelsConnectOrCreateFieldInput;
@@ -28825,6 +30470,10 @@ export type ResolversParentTypes = {
   ChannelUpdateInput: ChannelUpdateInput;
   ChannelUserAdminsAggregationSelection: ChannelUserAdminsAggregationSelection;
   ChannelUserAdminsNodeAggregateSelection: ChannelUserAdminsNodeAggregateSelection;
+  ChannelUserPendingModInvitesAggregationSelection: ChannelUserPendingModInvitesAggregationSelection;
+  ChannelUserPendingModInvitesNodeAggregateSelection: ChannelUserPendingModInvitesNodeAggregateSelection;
+  ChannelUserPendingOwnerInvitesAggregationSelection: ChannelUserPendingOwnerInvitesAggregationSelection;
+  ChannelUserPendingOwnerInvitesNodeAggregateSelection: ChannelUserPendingOwnerInvitesNodeAggregateSelection;
   ChannelWhere: ChannelWhere;
   ChannelsConnection: ChannelsConnection;
   Comment: Omit<Comment, 'CommentAuthor'> & { CommentAuthor?: Maybe<ResolversParentTypes['CommentAuthor']> };
@@ -29118,6 +30767,7 @@ export type ResolversParentTypes = {
   CreateModServerRolesMutationResponse: CreateModServerRolesMutationResponse;
   CreateModerationActionsMutationResponse: CreateModerationActionsMutationResponse;
   CreateModerationProfilesMutationResponse: CreateModerationProfilesMutationResponse;
+  CreateNotificationsMutationResponse: CreateNotificationsMutationResponse;
   CreateRecurringEventsMutationResponse: CreateRecurringEventsMutationResponse;
   CreateRepeatEndsMutationResponse: CreateRepeatEndsMutationResponse;
   CreateRepeatEveriesMutationResponse: CreateRepeatEveriesMutationResponse;
@@ -29983,6 +31633,16 @@ export type ResolversParentTypes = {
   ModerationProfilesConnection: ModerationProfilesConnection;
   Mutation: {};
   NewUserInput: NewUserInput;
+  Notification: Notification;
+  NotificationAggregateSelection: NotificationAggregateSelection;
+  NotificationConnectWhere: NotificationConnectWhere;
+  NotificationCreateInput: NotificationCreateInput;
+  NotificationEdge: NotificationEdge;
+  NotificationOptions: NotificationOptions;
+  NotificationSort: NotificationSort;
+  NotificationUpdateInput: NotificationUpdateInput;
+  NotificationWhere: NotificationWhere;
+  NotificationsConnection: NotificationsConnection;
   PageInfo: PageInfo;
   Point: Point;
   PointDistance: PointDistance;
@@ -30289,6 +31949,7 @@ export type ResolversParentTypes = {
   UpdateModServerRolesMutationResponse: UpdateModServerRolesMutationResponse;
   UpdateModerationActionsMutationResponse: UpdateModerationActionsMutationResponse;
   UpdateModerationProfilesMutationResponse: UpdateModerationProfilesMutationResponse;
+  UpdateNotificationsMutationResponse: UpdateNotificationsMutationResponse;
   UpdateRecurringEventsMutationResponse: UpdateRecurringEventsMutationResponse;
   UpdateRepeatEndsMutationResponse: UpdateRepeatEndsMutationResponse;
   UpdateRepeatEveriesMutationResponse: UpdateRepeatEveriesMutationResponse;
@@ -30353,6 +32014,10 @@ export type ResolversParentTypes = {
   UserChannelFavoriteChannelsNodeAggregateSelection: UserChannelFavoriteChannelsNodeAggregateSelection;
   UserChannelModOfChannelsAggregationSelection: UserChannelModOfChannelsAggregationSelection;
   UserChannelModOfChannelsNodeAggregateSelection: UserChannelModOfChannelsNodeAggregateSelection;
+  UserChannelPendingModInvitesAggregationSelection: UserChannelPendingModInvitesAggregationSelection;
+  UserChannelPendingModInvitesNodeAggregateSelection: UserChannelPendingModInvitesNodeAggregateSelection;
+  UserChannelPendingOwnerInvitesAggregationSelection: UserChannelPendingOwnerInvitesAggregationSelection;
+  UserChannelPendingOwnerInvitesNodeAggregateSelection: UserChannelPendingOwnerInvitesNodeAggregateSelection;
   UserChannelRecentlyVisitedChannelsAggregationSelection: UserChannelRecentlyVisitedChannelsAggregationSelection;
   UserChannelRecentlyVisitedChannelsNodeAggregateSelection: UserChannelRecentlyVisitedChannelsNodeAggregateSelection;
   UserChannelRoleChannelRolesAggregationSelection: UserChannelRoleChannelRolesAggregationSelection;
@@ -30583,8 +32248,53 @@ export type ResolversParentTypes = {
   UserModerationProfileRelationship: UserModerationProfileRelationship;
   UserModerationProfileUpdateConnectionInput: UserModerationProfileUpdateConnectionInput;
   UserModerationProfileUpdateFieldInput: UserModerationProfileUpdateFieldInput;
+  UserNotificationNotificationsAggregationSelection: UserNotificationNotificationsAggregationSelection;
+  UserNotificationNotificationsNodeAggregateSelection: UserNotificationNotificationsNodeAggregateSelection;
+  UserNotificationsAggregateInput: UserNotificationsAggregateInput;
+  UserNotificationsConnectFieldInput: UserNotificationsConnectFieldInput;
+  UserNotificationsConnection: UserNotificationsConnection;
+  UserNotificationsConnectionSort: UserNotificationsConnectionSort;
+  UserNotificationsConnectionWhere: UserNotificationsConnectionWhere;
+  UserNotificationsCreateFieldInput: UserNotificationsCreateFieldInput;
+  UserNotificationsDeleteFieldInput: UserNotificationsDeleteFieldInput;
+  UserNotificationsDisconnectFieldInput: UserNotificationsDisconnectFieldInput;
+  UserNotificationsFieldInput: UserNotificationsFieldInput;
+  UserNotificationsNodeAggregationWhereInput: UserNotificationsNodeAggregationWhereInput;
+  UserNotificationsRelationship: UserNotificationsRelationship;
+  UserNotificationsUpdateConnectionInput: UserNotificationsUpdateConnectionInput;
+  UserNotificationsUpdateFieldInput: UserNotificationsUpdateFieldInput;
   UserOnCreateInput: UserOnCreateInput;
   UserOptions: UserOptions;
+  UserPendingModInvitesAggregateInput: UserPendingModInvitesAggregateInput;
+  UserPendingModInvitesConnectFieldInput: UserPendingModInvitesConnectFieldInput;
+  UserPendingModInvitesConnectOrCreateFieldInput: UserPendingModInvitesConnectOrCreateFieldInput;
+  UserPendingModInvitesConnectOrCreateFieldInputOnCreate: UserPendingModInvitesConnectOrCreateFieldInputOnCreate;
+  UserPendingModInvitesConnection: UserPendingModInvitesConnection;
+  UserPendingModInvitesConnectionSort: UserPendingModInvitesConnectionSort;
+  UserPendingModInvitesConnectionWhere: UserPendingModInvitesConnectionWhere;
+  UserPendingModInvitesCreateFieldInput: UserPendingModInvitesCreateFieldInput;
+  UserPendingModInvitesDeleteFieldInput: UserPendingModInvitesDeleteFieldInput;
+  UserPendingModInvitesDisconnectFieldInput: UserPendingModInvitesDisconnectFieldInput;
+  UserPendingModInvitesFieldInput: UserPendingModInvitesFieldInput;
+  UserPendingModInvitesNodeAggregationWhereInput: UserPendingModInvitesNodeAggregationWhereInput;
+  UserPendingModInvitesRelationship: UserPendingModInvitesRelationship;
+  UserPendingModInvitesUpdateConnectionInput: UserPendingModInvitesUpdateConnectionInput;
+  UserPendingModInvitesUpdateFieldInput: UserPendingModInvitesUpdateFieldInput;
+  UserPendingOwnerInvitesAggregateInput: UserPendingOwnerInvitesAggregateInput;
+  UserPendingOwnerInvitesConnectFieldInput: UserPendingOwnerInvitesConnectFieldInput;
+  UserPendingOwnerInvitesConnectOrCreateFieldInput: UserPendingOwnerInvitesConnectOrCreateFieldInput;
+  UserPendingOwnerInvitesConnectOrCreateFieldInputOnCreate: UserPendingOwnerInvitesConnectOrCreateFieldInputOnCreate;
+  UserPendingOwnerInvitesConnection: UserPendingOwnerInvitesConnection;
+  UserPendingOwnerInvitesConnectionSort: UserPendingOwnerInvitesConnectionSort;
+  UserPendingOwnerInvitesConnectionWhere: UserPendingOwnerInvitesConnectionWhere;
+  UserPendingOwnerInvitesCreateFieldInput: UserPendingOwnerInvitesCreateFieldInput;
+  UserPendingOwnerInvitesDeleteFieldInput: UserPendingOwnerInvitesDeleteFieldInput;
+  UserPendingOwnerInvitesDisconnectFieldInput: UserPendingOwnerInvitesDisconnectFieldInput;
+  UserPendingOwnerInvitesFieldInput: UserPendingOwnerInvitesFieldInput;
+  UserPendingOwnerInvitesNodeAggregationWhereInput: UserPendingOwnerInvitesNodeAggregationWhereInput;
+  UserPendingOwnerInvitesRelationship: UserPendingOwnerInvitesRelationship;
+  UserPendingOwnerInvitesUpdateConnectionInput: UserPendingOwnerInvitesUpdateConnectionInput;
+  UserPendingOwnerInvitesUpdateFieldInput: UserPendingOwnerInvitesUpdateFieldInput;
   UserRecentlyVisitedChannelsAggregateInput: UserRecentlyVisitedChannelsAggregateInput;
   UserRecentlyVisitedChannelsConnectFieldInput: UserRecentlyVisitedChannelsConnectFieldInput;
   UserRecentlyVisitedChannelsConnectOrCreateFieldInput: UserRecentlyVisitedChannelsConnectOrCreateFieldInput;
@@ -30801,6 +32511,12 @@ export type ChannelResolvers<ContextType = any, ParentType extends ResolversPare
   Moderators?: Resolver<Array<ResolversTypes['ModerationProfile']>, ParentType, ContextType, RequireFields<ChannelModeratorsArgs, 'directed'>>;
   ModeratorsAggregate?: Resolver<Maybe<ResolversTypes['ChannelModerationProfileModeratorsAggregationSelection']>, ParentType, ContextType, RequireFields<ChannelModeratorsAggregateArgs, 'directed'>>;
   ModeratorsConnection?: Resolver<ResolversTypes['ChannelModeratorsConnection'], ParentType, ContextType, RequireFields<ChannelModeratorsConnectionArgs, 'directed'>>;
+  PendingModInvites?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, RequireFields<ChannelPendingModInvitesArgs, 'directed'>>;
+  PendingModInvitesAggregate?: Resolver<Maybe<ResolversTypes['ChannelUserPendingModInvitesAggregationSelection']>, ParentType, ContextType, RequireFields<ChannelPendingModInvitesAggregateArgs, 'directed'>>;
+  PendingModInvitesConnection?: Resolver<ResolversTypes['ChannelPendingModInvitesConnection'], ParentType, ContextType, RequireFields<ChannelPendingModInvitesConnectionArgs, 'directed'>>;
+  PendingOwnerInvites?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, RequireFields<ChannelPendingOwnerInvitesArgs, 'directed'>>;
+  PendingOwnerInvitesAggregate?: Resolver<Maybe<ResolversTypes['ChannelUserPendingOwnerInvitesAggregationSelection']>, ParentType, ContextType, RequireFields<ChannelPendingOwnerInvitesAggregateArgs, 'directed'>>;
+  PendingOwnerInvitesConnection?: Resolver<ResolversTypes['ChannelPendingOwnerInvitesConnection'], ParentType, ContextType, RequireFields<ChannelPendingOwnerInvitesConnectionArgs, 'directed'>>;
   RelatedChannels?: Resolver<Array<ResolversTypes['Channel']>, ParentType, ContextType, RequireFields<ChannelRelatedChannelsArgs, 'directed'>>;
   RelatedChannelsAggregate?: Resolver<Maybe<ResolversTypes['ChannelChannelRelatedChannelsAggregationSelection']>, ParentType, ContextType, RequireFields<ChannelRelatedChannelsAggregateArgs, 'directed'>>;
   RelatedChannelsConnection?: Resolver<ResolversTypes['ChannelRelatedChannelsConnection'], ParentType, ContextType, RequireFields<ChannelRelatedChannelsConnectionArgs, 'directed'>>;
@@ -31032,6 +32748,32 @@ export type ChannelModeratorsRelationshipResolvers<ContextType = any, ParentType
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type ChannelPendingModInvitesConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ChannelPendingModInvitesConnection'] = ResolversParentTypes['ChannelPendingModInvitesConnection']> = {
+  edges?: Resolver<Array<ResolversTypes['ChannelPendingModInvitesRelationship']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ChannelPendingModInvitesRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['ChannelPendingModInvitesRelationship'] = ResolversParentTypes['ChannelPendingModInvitesRelationship']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ChannelPendingOwnerInvitesConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ChannelPendingOwnerInvitesConnection'] = ResolversParentTypes['ChannelPendingOwnerInvitesConnection']> = {
+  edges?: Resolver<Array<ResolversTypes['ChannelPendingOwnerInvitesRelationship']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ChannelPendingOwnerInvitesRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['ChannelPendingOwnerInvitesRelationship'] = ResolversParentTypes['ChannelPendingOwnerInvitesRelationship']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type ChannelRelatedChannelsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ChannelRelatedChannelsConnection'] = ResolversParentTypes['ChannelRelatedChannelsConnection']> = {
   edges?: Resolver<Array<ResolversTypes['ChannelRelatedChannelsRelationship']>, ParentType, ContextType>;
   pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
@@ -31112,6 +32854,50 @@ export type ChannelUserAdminsAggregationSelectionResolvers<ContextType = any, Pa
 };
 
 export type ChannelUserAdminsNodeAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ChannelUserAdminsNodeAggregateSelection'] = ResolversParentTypes['ChannelUserAdminsNodeAggregateSelection']> = {
+  DefaultEmojiSkinTone?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  NotificationBundleInterval?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  PreferredTimeZone?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  bio?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  commentKarma?: Resolver<ResolversTypes['IntAggregateSelection'], ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['DateTimeAggregateSelection'], ParentType, ContextType>;
+  discussionKarma?: Resolver<ResolversTypes['IntAggregateSelection'], ParentType, ContextType>;
+  displayName?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  location?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  profilePicURL?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  pronouns?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  username?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ChannelUserPendingModInvitesAggregationSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ChannelUserPendingModInvitesAggregationSelection'] = ResolversParentTypes['ChannelUserPendingModInvitesAggregationSelection']> = {
+  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['ChannelUserPendingModInvitesNodeAggregateSelection']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ChannelUserPendingModInvitesNodeAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ChannelUserPendingModInvitesNodeAggregateSelection'] = ResolversParentTypes['ChannelUserPendingModInvitesNodeAggregateSelection']> = {
+  DefaultEmojiSkinTone?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  NotificationBundleInterval?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  PreferredTimeZone?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  bio?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  commentKarma?: Resolver<ResolversTypes['IntAggregateSelection'], ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['DateTimeAggregateSelection'], ParentType, ContextType>;
+  discussionKarma?: Resolver<ResolversTypes['IntAggregateSelection'], ParentType, ContextType>;
+  displayName?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  location?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  profilePicURL?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  pronouns?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  username?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ChannelUserPendingOwnerInvitesAggregationSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ChannelUserPendingOwnerInvitesAggregationSelection'] = ResolversParentTypes['ChannelUserPendingOwnerInvitesAggregationSelection']> = {
+  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['ChannelUserPendingOwnerInvitesNodeAggregateSelection']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ChannelUserPendingOwnerInvitesNodeAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ChannelUserPendingOwnerInvitesNodeAggregateSelection'] = ResolversParentTypes['ChannelUserPendingOwnerInvitesNodeAggregateSelection']> = {
   DefaultEmojiSkinTone?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
   NotificationBundleInterval?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
   PreferredTimeZone?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
@@ -31823,6 +33609,12 @@ export type CreateModerationActionsMutationResponseResolvers<ContextType = any, 
 export type CreateModerationProfilesMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateModerationProfilesMutationResponse'] = ResolversParentTypes['CreateModerationProfilesMutationResponse']> = {
   info?: Resolver<ResolversTypes['CreateInfo'], ParentType, ContextType>;
   moderationProfiles?: Resolver<Array<ResolversTypes['ModerationProfile']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CreateNotificationsMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateNotificationsMutationResponse'] = ResolversParentTypes['CreateNotificationsMutationResponse']> = {
+  info?: Resolver<ResolversTypes['CreateInfo'], ParentType, ContextType>;
+  notifications?: Resolver<Array<ResolversTypes['Notification']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -33674,6 +35466,8 @@ export type ModerationProfilesConnectionResolvers<ContextType = any, ParentType 
 };
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
+  acceptForumModInvite?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationAcceptForumModInviteArgs, 'channelUniqueName'>>;
+  acceptForumOwnerInvite?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationAcceptForumOwnerInviteArgs, 'channelUniqueName'>>;
   addEmojiToComment?: Resolver<Maybe<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<MutationAddEmojiToCommentArgs, 'commentId' | 'emojiLabel' | 'unicode' | 'username'>>;
   addEmojiToDiscussionChannel?: Resolver<Maybe<ResolversTypes['DiscussionChannel']>, ParentType, ContextType, RequireFields<MutationAddEmojiToDiscussionChannelArgs, 'discussionChannelId' | 'emojiLabel' | 'unicode' | 'username'>>;
   createAlbums?: Resolver<ResolversTypes['CreateAlbumsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateAlbumsArgs, 'input'>>;
@@ -33704,6 +35498,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createModServerRoles?: Resolver<ResolversTypes['CreateModServerRolesMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateModServerRolesArgs, 'input'>>;
   createModerationActions?: Resolver<ResolversTypes['CreateModerationActionsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateModerationActionsArgs, 'input'>>;
   createModerationProfiles?: Resolver<ResolversTypes['CreateModerationProfilesMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateModerationProfilesArgs, 'input'>>;
+  createNotifications?: Resolver<ResolversTypes['CreateNotificationsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateNotificationsArgs, 'input'>>;
   createRecurringEvents?: Resolver<ResolversTypes['CreateRecurringEventsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateRecurringEventsArgs, 'input'>>;
   createRepeatEnds?: Resolver<ResolversTypes['CreateRepeatEndsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateRepeatEndsArgs, 'input'>>;
   createRepeatEveries?: Resolver<ResolversTypes['CreateRepeatEveriesMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateRepeatEveriesArgs, 'input'>>;
@@ -33741,6 +35536,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteModServerRoles?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteModServerRolesArgs>>;
   deleteModerationActions?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteModerationActionsArgs>>;
   deleteModerationProfiles?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteModerationProfilesArgs>>;
+  deleteNotifications?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteNotificationsArgs>>;
   deleteRecurringEvents?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteRecurringEventsArgs>>;
   deleteRepeatEnds?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteRepeatEndsArgs>>;
   deleteRepeatEveries?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteRepeatEveriesArgs>>;
@@ -33753,8 +35549,12 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteTags?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteTagsArgs>>;
   deleteUsers?: Resolver<ResolversTypes['DeleteInfo'], ParentType, ContextType, Partial<MutationDeleteUsersArgs>>;
   dropDataForCypressTests?: Resolver<Maybe<ResolversTypes['DropDataResponse']>, ParentType, ContextType>;
+  inviteForumMod?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationInviteForumModArgs, 'channelUniqueName' | 'inviteeUsername'>>;
+  inviteForumOwner?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationInviteForumOwnerArgs, 'channelUniqueName' | 'inviteeUsername'>>;
   removeEmojiFromComment?: Resolver<Maybe<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<MutationRemoveEmojiFromCommentArgs, 'commentId' | 'emojiLabel' | 'username'>>;
   removeEmojiFromDiscussionChannel?: Resolver<Maybe<ResolversTypes['DiscussionChannel']>, ParentType, ContextType, RequireFields<MutationRemoveEmojiFromDiscussionChannelArgs, 'discussionChannelId' | 'emojiLabel' | 'username'>>;
+  removeForumMod?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationRemoveForumModArgs, 'channelUniqueName' | 'username'>>;
+  removeForumOwner?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationRemoveForumOwnerArgs, 'channelUniqueName' | 'username'>>;
   seedDataForCypressTests?: Resolver<Maybe<ResolversTypes['SeedDataResponse']>, ParentType, ContextType, RequireFields<MutationSeedDataForCypressTestsArgs, 'channelRoles' | 'channels' | 'comments' | 'discussions' | 'events' | 'modChannelRoles' | 'modServerRoles' | 'serverConfigs' | 'serverRoles' | 'tags' | 'users'>>;
   undoUpvoteComment?: Resolver<Maybe<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<MutationUndoUpvoteCommentArgs, 'commentId' | 'username'>>;
   undoUpvoteDiscussionChannel?: Resolver<Maybe<ResolversTypes['DiscussionChannel']>, ParentType, ContextType, RequireFields<MutationUndoUpvoteDiscussionChannelArgs, 'discussionChannelId' | 'username'>>;
@@ -33785,6 +35585,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   updateModServerRoles?: Resolver<ResolversTypes['UpdateModServerRolesMutationResponse'], ParentType, ContextType, Partial<MutationUpdateModServerRolesArgs>>;
   updateModerationActions?: Resolver<ResolversTypes['UpdateModerationActionsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateModerationActionsArgs>>;
   updateModerationProfiles?: Resolver<ResolversTypes['UpdateModerationProfilesMutationResponse'], ParentType, ContextType, Partial<MutationUpdateModerationProfilesArgs>>;
+  updateNotifications?: Resolver<ResolversTypes['UpdateNotificationsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateNotificationsArgs>>;
   updateRecurringEvents?: Resolver<ResolversTypes['UpdateRecurringEventsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateRecurringEventsArgs>>;
   updateRepeatEnds?: Resolver<ResolversTypes['UpdateRepeatEndsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateRepeatEndsArgs>>;
   updateRepeatEveries?: Resolver<ResolversTypes['UpdateRepeatEveriesMutationResponse'], ParentType, ContextType, Partial<MutationUpdateRepeatEveriesArgs>>;
@@ -33798,6 +35599,35 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   updateUsers?: Resolver<ResolversTypes['UpdateUsersMutationResponse'], ParentType, ContextType, Partial<MutationUpdateUsersArgs>>;
   upvoteComment?: Resolver<Maybe<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<MutationUpvoteCommentArgs, 'commentId' | 'username'>>;
   upvoteDiscussionChannel?: Resolver<Maybe<ResolversTypes['DiscussionChannel']>, ParentType, ContextType, RequireFields<MutationUpvoteDiscussionChannelArgs, 'discussionChannelId' | 'username'>>;
+};
+
+export type NotificationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Notification'] = ResolversParentTypes['Notification']> = {
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  read?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  text?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type NotificationAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['NotificationAggregateSelection'] = ResolversParentTypes['NotificationAggregateSelection']> = {
+  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['DateTimeAggregateSelection'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['IDAggregateSelection'], ParentType, ContextType>;
+  text?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type NotificationEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['NotificationEdge'] = ResolversParentTypes['NotificationEdge']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['Notification'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type NotificationsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['NotificationsConnection'] = ResolversParentTypes['NotificationsConnection']> = {
+  edges?: Resolver<Array<ResolversTypes['NotificationEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type PageInfoResolvers<ContextType = any, ParentType extends ResolversParentTypes['PageInfo'] = ResolversParentTypes['PageInfo']> = {
@@ -33902,6 +35732,9 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   moderationProfiles?: Resolver<Array<ResolversTypes['ModerationProfile']>, ParentType, ContextType, Partial<QueryModerationProfilesArgs>>;
   moderationProfilesAggregate?: Resolver<ResolversTypes['ModerationProfileAggregateSelection'], ParentType, ContextType, Partial<QueryModerationProfilesAggregateArgs>>;
   moderationProfilesConnection?: Resolver<ResolversTypes['ModerationProfilesConnection'], ParentType, ContextType, Partial<QueryModerationProfilesConnectionArgs>>;
+  notifications?: Resolver<Array<ResolversTypes['Notification']>, ParentType, ContextType, Partial<QueryNotificationsArgs>>;
+  notificationsAggregate?: Resolver<ResolversTypes['NotificationAggregateSelection'], ParentType, ContextType, Partial<QueryNotificationsAggregateArgs>>;
+  notificationsConnection?: Resolver<ResolversTypes['NotificationsConnection'], ParentType, ContextType, Partial<QueryNotificationsConnectionArgs>>;
   recurringEvents?: Resolver<Array<ResolversTypes['RecurringEvent']>, ParentType, ContextType, Partial<QueryRecurringEventsArgs>>;
   recurringEventsAggregate?: Resolver<ResolversTypes['RecurringEventAggregateSelection'], ParentType, ContextType, Partial<QueryRecurringEventsAggregateArgs>>;
   recurringEventsConnection?: Resolver<ResolversTypes['RecurringEventsConnection'], ParentType, ContextType, Partial<QueryRecurringEventsConnectionArgs>>;
@@ -34685,6 +36518,12 @@ export type UpdateModerationProfilesMutationResponseResolvers<ContextType = any,
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type UpdateNotificationsMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateNotificationsMutationResponse'] = ResolversParentTypes['UpdateNotificationsMutationResponse']> = {
+  info?: Resolver<ResolversTypes['UpdateInfo'], ParentType, ContextType>;
+  notifications?: Resolver<Array<ResolversTypes['Notification']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type UpdateRecurringEventsMutationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateRecurringEventsMutationResponse'] = ResolversParentTypes['UpdateRecurringEventsMutationResponse']> = {
   info?: Resolver<ResolversTypes['UpdateInfo'], ParentType, ContextType>;
   recurringEvents?: Resolver<Array<ResolversTypes['RecurringEvent']>, ParentType, ContextType>;
@@ -34805,6 +36644,15 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   ModerationProfileAggregate?: Resolver<Maybe<ResolversTypes['UserModerationProfileModerationProfileAggregationSelection']>, ParentType, ContextType, RequireFields<UserModerationProfileAggregateArgs, 'directed'>>;
   ModerationProfileConnection?: Resolver<ResolversTypes['UserModerationProfileConnection'], ParentType, ContextType, RequireFields<UserModerationProfileConnectionArgs, 'directed'>>;
   NotificationBundleInterval?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  Notifications?: Resolver<Array<ResolversTypes['Notification']>, ParentType, ContextType, RequireFields<UserNotificationsArgs, 'directed'>>;
+  NotificationsAggregate?: Resolver<Maybe<ResolversTypes['UserNotificationNotificationsAggregationSelection']>, ParentType, ContextType, RequireFields<UserNotificationsAggregateArgs, 'directed'>>;
+  NotificationsConnection?: Resolver<ResolversTypes['UserNotificationsConnection'], ParentType, ContextType, RequireFields<UserNotificationsConnectionArgs, 'directed'>>;
+  PendingModInvites?: Resolver<Array<ResolversTypes['Channel']>, ParentType, ContextType, RequireFields<UserPendingModInvitesArgs, 'directed'>>;
+  PendingModInvitesAggregate?: Resolver<Maybe<ResolversTypes['UserChannelPendingModInvitesAggregationSelection']>, ParentType, ContextType, RequireFields<UserPendingModInvitesAggregateArgs, 'directed'>>;
+  PendingModInvitesConnection?: Resolver<ResolversTypes['UserPendingModInvitesConnection'], ParentType, ContextType, RequireFields<UserPendingModInvitesConnectionArgs, 'directed'>>;
+  PendingOwnerInvites?: Resolver<Array<ResolversTypes['Channel']>, ParentType, ContextType, RequireFields<UserPendingOwnerInvitesArgs, 'directed'>>;
+  PendingOwnerInvitesAggregate?: Resolver<Maybe<ResolversTypes['UserChannelPendingOwnerInvitesAggregationSelection']>, ParentType, ContextType, RequireFields<UserPendingOwnerInvitesAggregateArgs, 'directed'>>;
+  PendingOwnerInvitesConnection?: Resolver<ResolversTypes['UserPendingOwnerInvitesConnection'], ParentType, ContextType, RequireFields<UserPendingOwnerInvitesConnectionArgs, 'directed'>>;
   PreferredTimeZone?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   RecentlyVisitedChannels?: Resolver<Array<ResolversTypes['Channel']>, ParentType, ContextType, RequireFields<UserRecentlyVisitedChannelsArgs, 'directed'>>;
   RecentlyVisitedChannelsAggregate?: Resolver<Maybe<ResolversTypes['UserChannelRecentlyVisitedChannelsAggregationSelection']>, ParentType, ContextType, RequireFields<UserRecentlyVisitedChannelsAggregateArgs, 'directed'>>;
@@ -34937,6 +36785,38 @@ export type UserChannelModOfChannelsAggregationSelectionResolvers<ContextType = 
 };
 
 export type UserChannelModOfChannelsNodeAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserChannelModOfChannelsNodeAggregateSelection'] = ResolversParentTypes['UserChannelModOfChannelsNodeAggregateSelection']> = {
+  channelBannerURL?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  channelIconURL?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['DateTimeAggregateSelection'], ParentType, ContextType>;
+  description?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  displayName?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  uniqueName?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type UserChannelPendingModInvitesAggregationSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserChannelPendingModInvitesAggregationSelection'] = ResolversParentTypes['UserChannelPendingModInvitesAggregationSelection']> = {
+  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['UserChannelPendingModInvitesNodeAggregateSelection']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type UserChannelPendingModInvitesNodeAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserChannelPendingModInvitesNodeAggregateSelection'] = ResolversParentTypes['UserChannelPendingModInvitesNodeAggregateSelection']> = {
+  channelBannerURL?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  channelIconURL?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['DateTimeAggregateSelection'], ParentType, ContextType>;
+  description?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  displayName?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  uniqueName?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type UserChannelPendingOwnerInvitesAggregationSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserChannelPendingOwnerInvitesAggregationSelection'] = ResolversParentTypes['UserChannelPendingOwnerInvitesAggregationSelection']> = {
+  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['UserChannelPendingOwnerInvitesNodeAggregateSelection']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type UserChannelPendingOwnerInvitesNodeAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserChannelPendingOwnerInvitesNodeAggregateSelection'] = ResolversParentTypes['UserChannelPendingOwnerInvitesNodeAggregateSelection']> = {
   channelBannerURL?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
   channelIconURL?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['DateTimeAggregateSelection'], ParentType, ContextType>;
@@ -35345,6 +37225,58 @@ export type UserModerationProfileRelationshipResolvers<ContextType = any, Parent
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type UserNotificationNotificationsAggregationSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserNotificationNotificationsAggregationSelection'] = ResolversParentTypes['UserNotificationNotificationsAggregationSelection']> = {
+  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['UserNotificationNotificationsNodeAggregateSelection']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type UserNotificationNotificationsNodeAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserNotificationNotificationsNodeAggregateSelection'] = ResolversParentTypes['UserNotificationNotificationsNodeAggregateSelection']> = {
+  createdAt?: Resolver<ResolversTypes['DateTimeAggregateSelection'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['IDAggregateSelection'], ParentType, ContextType>;
+  text?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type UserNotificationsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserNotificationsConnection'] = ResolversParentTypes['UserNotificationsConnection']> = {
+  edges?: Resolver<Array<ResolversTypes['UserNotificationsRelationship']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type UserNotificationsRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserNotificationsRelationship'] = ResolversParentTypes['UserNotificationsRelationship']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['Notification'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type UserPendingModInvitesConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserPendingModInvitesConnection'] = ResolversParentTypes['UserPendingModInvitesConnection']> = {
+  edges?: Resolver<Array<ResolversTypes['UserPendingModInvitesRelationship']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type UserPendingModInvitesRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserPendingModInvitesRelationship'] = ResolversParentTypes['UserPendingModInvitesRelationship']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['Channel'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type UserPendingOwnerInvitesConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserPendingOwnerInvitesConnection'] = ResolversParentTypes['UserPendingOwnerInvitesConnection']> = {
+  edges?: Resolver<Array<ResolversTypes['UserPendingOwnerInvitesRelationship']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type UserPendingOwnerInvitesRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserPendingOwnerInvitesRelationship'] = ResolversParentTypes['UserPendingOwnerInvitesRelationship']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['Channel'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type UserRecentlyVisitedChannelsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserRecentlyVisitedChannelsConnection'] = ResolversParentTypes['UserRecentlyVisitedChannelsConnection']> = {
   edges?: Resolver<Array<ResolversTypes['UserRecentlyVisitedChannelsRelationship']>, ParentType, ContextType>;
   pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
@@ -35508,6 +37440,10 @@ export type Resolvers<ContextType = any> = {
   ChannelModerationProfileModeratorsNodeAggregateSelection?: ChannelModerationProfileModeratorsNodeAggregateSelectionResolvers<ContextType>;
   ChannelModeratorsConnection?: ChannelModeratorsConnectionResolvers<ContextType>;
   ChannelModeratorsRelationship?: ChannelModeratorsRelationshipResolvers<ContextType>;
+  ChannelPendingModInvitesConnection?: ChannelPendingModInvitesConnectionResolvers<ContextType>;
+  ChannelPendingModInvitesRelationship?: ChannelPendingModInvitesRelationshipResolvers<ContextType>;
+  ChannelPendingOwnerInvitesConnection?: ChannelPendingOwnerInvitesConnectionResolvers<ContextType>;
+  ChannelPendingOwnerInvitesRelationship?: ChannelPendingOwnerInvitesRelationshipResolvers<ContextType>;
   ChannelRelatedChannelsConnection?: ChannelRelatedChannelsConnectionResolvers<ContextType>;
   ChannelRelatedChannelsRelationship?: ChannelRelatedChannelsRelationshipResolvers<ContextType>;
   ChannelRole?: ChannelRoleResolvers<ContextType>;
@@ -35520,6 +37456,10 @@ export type Resolvers<ContextType = any> = {
   ChannelTagsRelationship?: ChannelTagsRelationshipResolvers<ContextType>;
   ChannelUserAdminsAggregationSelection?: ChannelUserAdminsAggregationSelectionResolvers<ContextType>;
   ChannelUserAdminsNodeAggregateSelection?: ChannelUserAdminsNodeAggregateSelectionResolvers<ContextType>;
+  ChannelUserPendingModInvitesAggregationSelection?: ChannelUserPendingModInvitesAggregationSelectionResolvers<ContextType>;
+  ChannelUserPendingModInvitesNodeAggregateSelection?: ChannelUserPendingModInvitesNodeAggregateSelectionResolvers<ContextType>;
+  ChannelUserPendingOwnerInvitesAggregationSelection?: ChannelUserPendingOwnerInvitesAggregationSelectionResolvers<ContextType>;
+  ChannelUserPendingOwnerInvitesNodeAggregateSelection?: ChannelUserPendingOwnerInvitesNodeAggregateSelectionResolvers<ContextType>;
   ChannelsConnection?: ChannelsConnectionResolvers<ContextType>;
   Comment?: CommentResolvers<ContextType>;
   CommentAggregateSelection?: CommentAggregateSelectionResolvers<ContextType>;
@@ -35614,6 +37554,7 @@ export type Resolvers<ContextType = any> = {
   CreateModServerRolesMutationResponse?: CreateModServerRolesMutationResponseResolvers<ContextType>;
   CreateModerationActionsMutationResponse?: CreateModerationActionsMutationResponseResolvers<ContextType>;
   CreateModerationProfilesMutationResponse?: CreateModerationProfilesMutationResponseResolvers<ContextType>;
+  CreateNotificationsMutationResponse?: CreateNotificationsMutationResponseResolvers<ContextType>;
   CreateRecurringEventsMutationResponse?: CreateRecurringEventsMutationResponseResolvers<ContextType>;
   CreateRepeatEndsMutationResponse?: CreateRepeatEndsMutationResponseResolvers<ContextType>;
   CreateRepeatEveriesMutationResponse?: CreateRepeatEveriesMutationResponseResolvers<ContextType>;
@@ -35853,6 +37794,10 @@ export type Resolvers<ContextType = any> = {
   ModerationProfileUserUserNodeAggregateSelection?: ModerationProfileUserUserNodeAggregateSelectionResolvers<ContextType>;
   ModerationProfilesConnection?: ModerationProfilesConnectionResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
+  Notification?: NotificationResolvers<ContextType>;
+  NotificationAggregateSelection?: NotificationAggregateSelectionResolvers<ContextType>;
+  NotificationEdge?: NotificationEdgeResolvers<ContextType>;
+  NotificationsConnection?: NotificationsConnectionResolvers<ContextType>;
   PageInfo?: PageInfoResolvers<ContextType>;
   Point?: PointResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
@@ -35963,6 +37908,7 @@ export type Resolvers<ContextType = any> = {
   UpdateModServerRolesMutationResponse?: UpdateModServerRolesMutationResponseResolvers<ContextType>;
   UpdateModerationActionsMutationResponse?: UpdateModerationActionsMutationResponseResolvers<ContextType>;
   UpdateModerationProfilesMutationResponse?: UpdateModerationProfilesMutationResponseResolvers<ContextType>;
+  UpdateNotificationsMutationResponse?: UpdateNotificationsMutationResponseResolvers<ContextType>;
   UpdateRecurringEventsMutationResponse?: UpdateRecurringEventsMutationResponseResolvers<ContextType>;
   UpdateRepeatEndsMutationResponse?: UpdateRepeatEndsMutationResponseResolvers<ContextType>;
   UpdateRepeatEveriesMutationResponse?: UpdateRepeatEveriesMutationResponseResolvers<ContextType>;
@@ -35990,6 +37936,10 @@ export type Resolvers<ContextType = any> = {
   UserChannelFavoriteChannelsNodeAggregateSelection?: UserChannelFavoriteChannelsNodeAggregateSelectionResolvers<ContextType>;
   UserChannelModOfChannelsAggregationSelection?: UserChannelModOfChannelsAggregationSelectionResolvers<ContextType>;
   UserChannelModOfChannelsNodeAggregateSelection?: UserChannelModOfChannelsNodeAggregateSelectionResolvers<ContextType>;
+  UserChannelPendingModInvitesAggregationSelection?: UserChannelPendingModInvitesAggregationSelectionResolvers<ContextType>;
+  UserChannelPendingModInvitesNodeAggregateSelection?: UserChannelPendingModInvitesNodeAggregateSelectionResolvers<ContextType>;
+  UserChannelPendingOwnerInvitesAggregationSelection?: UserChannelPendingOwnerInvitesAggregationSelectionResolvers<ContextType>;
+  UserChannelPendingOwnerInvitesNodeAggregateSelection?: UserChannelPendingOwnerInvitesNodeAggregateSelectionResolvers<ContextType>;
   UserChannelRecentlyVisitedChannelsAggregationSelection?: UserChannelRecentlyVisitedChannelsAggregationSelectionResolvers<ContextType>;
   UserChannelRecentlyVisitedChannelsNodeAggregateSelection?: UserChannelRecentlyVisitedChannelsNodeAggregateSelectionResolvers<ContextType>;
   UserChannelRoleChannelRolesAggregationSelection?: UserChannelRoleChannelRolesAggregationSelectionResolvers<ContextType>;
@@ -36047,6 +37997,14 @@ export type Resolvers<ContextType = any> = {
   UserModerationProfileModerationProfileAggregationSelection?: UserModerationProfileModerationProfileAggregationSelectionResolvers<ContextType>;
   UserModerationProfileModerationProfileNodeAggregateSelection?: UserModerationProfileModerationProfileNodeAggregateSelectionResolvers<ContextType>;
   UserModerationProfileRelationship?: UserModerationProfileRelationshipResolvers<ContextType>;
+  UserNotificationNotificationsAggregationSelection?: UserNotificationNotificationsAggregationSelectionResolvers<ContextType>;
+  UserNotificationNotificationsNodeAggregateSelection?: UserNotificationNotificationsNodeAggregateSelectionResolvers<ContextType>;
+  UserNotificationsConnection?: UserNotificationsConnectionResolvers<ContextType>;
+  UserNotificationsRelationship?: UserNotificationsRelationshipResolvers<ContextType>;
+  UserPendingModInvitesConnection?: UserPendingModInvitesConnectionResolvers<ContextType>;
+  UserPendingModInvitesRelationship?: UserPendingModInvitesRelationshipResolvers<ContextType>;
+  UserPendingOwnerInvitesConnection?: UserPendingOwnerInvitesConnectionResolvers<ContextType>;
+  UserPendingOwnerInvitesRelationship?: UserPendingOwnerInvitesRelationshipResolvers<ContextType>;
   UserRecentlyVisitedChannelsConnection?: UserRecentlyVisitedChannelsConnectionResolvers<ContextType>;
   UserRecentlyVisitedChannelsRelationship?: UserRecentlyVisitedChannelsRelationshipResolvers<ContextType>;
   UserServerRoleServerRolesAggregationSelection?: UserServerRoleServerRolesAggregationSelectionResolvers<ContextType>;
