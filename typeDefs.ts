@@ -28,6 +28,13 @@ const typeDefinitions = gql`
     Discussions: [Discussion!]! @relationship(type: "HAS_ALBUM", direction: IN)
   }
 
+  type Notification {
+    id: ID! @id
+    createdAt: DateTime! @timestamp(operations: [CREATE])
+    read: Boolean
+    text: String
+  }
+
   type User {
     Albums: [Album!]! @relationship(type: "HAS_ALBUM", direction: OUT)
     username: String! @unique
@@ -43,17 +50,17 @@ const typeDefinitions = gql`
       @relationship(type: "AUTHORED_COMMENT", direction: OUT)
     AdminOfChannels: [Channel!]!
       @relationship(type: "ADMIN_OF_CHANNEL", direction: OUT)
+    ModOfChannels: [Channel!]!
+      @relationship(type: "MODERATOR_OF_CHANNEL", direction: OUT)
     Discussions: [Discussion!]!
       @relationship(type: "POSTED_DISCUSSION", direction: OUT)
     Events: [Event!]! @relationship(type: "POSTED_BY", direction: OUT)
-    # SentMessages:            [Message!]           @relationship(type: "SENT_MESSAGE", direction: OUT)
-    # ReceivedMessages:        [Message!]           @relationship(type: "RECEIVED_MESSAGE", direction: OUT)
     Feeds: [Feed!]! @relationship(type: "HAS_FEED_IN_LIBRARY", direction: OUT)
     CreatedFeeds: [Feed!]! @relationship(type: "CREATED_FEED", direction: OUT)
     DefaultFeed: Feed @relationship(type: "DEFAULT_FEED", direction: OUT)
     createdAt: DateTime! @timestamp(operations: [CREATE])
     # WikiChangeProposals:     [WikiChangeProposal] @relationship(type: "AUTHORED_CHANGE_PROPOSAL", direction: OUT)
-    # Notifications:           [Notification]       @relationship(type: "HAS_NOTIFICATION", direction: OUT)
+    Notifications:           [Notification!]!       @relationship(type: "HAS_NOTIFICATION", direction: OUT)
     Blocked: User @relationship(type: "BLOCKED", direction: OUT)
     IsBlockedBy: User @relationship(type: "BLOCKED", direction: IN)
     FavoriteChannels: [Channel!]!
@@ -92,8 +99,10 @@ const typeDefinitions = gql`
     # WikiPages:                [WikiPage]             @relationship(type: "HAS_WIKI_PAGE", direction: OUT)
     rules: JSON
     Admins: [User!]! @relationship(type: "ADMIN_OF_CHANNEL", direction: IN)
+    PendingOwnerInvites: [User!]!
     Moderators: [ModerationProfile!]!
       @relationship(type: "MODERATOR_OF_CHANNEL", direction: IN)
+    PendingModInvites: [User!]!
     RelatedChannels: [Channel!]!
       @relationship(type: "RELATED_CHANNEL", direction: OUT)
     EventChannels: [EventChannel!]!
@@ -427,6 +436,18 @@ const typeDefinitions = gql`
       modServerRoles: [ModServerRoleCreateInput!]!
       serverConfigs: [ServerConfigCreateInput!]!
     ): SeedDataResponse
+    inviteForumOwner(
+      inviteeUsername: String!
+      channelUniqueName: String!
+    ): Boolean
+    removeForumOwner(channelUniqueName: String!, username: String!): Boolean
+    acceptForumOwnerInvite(channelUniqueName: String!): Boolean
+    inviteForumMod(
+      inviteeUsername: String!
+      channelUniqueName: String!
+    ): Boolean
+    removeForumMod(channelUniqueName: String!, username: String!): Boolean
+    acceptModInvite(channelUniqueName: String!): Boolean
   }
 
   input SiteWideDiscussionSortOrder {

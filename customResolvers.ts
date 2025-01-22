@@ -32,6 +32,13 @@ import getCreateEmailAndUserResolver from "./customResolvers/mutations/createEma
 import dropDataForCypressTestsResolver from "./customResolvers/mutations/dropDataForCypressTests.js";
 import seedDataForCypressTestsResolver from "./customResolvers/mutations/seedDataForCypressTests.js";
 
+import inviteForumOwner from './customResolvers/mutations/inviteForumOwner.js';
+import removeForumOwner from './customResolvers/mutations/removeForumOwner.js';
+import acceptForumOwnerInvite from './customResolvers/mutations/acceptForumOwnerInvite.js';
+import inviteForumMod from './customResolvers/mutations/inviteForumMod.js';
+import removeForumMod from './customResolvers/mutations/removeForumMod.js';
+import acceptForumModInvite from './customResolvers/mutations/acceptForumModInvite.js';
+
 import getSortedChannels from './customResolvers/queries/getSortedChannels.js';
 
 const { OGM } = pkg;
@@ -152,6 +159,24 @@ export default function (driver: any) {
       createEmailAndUser: getCreateEmailAndUserResolver({
         User,
         Email,
+      }),
+      inviteForumOwner: inviteForumOwner({
+        Channel
+      }),
+      removeForumOwner: removeForumOwner({
+        Channel
+      }),
+      acceptForumOwnerInvite: acceptForumOwnerInvite({
+        Channel
+      }),
+      inviteForumMod: inviteForumMod({
+        Channel
+      }),
+      removeForumMod: removeForumMod({
+        Channel
+      }),
+      acceptForumModInvite: acceptForumModInvite({
+        Channel
       }),
       dropDataForCypressTests: dropDataForCypressTestsResolver({ driver }),
       seedDataForCypressTests: seedDataForCypressTestsResolver({
