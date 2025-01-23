@@ -38,9 +38,7 @@ const getResolver = (input: Input) => {
 
     try {
       const result = await Channel.update({
-        where: {
-          uniqueName: channelUniqueName,
-        },
+        where: { uniqueName: channelUniqueName },
         update: channelUpdateInput,
       });
       if (!result.channels[0]) {
@@ -48,9 +46,9 @@ const getResolver = (input: Input) => {
       }
       return true;
     } catch (e) {
-      console.error(e);
+      console.error("Error updating channel:", e);
       return false;
-    }
+    }    
   };
 };
 

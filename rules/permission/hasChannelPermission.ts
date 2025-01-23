@@ -1,6 +1,6 @@
 import { setUserDataOnContext } from "./userDataHelperFunctions.js";
 import { ERROR_MESSAGES } from "../errorMessages.js";
-import { ChannelRole } from "../../ogm-types.js";
+import { ChannelRole } from "../../ts_emitted/ogm-types";
 
 type HasChannelPermissionInput = {
   permission: keyof ChannelRole;

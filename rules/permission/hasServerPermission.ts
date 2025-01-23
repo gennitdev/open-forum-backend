@@ -1,6 +1,6 @@
 import { setUserDataOnContext } from "./userDataHelperFunctions.js";
 import { ERROR_MESSAGES } from "../errorMessages.js";
-import { ServerRole } from "../../ogm-types.js";
+import { ServerRole } from "../../ts_emitted/ogm-types";
 
 export const hasServerPermission: (
   permission: keyof ServerRole,

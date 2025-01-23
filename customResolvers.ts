@@ -173,7 +173,6 @@ export default function (driver: any) {
       }),
       acceptForumOwnerInvite: acceptForumOwnerInvite({
         Channel,
-        User
       }),
       inviteForumMod: inviteForumMod({
         Channel

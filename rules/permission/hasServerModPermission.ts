@@ -1,6 +1,6 @@
 import { setUserDataOnContext } from "./userDataHelperFunctions.js";
 import { ERROR_MESSAGES } from "../errorMessages.js";
-import { ModServerRole } from "../../ogm-types.js";
+import { ModServerRole } from "../../ts_emitted/ogm-types";
 
 export const hasServerModPermission: (
   permission: keyof ModServerRole,

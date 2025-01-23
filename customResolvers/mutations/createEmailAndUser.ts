@@ -1,4 +1,4 @@
-import { EmailModel, UserModel, UserCreateInput } from "../../ogm-types";
+import { EmailModel, UserModel, UserCreateInput } from "../../ts_emitted/ogm-types";
 import { generateSlug } from "random-word-slugs";
 
 type Args = {

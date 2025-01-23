@@ -446,7 +446,10 @@ const typeDefinitions = gql`
       inviteeUsername: String!
       channelUniqueName: String!
     ): Boolean
-    cancelInviteForumOwner(channelUniqueName: String!): Boolean
+    cancelInviteForumOwner(
+      channelUniqueName: String!
+      inviteeUsername: String!
+    ): Boolean
     removeForumOwner(channelUniqueName: String!, username: String!): Boolean
     acceptForumOwnerInvite(channelUniqueName: String!): Boolean
     inviteForumMod(

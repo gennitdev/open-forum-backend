@@ -17401,6 +17401,8 @@ export type Mutation = {
   acceptForumOwnerInvite?: Maybe<Scalars['Boolean']['output']>;
   addEmojiToComment?: Maybe<Comment>;
   addEmojiToDiscussionChannel?: Maybe<DiscussionChannel>;
+  cancelInviteForumMod?: Maybe<Scalars['Boolean']['output']>;
+  cancelInviteForumOwner?: Maybe<Scalars['Boolean']['output']>;
   createAlbums: CreateAlbumsMutationResponse;
   createChannelRoles: CreateChannelRolesMutationResponse;
   createChannels: CreateChannelsMutationResponse;
@@ -17556,6 +17558,17 @@ export type MutationAddEmojiToDiscussionChannelArgs = {
   emojiLabel: Scalars['String']['input'];
   unicode: Scalars['String']['input'];
   username: Scalars['String']['input'];
+};
+
+
+export type MutationCancelInviteForumModArgs = {
+  channelUniqueName: Scalars['String']['input'];
+};
+
+
+export type MutationCancelInviteForumOwnerArgs = {
+  channelUniqueName: Scalars['String']['input'];
+  inviteeUsername: Scalars['String']['input'];
 };
 
 
@@ -35470,6 +35483,8 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   acceptForumOwnerInvite?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationAcceptForumOwnerInviteArgs, 'channelUniqueName'>>;
   addEmojiToComment?: Resolver<Maybe<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<MutationAddEmojiToCommentArgs, 'commentId' | 'emojiLabel' | 'unicode' | 'username'>>;
   addEmojiToDiscussionChannel?: Resolver<Maybe<ResolversTypes['DiscussionChannel']>, ParentType, ContextType, RequireFields<MutationAddEmojiToDiscussionChannelArgs, 'discussionChannelId' | 'emojiLabel' | 'unicode' | 'username'>>;
+  cancelInviteForumMod?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationCancelInviteForumModArgs, 'channelUniqueName'>>;
+  cancelInviteForumOwner?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationCancelInviteForumOwnerArgs, 'channelUniqueName' | 'inviteeUsername'>>;
   createAlbums?: Resolver<ResolversTypes['CreateAlbumsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateAlbumsArgs, 'input'>>;
   createChannelRoles?: Resolver<ResolversTypes['CreateChannelRolesMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateChannelRolesArgs, 'input'>>;
   createChannels?: Resolver<ResolversTypes['CreateChannelsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateChannelsArgs, 'input'>>;

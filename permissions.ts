@@ -28,7 +28,7 @@ const permissionList = shield({
       updateUsers: or(rules.isAccountOwner, rules.isAdmin),
       
       createChannels: and(rules.createChannelInputIsValid, rules.canCreateChannel),
-      updateChannels: allow,//and(rules.updateChannelInputIsValid, or(rules.isChannelOwner, rules.isAdmin)),
+      updateChannels: and(rules.updateChannelInputIsValid, or(rules.isChannelOwner, rules.isAdmin)),
       deleteChannels: or(rules.isAdmin, rules.isChannelOwner),
 
       deleteEmails: or(rules.isAccountOwner, rules.isAdmin),
@@ -71,11 +71,15 @@ const permissionList = shield({
       createAlbums: allow,
       updateAlbums: allow,
       deleteAlbums: allow,
-      // hideComments: updateComments: and(rules.verifiedEmail, or(rules.hasChannelModPermission("hideComments"), rules.isAdmin)),
-      // canOpenChannelSupportTicket: and(rules.verifiedEmail, rules.isNotSuspendedFromServer),
-      // canCloseChannelSupportTicket: and(rules.verifiedEmail, rules.isChannelModerator, rules.isNotSuspendedFromServer),
-      // canOpenServerSupportTicket: rules.verifiedEmail,
-      // canCloseServerSupportTicket: and(rules.verifiedEmail, rules.isServerModerator, rules.isNotSuspendedFromServer),
+
+      inviteForumOwner: allow,
+      cancelInviteForumOwner: allow,
+      removeForumOwner: allow,
+      acceptForumOwnerInvite: allow,
+      inviteForumMod: allow,
+      cancelInviteForumMod: allow,
+      removeForumMod: allow,
+      acceptForumModInvite: allow,
     },
   },{
     debug: true,
