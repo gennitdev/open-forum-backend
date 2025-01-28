@@ -147,7 +147,8 @@ export default function (driver) {
                 Email,
             }),
             inviteForumOwner: inviteForumOwner({
-                Channel
+                Channel,
+                User
             }),
             cancelInviteForumOwner: cancelInviteOwner({
                 Channel

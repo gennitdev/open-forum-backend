@@ -1,7 +1,9 @@
-import type { ChannelUpdateInput, ChannelModel } from "../../ts_emitted/ogm-types";
-
+import type {
+  ChannelUpdateInput,
+  ChannelModel,
+} from "../../ts_emitted/ogm-types";
+import { setUserDataOnContext } from "../../rules/permission/userDataHelperFunctions.js";
 type Args = {
-  inviteeUsername: string;
   channelUniqueName: string;
 };
 
@@ -12,22 +14,47 @@ type Input = {
 const getResolver = (input: Input) => {
   const { Channel } = input;
   return async (parent: any, args: Args, context: any, resolveInfo: any) => {
-    const { channelUniqueName, inviteeUsername } = args;
-
-    if (!channelUniqueName || !inviteeUsername) {
-      throw new Error(
-        "All arguments (channelUniqueName, inviteeUsername) are required"
-      );
+    const { channelUniqueName } = args;
+    if (!channelUniqueName) {
+      throw new Error("All arguments (channelUniqueName) are required");
     }
 
-    const channelUpdateInput: ChannelUpdateInput = {
+    // Set loggedInUsername to null explicitly if not present
+    context.user = await setUserDataOnContext({
+      context,
+      getPermissionInfo: false,
+    });
+
+    const loggedInUsername = context.user?.username || null;
+
+    if (!loggedInUsername) {
+      throw new Error("User must be logged in");
+    }
+
+    const addChannelOwnerInput: ChannelUpdateInput = {
       Admins: [
         {
           connect: [
             {
               where: {
                 node: {
-                  username: inviteeUsername,
+                  username: loggedInUsername,
+                },
+              },
+            },
+          ],
+        },
+      ],
+    };
+
+    const removePendingInviteInput: ChannelUpdateInput = {
+      PendingOwnerInvites: [
+        {
+          disconnect: [
+            {
+              where: {
+                node: {
+                  username: loggedInUsername,
                 },
               },
             },
@@ -37,14 +64,23 @@ const getResolver = (input: Input) => {
     };
 
     try {
-      const result = await Channel.update({
+      const acceptInviteResult = await Channel.update({
         where: {
           uniqueName: channelUniqueName,
         },
-        update: channelUpdateInput,
+        update: addChannelOwnerInput,
       });
-      if (!result.channels[0]) {
-        throw new Error("Channel not found");
+      if (!acceptInviteResult.channels[0]) {
+        throw new Error("Channel not found. Could not accept invite.");
+      }
+      const removePendingInviteResult = await Channel.update({
+        where: {
+          uniqueName: channelUniqueName,
+        },
+        update: removePendingInviteInput,
+      });
+      if (!removePendingInviteResult.channels[0]) {
+        throw new Error("Channel not found. Could not remove pending invite");
       }
       return true;
     } catch (e) {

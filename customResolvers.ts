@@ -163,7 +163,8 @@ export default function (driver: any) {
         Email,
       }),
       inviteForumOwner: inviteForumOwner({
-        Channel
+        Channel,
+        User
       }),
       cancelInviteForumOwner: cancelInviteOwner({
         Channel

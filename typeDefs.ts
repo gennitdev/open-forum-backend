@@ -18,6 +18,9 @@ const typeDefinitions = gql`
     alt: String
     caption: String
     copyright: String
+    createdAt: DateTime @timestamp(operations: [CREATE])
+    hasSensitiveContent: Boolean
+    hasSpoiler: Boolean
     Album: Album @relationship(type: "HAS_IMAGE", direction: IN)
   }
 
@@ -35,6 +38,21 @@ const typeDefinitions = gql`
     text: String
   }
 
+  type Message {
+    id: ID! @id
+    createdAt: DateTime! @timestamp(operations: [CREATE])
+    text: String
+    Conversation: Conversation @relationship(type: "HAS_MESSAGE", direction: IN)
+  }
+
+  type Conversation {
+    id: ID! @id
+    createdAt: DateTime! @timestamp(operations: [CREATE])
+    lastUpdated: DateTime
+    Participants: [CommentAuthor!]! @relationship(type: "HAS_CONVERSATION", direction: IN)
+    Messages: [Message!]! @relationship(type: "HAS_MESSAGE", direction: OUT)
+  }
+
   type User {
     Albums: [Album!]! @relationship(type: "HAS_ALBUM", direction: OUT)
     username: String! @unique
@@ -46,6 +64,7 @@ const typeDefinitions = gql`
     commentKarma: Int
     discussionKarma: Int
     profilePicURL: String
+    enableSensitiveContentByDefault: Boolean
     Comments: [Comment!]!
       @relationship(type: "AUTHORED_COMMENT", direction: OUT)
     AdminOfChannels: [Channel!]!
@@ -59,7 +78,6 @@ const typeDefinitions = gql`
     CreatedFeeds: [Feed!]! @relationship(type: "CREATED_FEED", direction: OUT)
     DefaultFeed: Feed @relationship(type: "DEFAULT_FEED", direction: OUT)
     createdAt: DateTime! @timestamp(operations: [CREATE])
-    # WikiChangeProposals:     [WikiChangeProposal] @relationship(type: "AUTHORED_CHANGE_PROPOSAL", direction: OUT)
     Notifications:           [Notification!]!       @relationship(type: "HAS_NOTIFICATION", direction: OUT)
     Blocked: User @relationship(type: "BLOCKED", direction: OUT)
     IsBlockedBy: User @relationship(type: "BLOCKED", direction: IN)
@@ -88,6 +106,28 @@ const typeDefinitions = gql`
       @relationship(type: "HAS_PENDING_MOD_INVITE", direction: IN)
     PendingOwnerInvites: [Channel!]!
       @relationship(type: "HAS_PENDING_INVITE", direction: IN)
+    Conversations: [Conversation!]!
+      @relationship(type: "HAS_CONVERSATION", direction: OUT)
+  }
+
+  type TextVersion {
+    id: ID! @id
+    body: String
+    createdAt: DateTime! @timestamp(operations: [CREATE])
+    updatedAt: DateTime @timestamp(operations: [UPDATE])
+    Author: User @relationship(type: "AUTHORED_VERSION", direction: IN)
+  }
+
+  type WikiPage {
+    id: ID! @id
+    title: String!
+    body: String
+    slug: String!
+    createdAt: DateTime! @timestamp(operations: [CREATE])
+    updatedAt: DateTime @timestamp(operations: [UPDATE])
+    PastVersions: [TextVersion!]! @relationship(type: "HAS_VERSION", direction: OUT)
+    ProposedEdits: [TextVersion!]! @relationship(type: "PROPOSED_EDIT", direction: OUT)
+    ChildPages: [WikiPage!]! @relationship(type: "HAS_CHILD_PAGE", direction: OUT)
   }
 
   type Channel {
@@ -100,7 +140,6 @@ const typeDefinitions = gql`
     channelIconURL: String
     channelBannerURL: String
     Tags: [Tag!]! @relationship(type: "HAS_TAG", direction: OUT)
-    # WikiPages:                [WikiPage]             @relationship(type: "HAS_WIKI_PAGE", direction: OUT)
     rules: JSON
     Admins: [User!]! @relationship(type: "ADMIN_OF_CHANNEL", direction: IN)
     PendingOwnerInvites: [User!]!
@@ -119,6 +158,10 @@ const typeDefinitions = gql`
     DefaultChannelRole: ChannelRole
       @relationship(type: "HAS_DEFAULT_CHANNEL_ROLE", direction: OUT)
     Issues: [Issue!]! @relationship(type: "HAS_ISSUE", direction: OUT)
+    WikiHomePage: WikiPage @relationship(type: "HAS_WIKI_HOME_PAGE", direction: OUT)
+    eventsEnabled: Boolean
+    wikiEnabled: Boolean
+    feedbackEnabled: Boolean
   }
 
   type DiscussionChannel {
@@ -136,6 +179,8 @@ const typeDefinitions = gql`
     Comments: [Comment!]!
       @relationship(type: "CONTAINS_COMMENT", direction: OUT)
     emoji: JSON
+    archived: Boolean
+    RelatedIssues: [Issue!]! @relationship(type: "CITED_ISSUE", direction: IN)
   }
 
   type Discussion {
@@ -147,13 +192,15 @@ const typeDefinitions = gql`
     updatedAt: DateTime @timestamp(operations: [UPDATE])
     deleted: Boolean
     Tags: [Tag!]! @relationship(type: "HAS_TAG", direction: OUT)
-    # PastVersions:            [DiscussionVersion]     @relationship(type: "HAS_VERSION", direction: OUT)
+    # PastTitleVersions:           [TextVersion]     @relationship(type: "HAS_VERSION", direction: OUT)
+    # PastBodyVersions:            [TextVersion]     @relationship(type: "HAS_VERSION", direction: OUT)
     DiscussionChannels: [DiscussionChannel!]!
       @relationship(type: "POSTED_IN_CHANNEL", direction: IN)
     FeedbackComments: [Comment!]!
       @relationship(type: "HAS_FEEDBACK_COMMENT", direction: IN)
-    RelatedIssues: [Issue!]! @relationship(type: "CITED_ISSUE", direction: IN)
     Album: Album @relationship(type: "HAS_ALBUM", direction: OUT)
+    hasSensitiveContent: Boolean
+    hasSpoiler: Boolean
   }
 
   type EventChannel {
@@ -166,6 +213,7 @@ const typeDefinitions = gql`
     Channel: Channel @relationship(type: "POSTED_IN_CHANNEL", direction: OUT)
     Comments: [Comment!]!
       @relationship(type: "CONTAINS_COMMENT", direction: OUT)
+    RelatedIssues: [Issue!]! @relationship(type: "CITED_ISSUE", direction: IN)
   }
 
   enum RepeatUnit {
@@ -269,6 +317,7 @@ const typeDefinitions = gql`
     FeedbackComments: [Comment!]!
       @relationship(type: "HAS_FEEDBACK_COMMENT", direction: IN)
     ModerationAction: ModerationAction @relationship(type: "MODERATED_COMMENT", direction: IN)
+    RelatedIssues: [Issue!]! @relationship(type: "CITED_ISSUE", direction: IN)
   }
 
   type Emoji {

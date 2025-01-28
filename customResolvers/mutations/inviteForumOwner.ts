@@ -1,4 +1,9 @@
-import type { ChannelUpdateInput, ChannelModel } from "../../ts_emitted/ogm-types";
+import type {
+  ChannelUpdateInput,
+  ChannelModel,
+  UserUpdateInput,
+  UserModel,
+} from "../../ts_emitted/ogm-types";
 
 type Args = {
   inviteeUsername: string;
@@ -7,10 +12,11 @@ type Args = {
 
 type Input = {
   Channel: ChannelModel;
+  User: UserModel;
 };
 
 const getResolver = (input: Input) => {
-  const { Channel } = input; // This refers to the OGM model
+  const { Channel, User } = input; // This refers to the OGM model
   return async (parent: any, args: Args, context: any, resolveInfo: any) => {
     const { channelUniqueName, inviteeUsername } = args;
 
@@ -19,6 +25,11 @@ const getResolver = (input: Input) => {
         "All arguments (channelUniqueName, inviteeUsername) are required"
       );
     }
+
+    const notificationMessage = `
+You have been invited to be an owner of the forum ${channelUniqueName}.
+To accept it, go to [this page](${process.env.FRONTEND_URL}/forums/${channelUniqueName}/accept-invite).
+    `;
 
     const channelUpdateInput: ChannelUpdateInput = {
       PendingOwnerInvites: [
@@ -36,15 +47,39 @@ const getResolver = (input: Input) => {
       ],
     };
 
+    const userUpdateNotificationInput: UserUpdateInput = {
+      Notifications: [
+        {
+          create: [
+            {
+              node: {
+                text: notificationMessage,
+                read: false
+              },
+            },
+          ],
+        },
+      ],
+    };
+
     try {
-      const result = await Channel.update({
+      const channelUpdateResult = await Channel.update({
         where: {
           uniqueName: channelUniqueName,
         },
         update: channelUpdateInput,
       });
-      if (!result.channels[0]) {
-        throw new Error("Channel not found");
+      if (!channelUpdateResult.channels[0]) {
+        throw new Error("Could not invite user.");
+      }
+      const userUpdateResult = await User.update({
+        where: {
+          username: inviteeUsername,
+        },
+        update: userUpdateNotificationInput,
+      })
+      if (!userUpdateResult.users[0]) {
+        throw new Error("Could not notify the user of the invite.");
       }
       return true;
     } catch (e) {

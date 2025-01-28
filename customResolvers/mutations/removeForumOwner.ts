@@ -1,7 +1,7 @@
 import type { ChannelUpdateInput, ChannelModel } from "../../ts_emitted/ogm-types";
 
 type Args = {
-  inviteeUsername: string;
+  username: string;
   channelUniqueName: string;
 };
 
@@ -12,11 +12,11 @@ type Input = {
 const getResolver = (input: Input) => {
   const { Channel } = input;
   return async (parent: any, args: Args, context: any, resolveInfo: any) => {
-    const { channelUniqueName, inviteeUsername } = args;
+    const { channelUniqueName, username } = args;
 
-    if (!channelUniqueName || !inviteeUsername) {
+    if (!channelUniqueName || !username) {
       throw new Error(
-        "All arguments (channelUniqueName, inviteeUsername) are required"
+        "All arguments (channelUniqueName, username) are required"
       );
     }
 
@@ -27,7 +27,7 @@ const getResolver = (input: Input) => {
             {
               where: {
                 node: {
-                  username: inviteeUsername,
+                  username: username,
                 },
               },
             },
