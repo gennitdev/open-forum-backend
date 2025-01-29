@@ -17,6 +17,7 @@ import { setUserDataOnContext } from "./userDataHelperFunctions.js";
 
 type IsChannelOwnerInput = {
   where: ChannelWhere;
+  channelUniqueName: string;
 };
 
 export const isChannelOwner = rule({ cache: "contextual" })(
@@ -31,8 +32,18 @@ export const isChannelOwner = rule({ cache: "contextual" })(
     console.log("username: ", ctx.user);
 
     let ogm = ctx.ogm;
-    const { where } = args;
-    const uniqueName = where.uniqueName;
+    const { where, channelUniqueName } = args;
+    let uniqueName = '' ;
+
+    if (where?.uniqueName) {
+      // The channel name can be passed in the where object.
+      uniqueName = where.uniqueName;
+    }
+
+    if (channelUniqueName) {
+      // It can also be passed as a separate argument.
+      uniqueName = channelUniqueName;
+    }
 
     if (!uniqueName) {
       throw new Error(ERROR_MESSAGES.channel.notFound);
