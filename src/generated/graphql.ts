@@ -19022,6 +19022,7 @@ export type MutationAddEmojiToDiscussionChannelArgs = {
 
 export type MutationCancelInviteForumModArgs = {
   channelUniqueName: Scalars['String']['input'];
+  inviteeUsername: Scalars['String']['input'];
 };
 
 
@@ -39181,7 +39182,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   acceptForumOwnerInvite?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationAcceptForumOwnerInviteArgs, 'channelUniqueName'>>;
   addEmojiToComment?: Resolver<Maybe<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<MutationAddEmojiToCommentArgs, 'commentId' | 'emojiLabel' | 'unicode' | 'username'>>;
   addEmojiToDiscussionChannel?: Resolver<Maybe<ResolversTypes['DiscussionChannel']>, ParentType, ContextType, RequireFields<MutationAddEmojiToDiscussionChannelArgs, 'discussionChannelId' | 'emojiLabel' | 'unicode' | 'username'>>;
-  cancelInviteForumMod?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationCancelInviteForumModArgs, 'channelUniqueName'>>;
+  cancelInviteForumMod?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationCancelInviteForumModArgs, 'channelUniqueName' | 'inviteeUsername'>>;
   cancelInviteForumOwner?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationCancelInviteForumOwnerArgs, 'channelUniqueName' | 'inviteeUsername'>>;
   createAlbums?: Resolver<ResolversTypes['CreateAlbumsMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateAlbumsArgs, 'input'>>;
   createChannelRoles?: Resolver<ResolversTypes['CreateChannelRolesMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateChannelRolesArgs, 'input'>>;

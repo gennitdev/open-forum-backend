@@ -160,13 +160,15 @@ export default function (driver) {
                 Channel,
             }),
             inviteForumMod: inviteForumMod({
-                Channel
+                Channel,
+                User
             }),
             cancelInviteForumMod: cancelInviteForumMod({
                 Channel
             }),
             removeForumMod: removeForumMod({
                 Channel,
+                User
             }),
             acceptForumModInvite: acceptForumModInvite({
                 Channel,

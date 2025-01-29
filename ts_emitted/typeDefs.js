@@ -504,9 +504,14 @@ const typeDefinitions = gql `
       inviteeUsername: String!
       channelUniqueName: String!
     ): Boolean
-    cancelInviteForumMod(channelUniqueName: String!): Boolean
+    cancelInviteForumMod(
+      channelUniqueName: String!
+      inviteeUsername: String!
+    ): Boolean
     removeForumMod(channelUniqueName: String!, username: String!): Boolean
-    acceptForumModInvite(channelUniqueName: String!): Boolean
+    acceptForumModInvite(
+      channelUniqueName: String!
+    ): Boolean
   }
 
   input SiteWideDiscussionSortOrder {
