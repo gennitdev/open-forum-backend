@@ -1,7 +1,7 @@
 import type {
   ChannelUpdateInput,
   ChannelModel,
-} from "../../ts_emitted/ogm-types";
+} from "../../ogm_types.js";
 import { setUserDataOnContext } from "../../rules/permission/userDataHelperFunctions.js";
 type Args = {
   channelUniqueName: string;

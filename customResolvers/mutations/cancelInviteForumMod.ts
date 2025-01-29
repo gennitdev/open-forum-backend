@@ -1,4 +1,4 @@
-import type { ChannelUpdateInput, ChannelModel } from "../../ts_emitted/ogm-types";
+import type { ChannelUpdateInput, ChannelModel } from "../../ogm_types.js";
 
 type Args = {
   inviteeUsername: string;

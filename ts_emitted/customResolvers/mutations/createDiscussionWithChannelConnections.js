@@ -54,12 +54,10 @@ export const createDiscussionsFromInput = async (Discussion, driver, input) => {
     if (!input || input.length === 0) {
         throw new Error("Input cannot be empty");
     }
-    console.log("Creating discussions with input:", input);
     const session = driver.session();
     const discussions = [];
     try {
         for (const { discussionCreateInput, channelConnections } of input) {
-            console.log("Creating discussion with channels:", discussionCreateInput, channelConnections);
             if (!channelConnections || channelConnections.length === 0) {
                 throw new Error("At least one channel must be selected");
             }
@@ -67,17 +65,11 @@ export const createDiscussionsFromInput = async (Discussion, driver, input) => {
                 input: [discussionCreateInput],
                 selectionSet: `{ discussions ${selectionSet} }`,
             });
-            console.log("Discussion created:", response);
             const newDiscussion = response.discussions[0];
             const newDiscussionId = newDiscussion.id;
             // Link the discussion to channels
             for (const channelUniqueName of channelConnections) {
                 try {
-                    console.log('running create DC with arguments ,', {
-                        discussionId: newDiscussionId,
-                        channelUniqueName,
-                        upvotedBy: newDiscussion.Author.username,
-                    });
                     await session.run(createDiscussionChannelQuery, {
                         discussionId: newDiscussionId,
                         channelUniqueName,
@@ -101,7 +93,6 @@ export const createDiscussionsFromInput = async (Discussion, driver, input) => {
                 },
                 selectionSet,
             });
-            console.log("Fetched discussion:", fetchedDiscussion[0]);
             discussions.push(fetchedDiscussion[0]);
         }
     }
@@ -124,7 +115,6 @@ const getResolver = (input) => {
         try {
             // Use the extracted function to create discussions
             const discussions = await createDiscussionsFromInput(Discussion, driver, input);
-            console.log("Discussions created in resolver:", discussions);
             return discussions;
         }
         catch (error) {

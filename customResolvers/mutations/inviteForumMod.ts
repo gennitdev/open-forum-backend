@@ -3,7 +3,7 @@ import type {
   ChannelModel,
   UserUpdateInput,
   UserModel,
-} from "../../ts_emitted/ogm-types";
+} from "../../ogm_types.js";
 
 type Args = {
   inviteeUsername: string;

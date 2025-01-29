@@ -19,7 +19,7 @@ import {
   ServerRoleCreateInput,
   ModServerRoleCreateInput,
   ServerConfigCreateInput,
-} from "../../ts_emitted/ogm-types";
+} from "../../ogm_types.js";
 import { createUsersWithEmails } from "./createEmailAndUser.js";
 import { createDiscussionsFromInput } from "./createDiscussionWithChannelConnections.js";
 import { createEventsFromInput } from "./createEventWithChannelConnections.js";

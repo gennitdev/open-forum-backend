@@ -27,7 +27,7 @@ import createSignedStorageURL from "./customResolvers/mutations/createSignedStor
 
 import safetyCheck from "./customResolvers/queries/safetyCheck.js";
 
-import { ModelMap } from "./ts_emitted/ogm-types";
+import { ModelMap } from "./ogm_types.js";
 import getCreateEmailAndUserResolver from "./customResolvers/mutations/createEmailAndUser.js";
 import dropDataForCypressTestsResolver from "./customResolvers/mutations/dropDataForCypressTests.js";
 import seedDataForCypressTestsResolver from "./customResolvers/mutations/seedDataForCypressTests.js";
