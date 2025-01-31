@@ -9,6 +9,10 @@ import type {
 import { setUserDataOnContext } from "../../rules/permission/userDataHelperFunctions.js";
 import { GraphQLError } from "graphql";
 import { getFinalCommentText } from "./reportDiscussion.js";
+import {
+  getModerationActionCreateInput,
+  getIssueCreateInput,
+} from "./reportComment.js";
 
 type Args = {
   eventId: string;
@@ -87,144 +91,84 @@ const getResolver = (input: Input) => {
       selectedServerRules,
     });
 
-    const moderationActionCreateInput: ModerationActionCreateInput = {
-      ModerationProfile: {
-        connect: {
-          where: {
-            node: {
-              displayName: loggedInModName,
-            },
-          },
+    // If an issue does NOT already exist, create a new issue.
+    if (!existingIssueId) {
+      const eventData = await Event.find({
+        where: {
+          id: eventId,
         },
-      },
-      actionType: "report",
-      actionDescription: "Reported the event",
-      Comment: {
-        create: {
-          node: {
-            text: finalCommentText,
-            isRootComment: true,
-            CommentAuthor: {
-              ModerationProfile: {
-                connect: {
-                  where: {
-                    node: {
-                      displayName: loggedInModName,
-                    },
-                  },
-                },
-              },
-            },
-            Channel: {
-              connect: {
-                where: {
-                  node: {
-                    uniqueName: channelUniqueName,
-                  },
-                },
-              },
-            }
-          },
-        },
-      },
-    };
+        selectionSet: `{
+                        id
+                        title            
+                    }`,
+      });
+      const contextText = eventData[0]?.title || "";
 
-    // If an issue already exists, update the issue with the new moderation action.
-    if (existingIssueId) {
-      const issueUpdateWhere: IssueWhere = {
-        id: existingIssueId,
-      };
-      const issueUpdateInput: IssueUpdateInput = {
-        ActivityFeed: [
-          {
-            create: [
-              {
-                node: moderationActionCreateInput,
-              },
-            ],
-          },
-        ],
-        isOpen: true, // Reopen the issue if it was closed
-        flaggedServerRuleViolation:
-          existingIssueFlaggedServerRuleViolation ||
-          selectedServerRules.length > 0,
-      };
-
+      const issueCreateInput: IssueCreateInput = getIssueCreateInput({
+        contextText,
+        selectedForumRules,
+        selectedServerRules,
+        loggedInModName,
+        channelUniqueName,
+        reportedContentType: "event",
+        relatedEventId: eventId,
+      });
       try {
-        const issueData = await Issue.update({
-          where: issueUpdateWhere,
-          update: issueUpdateInput,
+        const issueData = await Issue.create({
+          input: [issueCreateInput],
         });
         const issueId = issueData.issues[0]?.id || null;
         if (!issueId) {
-          throw new GraphQLError("Error updating issue");
+          throw new GraphQLError("Error creating issue");
         }
-        return issueData.issues[0]
+        existingIssueId = issueId;
       } catch (error) {
-        throw new GraphQLError("Error updating issue");
+        throw new GraphQLError("Error creating issue");
       }
     }
 
-    // If an issue does NOT already exist, create a new issue.
+    const moderationActionCreateInput: ModerationActionCreateInput =
+      getModerationActionCreateInput({
+        text: finalCommentText,
+        loggedInModName,
+        channelUniqueName,
+        actionType: "report",
+        actionDescription: "Reported the Event",
+        issueId: existingIssueId,
+      });
 
-    const eventData = await Event.find({
-      where: {
-        id: eventId,
-      },
-      selectionSet: `{
-            id
-            title
-        }`,
-    });
-    const eventTitle = eventData[0]?.title || null;
-
-    const issueCreateInput: IssueCreateInput = {
-      title: `[Reported Event] "${eventTitle}"`,
-      isOpen: true,
-      authorName: loggedInModName,
-      flaggedServerRuleViolation: selectedServerRules.length > 0,
-      channelUniqueName: channelUniqueName,
-      relatedEventId: eventId,
-      Author: {
-        ModerationProfile: {
-          connect: {
-            where: {
-              node: {
-                displayName: loggedInModName,
-              },
+    // Update the issue with the new moderation action.
+    const issueUpdateWhere: IssueWhere = {
+      id: existingIssueId,
+    };
+    const issueUpdateInput: IssueUpdateInput = {
+      ActivityFeed: [
+        {
+          create: [
+            {
+              node: moderationActionCreateInput,
             },
-          },
+          ],
         },
-      },
-      Channel: {
-        connect: {
-          where: {
-            node: {
-              uniqueName: channelUniqueName,
-            },
-          },
-        },
-      },
-      ActivityFeed: {
-        create: [
-          {
-            node: moderationActionCreateInput,
-          },
-        ],
-      },
+      ],
+      isOpen: true, // Reopen the issue if it was closed
+      flaggedServerRuleViolation:
+        existingIssueFlaggedServerRuleViolation ||
+        selectedServerRules.length > 0,
     };
 
     try {
-      const issueData = await Issue.create({
-        input: [issueCreateInput],
+      const issueData = await Issue.update({
+        where: issueUpdateWhere,
+        update: issueUpdateInput,
       });
       const issueId = issueData.issues[0]?.id || null;
       if (!issueId) {
-        throw new GraphQLError("Error creating issue");
+        throw new GraphQLError("Error updating issue");
       }
-      return issueData.issues[0]
+      return issueData.issues[0];
     } catch (error) {
-      throw new GraphQLError("Error creating issue");
+      throw new GraphQLError("Error updating issue");
     }
   };
 };

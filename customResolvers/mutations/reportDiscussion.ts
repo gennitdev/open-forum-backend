@@ -8,6 +8,10 @@ import type {
 } from "../../ogm_types.js";
 import { setUserDataOnContext } from "../../rules/permission/userDataHelperFunctions.js";
 import { GraphQLError } from "graphql";
+import {
+  getModerationActionCreateInput,
+  getIssueCreateInput,
+} from "./reportComment.js";
 
 type Args = {
   discussionId: string;
@@ -74,14 +78,18 @@ const getResolver = (input: Input) => {
       selectedServerRules,
       channelUniqueName,
     } = args;
+
     if (!discussionId) {
       throw new GraphQLError("Discussion ID is required");
     }
+
     if (!channelUniqueName) {
       throw new GraphQLError("Channel unique name is required");
     }
+
     const atLeastOneViolation =
       selectedForumRules?.length > 0 || selectedServerRules?.length > 0;
+
     if (!atLeastOneViolation) {
       throw new GraphQLError("At least one rule must be selected");
     }
@@ -97,10 +105,12 @@ const getResolver = (input: Input) => {
     if (!loggedInUsername) {
       throw new GraphQLError("User must be logged in");
     }
+
     const loggedInModName = context.user.data.ModerationProfile.displayName;
     if (!loggedInModName) {
       throw new GraphQLError(`User ${loggedInUsername} is not a moderator`);
     }
+
     let existingIssueId = "";
     let existingIssueFlaggedServerRuleViolation = false;
 
@@ -128,146 +138,85 @@ const getResolver = (input: Input) => {
       selectedServerRules,
     });
 
-    const moderationActionCreateInput: ModerationActionCreateInput = {
-      ModerationProfile: {
-        connect: {
-          where: {
-            node: {
-              displayName: loggedInModName,
-            },
-          },
+    // If an issue does NOT already exist, create a new issue.
+    if (!existingIssueId) {
+      const discussionData = await Discussion.find({
+        where: {
+          id: discussionId,
         },
-      },
-      actionType: "report",
-      actionDescription: "Reported the discussion",
-      Comment: {
-        create: {
-          node: {
-            text: finalCommentText,
-            isRootComment: true,
-            CommentAuthor: {
-              ModerationProfile: {
-                connect: {
-                  where: {
-                    node: {
-                      displayName: loggedInModName,
-                    },
-                  },
-                },
-              },
-            },
-            Channel: {
-              connect: {
-                where: {
-                  node: {
-                    uniqueName: channelUniqueName,
-                  },
-                },
-              },
-            }
-          },
-        },
-      },
-    };
+        selectionSet: `{
+                    id
+                    title            
+                }`,
+      });
+      const contextText = discussionData[0]?.title || "";
 
-    // If an issue already exists, update the issue with the new moderation action.
-    if (existingIssueId) {
-      const issueUpdateWhere: IssueWhere = {
-        id: existingIssueId,
-      };
-      const issueUpdateInput: IssueUpdateInput = {
-        ActivityFeed: [
-          {
-            create: [
-              {
-                node: moderationActionCreateInput,
-              },
-            ],
-          },
-        ],
-        isOpen: true, // Reopen the issue if it was closed
-        flaggedServerRuleViolation:
-          existingIssueFlaggedServerRuleViolation ||
-          selectedServerRules.length > 0,
-      };
-
+      const issueCreateInput: IssueCreateInput = getIssueCreateInput({
+        contextText,
+        selectedForumRules,
+        selectedServerRules,
+        loggedInModName,
+        channelUniqueName,
+        reportedContentType: "discussion",
+        relatedDiscussionId: discussionId,
+      });
       try {
-        const issueData = await Issue.update({
-          where: issueUpdateWhere,
-          update: issueUpdateInput,
+        const issueData = await Issue.create({
+          input: [issueCreateInput],
         });
         const issueId = issueData.issues[0]?.id || null;
         if (!issueId) {
-          throw new GraphQLError("Error updating issue");
+          throw new GraphQLError("Error creating issue");
         }
-        return issueData.issues[0]
+        existingIssueId = issueId;
       } catch (error) {
-        throw new GraphQLError("Error updating issue");
+        throw new GraphQLError("Error creating issue");
       }
     }
 
-    // If an issue does NOT already exist, create a new issue.
+    const moderationActionCreateInput: ModerationActionCreateInput =
+      getModerationActionCreateInput({
+        text: finalCommentText,
+        loggedInModName,
+        channelUniqueName,
+        actionType: "report",
+        actionDescription: "Reported the discussion",
+        issueId: existingIssueId,
+      });
 
-    const discussionData = await Discussion.find({
-      where: {
-        id: discussionId,
-      },
-      selectionSet: `{
-            id
-            title
-        }`,
-    });
-    const discussionTitle = discussionData[0]?.title || null;
-
-    const issueCreateInput: IssueCreateInput = {
-      title: `[Reported Discussion] "${discussionTitle}"`,
-      isOpen: true,
-      authorName: loggedInModName,
-      flaggedServerRuleViolation: selectedServerRules.length > 0,
-      channelUniqueName: channelUniqueName,
-      relatedDiscussionId: discussionId,
-      Author: {
-        ModerationProfile: {
-          connect: {
-            where: {
-              node: {
-                displayName: loggedInModName,
-              },
+    // Update the issue with the new moderation action.
+    const issueUpdateWhere: IssueWhere = {
+      id: existingIssueId,
+    };
+    const issueUpdateInput: IssueUpdateInput = {
+      ActivityFeed: [
+        {
+          create: [
+            {
+              node: moderationActionCreateInput,
             },
-          },
+          ],
         },
-      },
-      Channel: {
-        connect: {
-          where: {
-            node: {
-              uniqueName: channelUniqueName,
-            },
-          },
-        },
-      },
-      ActivityFeed: {
-        create: [
-          {
-            node: moderationActionCreateInput,
-          },
-        ],
-      },
+      ],
+      isOpen: true, // Reopen the issue if it was closed
+      flaggedServerRuleViolation:
+        existingIssueFlaggedServerRuleViolation ||
+        selectedServerRules.length > 0,
     };
 
     try {
-      const issueData = await Issue.create({
-        input: [issueCreateInput],
+      const issueData = await Issue.update({
+        where: issueUpdateWhere,
+        update: issueUpdateInput,
       });
       const issueId = issueData.issues[0]?.id || null;
       if (!issueId) {
-        throw new GraphQLError("Error creating issue");
+        throw new GraphQLError("Error updating issue");
       }
-      return issueData.issues[0]
+      return issueData.issues[0];
     } catch (error) {
-      throw new GraphQLError("Error creating issue");
+      throw new GraphQLError("Error updating issue");
     }
-    return false;
   };
 };
 
