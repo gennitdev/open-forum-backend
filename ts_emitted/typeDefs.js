@@ -41,14 +41,14 @@ const typeDefinitions = gql `
     id: ID! @id
     createdAt: DateTime! @timestamp(operations: [CREATE])
     text: String
-    Conversation: Conversation @relationship(type: "HAS_MESSAGE", direction: IN)
+    Contact: Contact @relationship(type: "HAS_MESSAGE", direction: IN)
   }
 
-  type Conversation {
+  type Contact {
     id: ID! @id
+    MessageAuthor: CommentAuthor @relationship(type: "AUTHORED_MESSAGE", direction: IN)
     createdAt: DateTime! @timestamp(operations: [CREATE])
-    lastUpdated: DateTime
-    Participants: [CommentAuthor!]! @relationship(type: "HAS_CONVERSATION", direction: IN)
+    mostRecentMessageTimestamp: DateTime
     Messages: [Message!]! @relationship(type: "HAS_MESSAGE", direction: OUT)
   }
 
@@ -105,8 +105,7 @@ const typeDefinitions = gql `
       @relationship(type: "HAS_PENDING_MOD_INVITE", direction: IN)
     PendingOwnerInvites: [Channel!]!
       @relationship(type: "HAS_PENDING_INVITE", direction: IN)
-    Conversations: [Conversation!]!
-      @relationship(type: "HAS_CONVERSATION", direction: OUT)
+    Suspensions: [Suspension!]! @relationship(type: "SUSPENDED_AS_USER", direction: OUT)
   }
 
   type TextVersion {
@@ -129,11 +128,22 @@ const typeDefinitions = gql `
     ChildPages: [WikiPage!]! @relationship(type: "HAS_CHILD_PAGE", direction: OUT)
   }
 
+  type Suspension {
+    id: ID! @id
+    channelUniqueName: String!
+    username: String!
+    createdAt: DateTime! @timestamp(operations: [CREATE])
+    suspendedUntil: DateTime
+    suspendedIndefinitely: Boolean
+    SuspendedUser: User @relationship(type: "SUSPENDED_AS_USER", direction: IN)
+    SuspendedMod: ModerationProfile @relationship(type: "SUSPENDED_AS_MOD", direction: IN)
+  }
+
   type Channel {
-    description: String
-    displayName: String
     uniqueName: String! @unique
     createdAt: DateTime! @timestamp(operations: [CREATE])
+    displayName: String
+    description: String
     locked: Boolean
     deleted: Boolean
     channelIconURL: String
@@ -156,7 +166,17 @@ const typeDefinitions = gql `
     Comments: [Comment!]! @relationship(type: "HAS_COMMENT", direction: OUT) # used for aggregated comment counts
     DefaultChannelRole: ChannelRole
       @relationship(type: "HAS_DEFAULT_CHANNEL_ROLE", direction: OUT)
+    DefaultModRole: ModChannelRole
+      @relationship(type: "HAS_DEFAULT_MOD_ROLE", direction: OUT)
+    ElevatedModRole: ModChannelRole
+      @relationship(type: "HAS_DEFAULT_ELEVATED_MOD_ROLE", direction: OUT)
+    SuspendedRole: ChannelRole
+      @relationship(type: "HAS_DEFAULT_SUSPENDED_ROLE", direction: OUT)
+    SuspendedModRole: ModChannelRole
+      @relationship(type: "HAS_DEFAULT_SUSPENDED_ROLE", direction: OUT)
     Issues: [Issue!]! @relationship(type: "HAS_ISSUE", direction: OUT)
+    SuspendedUsers: [Suspension!]! @relationship(type: "SUSPENDED_AS_USER", direction: OUT)
+    SuspendedMods: [Suspension!]! @relationship(type: "SUSPENDED_AS_MOD", direction: OUT)
     WikiHomePage: WikiPage @relationship(type: "HAS_WIKI_HOME_PAGE", direction: OUT)
     eventsEnabled: Boolean
     wikiEnabled: Boolean
@@ -212,6 +232,7 @@ const typeDefinitions = gql `
     Channel: Channel @relationship(type: "POSTED_IN_CHANNEL", direction: OUT)
     Comments: [Comment!]!
       @relationship(type: "CONTAINS_COMMENT", direction: OUT)
+    archived: Boolean
     RelatedIssues: [Issue!]! @relationship(type: "CITED_ISSUE", direction: IN)
   }
 
@@ -298,6 +319,7 @@ const typeDefinitions = gql `
     isFeedbackComment: Boolean
     ChildComments: [Comment!]! @relationship(type: "IS_REPLY_TO", direction: IN)
     deleted: Boolean
+    archived: Boolean
     updatedAt: DateTime @timestamp(operations: [UPDATE])
     createdAt: DateTime! @timestamp(operations: [CREATE])
     Tags: [Tag!]! @relationship(type: "HAS_TAG", direction: OUT)
@@ -345,6 +367,7 @@ const typeDefinitions = gql `
       @relationship(type: "HAS_MOD_ROLE", direction: OUT)
     ActivityFeed: [ModerationAction!]!
       @relationship(type: "ACTIVITY_ON_ISSUE", direction: OUT)
+    Suspensions: [Suspension!]! @relationship(type: "SUSPENDED_AS_MOD", direction: OUT)
   }
 
   type ModerationAction {
@@ -369,6 +392,8 @@ const typeDefinitions = gql `
     relatedDiscussionId: ID
     relatedCommentId: ID
     relatedEventId: ID
+    relatedUsername: String
+    relatedModProfileName: String
     createdAt: DateTime! @timestamp(operations: [CREATE])
     updatedAt: DateTime @timestamp(operations: [UPDATE])
     flaggedServerRuleViolation: Boolean
@@ -512,6 +537,53 @@ const typeDefinitions = gql `
     acceptForumModInvite(
       channelUniqueName: String!
     ): Boolean
+    reportDiscussion(
+      discussionId: ID!
+      reportText: String!
+      selectedForumRules: [String!]!
+      selectedServerRules: [String!]!
+      channelUniqueName: String!
+    ): Issue
+    reportComment(
+      commentId: ID!
+      reportText: String!
+      selectedForumRules: [String!]!
+      selectedServerRules: [String!]!
+      channelUniqueName: String!
+    ): Issue
+    reportEvent(
+      eventId: ID!
+      reportText: String!
+      selectedForumRules: [String!]!
+      selectedServerRules: [String!]!
+      channelUniqueName: String!
+    ): Issue
+    suspendUser(
+      issueId: ID!
+    ): Issue
+    suspendMod(
+      issueId: ID!
+    ): Issue
+    archiveComment(
+      commentId: ID!
+      selectedForumRules: [String!]!
+      selectedServerRules: [String!]!
+      reportText: String!
+    ): Issue
+    archiveDiscussion(
+      discussionId: ID!
+      selectedForumRules: [String!]!
+      selectedServerRules: [String!]!
+      reportText: String!
+      channelUniqueName: String!
+    ): Issue
+    archiveEvent(
+      eventId: ID!
+      selectedForumRules: [String!]!
+      selectedServerRules: [String!]!
+      reportText: String!
+      channelUniqueName: String!
+    ): Issue
   }
 
   input SiteWideDiscussionSortOrder {
@@ -609,15 +681,21 @@ const typeDefinitions = gql `
     canOpenSupportTickets: Boolean
     canCloseSupportTickets: Boolean
     canReport: Boolean
+    canSuspendUser: Boolean
   }
 
   type ModServerRole {
     name: String @unique
     description: String
-    canOpenSupportTickets: Boolean
     canLockChannel: Boolean
-    canCloseSupportTickets: Boolean
+    canHideComment: Boolean
+    canHideEvent: Boolean
+    canHideDiscussion: Boolean
     canGiveFeedback: Boolean
+    canOpenSupportTickets: Boolean
+    canCloseSupportTickets: Boolean
+    canReport: Boolean
+    canSuspendUser: Boolean
   }
 
   type ServerConfig {
@@ -629,10 +707,12 @@ const typeDefinitions = gql `
       @relationship(type: "HAS_DEFAULT_SERVER_ROLE", direction: OUT)
     DefaultModRole: ModServerRole
       @relationship(type: "HAS_DEFAULT_MOD_ROLE", direction: OUT)
-    DefaultChannelRole: ChannelRole
-      @relationship(type: "HAS_DEFAULT_CHANNEL_ROLE", direction: OUT)
-    DefaultModChannelRole: ModChannelRole
-      @relationship(type: "HAS_DEFAULT_MOD_ROLE", direction: OUT)
+    DefaultElevatedModRole: ModServerRole
+      @relationship(type: "HAS_DEFAULT_ELEVATED_MOD_ROLE", direction: OUT)
+    DefaultSuspendedRole: ServerRole
+      @relationship(type: "HAS_DEFAULT_SUSPENDED_ROLE", direction: OUT)
+    DefaultSuspendedModRole: ModServerRole
+      @relationship(type: "HAS_DEFAULT_SUSPENDED_ROLE", direction: OUT)
   }
 
   type EnvironmentInfo {

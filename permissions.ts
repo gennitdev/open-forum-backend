@@ -21,14 +21,15 @@ const permissionList = shield({
       deleteServerConfigs: rules.isAdmin,
 
       updateServerConfigs: rules.isAdmin,
+      updateModServerRoles: rules.isAdmin,
       deleteChannelRoles: or(rules.isAdmin, rules.isChannelOwner),
       deleteServerRoles: rules.isAdmin,
       
       createEmailAndUser: allow,
-      updateUsers: allow,//or(rules.isAccountOwner, rules.isAdmin),
+      updateUsers: or(rules.isAccountOwner, rules.isAdmin),
       
       createChannels: and(rules.createChannelInputIsValid, rules.canCreateChannel),
-      updateChannels: allow,//and(rules.updateChannelInputIsValid, or(rules.isChannelOwner, rules.isAdmin)),
+      updateChannels: and(rules.updateChannelInputIsValid, or(rules.isChannelOwner, rules.isAdmin)),
       deleteChannels: or(rules.isAdmin, rules.isChannelOwner),
 
       deleteEmails: or(rules.isAccountOwner, rules.isAdmin),
@@ -84,6 +85,15 @@ const permissionList = shield({
       createNotifications: deny,
       deleteNotifications: deny,
       updateNotifications: deny,
+
+      reportDiscussion: allow,
+      reportComment: allow,
+      reportEvent: allow,
+      suspendMod: allow,
+      suspendUser: allow,
+      archiveComment: allow,
+      archiveDiscussion: allow,
+      archiveEvent: allow,
     },
   },{
     debug: true,

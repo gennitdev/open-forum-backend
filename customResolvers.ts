@@ -43,6 +43,17 @@ import cancelInviteOwner from './customResolvers/mutations/cancelInviteForumOwne
 
 import getSortedChannels from './customResolvers/queries/getSortedChannels.js';
 
+import reportComment from './customResolvers/mutations/reportComment.js';
+import reportDiscussion from './customResolvers/mutations/reportDiscussion.js';
+import reportEvent from './customResolvers/mutations/reportEvent.js';
+
+import archiveComment from './customResolvers/mutations/archiveComment.js';
+import archiveDiscussion from './customResolvers/mutations/archiveDiscussion.js';
+import archiveEvent from './customResolvers/mutations/archiveEvent.js';
+
+import suspendUser from './customResolvers/mutations/suspendUser.js';
+import suspendMod from './customResolvers/mutations/suspendMod.js';
+
 const { OGM } = pkg;
 
 export default function (driver: any) {
@@ -54,11 +65,13 @@ export default function (driver: any) {
   const Discussion = ogm.model("Discussion");
   const DiscussionChannel = ogm.model("DiscussionChannel");
   const Event = ogm.model("Event");
+  const EventChannel = ogm.model("EventChannel");
   const Comment = ogm.model("Comment");
   const User = ogm.model("User");
   const Email = ogm.model("Email");
   const Channel = ogm.model("Channel");
   const Tag = ogm.model("Tag");
+  const Issue = ogm.model("Issue");
   const ChannelRole = ogm.model("ChannelRole");
   const ModChannelRole = ogm.model("ModChannelRole");
   const ServerRole = ogm.model("ServerRole");
@@ -205,6 +218,40 @@ export default function (driver: any) {
         ServerRole,
         ModServerRole,
         ServerConfig,
+      }),
+      reportComment: reportComment({
+        Issue,
+        Comment
+      }),
+      reportDiscussion: reportDiscussion({
+        Issue,
+        Discussion
+      }),
+      reportEvent: reportEvent({
+        Issue,
+        Event
+      }),
+      suspendUser: suspendUser({
+        Issue,
+        Channel
+      }),
+      suspendMod: suspendMod({
+        Issue,
+        Channel
+      }),
+      archiveComment: archiveComment({
+        Issue,
+        Comment,
+      }),
+      archiveDiscussion: archiveDiscussion({
+        Issue,
+        Discussion,
+        DiscussionChannel
+      }),
+      archiveEvent: archiveEvent({
+        Issue,
+        Event,
+        EventChannel
       })
     },
   };

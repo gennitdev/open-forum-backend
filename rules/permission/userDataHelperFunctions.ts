@@ -57,6 +57,27 @@ const getKey = (header: any, callback: any) => {
   }
 };
 
+export const getModProfileNameFromUsername = async (
+  username: string,
+  ogm: any
+) => {
+  const User = ogm.model("User");
+  try {
+    const userData = await User.find({
+      where: { username },
+      selectionSet: `{
+        ModerationProfile {
+          displayName
+        }
+      }`,
+    });
+    return userData[0]?.ModerationProfile?.displayName;
+  } catch (error) {
+    console.error("Error fetching mod profile name:", error);
+    return null;
+  }
+}
+
 export const getUserFromEmail = async (
   email: string,
   EmailModel: EmailModel
@@ -225,6 +246,7 @@ export const setUserDataOnContext = async (
   let email: string | null = null;
   let decoded: any;
   let username: string | null | undefined = null;
+  let modProfileName: string | null | undefined = null;
 
   if (token) {
     console.log("Verifying token...");
@@ -291,6 +313,9 @@ export const setUserDataOnContext = async (
     if (email) {
       username = await getUserFromEmail(email, ogm.model("Email"));
     }
+    if (username) {
+      modProfileName = await getModProfileNameFromUsername(username, ogm);
+    }
   }
 
   return {
@@ -300,7 +325,7 @@ export const setUserDataOnContext = async (
     data: {
       ServerRoles: [],
       ChannelRoles: [],
-      ModerationProfile: null,
+      ModerationProfile: modProfileName ? { displayName: modProfileName } : null,
     },
   };
 };

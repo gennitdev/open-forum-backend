@@ -4,6 +4,7 @@ import type {
   UserModel,
 } from "../../ogm_types.js";
 import { setUserDataOnContext } from "../../rules/permission/userDataHelperFunctions.js";
+
 type Args = {
   channelUniqueName: string;
 };
