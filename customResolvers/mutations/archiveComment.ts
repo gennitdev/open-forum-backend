@@ -172,7 +172,9 @@ const getResolver = (input: Input) => {
           update: issueUpdateInput,
         });
         const issueId = issueData.issues[0]?.id || null;
-        if (issueId) return true;
+        if (!issueId) {
+          throw new GraphQLError("Error updating issue");
+        }
       } catch (error) {
         throw new GraphQLError("Error updating issue");
       }
@@ -234,7 +236,7 @@ const getResolver = (input: Input) => {
         id: commentId,
       };
       const commentUpdateInput: CommentUpdateInput = {
-        // archived: true,
+        archived: true,
         RelatedIssues: [
           {
             connect: [
@@ -257,7 +259,7 @@ const getResolver = (input: Input) => {
       if (!commentUpdateId) {
         throw new GraphQLError("Error updating comment");
       }
-      return issueData;
+      return issueData.issues[0]
     } catch (error) {
       console.log("Error creating issue", error);
       return false;

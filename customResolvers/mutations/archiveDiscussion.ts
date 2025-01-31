@@ -275,7 +275,7 @@ const getResolver = (input: Input) => {
       if (!discussionChannelUpdateId) {
         throw new GraphQLError("Error updating discussionChannel");
       }
-      return issueData;
+      return issueData.issues[0];
     } catch (error) {
       console.log("Error creating issue", error);
       return false;
