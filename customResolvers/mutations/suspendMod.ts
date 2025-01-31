@@ -50,9 +50,9 @@ const getResolver = (input: Input) => {
     }
 
     const relatedModProfileName = "test"; //issueData[0]?.relatedModProfileName || null;
-    // if (!relatedModProfileName) {
-    //   throw new GraphQLError("Could not find the relatedModProfileName of the account that needs to be suspended.");
-    // }
+    if (!relatedModProfileName) {
+      throw new GraphQLError("Could not find the relatedModProfileName of the account that needs to be suspended.");
+    }
 
     // Set loggedInUsername to null explicitly if not present
     context.user = await setUserDataOnContext({
