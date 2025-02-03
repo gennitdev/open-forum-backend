@@ -735,6 +735,7 @@ const typeDefinitions = gql`
       channelUniqueName: String!
       searchInput: String
       selectedTags: [String]
+      showArchived: Boolean
       options: DiscussionListOptions
     ): DiscussionChannelListFormat
     getSiteWideDiscussionList(

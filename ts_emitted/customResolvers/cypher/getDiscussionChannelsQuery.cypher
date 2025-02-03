@@ -14,6 +14,10 @@ WHERE
             WHERE tag.text IN $selectedTags 
         }
     )
+   // If archived=false, exclude archived. If archived=true, include archived.
+    AND ($showArchived OR coalesce(dc.archived, false) = false)
+    
+
 WITH COUNT(dc) AS totalCount
 
 // Now, fetch the discussion channels with pagination and other filters
@@ -31,6 +35,8 @@ WHERE
             WHERE tag.text IN $selectedTags 
         }
     )
+    // If archived=false, exclude archived. If archived=true, include archived.
+    AND ($showArchived OR coalesce(dc.archived, false) = false)
 
 WITH dc, totalCount
 MATCH (dc)-[:POSTED_IN_CHANNEL]->(d:Discussion)
@@ -106,6 +112,8 @@ WITH totalCount, dc, d, author, tagsText, loggedInUserUpvote, totalUpvoters,
 // Return the results with modified UpvotedByUsers
 RETURN {
     id: dc.id,
+    archived: dc.archived,
+    locked: dc.locked,
     discussionId: d.id,
     createdAt: dc.createdAt,
     channelUniqueName: dc.channelUniqueName,

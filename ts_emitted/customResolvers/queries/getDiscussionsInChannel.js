@@ -9,10 +9,10 @@ var timeFrameOptionKeys;
     timeFrameOptionKeys["day"] = "day";
 })(timeFrameOptionKeys || (timeFrameOptionKeys = {}));
 const getResolver = (input) => {
-    const { driver, DiscussionChannel } = input;
+    const { driver } = input;
     return async (parent, args, context, info) => {
         var _a;
-        const { channelUniqueName, options, selectedTags, searchInput } = args;
+        const { channelUniqueName, options, selectedTags, searchInput, showArchived } = args;
         const { offset, limit, sort, timeFrame } = options || {};
         // Set loggedInUsername to null explicitly if not present
         context.user = await setUserDataOnContext({
@@ -27,6 +27,7 @@ const getResolver = (input) => {
             let aggregateCount = 0;
             const queryParams = {
                 searchInput,
+                showArchived,
                 titleRegex,
                 bodyRegex,
                 selectedTags: selectedTags || [],

@@ -24,23 +24,26 @@ type Args = {
 type Input = {
   Issue: IssueModel;
   Discussion: DiscussionModel;
-  DiscussionChannel: DiscussionChannelModel
+  DiscussionChannel: DiscussionChannelModel;
 };
 
 const getResolver = (input: Input) => {
   const { Issue, Discussion, DiscussionChannel } = input;
   return async (parent: any, args: Args, context: any, resolveInfo: any) => {
-    const { discussionId, selectedForumRules, selectedServerRules, reportText, channelUniqueName } =
-      args;
+    const {
+      discussionId,
+      selectedForumRules,
+      selectedServerRules,
+      reportText,
+      channelUniqueName,
+    } = args;
 
     if (!discussionId) {
       throw new GraphQLError("Discussion ID is required");
     }
 
     if (!channelUniqueName) {
-      throw new GraphQLError(
-        "A forum name is required."
-      );
+      throw new GraphQLError("A forum name is required.");
     }
 
     const atLeastOneViolation =
@@ -78,7 +81,6 @@ const getResolver = (input: Input) => {
             title
         }`,
     });
-  
 
     // Check if an issue already exists for the discussion ID and channel unique name.
     const issueData = await Issue.find({
@@ -96,6 +98,54 @@ const getResolver = (input: Input) => {
       existingIssueId = issueData[0]?.id || "";
       existingIssueFlaggedServerRuleViolation =
         issueData[0]?.flaggedServerRuleViolation || false;
+    } else {
+      // If an issue does NOT already exist, create a new issue.
+      const discussionTitle = discussionData[0]?.title || "";
+      const truncatedDiscussionTitle = discussionTitle?.substring(0, 50) || "";
+
+      const issueCreateInput: IssueCreateInput = {
+        title: `[Reported Discussion] "${truncatedDiscussionTitle}${
+          truncatedDiscussionTitle.length > 50 ? "..." : ""
+        }"`,
+        isOpen: true,
+        authorName: loggedInModName,
+        flaggedServerRuleViolation: selectedServerRules.length > 0,
+        channelUniqueName: channelUniqueName,
+        relatedDiscussionId: discussionId,
+        Author: {
+          ModerationProfile: {
+            connect: {
+              where: {
+                node: {
+                  displayName: loggedInModName,
+                },
+              },
+            },
+          },
+        },
+        Channel: {
+          connect: {
+            where: {
+              node: {
+                uniqueName: channelUniqueName,
+              },
+            },
+          },
+        },
+      };
+
+      try {
+        const issueData = await Issue.create({
+          input: [issueCreateInput],
+        });
+        const issueId = issueData.issues[0]?.id || null;
+        if (!issueId) {
+          throw new GraphQLError("Error creating issue");
+        }
+        existingIssueId = issueId;
+      } catch (error) {
+        throw new GraphQLError("Error creating issue");
+      }
     }
 
     const finalDiscussionText = getFinalCommentText({
@@ -146,8 +196,8 @@ const getResolver = (input: Input) => {
       },
     };
 
-    // If an issue already exists, update the issue with the new moderation action.
-    if (existingIssueId) {
+    try {
+      // Add the activity feed item to the issue that says we archived the discussion.
       const issueUpdateWhere: IssueWhere = {
         id: existingIssueId,
       };
@@ -167,70 +217,19 @@ const getResolver = (input: Input) => {
           selectedServerRules.length > 0,
       };
 
-      try {
-        const issueData = await Issue.update({
-          where: issueUpdateWhere,
-          update: issueUpdateInput,
-        });
-        const issueId = issueData.issues[0]?.id || null;
-        if (!issueId) {
-          throw new GraphQLError("Error updating issue");
-        }
-      } catch (error) {
-        throw new GraphQLError("Error updating issue");
-      }
-    }
-
-    // If an issue does NOT already exist, create a new issue.
-    const discussionTitle = discussionData[0]?.title || "";
-    const truncatedDiscussionTitle = discussionTitle?.substring(0, 50) || "";
-
-    const issueCreateInput: IssueCreateInput = {
-      title: `[Reported Discussion] "${truncatedDiscussionTitle}${
-        truncatedDiscussionTitle.length > 50 ? "..." : ""
-      }"`,
-      isOpen: true,
-      authorName: loggedInModName,
-      flaggedServerRuleViolation: selectedServerRules.length > 0,
-      channelUniqueName: channelUniqueName,
-      relatedDiscussionId: discussionId,
-      Author: {
-        ModerationProfile: {
-          connect: {
-            where: {
-              node: {
-                displayName: loggedInModName,
-              },
-            },
-          },
-        },
-      },
-      Channel: {
-        connect: {
-          where: {
-            node: {
-              uniqueName: channelUniqueName,
-            },
-          },
-        },
-      },
-      ActivityFeed: {
-        create: [
-          {
-            node: moderationActionCreateInput,
-          },
-        ],
-      },
-    };
-
-    try {
-      const issueData = await Issue.create({
-        input: [issueCreateInput],
+      const issueData = await Issue.update({
+        where: issueUpdateWhere,
+        update: issueUpdateInput,
       });
       const issueId = issueData.issues[0]?.id || null;
       if (!issueId) {
-        throw new GraphQLError("Error creating issue");
+        throw new GraphQLError("Error updating issue");
       }
+    } catch (error) {
+      throw new GraphQLError("Error updating issue");
+    }
+
+    try {
       // Update the discussionChannel so that archived=true and the issue is linked
       // to the discussion under RelatedIssues.
       // First we need to find the discussionChannel that matches the given discussion ID
@@ -244,12 +243,13 @@ const getResolver = (input: Input) => {
             id
         }`,
       });
+      console.log("discussionChannel", discussionChannel);
       const discussionChannelId = discussionChannel[0]?.id || null;
       if (!discussionChannelId) {
         throw new GraphQLError("Error finding discussionChannel");
       }
       const discussionChannelUpdateWhere: DiscussionChannelWhere = {
-        id: discussionId,
+        id: discussionChannelId,
       };
       const discussionChannelUpdateInput: DiscussionChannelUpdateInput = {
         archived: true,
@@ -259,7 +259,7 @@ const getResolver = (input: Input) => {
               {
                 where: {
                   node: {
-                    id: issueId,
+                    id: existingIssueId,
                   },
                 },
               },
@@ -271,11 +271,13 @@ const getResolver = (input: Input) => {
         where: discussionChannelUpdateWhere,
         update: discussionChannelUpdateInput,
       });
-      const discussionChannelUpdateId = discussionChannelUpdateData.discussionChannels[0]?.id || null;
+      console.log('result of discussion channel update data', discussionChannelUpdateData);
+      const discussionChannelUpdateId =
+        discussionChannelUpdateData.discussionChannels[0]?.id || null;
       if (!discussionChannelUpdateId) {
         throw new GraphQLError("Error updating discussionChannel");
       }
-      return issueData.issues[0];
+      return issueData[0];
     } catch (error) {
       console.log("Error creating issue", error);
       return false;
