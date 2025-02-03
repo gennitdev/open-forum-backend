@@ -9,11 +9,8 @@ import type {
   ModerationActionCreateInput,
 } from "../../../ogm_types.js";
 import { setUserDataOnContext } from "../../../rules/permission/userDataHelperFunctions.js";
-import {
-  getModerationActionCreateInput,
-} from "../reportComment.js";
 
-type CreateSuspensionResolverOptions = {
+type CreateUnsuspendResolverOptions = {
   Issue: IssueModel;
   Channel: ChannelModel;
 
@@ -35,7 +32,7 @@ type Args = {
   issueId: string;
 };
 
-export function createSuspensionResolver({
+export function createUnsuspendResolver({
   Issue,
   Channel,
   issueRelatedAccountField,
@@ -43,7 +40,7 @@ export function createSuspensionResolver({
   suspendedEntityName,
   suspensionActionDescription,
   suspensionCommentText,
-}: CreateSuspensionResolverOptions) {
+}: CreateUnsuspendResolverOptions) {
   return async function suspendEntityResolver(
     parent: any,
     args: Args,
@@ -83,7 +80,7 @@ export function createSuspensionResolver({
       );
     }
 
-    //  Make sure the user is logged in and is a moderator
+    // Make sure the user is logged in and is a moderator
     context.user = await setUserDataOnContext({
       context,
       getPermissionInfo: false,
@@ -97,16 +94,40 @@ export function createSuspensionResolver({
       throw new GraphQLError(`User ${loggedInUsername} is not a moderator`);
     }
 
-    const moderationActionCreateInput: ModerationActionCreateInput = getModerationActionCreateInput({
-      text: suspensionCommentText,
-      loggedInModName,
-      channelUniqueName,
+    // Build the ModerationAction creation input
+    const moderationActionCreateInput: ModerationActionCreateInput = {
+      ModerationProfile: {
+        connect: {
+          where: {
+            node: { displayName: loggedInModName },
+          },
+        },
+      },
       actionType: "suspension",
       actionDescription: suspensionActionDescription,
-      issueId,
-    })
+      Comment: {
+        create: {
+          node: {
+            text: suspensionCommentText,
+            isRootComment: true,
+            CommentAuthor: {
+              ModerationProfile: {
+                connect: {
+                  where: { node: { displayName: loggedInModName } },
+                },
+              },
+            },
+            Channel: {
+              connect: {
+                where: { node: { uniqueName: channelUniqueName } },
+              },
+            },
+          },
+        },
+      },
+    };
 
-    // Update the Issue with the new ModerationAction
+    // 4. Update the Issue with the new ModerationAction
     const issueUpdateWhere: IssueWhere = { id: issueId };
     const issueUpdateInput: IssueUpdateInput = {
       ActivityFeed: [
@@ -135,8 +156,7 @@ export function createSuspensionResolver({
       throw new GraphQLError("Unable to update Issue with ModerationAction");
     }
 
-// THIS IS WRONG
-
+    // Update the Channel's suspended field (e.g. SuspendedUsers / SuspendedMods)
     const channelUpdateWhere: ChannelWhere = {
       uniqueName: channelUniqueName,
     };

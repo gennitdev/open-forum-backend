@@ -71,6 +71,7 @@ export const getModerationActionCreateInput = (input: ModActionInput) => {
             },
           },
           Channel: {
+            // Important for making user profile's permalinks work
             connect: {
               where: {
                 node: {
@@ -80,6 +81,7 @@ export const getModerationActionCreateInput = (input: ModActionInput) => {
             },
           },
           Issue: {
+            // Important for making user profile's permalinks work
             connect: {
               where: {
                 node: {

@@ -585,6 +585,20 @@ const typeDefinitions = gql`
       reportText: String!
       channelUniqueName: String!
     ): Issue
+    unarchiveComment(
+      commentId: ID!
+      explanation: String
+    ): Issue
+    unarchiveDiscussion(
+      discussionId: ID!
+      channelUniqueName: String!
+      explanation: String
+    ): Issue
+    unarchiveEvent(
+      eventId: ID!
+      channelUniqueName: String!
+      explanation: String
+    ): Issue
   }
 
   input SiteWideDiscussionSortOrder {
@@ -742,6 +756,7 @@ const typeDefinitions = gql`
       searchInput: String
       selectedChannels: [String]
       selectedTags: [String]
+      showArchived: Boolean
       options: DiscussionListOptions
     ): SiteWideDiscussionListFormat
     getCommentSection(

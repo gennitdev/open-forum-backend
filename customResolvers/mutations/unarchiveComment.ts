@@ -2,7 +2,6 @@ import type {
   Issue,
   IssueModel,
   CommentModel,
-  IssueCreateInput,
   ModerationActionCreateInput,
   IssueWhere,
   IssueUpdateInput,
@@ -11,17 +10,13 @@ import type {
 } from "../../ogm_types.js";
 import { setUserDataOnContext } from "../../rules/permission/userDataHelperFunctions.js";
 import { GraphQLError } from "graphql";
-import { getFinalCommentText } from "./reportDiscussion.js";
 import {
   getModerationActionCreateInput,
-  getIssueCreateInput,
 } from "./reportComment.js";
 
 type Args = {
   commentId: string;
-  selectedForumRules: string[];
-  selectedServerRules: string[];
-  reportText: string;
+  explanation: string;
 };
 
 type Input = {
@@ -32,20 +27,11 @@ type Input = {
 const getResolver = (input: Input) => {
   const { Issue, Comment } = input;
   return async (parent: any, args: Args, context: any, resolveInfo: any) => {
-    const { commentId, selectedForumRules, selectedServerRules, reportText } =
-      args;
+    const { commentId, explanation } = args;
 
     if (!commentId) {
       throw new GraphQLError("Comment ID is required");
     }
-
-    const atLeastOneViolation =
-      selectedForumRules?.length > 0 || selectedServerRules?.length > 0;
-
-    if (!atLeastOneViolation) {
-      throw new GraphQLError("At least one rule must be selected");
-    }
-
     // Set loggedInUsername to null explicitly if not present
     context.user = await setUserDataOnContext({
       context,
@@ -53,7 +39,6 @@ const getResolver = (input: Input) => {
     });
 
     const loggedInUsername = context.user?.username || null;
-
     if (!loggedInUsername) {
       throw new GraphQLError("User must be logged in");
     }
@@ -65,18 +50,18 @@ const getResolver = (input: Input) => {
 
     let existingIssueId = "";
     let existingIssue: Issue | null = null;
-    let existingIssueFlaggedServerRuleViolation = false;
+
     const commentData = await Comment.find({
       where: {
         id: commentId,
       },
       selectionSet: `{
-            id
-            text
-            Channel {
-              uniqueName
-            }
-        }`,
+              id
+              text
+              Channel {
+                uniqueName
+              }
+          }`,
     });
     const channelUniqueName = commentData[0]?.Channel?.uniqueName || "";
     if (!channelUniqueName) {
@@ -92,60 +77,25 @@ const getResolver = (input: Input) => {
         relatedCommentId: commentId,
       },
       selectionSet: `{
-            id
-            flaggedServerRuleViolation
-        }`,
+              id
+              flaggedServerRuleViolation
+          }`,
     });
 
     if (issueData.length > 0) {
       existingIssueId = issueData[0]?.id || "";
       existingIssue = issueData[0];
-      existingIssueFlaggedServerRuleViolation =
-        issueData[0]?.flaggedServerRuleViolation || false;
+    } else {
+      throw new GraphQLError("Issue not found");
     }
-
-    const finalCommentText = getFinalCommentText({
-      reportText,
-      selectedForumRules,
-      selectedServerRules,
-    });
-
-    // If an issue does NOT already exist, create a new issue.
-    try {
-      const commentText = commentData[0]?.text || "";
-
-      const issueCreateInput: IssueCreateInput = getIssueCreateInput({
-        contextText: commentText,
-        selectedForumRules,
-        selectedServerRules,
-        loggedInModName,
-        channelUniqueName,
-        reportedContentType: "comment",
-        relatedCommentId: commentId,
-      });
-      const issueData = await Issue.create({
-        input: [issueCreateInput],
-      });
-      const issueId = issueData.issues[0]?.id || null;
-      if (!issueId) {
-        throw new GraphQLError("Error creating issue");
-      }
-      existingIssueId = issueId;
-      existingIssue = issueData.issues[0];
-    } catch (error) {
-      console.log("Error creating issue", error);
-      return false;
-    }
-
-   
 
     const moderationActionCreateInput: ModerationActionCreateInput =
       getModerationActionCreateInput({
-        text: finalCommentText,
+        text: explanation,
         loggedInModName,
         channelUniqueName,
-        actionType: "archive",
-        actionDescription: "Archived the comment and closed the issue",
+        actionType: "un-archive",
+        actionDescription: "Un-archived the comment",
         issueId: existingIssueId,
       });
 
@@ -163,10 +113,6 @@ const getResolver = (input: Input) => {
           ],
         },
       ],
-      isOpen: false, // Close the issue; archival is often the final action.
-      flaggedServerRuleViolation:
-        existingIssueFlaggedServerRuleViolation ||
-        selectedServerRules.length > 0,
     };
 
     try {
@@ -178,32 +124,17 @@ const getResolver = (input: Input) => {
       if (!issueId) {
         throw new GraphQLError("Error updating issue");
       }
-      
     } catch (error) {
       throw new GraphQLError("Error updating issue");
     }
 
     try {
-      // Update the comment so that archived=true and the issue is linked
-      // to the comment under RelatedIssues.
+      // Update the comment so that archived=false.
       const commentUpdateWhere: CommentWhere = {
         id: commentId,
       };
       const commentUpdateInput: CommentUpdateInput = {
-        archived: true,
-        RelatedIssues: [
-          {
-            connect: [
-              {
-                where: {
-                  node: {
-                    id: existingIssueId,
-                  },
-                },
-              },
-            ],
-          },
-        ],
+        archived: false,
       };
       const commentUpdateData = await Comment.update({
         where: commentUpdateWhere,

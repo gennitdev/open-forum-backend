@@ -20558,6 +20558,9 @@ export type Mutation = {
   seedDataForCypressTests?: Maybe<SeedDataResponse>;
   suspendMod?: Maybe<Issue>;
   suspendUser?: Maybe<Issue>;
+  unarchiveComment?: Maybe<Issue>;
+  unarchiveDiscussion?: Maybe<Issue>;
+  unarchiveEvent?: Maybe<Issue>;
   undoUpvoteComment?: Maybe<Comment>;
   undoUpvoteDiscussionChannel?: Maybe<DiscussionChannel>;
   updateAlbums: UpdateAlbumsMutationResponse;
@@ -21225,6 +21228,26 @@ export type MutationSuspendModArgs = {
 
 export type MutationSuspendUserArgs = {
   issueId: Scalars['ID']['input'];
+};
+
+
+export type MutationUnarchiveCommentArgs = {
+  commentId: Scalars['ID']['input'];
+  explanation?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type MutationUnarchiveDiscussionArgs = {
+  channelUniqueName: Scalars['String']['input'];
+  discussionId: Scalars['ID']['input'];
+  explanation?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type MutationUnarchiveEventArgs = {
+  channelUniqueName: Scalars['String']['input'];
+  eventId: Scalars['ID']['input'];
+  explanation?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -42438,6 +42461,9 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   seedDataForCypressTests?: Resolver<Maybe<ResolversTypes['SeedDataResponse']>, ParentType, ContextType, RequireFields<MutationSeedDataForCypressTestsArgs, 'channelRoles' | 'channels' | 'comments' | 'discussions' | 'events' | 'modChannelRoles' | 'modServerRoles' | 'serverConfigs' | 'serverRoles' | 'tags' | 'users'>>;
   suspendMod?: Resolver<Maybe<ResolversTypes['Issue']>, ParentType, ContextType, RequireFields<MutationSuspendModArgs, 'issueId'>>;
   suspendUser?: Resolver<Maybe<ResolversTypes['Issue']>, ParentType, ContextType, RequireFields<MutationSuspendUserArgs, 'issueId'>>;
+  unarchiveComment?: Resolver<Maybe<ResolversTypes['Issue']>, ParentType, ContextType, RequireFields<MutationUnarchiveCommentArgs, 'commentId'>>;
+  unarchiveDiscussion?: Resolver<Maybe<ResolversTypes['Issue']>, ParentType, ContextType, RequireFields<MutationUnarchiveDiscussionArgs, 'channelUniqueName' | 'discussionId'>>;
+  unarchiveEvent?: Resolver<Maybe<ResolversTypes['Issue']>, ParentType, ContextType, RequireFields<MutationUnarchiveEventArgs, 'channelUniqueName' | 'eventId'>>;
   undoUpvoteComment?: Resolver<Maybe<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<MutationUndoUpvoteCommentArgs, 'commentId' | 'username'>>;
   undoUpvoteDiscussionChannel?: Resolver<Maybe<ResolversTypes['DiscussionChannel']>, ParentType, ContextType, RequireFields<MutationUndoUpvoteDiscussionChannelArgs, 'discussionChannelId' | 'username'>>;
   updateAlbums?: Resolver<ResolversTypes['UpdateAlbumsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateAlbumsArgs>>;

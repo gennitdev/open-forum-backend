@@ -1,4 +1,5 @@
 import type {
+  Issue,
   IssueModel,
   DiscussionModel,
   IssueCreateInput,
@@ -12,6 +13,10 @@ import type {
 import { setUserDataOnContext } from "../../rules/permission/userDataHelperFunctions.js";
 import { GraphQLError } from "graphql";
 import { getFinalCommentText } from "./reportDiscussion.js";
+import {
+  getModerationActionCreateInput,
+  getIssueCreateInput,
+} from "./reportComment.js";
 
 type Args = {
   discussionId: string;
@@ -71,6 +76,7 @@ const getResolver = (input: Input) => {
     }
 
     let existingIssueId = "";
+    let existingIssue: Issue | null = null;
     let existingIssueFlaggedServerRuleViolation = false;
     const discussionData = await Discussion.find({
       where: {
@@ -96,43 +102,22 @@ const getResolver = (input: Input) => {
 
     if (issueData.length > 0) {
       existingIssueId = issueData[0]?.id || "";
+      existingIssue = issueData[0];
       existingIssueFlaggedServerRuleViolation =
         issueData[0]?.flaggedServerRuleViolation || false;
     } else {
       // If an issue does NOT already exist, create a new issue.
       const discussionTitle = discussionData[0]?.title || "";
-      const truncatedDiscussionTitle = discussionTitle?.substring(0, 50) || "";
 
-      const issueCreateInput: IssueCreateInput = {
-        title: `[Reported Discussion] "${truncatedDiscussionTitle}${
-          truncatedDiscussionTitle.length > 50 ? "..." : ""
-        }"`,
-        isOpen: true,
-        authorName: loggedInModName,
-        flaggedServerRuleViolation: selectedServerRules.length > 0,
-        channelUniqueName: channelUniqueName,
+      const issueCreateInput: IssueCreateInput = getIssueCreateInput({
+        contextText: discussionTitle,
+        selectedForumRules,
+        selectedServerRules,
+        loggedInModName,
+        channelUniqueName,
+        reportedContentType: "discussion",
         relatedDiscussionId: discussionId,
-        Author: {
-          ModerationProfile: {
-            connect: {
-              where: {
-                node: {
-                  displayName: loggedInModName,
-                },
-              },
-            },
-          },
-        },
-        Channel: {
-          connect: {
-            where: {
-              node: {
-                uniqueName: channelUniqueName,
-              },
-            },
-          },
-        },
-      };
+      })
 
       try {
         const issueData = await Issue.create({
@@ -143,6 +128,7 @@ const getResolver = (input: Input) => {
           throw new GraphQLError("Error creating issue");
         }
         existingIssueId = issueId;
+        existingIssue = issueData.issues[0];
       } catch (error) {
         throw new GraphQLError("Error creating issue");
       }
@@ -154,50 +140,17 @@ const getResolver = (input: Input) => {
       selectedServerRules,
     });
 
-    const moderationActionCreateInput: ModerationActionCreateInput = {
-      ModerationProfile: {
-        connect: {
-          where: {
-            node: {
-              displayName: loggedInModName,
-            },
-          },
-        },
-      },
-      actionType: "archive",
-      actionDescription: "Archived the discussion and closed the issue",
-      Comment: {
-        create: {
-          node: {
-            text: finalDiscussionText,
-            isRootComment: true,
-            CommentAuthor: {
-              ModerationProfile: {
-                connect: {
-                  where: {
-                    node: {
-                      displayName: loggedInModName,
-                    },
-                  },
-                },
-              },
-            },
-            Channel: {
-              connect: {
-                where: {
-                  node: {
-                    uniqueName: channelUniqueName,
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
-    };
-
     try {
       // Add the activity feed item to the issue that says we archived the discussion.
+      const moderationActionCreateInput: ModerationActionCreateInput =
+        getModerationActionCreateInput({
+          text: finalDiscussionText,
+          loggedInModName,
+          channelUniqueName,
+          actionType: "archive",
+          actionDescription: "Archived the discussion and closed the issue",
+          issueId: existingIssueId,
+        });
       const issueUpdateWhere: IssueWhere = {
         id: existingIssueId,
       };
@@ -271,13 +224,12 @@ const getResolver = (input: Input) => {
         where: discussionChannelUpdateWhere,
         update: discussionChannelUpdateInput,
       });
-      console.log('result of discussion channel update data', discussionChannelUpdateData);
       const discussionChannelUpdateId =
         discussionChannelUpdateData.discussionChannels[0]?.id || null;
       if (!discussionChannelUpdateId) {
         throw new GraphQLError("Error updating discussionChannel");
       }
-      return issueData[0];
+      return existingIssue;
     } catch (error) {
       console.log("Error creating issue", error);
       return false;

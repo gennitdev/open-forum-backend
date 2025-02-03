@@ -12,6 +12,10 @@ import type {
 import { setUserDataOnContext } from "../../rules/permission/userDataHelperFunctions.js";
 import { GraphQLError } from "graphql";
 import { getFinalCommentText } from "./reportDiscussion.js";
+import {
+  getModerationActionCreateInput,
+  getIssueCreateInput,
+} from "./reportComment.js";
 
 type Args = {
   eventId: string;
@@ -24,23 +28,26 @@ type Args = {
 type Input = {
   Issue: IssueModel;
   Event: EventModel;
-  EventChannel: EventChannelModel
+  EventChannel: EventChannelModel;
 };
 
 const getResolver = (input: Input) => {
   const { Issue, Event, EventChannel } = input;
   return async (parent: any, args: Args, context: any, resolveInfo: any) => {
-    const { eventId, selectedForumRules, selectedServerRules, reportText, channelUniqueName } =
-      args;
+    const {
+      eventId,
+      selectedForumRules,
+      selectedServerRules,
+      reportText,
+      channelUniqueName,
+    } = args;
 
     if (!eventId) {
       throw new GraphQLError("Event ID is required");
     }
 
     if (!channelUniqueName) {
-      throw new GraphQLError(
-        "A forum name is required."
-      );
+      throw new GraphQLError("A forum name is required.");
     }
 
     const atLeastOneViolation =
@@ -78,7 +85,6 @@ const getResolver = (input: Input) => {
             title
         }`,
     });
-  
 
     // Check if an issue already exists for the event ID and channel unique name.
     const issueData = await Issue.find({
@@ -96,6 +102,32 @@ const getResolver = (input: Input) => {
       existingIssueId = issueData[0]?.id || "";
       existingIssueFlaggedServerRuleViolation =
         issueData[0]?.flaggedServerRuleViolation || false;
+    } else {
+      // If an issue does NOT already exist, create a new issue.
+      const eventTitle = eventData[0]?.title || "";
+
+      const issueCreateInput: IssueCreateInput = getIssueCreateInput({
+        contextText: eventTitle,
+        selectedForumRules,
+        selectedServerRules,
+        loggedInModName,
+        channelUniqueName,
+        reportedContentType: "event",
+        relatedEventId: eventId,
+      });
+
+      try {
+        const issueData = await Issue.create({
+          input: [issueCreateInput],
+        });
+        const issueId = issueData.issues[0]?.id || null;
+        if (!issueId) {
+          throw new GraphQLError("Error creating issue");
+        }
+        existingIssueId = issueId;
+      } catch (error) {
+        throw new GraphQLError("Error creating issue");
+      }
     }
 
     const finalEventText = getFinalCommentText({
@@ -104,50 +136,17 @@ const getResolver = (input: Input) => {
       selectedServerRules,
     });
 
-    const moderationActionCreateInput: ModerationActionCreateInput = {
-      ModerationProfile: {
-        connect: {
-          where: {
-            node: {
-              displayName: loggedInModName,
-            },
-          },
-        },
-      },
-      actionType: "archive",
-      actionDescription: "Archived the event and closed the issue",
-      Comment: {
-        create: {
-          node: {
-            text: finalEventText,
-            isRootComment: true,
-            CommentAuthor: {
-              ModerationProfile: {
-                connect: {
-                  where: {
-                    node: {
-                      displayName: loggedInModName,
-                    },
-                  },
-                },
-              },
-            },
-            Channel: {
-              connect: {
-                where: {
-                  node: {
-                    uniqueName: channelUniqueName,
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
-    };
-
-    // If an issue already exists, update the issue with the new moderation action.
-    if (existingIssueId) {
+    try {
+      // Add the activity feed item to the issue that says we archived the event.
+      const moderationActionCreateInput: ModerationActionCreateInput =
+        getModerationActionCreateInput({
+          text: finalEventText,
+          loggedInModName,
+          channelUniqueName,
+          actionType: "archive",
+          actionDescription: "Archived the event and closed the issue",
+          issueId: existingIssueId,
+        });
       const issueUpdateWhere: IssueWhere = {
         id: existingIssueId,
       };
@@ -167,70 +166,19 @@ const getResolver = (input: Input) => {
           selectedServerRules.length > 0,
       };
 
-      try {
-        const issueData = await Issue.update({
-          where: issueUpdateWhere,
-          update: issueUpdateInput,
-        });
-        const issueId = issueData.issues[0]?.id || null;
-        if (!issueId) {
-          throw new GraphQLError("Error updating issue");
-        }
-      } catch (error) {
-        throw new GraphQLError("Error updating issue");
-      }
-    }
-
-    // If an issue does NOT already exist, create a new issue.
-    const eventTitle = eventData[0]?.title || "";
-    const truncatedEventTitle = eventTitle?.substring(0, 50) || "";
-
-    const issueCreateInput: IssueCreateInput = {
-      title: `[Reported Event] "${truncatedEventTitle}${
-        truncatedEventTitle.length > 50 ? "..." : ""
-      }"`,
-      isOpen: true,
-      authorName: loggedInModName,
-      flaggedServerRuleViolation: selectedServerRules.length > 0,
-      channelUniqueName: channelUniqueName,
-      relatedEventId: eventId,
-      Author: {
-        ModerationProfile: {
-          connect: {
-            where: {
-              node: {
-                displayName: loggedInModName,
-              },
-            },
-          },
-        },
-      },
-      Channel: {
-        connect: {
-          where: {
-            node: {
-              uniqueName: channelUniqueName,
-            },
-          },
-        },
-      },
-      ActivityFeed: {
-        create: [
-          {
-            node: moderationActionCreateInput,
-          },
-        ],
-      },
-    };
-
-    try {
-      const issueData = await Issue.create({
-        input: [issueCreateInput],
+      const issueData = await Issue.update({
+        where: issueUpdateWhere,
+        update: issueUpdateInput,
       });
       const issueId = issueData.issues[0]?.id || null;
       if (!issueId) {
-        throw new GraphQLError("Error creating issue");
+        throw new GraphQLError("Error updating issue");
       }
+    } catch (error) {
+      throw new GraphQLError("Error updating issue");
+    }
+
+    try {
       // Update the eventChannel so that archived=true and the issue is linked
       // to the event under RelatedIssues.
       // First we need to find the eventChannel that matches the given event ID
@@ -249,17 +197,17 @@ const getResolver = (input: Input) => {
         throw new GraphQLError("Error finding eventChannel");
       }
       const eventChannelUpdateWhere: EventChannelWhere = {
-        id: eventId,
+        id: eventChannelId,
       };
       const eventChannelUpdateInput: EventChannelUpdateInput = {
-        // archived: true,
+        archived: true,
         RelatedIssues: [
           {
             connect: [
               {
                 where: {
                   node: {
-                    id: issueId,
+                    id: existingIssueId,
                   },
                 },
               },
@@ -271,11 +219,16 @@ const getResolver = (input: Input) => {
         where: eventChannelUpdateWhere,
         update: eventChannelUpdateInput,
       });
-      const eventChannelUpdateId = eventChannelUpdateData.eventChannels[0]?.id || null;
+      console.log(
+        "result of event channel update data",
+        eventChannelUpdateData
+      );
+      const eventChannelUpdateId =
+        eventChannelUpdateData.eventChannels[0]?.id || null;
       if (!eventChannelUpdateId) {
         throw new GraphQLError("Error updating eventChannel");
       }
-      return issueData.issues[0]
+      return issueData[0];
     } catch (error) {
       console.log("Error creating issue", error);
       return false;
