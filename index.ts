@@ -173,8 +173,15 @@ async function initializeServer() {
         code: error.extensions?.code,
       }),
     });
+    
 
-    server.listen({ port }).then(({ url }) => {
+    server.listen({ 
+      port,
+      cors: {
+        origin: "*",
+        credentials: true,
+      },
+    }).then(({ url }) => {
       console.log(`🚀  Server ready at ${url}`);
     });
   } catch (e) {
