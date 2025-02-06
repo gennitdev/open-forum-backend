@@ -36,8 +36,11 @@ import reportComment from './customResolvers/mutations/reportComment.js';
 import reportDiscussion from './customResolvers/mutations/reportDiscussion.js';
 import reportEvent from './customResolvers/mutations/reportEvent.js';
 import archiveComment from './customResolvers/mutations/archiveComment.js';
+import unarchiveComment from './customResolvers/mutations/unarchiveComment.js';
 import archiveDiscussion from './customResolvers/mutations/archiveDiscussion.js';
+import unarchiveDiscussion from './customResolvers/mutations/unarchiveDiscussion.js';
 import archiveEvent from './customResolvers/mutations/archiveEvent.js';
+import unarchiveEvent from './customResolvers/mutations/unarchiveEvent.js';
 import suspendUser from './customResolvers/mutations/suspendUser.js';
 import suspendMod from './customResolvers/mutations/suspendMod.js';
 const { OGM } = pkg;
@@ -233,7 +236,19 @@ export default function (driver) {
                 Issue,
                 Event,
                 EventChannel
-            })
+            }),
+            unarchiveComment: unarchiveComment({
+                Issue,
+                Comment,
+            }),
+            unarchiveDiscussion: unarchiveDiscussion({
+                Issue,
+                DiscussionChannel
+            }),
+            unarchiveEvent: unarchiveEvent({
+                Issue,
+                EventChannel
+            }),
         },
     };
     return {

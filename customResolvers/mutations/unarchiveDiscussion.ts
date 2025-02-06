@@ -67,9 +67,10 @@ const getResolver = (input: Input) => {
           }`,
     });
 
-    if (issueData.length > 0) {
+    if (issueData.length > 0 && issueData[0]?.id) {
       existingIssueId = issueData[0]?.id || "";
       existingIssue = issueData[0];
+      console.log("existingIssueId", existingIssueId);
     } else {
       throw new GraphQLError("Issue not found");
     }

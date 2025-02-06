@@ -94,6 +94,9 @@ const permissionList = shield({
       archiveComment: allow,
       archiveDiscussion: allow,
       archiveEvent: allow,
+      unarchiveComment: allow,
+      unarchiveDiscussion: allow,
+      unarchiveEvent: allow,
     },
   },{
     debug: true,
