@@ -256,6 +256,7 @@ export const setUserDataOnContext = async (
           resolve(decoded);
         } 
         console.error("JWT Verification Error:", err);
+        resolve(null);
       });
     });
 

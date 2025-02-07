@@ -150,7 +150,13 @@ async function initializeServer() {
                 });
             },
         });
-        server.listen({ port }).then(({ url }) => {
+        server.listen({
+            port,
+            cors: {
+                origin: "*",
+                credentials: true,
+            },
+        }).then(({ url }) => {
             console.log(`🚀  Server ready at ${url}`);
         });
     }
