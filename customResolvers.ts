@@ -236,11 +236,17 @@ export default function (driver: any) {
       }),
       suspendUser: suspendUser({
         Issue,
-        Channel
+        Channel,
+        Comment,
+        Event,
+        Discussion
       }),
       suspendMod: suspendMod({
         Issue,
-        Channel
+        Channel,
+        Comment,
+        Event,
+        Discussion
       }),
       archiveComment: archiveComment({
         Issue,

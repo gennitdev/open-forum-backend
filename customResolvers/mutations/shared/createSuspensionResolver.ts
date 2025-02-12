@@ -1,58 +1,72 @@
-import { GraphQLError } from "graphql";
+import { GraphQLError } from 'graphql'
 import type {
-  IssueModel,
   ChannelModel,
-  IssueWhere,
+  IssueModel,
   IssueUpdateInput,
-  ChannelWhere,
+  IssueWhere,
+  CommentModel,
+  DiscussionModel,
+  EventModel,
   ChannelUpdateInput,
   ModerationActionCreateInput,
-} from "../../../ogm_types.js";
-import { setUserDataOnContext } from "../../../rules/permission/userDataHelperFunctions.js";
-import {
-  getModerationActionCreateInput,
-} from "../reportComment.js";
+  ChannelWhere,
+  ModerationProfile,
+  User
+} from '../../../ogm_types.js'
+import { setUserDataOnContext } from '../../../rules/permission/userDataHelperFunctions.js'
+import { getModerationActionCreateInput } from '../reportComment.js'
 
 type CreateSuspensionResolverOptions = {
-  Issue: IssueModel;
-  Channel: ChannelModel;
+  Issue: IssueModel
+  Channel: ChannelModel
+  Comment: CommentModel
+  Discussion: DiscussionModel
+  Event: EventModel
 
   // The name of the field on the Issue that identifies the user or mod to suspend
-  issueRelatedAccountField: 'relatedUsername' | 'relatedModProfileName';
+  issueRelatedAccountField: 'relatedUsername' | 'relatedModProfileName'
 
   // The field on Channel to connect the suspended user or mod
-  channelSuspendedField: 'SuspendedUsers' | 'SuspendedMods';
+  channelSuspendedField: 'SuspendedUsers' | 'SuspendedMods'
 
   // A short string describing who/what is being suspended
-  suspendedEntityName: 'user' | 'mod';
+  suspendedEntityName: 'user' | 'mod'
 
   // For constructing the moderation action message text (and description).
-  suspensionActionDescription: string;
-  suspensionCommentText: string;
-};
+  suspensionActionDescription: string
+  suspensionCommentText: string
+}
 
 type Args = {
-  issueId: string;
-};
+  issueId: string
+  suspendUntil: Date
+  suspendIndefinitely: boolean
+  explanation: string
+}
 
-export function createSuspensionResolver({
+export function createSuspensionResolver ({
   Issue,
   Channel,
-  issueRelatedAccountField,
-  channelSuspendedField,
+  Discussion,
+  Event,
+  Comment,
   suspendedEntityName,
   suspensionActionDescription,
-  suspensionCommentText,
+  suspensionCommentText
 }: CreateSuspensionResolverOptions) {
-  return async function suspendEntityResolver(
+  return async function suspendEntityResolver (
     parent: any,
     args: Args,
     context: any,
     resolveInfo: any
   ) {
-    const { issueId } = args;
+    const { issueId, suspendUntil, suspendIndefinitely, explanation } = args
     if (!issueId) {
-      throw new GraphQLError("Issue ID is required");
+      throw new GraphQLError('Issue ID is required')
+    }
+
+    function isUser (data: User | ModerationProfile): data is User {
+      return (data as User).username !== undefined
     }
 
     // Fetch Issue to ensure it exists and to retrieve the channel unique name.
@@ -61,128 +75,211 @@ export function createSuspensionResolver({
       selectionSet: `{
         id
         channelUniqueName
-        ${issueRelatedAccountField}
+        relatedDiscussionId
+        relatedEventId
+        relatedCommentId
         Channel { uniqueName }
-      }`,
-    });
+      }`
+    })
+
+    let originalPosterData: null | undefined | User | ModerationProfile = null
+    const discussionId = issueData[0]?.relatedDiscussionId
+    const eventId = issueData[0]?.relatedEventId
+    const commentId = issueData[0]?.relatedCommentId
+
+    if (discussionId) {
+      const discussionResult = await Discussion.find({
+        where: { id: discussionId },
+        selectionSet: `{ 
+          id
+          Author { username } 
+        }`
+      })
+      originalPosterData = discussionResult[0]?.Author
+    }
+    if (eventId) {
+      const eventResult = await Event.find({
+        where: { id: eventId },
+        selectionSet: `{ 
+          id
+          Author { username } 
+        }`
+      })
+      originalPosterData = eventResult[0]?.Poster
+    }
+    if (commentId) {
+      const commentResult = await Comment.find({
+        where: { id: commentId },
+        selectionSet: `{ 
+          id
+          Author { username } 
+        }`
+      })
+      originalPosterData = commentResult[0]?.CommentAuthor
+    }
 
     if (issueData.length === 0) {
-      throw new GraphQLError("Issue not found");
+      throw new GraphQLError('Issue not found')
     }
 
-    const foundIssue = issueData[0];
-    const channelUniqueName = foundIssue?.Channel?.uniqueName;
+    const foundIssue = issueData[0]
+    const channelUniqueName = foundIssue?.Channel?.uniqueName
     if (!channelUniqueName) {
-      throw new GraphQLError("Could not find the forum name for the issue.");
+      throw new GraphQLError('Could not find the forum name for the issue.')
     }
 
-    const relatedAccountName = foundIssue?.[issueRelatedAccountField];
+    let relatedAccountName = ''
+    let relatedAccountType = ''
+    if (originalPosterData && !isUser(originalPosterData)) {
+      if (!originalPosterData.displayName) {
+        throw new GraphQLError(
+          `Could not find the ${suspendedEntityName} account name to be suspended.`
+        )
+      }
+      relatedAccountName = originalPosterData.displayName
+      relatedAccountType = 'ModerationProfile'
+    } else if ((originalPosterData as User)?.username) {
+      relatedAccountName = (originalPosterData as User).username
+      relatedAccountType = 'User'
+      if (!relatedAccountName) {
+        throw new GraphQLError(
+          `Could not find the ${suspendedEntityName} account name to be suspended.`
+        )
+      }
+    }
     if (!relatedAccountName) {
       throw new GraphQLError(
         `Could not find the ${suspendedEntityName} account name to be suspended.`
-      );
+      )
     }
 
     //  Make sure the user is logged in and is a moderator
     context.user = await setUserDataOnContext({
       context,
-      getPermissionInfo: false,
-    });
-    const loggedInUsername = context.user?.username || null;
+      getPermissionInfo: false
+    })
+    const loggedInUsername = context.user?.username || null
     if (!loggedInUsername) {
-      throw new GraphQLError("User must be logged in");
+      throw new GraphQLError('User must be logged in')
     }
-    const loggedInModName = context.user.data?.ModerationProfile?.displayName;
+    const loggedInModName = context.user.data?.ModerationProfile?.displayName
     if (!loggedInModName) {
-      throw new GraphQLError(`User ${loggedInUsername} is not a moderator`);
+      throw new GraphQLError(`User ${loggedInUsername} is not a moderator`)
     }
 
-    const moderationActionCreateInput: ModerationActionCreateInput = getModerationActionCreateInput({
-      text: suspensionCommentText,
-      loggedInModName,
-      channelUniqueName,
-      actionType: "suspension",
-      actionDescription: suspensionActionDescription,
-      issueId,
-    })
+    const moderationActionCreateInput: ModerationActionCreateInput =
+      getModerationActionCreateInput({
+        text: suspensionCommentText,
+        loggedInModName,
+        channelUniqueName,
+        actionType: 'suspension',
+        actionDescription: suspensionActionDescription,
+        issueId
+      })
 
     // Update the Issue with the new ModerationAction
-    const issueUpdateWhere: IssueWhere = { id: issueId };
+    const issueUpdateWhere: IssueWhere = { id: issueId }
     const issueUpdateInput: IssueUpdateInput = {
       ActivityFeed: [
         {
           create: [
             {
-              node: moderationActionCreateInput,
-            },
-          ],
-        },
-      ],
-    };
+              node: moderationActionCreateInput
+            }
+          ]
+        }
+      ]
+    }
 
-    let updatedIssue: any;
+    let updatedIssue: any
     try {
       updatedIssue = await Issue.update({
         where: issueUpdateWhere,
-        update: issueUpdateInput,
-      });
+        update: issueUpdateInput
+      })
     } catch (error) {
-      throw new GraphQLError("Error updating issue");
+      throw new GraphQLError('Error updating issue')
     }
 
-    const updatedIssueId = updatedIssue.issues[0]?.id || null;
+    const updatedIssueId = updatedIssue.issues[0]?.id || null
     if (!updatedIssueId) {
-      throw new GraphQLError("Unable to update Issue with ModerationAction");
+      throw new GraphQLError('Unable to update Issue with ModerationAction')
     }
-
-// THIS IS WRONG
-
     const channelUpdateWhere: ChannelWhere = {
-      uniqueName: channelUniqueName,
-    };
-    const channelUpdateInput: ChannelUpdateInput = {
-      [channelSuspendedField]: [
-        {
-          connect: [
-            {
-              where: {
-                node: { 
-                    username: relatedAccountName ,
-                    SuspendedUser: issueRelatedAccountField === 'relatedUsername' ? {
-                        connect: {
-                            node: {
-                                where: { username: relatedAccountName }
-                            }
-                        }
-                    } : null,
-                    SuspendedMod: issueRelatedAccountField === 'relatedModProfileName' ? {
-                        connect: {
-                            node: {
-                                where: { displayName: relatedAccountName }
-                            }
-                        }
-                    } : null
-                },
-              },
-            },
-          ],
-        },
-      ],
-    };
-
-    try {
-      const channelData = await Channel.update({
-        where: channelUpdateWhere,
-        update: channelUpdateInput,
-      });
-      const channelId = channelData.channels[0]?.uniqueName || null;
-      if (channelId) {
-        return updatedIssue; // success
-      }
-    } catch (error) {
-      throw new GraphQLError("Error updating channel");
+      uniqueName: channelUniqueName
     }
+    let channelUpdateInput: ChannelUpdateInput | null = null
+    if (relatedAccountType === 'User') {
+      channelUpdateInput = {
+        SuspendedUsers: [
+          {
+            create: [
+              {
+                node: {
+                  // Create Suspension, which contains the length
+                  // of the suspension and the reason for it.
+                  channelUniqueName: channelUniqueName,
+                  username: relatedAccountName,
+                  suspendedUntil: suspendUntil,
+                  suspendedIndefinitely: suspendIndefinitely,
+                  SuspendedUser: {
+                    connect: {
+                      where: {
+                        node: {
+                          username: relatedAccountName
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    } else if (relatedAccountType === 'ModerationProfile') {
+      channelUpdateInput = {
+        SuspendedMods: [
+          {
+            create: [
+              {
+                // Create Suspension, which contains the length
+                // of the suspension and the reason for it.
+                node: {
+                  channelUniqueName: channelUniqueName,
+                  modProfileName: relatedAccountName,
+                  suspendedUntil: suspendUntil,
+                  suspendedIndefinitely: suspendIndefinitely,
+                  SuspendedMod: {
+                    connect: {
+                      where: {
+                        node: {
+                          displayName: relatedAccountName
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
 
-    return false;
-  };
+      try {
+        const channelData = await Channel.update({
+          where: channelUpdateWhere,
+          update: channelUpdateInput
+        })
+        const channelId = channelData.channels[0]?.uniqueName || null
+        if (channelId) {
+          return updatedIssue // success
+        }
+      } catch (error) {
+        throw new GraphQLError('Error updating channel')
+      }
+
+      return false
+    }
+  }
 }

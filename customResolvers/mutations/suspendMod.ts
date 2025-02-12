@@ -1,20 +1,32 @@
-import type { IssueModel, ChannelModel } from "../../ogm_types.js";
+import type { IssueModel, ChannelModel, EventModel, DiscussionModel, CommentModel } from "../../ogm_types.js";
 import { createSuspensionResolver } from "./shared/createSuspensionResolver.js";
 
 type Input = {
   Issue: IssueModel;
   Channel: ChannelModel;
+  Event: EventModel;
+  Comment: CommentModel;
+  Discussion: DiscussionModel;
 };
 
 export default function getResolver(input: Input) {
-  const { Issue, Channel } = input;
+  const { 
+    Issue, 
+    Channel,
+    Comment,
+    Event,
+    Discussion
+  } = input;
   return createSuspensionResolver({
     Issue,
     Channel,
+    Comment,
+    Event,
+    Discussion,
     issueRelatedAccountField: "relatedModProfileName",
     channelSuspendedField: "SuspendedMods",
     suspendedEntityName: "mod",
     suspensionActionDescription: "Suspended the mod",
-    suspensionCommentText: "The mod has been suspended."
+    suspensionCommentText: "The mod has been suspended.",
   });
 }

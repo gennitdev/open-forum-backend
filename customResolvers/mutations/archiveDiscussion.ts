@@ -196,7 +196,6 @@ const getResolver = (input: Input) => {
             id
         }`,
       });
-      console.log("discussionChannel", discussionChannel);
       const discussionChannelId = discussionChannel[0]?.id || null;
       if (!discussionChannelId) {
         throw new GraphQLError("Error finding discussionChannel");

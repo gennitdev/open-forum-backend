@@ -132,7 +132,8 @@ const typeDefinitions = gql`
   type Suspension {
     id: ID! @id
     channelUniqueName: String!
-    username: String!
+    username: String
+    modProfileName: String
     createdAt: DateTime! @timestamp(operations: [CREATE])
     suspendedUntil: DateTime
     suspendedIndefinitely: Boolean
@@ -561,9 +562,15 @@ const typeDefinitions = gql`
     ): Issue
     suspendUser(
       issueId: ID!
+      suspendUntil: DateTime
+      suspendIndefinitely: Boolean
+      explanation: String
     ): Issue
     suspendMod(
       issueId: ID!
+      suspendUntil: DateTime
+      suspendIndefinitely: Boolean
+      explanation: String
     ): Issue
     archiveComment(
       commentId: ID!
