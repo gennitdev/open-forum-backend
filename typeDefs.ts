@@ -139,6 +139,7 @@ const typeDefinitions = gql`
     suspendedIndefinitely: Boolean
     SuspendedUser: User @relationship(type: "SUSPENDED_AS_USER", direction: IN)
     SuspendedMod: ModerationProfile @relationship(type: "SUSPENDED_AS_MOD", direction: IN)
+    RelatedIssue: Issue @relationship(type: "HAS_CONTEXT", direction: OUT)
   }
 
   type Channel {

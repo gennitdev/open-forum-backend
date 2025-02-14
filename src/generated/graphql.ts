@@ -21270,12 +21270,18 @@ export type MutationSeedDataForCypressTestsArgs = {
 
 
 export type MutationSuspendModArgs = {
+  explanation?: InputMaybe<Scalars['String']['input']>;
   issueId: Scalars['ID']['input'];
+  suspendIndefinitely?: InputMaybe<Scalars['Boolean']['input']>;
+  suspendUntil?: InputMaybe<Scalars['DateTime']['input']>;
 };
 
 
 export type MutationSuspendUserArgs = {
+  explanation?: InputMaybe<Scalars['String']['input']>;
   issueId: Scalars['ID']['input'];
+  suspendIndefinitely?: InputMaybe<Scalars['Boolean']['input']>;
+  suspendUntil?: InputMaybe<Scalars['DateTime']['input']>;
 };
 
 
@@ -24617,6 +24623,9 @@ export type StringAggregateSelection = {
 
 export type Suspension = {
   __typename?: 'Suspension';
+  RelatedIssue?: Maybe<Issue>;
+  RelatedIssueAggregate?: Maybe<SuspensionIssueRelatedIssueAggregationSelection>;
+  RelatedIssueConnection: SuspensionRelatedIssueConnection;
   SuspendedMod?: Maybe<ModerationProfile>;
   SuspendedModAggregate?: Maybe<SuspensionModerationProfileSuspendedModAggregationSelection>;
   SuspendedModConnection: SuspensionSuspendedModConnection;
@@ -24630,6 +24639,28 @@ export type Suspension = {
   suspendedIndefinitely?: Maybe<Scalars['Boolean']['output']>;
   suspendedUntil?: Maybe<Scalars['DateTime']['output']>;
   username?: Maybe<Scalars['String']['output']>;
+};
+
+
+export type SuspensionRelatedIssueArgs = {
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  options?: InputMaybe<IssueOptions>;
+  where?: InputMaybe<IssueWhere>;
+};
+
+
+export type SuspensionRelatedIssueAggregateArgs = {
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  where?: InputMaybe<IssueWhere>;
+};
+
+
+export type SuspensionRelatedIssueConnectionArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<Array<SuspensionRelatedIssueConnectionSort>>;
+  where?: InputMaybe<SuspensionRelatedIssueConnectionWhere>;
 };
 
 
@@ -24688,6 +24719,7 @@ export type SuspensionAggregateSelection = {
 };
 
 export type SuspensionConnectInput = {
+  RelatedIssue?: InputMaybe<SuspensionRelatedIssueConnectFieldInput>;
   SuspendedMod?: InputMaybe<SuspensionSuspendedModConnectFieldInput>;
   SuspendedUser?: InputMaybe<SuspensionSuspendedUserConnectFieldInput>;
 };
@@ -24702,6 +24734,7 @@ export type SuspensionConnectWhere = {
 };
 
 export type SuspensionCreateInput = {
+  RelatedIssue?: InputMaybe<SuspensionRelatedIssueFieldInput>;
   SuspendedMod?: InputMaybe<SuspensionSuspendedModFieldInput>;
   SuspendedUser?: InputMaybe<SuspensionSuspendedUserFieldInput>;
   channelUniqueName: Scalars['String']['input'];
@@ -24712,11 +24745,13 @@ export type SuspensionCreateInput = {
 };
 
 export type SuspensionDeleteInput = {
+  RelatedIssue?: InputMaybe<SuspensionRelatedIssueDeleteFieldInput>;
   SuspendedMod?: InputMaybe<SuspensionSuspendedModDeleteFieldInput>;
   SuspendedUser?: InputMaybe<SuspensionSuspendedUserDeleteFieldInput>;
 };
 
 export type SuspensionDisconnectInput = {
+  RelatedIssue?: InputMaybe<SuspensionRelatedIssueDisconnectFieldInput>;
   SuspendedMod?: InputMaybe<SuspensionSuspendedModDisconnectFieldInput>;
   SuspendedUser?: InputMaybe<SuspensionSuspendedUserDisconnectFieldInput>;
 };
@@ -24725,6 +24760,28 @@ export type SuspensionEdge = {
   __typename?: 'SuspensionEdge';
   cursor: Scalars['String']['output'];
   node: Suspension;
+};
+
+export type SuspensionIssueRelatedIssueAggregationSelection = {
+  __typename?: 'SuspensionIssueRelatedIssueAggregationSelection';
+  count: Scalars['Int']['output'];
+  node?: Maybe<SuspensionIssueRelatedIssueNodeAggregateSelection>;
+};
+
+export type SuspensionIssueRelatedIssueNodeAggregateSelection = {
+  __typename?: 'SuspensionIssueRelatedIssueNodeAggregateSelection';
+  authorName: StringAggregateSelection;
+  body: StringAggregateSelection;
+  channelUniqueName: StringAggregateSelection;
+  createdAt: DateTimeAggregateSelection;
+  id: IdAggregateSelection;
+  relatedCommentId: IdAggregateSelection;
+  relatedDiscussionId: IdAggregateSelection;
+  relatedEventId: IdAggregateSelection;
+  relatedModProfileName: StringAggregateSelection;
+  relatedUsername: StringAggregateSelection;
+  title: StringAggregateSelection;
+  updatedAt: DateTimeAggregateSelection;
 };
 
 export type SuspensionModerationProfileSuspendedModAggregationSelection = {
@@ -24746,7 +24803,199 @@ export type SuspensionOptions = {
   sort?: InputMaybe<Array<SuspensionSort>>;
 };
 
+export type SuspensionRelatedIssueAggregateInput = {
+  AND?: InputMaybe<Array<SuspensionRelatedIssueAggregateInput>>;
+  NOT?: InputMaybe<SuspensionRelatedIssueAggregateInput>;
+  OR?: InputMaybe<Array<SuspensionRelatedIssueAggregateInput>>;
+  count?: InputMaybe<Scalars['Int']['input']>;
+  count_GT?: InputMaybe<Scalars['Int']['input']>;
+  count_GTE?: InputMaybe<Scalars['Int']['input']>;
+  count_LT?: InputMaybe<Scalars['Int']['input']>;
+  count_LTE?: InputMaybe<Scalars['Int']['input']>;
+  node?: InputMaybe<SuspensionRelatedIssueNodeAggregationWhereInput>;
+};
+
+export type SuspensionRelatedIssueConnectFieldInput = {
+  connect?: InputMaybe<IssueConnectInput>;
+  /** Whether or not to overwrite any matching relationship with the new properties. */
+  overwrite?: Scalars['Boolean']['input'];
+  where?: InputMaybe<IssueConnectWhere>;
+};
+
+export type SuspensionRelatedIssueConnection = {
+  __typename?: 'SuspensionRelatedIssueConnection';
+  edges: Array<SuspensionRelatedIssueRelationship>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type SuspensionRelatedIssueConnectionSort = {
+  node?: InputMaybe<IssueSort>;
+};
+
+export type SuspensionRelatedIssueConnectionWhere = {
+  AND?: InputMaybe<Array<SuspensionRelatedIssueConnectionWhere>>;
+  NOT?: InputMaybe<SuspensionRelatedIssueConnectionWhere>;
+  OR?: InputMaybe<Array<SuspensionRelatedIssueConnectionWhere>>;
+  node?: InputMaybe<IssueWhere>;
+};
+
+export type SuspensionRelatedIssueCreateFieldInput = {
+  node: IssueCreateInput;
+};
+
+export type SuspensionRelatedIssueDeleteFieldInput = {
+  delete?: InputMaybe<IssueDeleteInput>;
+  where?: InputMaybe<SuspensionRelatedIssueConnectionWhere>;
+};
+
+export type SuspensionRelatedIssueDisconnectFieldInput = {
+  disconnect?: InputMaybe<IssueDisconnectInput>;
+  where?: InputMaybe<SuspensionRelatedIssueConnectionWhere>;
+};
+
+export type SuspensionRelatedIssueFieldInput = {
+  connect?: InputMaybe<SuspensionRelatedIssueConnectFieldInput>;
+  create?: InputMaybe<SuspensionRelatedIssueCreateFieldInput>;
+};
+
+export type SuspensionRelatedIssueNodeAggregationWhereInput = {
+  AND?: InputMaybe<Array<SuspensionRelatedIssueNodeAggregationWhereInput>>;
+  NOT?: InputMaybe<SuspensionRelatedIssueNodeAggregationWhereInput>;
+  OR?: InputMaybe<Array<SuspensionRelatedIssueNodeAggregationWhereInput>>;
+  authorName_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  authorName_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  authorName_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  authorName_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  authorName_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  authorName_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  authorName_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  authorName_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  authorName_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  authorName_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  authorName_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  authorName_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  authorName_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  authorName_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  authorName_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  body_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  body_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  body_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  body_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  body_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  body_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  body_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  body_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  body_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  body_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  body_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  body_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  body_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  body_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  body_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  createdAt_MAX_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+  relatedModProfileName_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  relatedModProfileName_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  relatedModProfileName_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  relatedModProfileName_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  relatedModProfileName_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  relatedModProfileName_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  relatedModProfileName_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  relatedModProfileName_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  relatedModProfileName_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  relatedModProfileName_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  relatedModProfileName_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  relatedModProfileName_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  relatedModProfileName_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  relatedModProfileName_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  relatedModProfileName_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  relatedUsername_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  relatedUsername_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  relatedUsername_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  relatedUsername_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  relatedUsername_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  relatedUsername_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  relatedUsername_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  relatedUsername_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  relatedUsername_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  relatedUsername_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  relatedUsername_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  relatedUsername_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  relatedUsername_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  relatedUsername_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  relatedUsername_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  title_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  title_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  title_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  title_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  title_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  title_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  title_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  title_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  title_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  title_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  title_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  title_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  title_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  title_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  title_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  updatedAt_MAX_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MAX_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MAX_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MAX_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MAX_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MIN_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MIN_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MIN_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MIN_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_MIN_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+};
+
+export type SuspensionRelatedIssueRelationship = {
+  __typename?: 'SuspensionRelatedIssueRelationship';
+  cursor: Scalars['String']['output'];
+  node: Issue;
+};
+
+export type SuspensionRelatedIssueUpdateConnectionInput = {
+  node?: InputMaybe<IssueUpdateInput>;
+};
+
+export type SuspensionRelatedIssueUpdateFieldInput = {
+  connect?: InputMaybe<SuspensionRelatedIssueConnectFieldInput>;
+  create?: InputMaybe<SuspensionRelatedIssueCreateFieldInput>;
+  delete?: InputMaybe<SuspensionRelatedIssueDeleteFieldInput>;
+  disconnect?: InputMaybe<SuspensionRelatedIssueDisconnectFieldInput>;
+  update?: InputMaybe<SuspensionRelatedIssueUpdateConnectionInput>;
+  where?: InputMaybe<SuspensionRelatedIssueConnectionWhere>;
+};
+
 export type SuspensionRelationInput = {
+  RelatedIssue?: InputMaybe<SuspensionRelatedIssueCreateFieldInput>;
   SuspendedMod?: InputMaybe<SuspensionSuspendedModCreateFieldInput>;
   SuspendedUser?: InputMaybe<SuspensionSuspendedUserCreateFieldInput>;
 };
@@ -25157,6 +25406,7 @@ export type SuspensionSuspendedUserUpdateFieldInput = {
 };
 
 export type SuspensionUpdateInput = {
+  RelatedIssue?: InputMaybe<SuspensionRelatedIssueUpdateFieldInput>;
   SuspendedMod?: InputMaybe<SuspensionSuspendedModUpdateFieldInput>;
   SuspendedUser?: InputMaybe<SuspensionSuspendedUserUpdateFieldInput>;
   channelUniqueName?: InputMaybe<Scalars['String']['input']>;
@@ -25193,6 +25443,11 @@ export type SuspensionWhere = {
   AND?: InputMaybe<Array<SuspensionWhere>>;
   NOT?: InputMaybe<SuspensionWhere>;
   OR?: InputMaybe<Array<SuspensionWhere>>;
+  RelatedIssue?: InputMaybe<IssueWhere>;
+  RelatedIssueAggregate?: InputMaybe<SuspensionRelatedIssueAggregateInput>;
+  RelatedIssueConnection?: InputMaybe<SuspensionRelatedIssueConnectionWhere>;
+  RelatedIssueConnection_NOT?: InputMaybe<SuspensionRelatedIssueConnectionWhere>;
+  RelatedIssue_NOT?: InputMaybe<IssueWhere>;
   SuspendedMod?: InputMaybe<ModerationProfileWhere>;
   SuspendedModAggregate?: InputMaybe<SuspensionSuspendedModAggregateInput>;
   SuspendedModConnection?: InputMaybe<SuspensionSuspendedModConnectionWhere>;
@@ -35534,9 +35789,24 @@ export type ResolversTypes = {
   SuspensionDeleteInput: SuspensionDeleteInput;
   SuspensionDisconnectInput: SuspensionDisconnectInput;
   SuspensionEdge: ResolverTypeWrapper<SuspensionEdge>;
+  SuspensionIssueRelatedIssueAggregationSelection: ResolverTypeWrapper<SuspensionIssueRelatedIssueAggregationSelection>;
+  SuspensionIssueRelatedIssueNodeAggregateSelection: ResolverTypeWrapper<SuspensionIssueRelatedIssueNodeAggregateSelection>;
   SuspensionModerationProfileSuspendedModAggregationSelection: ResolverTypeWrapper<SuspensionModerationProfileSuspendedModAggregationSelection>;
   SuspensionModerationProfileSuspendedModNodeAggregateSelection: ResolverTypeWrapper<SuspensionModerationProfileSuspendedModNodeAggregateSelection>;
   SuspensionOptions: SuspensionOptions;
+  SuspensionRelatedIssueAggregateInput: SuspensionRelatedIssueAggregateInput;
+  SuspensionRelatedIssueConnectFieldInput: SuspensionRelatedIssueConnectFieldInput;
+  SuspensionRelatedIssueConnection: ResolverTypeWrapper<SuspensionRelatedIssueConnection>;
+  SuspensionRelatedIssueConnectionSort: SuspensionRelatedIssueConnectionSort;
+  SuspensionRelatedIssueConnectionWhere: SuspensionRelatedIssueConnectionWhere;
+  SuspensionRelatedIssueCreateFieldInput: SuspensionRelatedIssueCreateFieldInput;
+  SuspensionRelatedIssueDeleteFieldInput: SuspensionRelatedIssueDeleteFieldInput;
+  SuspensionRelatedIssueDisconnectFieldInput: SuspensionRelatedIssueDisconnectFieldInput;
+  SuspensionRelatedIssueFieldInput: SuspensionRelatedIssueFieldInput;
+  SuspensionRelatedIssueNodeAggregationWhereInput: SuspensionRelatedIssueNodeAggregationWhereInput;
+  SuspensionRelatedIssueRelationship: ResolverTypeWrapper<SuspensionRelatedIssueRelationship>;
+  SuspensionRelatedIssueUpdateConnectionInput: SuspensionRelatedIssueUpdateConnectionInput;
+  SuspensionRelatedIssueUpdateFieldInput: SuspensionRelatedIssueUpdateFieldInput;
   SuspensionRelationInput: SuspensionRelationInput;
   SuspensionSort: SuspensionSort;
   SuspensionSuspendedModAggregateInput: SuspensionSuspendedModAggregateInput;
@@ -38128,9 +38398,24 @@ export type ResolversParentTypes = {
   SuspensionDeleteInput: SuspensionDeleteInput;
   SuspensionDisconnectInput: SuspensionDisconnectInput;
   SuspensionEdge: SuspensionEdge;
+  SuspensionIssueRelatedIssueAggregationSelection: SuspensionIssueRelatedIssueAggregationSelection;
+  SuspensionIssueRelatedIssueNodeAggregateSelection: SuspensionIssueRelatedIssueNodeAggregateSelection;
   SuspensionModerationProfileSuspendedModAggregationSelection: SuspensionModerationProfileSuspendedModAggregationSelection;
   SuspensionModerationProfileSuspendedModNodeAggregateSelection: SuspensionModerationProfileSuspendedModNodeAggregateSelection;
   SuspensionOptions: SuspensionOptions;
+  SuspensionRelatedIssueAggregateInput: SuspensionRelatedIssueAggregateInput;
+  SuspensionRelatedIssueConnectFieldInput: SuspensionRelatedIssueConnectFieldInput;
+  SuspensionRelatedIssueConnection: SuspensionRelatedIssueConnection;
+  SuspensionRelatedIssueConnectionSort: SuspensionRelatedIssueConnectionSort;
+  SuspensionRelatedIssueConnectionWhere: SuspensionRelatedIssueConnectionWhere;
+  SuspensionRelatedIssueCreateFieldInput: SuspensionRelatedIssueCreateFieldInput;
+  SuspensionRelatedIssueDeleteFieldInput: SuspensionRelatedIssueDeleteFieldInput;
+  SuspensionRelatedIssueDisconnectFieldInput: SuspensionRelatedIssueDisconnectFieldInput;
+  SuspensionRelatedIssueFieldInput: SuspensionRelatedIssueFieldInput;
+  SuspensionRelatedIssueNodeAggregationWhereInput: SuspensionRelatedIssueNodeAggregationWhereInput;
+  SuspensionRelatedIssueRelationship: SuspensionRelatedIssueRelationship;
+  SuspensionRelatedIssueUpdateConnectionInput: SuspensionRelatedIssueUpdateConnectionInput;
+  SuspensionRelatedIssueUpdateFieldInput: SuspensionRelatedIssueUpdateFieldInput;
   SuspensionRelationInput: SuspensionRelationInput;
   SuspensionSort: SuspensionSort;
   SuspensionSuspendedModAggregateInput: SuspensionSuspendedModAggregateInput;
@@ -43204,6 +43489,9 @@ export type StringAggregateSelectionResolvers<ContextType = any, ParentType exte
 };
 
 export type SuspensionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Suspension'] = ResolversParentTypes['Suspension']> = {
+  RelatedIssue?: Resolver<Maybe<ResolversTypes['Issue']>, ParentType, ContextType, RequireFields<SuspensionRelatedIssueArgs, 'directed'>>;
+  RelatedIssueAggregate?: Resolver<Maybe<ResolversTypes['SuspensionIssueRelatedIssueAggregationSelection']>, ParentType, ContextType, RequireFields<SuspensionRelatedIssueAggregateArgs, 'directed'>>;
+  RelatedIssueConnection?: Resolver<ResolversTypes['SuspensionRelatedIssueConnection'], ParentType, ContextType, RequireFields<SuspensionRelatedIssueConnectionArgs, 'directed'>>;
   SuspendedMod?: Resolver<Maybe<ResolversTypes['ModerationProfile']>, ParentType, ContextType, RequireFields<SuspensionSuspendedModArgs, 'directed'>>;
   SuspendedModAggregate?: Resolver<Maybe<ResolversTypes['SuspensionModerationProfileSuspendedModAggregationSelection']>, ParentType, ContextType, RequireFields<SuspensionSuspendedModAggregateArgs, 'directed'>>;
   SuspendedModConnection?: Resolver<ResolversTypes['SuspensionSuspendedModConnection'], ParentType, ContextType, RequireFields<SuspensionSuspendedModConnectionArgs, 'directed'>>;
@@ -43237,6 +43525,28 @@ export type SuspensionEdgeResolvers<ContextType = any, ParentType extends Resolv
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type SuspensionIssueRelatedIssueAggregationSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['SuspensionIssueRelatedIssueAggregationSelection'] = ResolversParentTypes['SuspensionIssueRelatedIssueAggregationSelection']> = {
+  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['SuspensionIssueRelatedIssueNodeAggregateSelection']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type SuspensionIssueRelatedIssueNodeAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['SuspensionIssueRelatedIssueNodeAggregateSelection'] = ResolversParentTypes['SuspensionIssueRelatedIssueNodeAggregateSelection']> = {
+  authorName?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  body?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  channelUniqueName?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['DateTimeAggregateSelection'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['IDAggregateSelection'], ParentType, ContextType>;
+  relatedCommentId?: Resolver<ResolversTypes['IDAggregateSelection'], ParentType, ContextType>;
+  relatedDiscussionId?: Resolver<ResolversTypes['IDAggregateSelection'], ParentType, ContextType>;
+  relatedEventId?: Resolver<ResolversTypes['IDAggregateSelection'], ParentType, ContextType>;
+  relatedModProfileName?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  relatedUsername?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  title?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  updatedAt?: Resolver<ResolversTypes['DateTimeAggregateSelection'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type SuspensionModerationProfileSuspendedModAggregationSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['SuspensionModerationProfileSuspendedModAggregationSelection'] = ResolversParentTypes['SuspensionModerationProfileSuspendedModAggregationSelection']> = {
   count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   node?: Resolver<Maybe<ResolversTypes['SuspensionModerationProfileSuspendedModNodeAggregateSelection']>, ParentType, ContextType>;
@@ -43246,6 +43556,19 @@ export type SuspensionModerationProfileSuspendedModAggregationSelectionResolvers
 export type SuspensionModerationProfileSuspendedModNodeAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['SuspensionModerationProfileSuspendedModNodeAggregateSelection'] = ResolversParentTypes['SuspensionModerationProfileSuspendedModNodeAggregateSelection']> = {
   createdAt?: Resolver<ResolversTypes['DateTimeAggregateSelection'], ParentType, ContextType>;
   displayName?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type SuspensionRelatedIssueConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['SuspensionRelatedIssueConnection'] = ResolversParentTypes['SuspensionRelatedIssueConnection']> = {
+  edges?: Resolver<Array<ResolversTypes['SuspensionRelatedIssueRelationship']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type SuspensionRelatedIssueRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['SuspensionRelatedIssueRelationship'] = ResolversParentTypes['SuspensionRelatedIssueRelationship']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['Issue'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -45320,8 +45643,12 @@ export type Resolvers<ContextType = any> = {
   Suspension?: SuspensionResolvers<ContextType>;
   SuspensionAggregateSelection?: SuspensionAggregateSelectionResolvers<ContextType>;
   SuspensionEdge?: SuspensionEdgeResolvers<ContextType>;
+  SuspensionIssueRelatedIssueAggregationSelection?: SuspensionIssueRelatedIssueAggregationSelectionResolvers<ContextType>;
+  SuspensionIssueRelatedIssueNodeAggregateSelection?: SuspensionIssueRelatedIssueNodeAggregateSelectionResolvers<ContextType>;
   SuspensionModerationProfileSuspendedModAggregationSelection?: SuspensionModerationProfileSuspendedModAggregationSelectionResolvers<ContextType>;
   SuspensionModerationProfileSuspendedModNodeAggregateSelection?: SuspensionModerationProfileSuspendedModNodeAggregateSelectionResolvers<ContextType>;
+  SuspensionRelatedIssueConnection?: SuspensionRelatedIssueConnectionResolvers<ContextType>;
+  SuspensionRelatedIssueRelationship?: SuspensionRelatedIssueRelationshipResolvers<ContextType>;
   SuspensionSuspendedModConnection?: SuspensionSuspendedModConnectionResolvers<ContextType>;
   SuspensionSuspendedModRelationship?: SuspensionSuspendedModRelationshipResolvers<ContextType>;
   SuspensionSuspendedUserConnection?: SuspensionSuspendedUserConnectionResolvers<ContextType>;

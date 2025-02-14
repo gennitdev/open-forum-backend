@@ -2,14 +2,9 @@ import { GraphQLError } from 'graphql'
 import type {
   ChannelModel,
   IssueModel,
-  IssueUpdateInput,
-  IssueWhere,
   CommentModel,
   DiscussionModel,
   EventModel,
-  ChannelUpdateInput,
-  ModerationActionCreateInput,
-  ChannelWhere,
   ModerationProfile,
   User
 } from '../../../ogm_types.js'
@@ -61,6 +56,7 @@ export function createSuspensionResolver ({
     resolveInfo: any
   ) {
     const { issueId, suspendUntil, suspendIndefinitely, explanation } = args
+
     if (!issueId) {
       throw new GraphQLError('Issue ID is required')
     }
@@ -69,8 +65,8 @@ export function createSuspensionResolver ({
       return (data as User).username !== undefined
     }
 
-    // Fetch Issue to ensure it exists and to retrieve the channel unique name.
-    const issueData = await Issue.find({
+    // 1. Fetch the Issue
+    const [foundIssue] = await Issue.find({
       where: { id: issueId },
       selectionSet: `{
         id
@@ -82,55 +78,47 @@ export function createSuspensionResolver ({
       }`
     })
 
-    let originalPosterData: null | undefined | User | ModerationProfile = null
-    const discussionId = issueData[0]?.relatedDiscussionId
-    const eventId = issueData[0]?.relatedEventId
-    const commentId = issueData[0]?.relatedCommentId
-
-    if (discussionId) {
-      const discussionResult = await Discussion.find({
-        where: { id: discussionId },
-        selectionSet: `{ 
-          id
-          Author { username } 
-        }`
-      })
-      originalPosterData = discussionResult[0]?.Author
-    }
-    if (eventId) {
-      const eventResult = await Event.find({
-        where: { id: eventId },
-        selectionSet: `{ 
-          id
-          Author { username } 
-        }`
-      })
-      originalPosterData = eventResult[0]?.Poster
-    }
-    if (commentId) {
-      const commentResult = await Comment.find({
-        where: { id: commentId },
-        selectionSet: `{ 
-          id
-          Author { username } 
-        }`
-      })
-      originalPosterData = commentResult[0]?.CommentAuthor
-    }
-
-    if (issueData.length === 0) {
+    if (!foundIssue) {
       throw new GraphQLError('Issue not found')
     }
 
-    const foundIssue = issueData[0]
-    const channelUniqueName = foundIssue?.Channel?.uniqueName
+    const { relatedDiscussionId, relatedEventId, relatedCommentId } = foundIssue
+    const channelUniqueName = foundIssue.Channel?.uniqueName
     if (!channelUniqueName) {
-      throw new GraphQLError('Could not find the forum name for the issue.')
+      throw new GraphQLError(
+        'Could not find the forum (channel) name for the issue.'
+      )
     }
 
+    // 2. Figure out the "original poster" for discussion/event/comment
+    let originalPosterData = null
+    if (relatedDiscussionId) {
+      const [discussion] = await Discussion.find({
+        where: { id: relatedDiscussionId },
+        selectionSet: `{ id Author { username } }`
+      })
+      originalPosterData = discussion?.Author
+    }
+    if (relatedEventId) {
+      const [event] = await Event.find({
+        where: { id: relatedEventId },
+        selectionSet: `{ id Poster { username } }`
+      })
+      originalPosterData = event?.Poster
+    }
+    if (relatedCommentId) {
+      const [comment] = await Comment.find({
+        where: { id: relatedCommentId },
+        selectionSet: `{ id CommentAuthor { username } }`
+      })
+      originalPosterData = comment?.CommentAuthor
+    }
+
+    // 3. Extract the actual "name" to suspend
     let relatedAccountName = ''
     let relatedAccountType = ''
     if (originalPosterData && !isUser(originalPosterData)) {
+      // It's a ModerationProfile
       if (!originalPosterData.displayName) {
         throw new GraphQLError(
           `Could not find the ${suspendedEntityName} account name to be suspended.`
@@ -138,27 +126,26 @@ export function createSuspensionResolver ({
       }
       relatedAccountName = originalPosterData.displayName
       relatedAccountType = 'ModerationProfile'
-    } else if ((originalPosterData as User)?.username) {
-      relatedAccountName = (originalPosterData as User).username
-      relatedAccountType = 'User'
-      if (!relatedAccountName) {
+    } else if (originalPosterData && isUser(originalPosterData)) {
+      if (!originalPosterData.username) {
         throw new GraphQLError(
           `Could not find the ${suspendedEntityName} account name to be suspended.`
         )
       }
-    }
-    if (!relatedAccountName) {
+      relatedAccountName = originalPosterData.username
+      relatedAccountType = 'User'
+    } else {
       throw new GraphQLError(
         `Could not find the ${suspendedEntityName} account name to be suspended.`
       )
     }
 
-    //  Make sure the user is logged in and is a moderator
+    // 4. Confirm the person calling this is indeed a moderator
     context.user = await setUserDataOnContext({
       context,
       getPermissionInfo: false
     })
-    const loggedInUsername = context.user?.username || null
+    const loggedInUsername = context.user?.username
     if (!loggedInUsername) {
       throw new GraphQLError('User must be logged in')
     }
@@ -167,48 +154,51 @@ export function createSuspensionResolver ({
       throw new GraphQLError(`User ${loggedInUsername} is not a moderator`)
     }
 
-    const moderationActionCreateInput: ModerationActionCreateInput =
-      getModerationActionCreateInput({
-        text: suspensionCommentText,
-        loggedInModName,
-        channelUniqueName,
-        actionType: 'suspension',
-        actionDescription: suspensionActionDescription,
-        issueId
-      })
+    // 5. Create the moderation activity feed item
+    const moderationActionCreateInput = getModerationActionCreateInput({
+      text: explanation,
+      loggedInModName,
+      channelUniqueName,
+      actionType: 'suspension',
+      actionDescription: suspensionActionDescription,
+      issueId
+    })
 
-    // Update the Issue with the new ModerationAction
-    const issueUpdateWhere: IssueWhere = { id: issueId }
-    const issueUpdateInput: IssueUpdateInput = {
-      ActivityFeed: [
-        {
-          create: [
-            {
-              node: moderationActionCreateInput
-            }
-          ]
-        }
-      ]
-    }
-
-    let updatedIssue: any
+    // 6. Update the Issue with the ModerationAction
+    let updatedIssue
     try {
       updatedIssue = await Issue.update({
-        where: issueUpdateWhere,
-        update: issueUpdateInput
+        where: { id: issueId },
+        update: {
+          ActivityFeed: [
+            {
+              create: [{ node: moderationActionCreateInput }]
+            }
+          ]
+        },
+        selectionSet: `{
+          issues {
+            id
+            ActivityFeed {
+              id
+              actionType
+            }
+          }
+        }`
       })
-    } catch (error) {
+    } catch (err) {
       throw new GraphQLError('Error updating issue')
     }
 
-    const updatedIssueId = updatedIssue.issues[0]?.id || null
-    if (!updatedIssueId) {
-      throw new GraphQLError('Unable to update Issue with ModerationAction')
+    const updatedIssueNode = updatedIssue?.issues?.[0] || null
+    if (!updatedIssueNode?.id) {
+      // If your schema says the resolver must return Issue!, you might want to throw:
+      // throw new GraphQLError('Unable to update Issue with ModerationAction')
+      return null
     }
-    const channelUpdateWhere: ChannelWhere = {
-      uniqueName: channelUniqueName
-    }
-    let channelUpdateInput: ChannelUpdateInput | null = null
+
+    // 7. Construct the channel update input for either a user or mod
+    let channelUpdateInput = null
     if (relatedAccountType === 'User') {
       channelUpdateInput = {
         SuspendedUsers: [
@@ -222,6 +212,15 @@ export function createSuspensionResolver ({
                   username: relatedAccountName,
                   suspendedUntil: suspendUntil,
                   suspendedIndefinitely: suspendIndefinitely,
+                  RelatedIssue: {
+                    connect: {
+                      where: {
+                        node: {
+                          id: issueId
+                        }
+                      }
+                    }
+                  },
                   SuspendedUser: {
                     connect: {
                       where: {
@@ -258,6 +257,15 @@ export function createSuspensionResolver ({
                         }
                       }
                     }
+                  },
+                  RelatedIssue: {
+                    connect: {
+                      where: {
+                        node: {
+                          id: issueId
+                        }
+                      }
+                    }
                   }
                 }
               }
@@ -265,21 +273,32 @@ export function createSuspensionResolver ({
           }
         ]
       }
+    }
 
+    // 8. Update the channel with the suspension relationship
+    if (channelUpdateInput) {
       try {
         const channelData = await Channel.update({
-          where: channelUpdateWhere,
-          update: channelUpdateInput
+          where: { uniqueName: channelUniqueName },
+          update: channelUpdateInput,
+          // If you need the updated fields
+          selectionSet: `{
+            channels {
+              uniqueName
+            }
+          }`
         })
-        const channelId = channelData.channels[0]?.uniqueName || null
-        if (channelId) {
-          return updatedIssue // success
+
+        const updatedChannel = channelData.channels?.[0] || null
+        if (!updatedChannel?.uniqueName) {
+          throw new GraphQLError('Error updating channel')
         }
-      } catch (error) {
+      } catch (err) {
         throw new GraphQLError('Error updating channel')
       }
-
-      return false
     }
+
+    // 9. Finally, return the updatedIssue’s single Issue node (or null if it’s missing)
+    return updatedIssueNode || null
   }
 }
