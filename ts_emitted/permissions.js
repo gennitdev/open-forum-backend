@@ -74,6 +74,8 @@ const permissionList = shield({
         reportEvent: allow,
         suspendMod: allow,
         suspendUser: allow,
+        unsuspendMod: allow,
+        unsuspendUser: allow,
         archiveComment: allow,
         archiveDiscussion: allow,
         archiveEvent: allow,

@@ -107,7 +107,13 @@ export function createUnsuspendResolver ({
     if (relatedCommentId) {
       const [comment] = await Comment.find({
         where: { id: relatedCommentId },
-        selectionSet: `{ id CommentAuthor { username } }`
+        selectionSet: `{ 
+          id 
+          CommentAuthor { 
+            ... on User { username }
+            ... on ModerationProfile { displayName }
+          } 
+        }`
       })
       originalPosterData = comment?.CommentAuthor
     }
