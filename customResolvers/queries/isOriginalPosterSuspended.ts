@@ -28,13 +28,13 @@ export default function getResolver (input: Input) {
       where: {
         id: issueId
       },
-      selectionSet: `
-                id
-                channelUniqueName
-                relatedEventId
-                relatedDiscussionId
-                relatedCommentId
-            `
+      selectionSet: `{
+          id
+          channelUniqueName
+          relatedEventId
+          relatedDiscussionId
+          relatedCommentId
+        }`
     })
 
     if (!issues.length) {
@@ -49,11 +49,12 @@ export default function getResolver (input: Input) {
         where: {
           id: issue.relatedEventId
         },
-        selectionSet: `
+        selectionSet: `{
                     id
                     Poster {
                         username
                     }
+                }
                 `
       })
       if (!events.length) {
@@ -67,11 +68,12 @@ export default function getResolver (input: Input) {
         where: {
           id: issue.relatedDiscussionId
         },
-        selectionSet: `
+        selectionSet: `{
                     id
                     Author {
                         username
                     }
+                }
                 `
       })
       if (!discussions.length) {
@@ -87,7 +89,7 @@ export default function getResolver (input: Input) {
         where: {
           id: issue.relatedCommentId
         },
-        selectionSet: `
+        selectionSet: `{
                     id
                     CommentAuthor {
                         ... on User {
@@ -97,6 +99,7 @@ export default function getResolver (input: Input) {
                             displayName
                         }
                     }
+                }
                 `
       })
       if (!comments.length) {
@@ -114,7 +117,7 @@ export default function getResolver (input: Input) {
       const suspensions = await Suspension.find({
         where: {
           username: originalPoster.username,
-          channelUniqueName: issue.Channel?.uniqueName
+          channelUniqueName: issue.channelUniqueName
         }
       })
       if (!suspensions.length) {
@@ -126,7 +129,7 @@ export default function getResolver (input: Input) {
       const suspensions = await Suspension.find({
         where: {
           modProfileName: originalPoster.displayName,
-          channelUniqueName: issue.Channel?.uniqueName
+          channelUniqueName: issue.channelUniqueName
         }
       })
       if (!suspensions.length) {
