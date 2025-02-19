@@ -192,9 +192,7 @@ export function createSuspensionResolver ({
 
     const updatedIssueNode = updatedIssue?.issues?.[0] || null
     if (!updatedIssueNode?.id) {
-      // If your schema says the resolver must return Issue!, you might want to throw:
-      // throw new GraphQLError('Unable to update Issue with ModerationAction')
-      return null
+      throw new GraphQLError('Unable to update Issue with ModerationAction')
     }
 
     // 7. Construct the channel update input for either a user or mod

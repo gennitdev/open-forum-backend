@@ -4,6 +4,7 @@ import type {
   UserUpdateInput,
   UserModel,
 } from "../../ogm_types.js";
+import sgMail from "@sendgrid/mail";
 
 type Args = {
   inviteeUsername: string;
@@ -17,6 +18,7 @@ type Input = {
 
 const getResolver = (input: Input) => {
   const { Channel, User } = input; // This refers to the OGM model
+
   return async (parent: any, args: Args, context: any, resolveInfo: any) => {
     const { channelUniqueName, inviteeUsername } = args;
 
@@ -26,11 +28,25 @@ const getResolver = (input: Input) => {
       );
     }
 
+    // 1. Markdown-friendly message for in-app Notifications:
     const notificationMessage = `
 You have been invited to be an owner of the forum ${channelUniqueName}.
 To accept it, go to [this page](${process.env.FRONTEND_URL}/forums/${channelUniqueName}/accept-invite).
-    `;
+`;
 
+    // 2. Non-Markdown email text (plain text) and HTML
+    const emailPlainText = `You have been invited to be an owner of the forum "${channelUniqueName}". 
+To accept it, please visit this link:
+${process.env.FRONTEND_URL}/forums/${channelUniqueName}/accept-invite
+`;
+
+    const emailHtml = `
+<p>You have been invited to be an owner of the forum <strong>${channelUniqueName}</strong>.</p>
+<p>To accept your invite, please click or copy/paste the link below:</p>
+<p><a href="${process.env.FRONTEND_URL}/forums/${channelUniqueName}/accept-invite">${process.env.FRONTEND_URL}/forums/${channelUniqueName}/accept-invite</a></p>
+`;
+
+    // Prepare the OGM update inputs
     const channelUpdateInput: ChannelUpdateInput = {
       PendingOwnerInvites: [
         {
@@ -63,6 +79,7 @@ To accept it, go to [this page](${process.env.FRONTEND_URL}/forums/${channelUniq
     };
 
     try {
+      // Update the Channel to add the user to the list of pending invites
       const channelUpdateResult = await Channel.update({
         where: {
           uniqueName: channelUniqueName,
@@ -72,15 +89,66 @@ To accept it, go to [this page](${process.env.FRONTEND_URL}/forums/${channelUniq
       if (!channelUpdateResult.channels[0]) {
         throw new Error("Could not invite user.");
       }
+
+      // Create notification for the user
       const userUpdateResult = await User.update({
         where: {
           username: inviteeUsername,
         },
         update: userUpdateNotificationInput,
-      })
+      });
       if (!userUpdateResult.users[0]) {
         throw new Error("Could not notify the user of the invite.");
       }
+
+      // Check SendGrid setup
+      if (process.env.SENDGRID_API_KEY) {
+        sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+      } else {
+        console.warn("SENDGRID_API_KEY is not set. Email will not be sent.");
+      }
+
+      // Fetch user email
+      const users = await User.find({
+        where: {
+          username: inviteeUsername,
+        },
+        selectionSet: `
+        {
+          username
+          Email {
+            address
+          }
+        }
+        `,
+      });
+      if (!users.length) {
+        throw new Error(`User with username ${inviteeUsername} not found`);
+      }
+
+      const user = users[0];
+      if (!user.Email) {
+        throw new Error(
+          `User with username ${inviteeUsername} does not have an email address`
+        );
+      }
+
+      if (!process.env.SENDGRID_FROM_EMAIL) {
+        throw new Error("SENDGRID_FROM_EMAIL is not set");
+      }
+
+      // Prepare and send the email
+      const msg = {
+        to: user.Email.address,
+        from: process.env.SENDGRID_FROM_EMAIL,
+        subject: "You have been invited to be an owner of a forum",
+        text: emailPlainText,
+        html: emailHtml 
+      };
+
+      console.log("Sending email to", user.Email.address);
+      await sgMail.send(msg);
+
       return true;
     } catch (e) {
       console.error(e);

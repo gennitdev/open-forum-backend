@@ -1,20 +1,26 @@
-import type { IssueModel, ChannelModel } from "../../ogm_types.js";
+import type { IssueModel, ChannelModel, CommentModel, DiscussionModel, EventModel } from "../../ogm_types.js";
 import { createUnsuspendResolver } from "./shared/createUnsuspendResolver.js";
 
 type Input = {
   Issue: IssueModel;
   Channel: ChannelModel;
+  Comment: CommentModel;
+  Discussion: DiscussionModel;
+  Event: EventModel;
 };
 
 export default function getResolver(input: Input) {
-  const { Issue, Channel } = input;
+  const { Issue, Channel, Event, Comment, Discussion } = input;
   return createUnsuspendResolver({
     Issue,
     Channel,
+    Comment,
+    Discussion,
+    Event,
     issueRelatedAccountField: "relatedUsername",
     channelSuspendedField: "SuspendedUsers",
     suspendedEntityName: "user",
-    suspensionActionDescription: "Uns-suspended the user",
-    suspensionCommentText: "The user has been un-suspended."
+    unsuspendActionDescription: "Unsuspended the user",
+    unsuspendCommentText: "The user has been unsuspended."
   });
 }

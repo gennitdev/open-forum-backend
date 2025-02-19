@@ -20611,6 +20611,8 @@ export type Mutation = {
   unarchiveEvent?: Maybe<Issue>;
   undoUpvoteComment?: Maybe<Comment>;
   undoUpvoteDiscussionChannel?: Maybe<DiscussionChannel>;
+  unsuspendMod?: Maybe<Issue>;
+  unsuspendUser?: Maybe<Issue>;
   updateAlbums: UpdateAlbumsMutationResponse;
   updateChannelRoles: UpdateChannelRolesMutationResponse;
   updateChannels: UpdateChannelsMutationResponse;
@@ -21317,6 +21319,18 @@ export type MutationUndoUpvoteDiscussionChannelArgs = {
 };
 
 
+export type MutationUnsuspendModArgs = {
+  explanation?: InputMaybe<Scalars['String']['input']>;
+  issueId: Scalars['ID']['input'];
+};
+
+
+export type MutationUnsuspendUserArgs = {
+  explanation?: InputMaybe<Scalars['String']['input']>;
+  issueId: Scalars['ID']['input'];
+};
+
+
 export type MutationUpdateAlbumsArgs = {
   update?: InputMaybe<AlbumUpdateInput>;
   where?: InputMaybe<AlbumWhere>;
@@ -21786,6 +21800,7 @@ export type Query = {
   images: Array<Image>;
   imagesAggregate: ImageAggregateSelection;
   imagesConnection: ImagesConnection;
+  isOriginalPosterSuspended?: Maybe<Scalars['Boolean']['output']>;
   issueAuthors: Array<IssueAuthor>;
   issueCommentAuthors: Array<IssueCommentAuthor>;
   issues: Array<Issue>;
@@ -22292,6 +22307,11 @@ export type QueryImagesConnectionArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<Array<InputMaybe<ImageSort>>>;
   where?: InputMaybe<ImageWhere>;
+};
+
+
+export type QueryIsOriginalPosterSuspendedArgs = {
+  issueId: Scalars['String']['input'];
 };
 
 
@@ -42829,6 +42849,8 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   unarchiveEvent?: Resolver<Maybe<ResolversTypes['Issue']>, ParentType, ContextType, RequireFields<MutationUnarchiveEventArgs, 'channelUniqueName' | 'eventId'>>;
   undoUpvoteComment?: Resolver<Maybe<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<MutationUndoUpvoteCommentArgs, 'commentId' | 'username'>>;
   undoUpvoteDiscussionChannel?: Resolver<Maybe<ResolversTypes['DiscussionChannel']>, ParentType, ContextType, RequireFields<MutationUndoUpvoteDiscussionChannelArgs, 'discussionChannelId' | 'username'>>;
+  unsuspendMod?: Resolver<Maybe<ResolversTypes['Issue']>, ParentType, ContextType, RequireFields<MutationUnsuspendModArgs, 'issueId'>>;
+  unsuspendUser?: Resolver<Maybe<ResolversTypes['Issue']>, ParentType, ContextType, RequireFields<MutationUnsuspendUserArgs, 'issueId'>>;
   updateAlbums?: Resolver<ResolversTypes['UpdateAlbumsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateAlbumsArgs>>;
   updateChannelRoles?: Resolver<ResolversTypes['UpdateChannelRolesMutationResponse'], ParentType, ContextType, Partial<MutationUpdateChannelRolesArgs>>;
   updateChannels?: Resolver<ResolversTypes['UpdateChannelsMutationResponse'], ParentType, ContextType, Partial<MutationUpdateChannelsArgs>>;
@@ -42991,6 +43013,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   images?: Resolver<Array<ResolversTypes['Image']>, ParentType, ContextType, Partial<QueryImagesArgs>>;
   imagesAggregate?: Resolver<ResolversTypes['ImageAggregateSelection'], ParentType, ContextType, Partial<QueryImagesAggregateArgs>>;
   imagesConnection?: Resolver<ResolversTypes['ImagesConnection'], ParentType, ContextType, Partial<QueryImagesConnectionArgs>>;
+  isOriginalPosterSuspended?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<QueryIsOriginalPosterSuspendedArgs, 'issueId'>>;
   issueAuthors?: Resolver<Array<ResolversTypes['IssueAuthor']>, ParentType, ContextType, Partial<QueryIssueAuthorsArgs>>;
   issueCommentAuthors?: Resolver<Array<ResolversTypes['IssueCommentAuthor']>, ParentType, ContextType, Partial<QueryIssueCommentAuthorsArgs>>;
   issues?: Resolver<Array<ResolversTypes['Issue']>, ParentType, ContextType, Partial<QueryIssuesArgs>>;

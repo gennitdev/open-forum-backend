@@ -1,4 +1,4 @@
-import { gql } from "apollo-server";
+import { gql } from 'apollo-server';
 const typeDefinitions = gql `
   scalar JSON
 
@@ -46,7 +46,8 @@ const typeDefinitions = gql `
 
   type Contact {
     id: ID! @id
-    MessageAuthor: CommentAuthor @relationship(type: "AUTHORED_MESSAGE", direction: IN)
+    MessageAuthor: CommentAuthor
+      @relationship(type: "AUTHORED_MESSAGE", direction: IN)
     createdAt: DateTime! @timestamp(operations: [CREATE])
     mostRecentMessageTimestamp: DateTime
     Messages: [Message!]! @relationship(type: "HAS_MESSAGE", direction: OUT)
@@ -77,7 +78,8 @@ const typeDefinitions = gql `
     CreatedFeeds: [Feed!]! @relationship(type: "CREATED_FEED", direction: OUT)
     DefaultFeed: Feed @relationship(type: "DEFAULT_FEED", direction: OUT)
     createdAt: DateTime! @timestamp(operations: [CREATE])
-    Notifications:           [Notification!]!       @relationship(type: "HAS_NOTIFICATION", direction: OUT)
+    Notifications: [Notification!]!
+      @relationship(type: "HAS_NOTIFICATION", direction: OUT)
     Blocked: User @relationship(type: "BLOCKED", direction: OUT)
     IsBlockedBy: User @relationship(type: "BLOCKED", direction: IN)
     FavoriteChannels: [Channel!]!
@@ -105,7 +107,8 @@ const typeDefinitions = gql `
       @relationship(type: "HAS_PENDING_MOD_INVITE", direction: IN)
     PendingOwnerInvites: [Channel!]!
       @relationship(type: "HAS_PENDING_INVITE", direction: IN)
-    Suspensions: [Suspension!]! @relationship(type: "SUSPENDED_AS_USER", direction: OUT)
+    Suspensions: [Suspension!]!
+      @relationship(type: "SUSPENDED_AS_USER", direction: OUT)
   }
 
   type TextVersion {
@@ -123,9 +126,12 @@ const typeDefinitions = gql `
     slug: String!
     createdAt: DateTime! @timestamp(operations: [CREATE])
     updatedAt: DateTime @timestamp(operations: [UPDATE])
-    PastVersions: [TextVersion!]! @relationship(type: "HAS_VERSION", direction: OUT)
-    ProposedEdits: [TextVersion!]! @relationship(type: "PROPOSED_EDIT", direction: OUT)
-    ChildPages: [WikiPage!]! @relationship(type: "HAS_CHILD_PAGE", direction: OUT)
+    PastVersions: [TextVersion!]!
+      @relationship(type: "HAS_VERSION", direction: OUT)
+    ProposedEdits: [TextVersion!]!
+      @relationship(type: "PROPOSED_EDIT", direction: OUT)
+    ChildPages: [WikiPage!]!
+      @relationship(type: "HAS_CHILD_PAGE", direction: OUT)
   }
 
   type Suspension {
@@ -137,7 +143,8 @@ const typeDefinitions = gql `
     suspendedUntil: DateTime
     suspendedIndefinitely: Boolean
     SuspendedUser: User @relationship(type: "SUSPENDED_AS_USER", direction: IN)
-    SuspendedMod: ModerationProfile @relationship(type: "SUSPENDED_AS_MOD", direction: IN)
+    SuspendedMod: ModerationProfile
+      @relationship(type: "SUSPENDED_AS_MOD", direction: IN)
     RelatedIssue: Issue @relationship(type: "HAS_CONTEXT", direction: OUT)
   }
 
@@ -177,9 +184,12 @@ const typeDefinitions = gql `
     SuspendedModRole: ModChannelRole
       @relationship(type: "HAS_DEFAULT_SUSPENDED_ROLE", direction: OUT)
     Issues: [Issue!]! @relationship(type: "HAS_ISSUE", direction: OUT)
-    SuspendedUsers: [Suspension!]! @relationship(type: "SUSPENDED_AS_USER", direction: OUT)
-    SuspendedMods: [Suspension!]! @relationship(type: "SUSPENDED_AS_MOD", direction: OUT)
-    WikiHomePage: WikiPage @relationship(type: "HAS_WIKI_HOME_PAGE", direction: OUT)
+    SuspendedUsers: [Suspension!]!
+      @relationship(type: "SUSPENDED_AS_USER", direction: OUT)
+    SuspendedMods: [Suspension!]!
+      @relationship(type: "SUSPENDED_AS_MOD", direction: OUT)
+    WikiHomePage: WikiPage
+      @relationship(type: "HAS_WIKI_HOME_PAGE", direction: OUT)
     eventsEnabled: Boolean
     wikiEnabled: Boolean
     feedbackEnabled: Boolean
@@ -339,7 +349,8 @@ const typeDefinitions = gql `
     Issue: Issue @relationship(type: "ACTIVITY_ON_ISSUE", direction: OUT)
     FeedbackComments: [Comment!]!
       @relationship(type: "HAS_FEEDBACK_COMMENT", direction: IN)
-    ModerationAction: ModerationAction @relationship(type: "MODERATED_COMMENT", direction: IN)
+    ModerationAction: ModerationAction
+      @relationship(type: "MODERATED_COMMENT", direction: IN)
     RelatedIssues: [Issue!]! @relationship(type: "CITED_ISSUE", direction: IN)
   }
 
@@ -369,7 +380,8 @@ const typeDefinitions = gql `
       @relationship(type: "HAS_MOD_ROLE", direction: OUT)
     ActivityFeed: [ModerationAction!]!
       @relationship(type: "ACTIVITY_ON_ISSUE", direction: OUT)
-    Suspensions: [Suspension!]! @relationship(type: "SUSPENDED_AS_MOD", direction: OUT)
+    Suspensions: [Suspension!]!
+      @relationship(type: "SUSPENDED_AS_MOD", direction: OUT)
   }
 
   type ModerationAction {
@@ -536,9 +548,7 @@ const typeDefinitions = gql `
       inviteeUsername: String!
     ): Boolean
     removeForumMod(channelUniqueName: String!, username: String!): Boolean
-    acceptForumModInvite(
-      channelUniqueName: String!
-    ): Boolean
+    acceptForumModInvite(channelUniqueName: String!): Boolean
     reportDiscussion(
       discussionId: ID!
       reportText: String!
@@ -566,12 +576,14 @@ const typeDefinitions = gql `
       suspendIndefinitely: Boolean
       explanation: String
     ): Issue
+    unsuspendUser(issueId: ID!, explanation: String): Issue
     suspendMod(
       issueId: ID!
       suspendUntil: DateTime
       suspendIndefinitely: Boolean
       explanation: String
     ): Issue
+    unsuspendMod(issueId: ID!, explanation: String): Issue
     archiveComment(
       commentId: ID!
       selectedForumRules: [String!]!
@@ -592,10 +604,7 @@ const typeDefinitions = gql `
       reportText: String!
       channelUniqueName: String!
     ): Issue
-    unarchiveComment(
-      commentId: ID!
-      explanation: String
-    ): Issue
+    unarchiveComment(commentId: ID!, explanation: String): Issue
     unarchiveDiscussion(
       discussionId: ID!
       channelUniqueName: String!
@@ -793,6 +802,7 @@ const typeDefinitions = gql `
       tags: [String]
       searchInput: String
     ): GetSortedChannelsResponse
+    isOriginalPosterSuspended(issueId: String!): Boolean
     safetyCheck: SafetyCheckResponse
   }
 `;

@@ -56,6 +56,7 @@ import unarchiveEvent from './customResolvers/mutations/unarchiveEvent.js';
 
 import suspendUser from './customResolvers/mutations/suspendUser.js';
 import suspendMod from './customResolvers/mutations/suspendMod.js';
+import isOriginalPosterSuspended from './customResolvers/queries/isOriginalPosterSuspended.js';
 
 const { OGM } = pkg;
 
@@ -80,6 +81,7 @@ export default function (driver: any) {
   const ServerRole = ogm.model("ServerRole");
   const ModServerRole = ogm.model("ModServerRole");
   const ServerConfig = ogm.model("ServerConfig");
+  const Suspension = ogm.model("Suspension");
 
   const resolvers = {
     JSON: GraphQLJSON,
@@ -88,6 +90,7 @@ export default function (driver: any) {
         if (obj.username) {
           return "User";
         }
+        // Both user and mod profiles have this field so the order matters.
         if (obj.displayName) {
           return "ModerationProfile";
         }
@@ -119,6 +122,13 @@ export default function (driver: any) {
       }),
       getSortedChannels: getSortedChannels({
         driver,
+      }),
+      isOriginalPosterSuspended: isOriginalPosterSuspended({
+        Issue,
+        Discussion,
+        Event,
+        Comment,
+        Suspension
       }),
       safetyCheck: safetyCheck
     },
