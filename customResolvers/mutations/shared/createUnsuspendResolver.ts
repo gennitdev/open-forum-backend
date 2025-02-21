@@ -45,7 +45,6 @@ export function createUnsuspendResolver ({
   Comment,
   suspendedEntityName,
   unsuspendActionDescription,
-  unsuspendCommentText
 }: CreateUnsuspendResolverOptions) {
   return async function unsuspendEntityResolver (
     parent: any,
@@ -53,6 +52,7 @@ export function createUnsuspendResolver ({
     context: any,
     resolveInfo: any
   ) {
+    console.log('called unsuspend user')
     const { issueId, explanation } = args
 
     if (!issueId) {
@@ -117,6 +117,7 @@ export function createUnsuspendResolver ({
       })
       originalPosterData = comment?.CommentAuthor
     }
+    console.log('originalPosterData:', originalPosterData)
 
     // 3. Extract the actual account name to suspend
     let relatedAccountName = ''
@@ -143,6 +144,7 @@ export function createUnsuspendResolver ({
         `Could not find the ${suspendedEntityName} account name to be suspended.`
       )
     }
+    console.log('relatedAccountName:', relatedAccountName)
 
     // 4. Confirm the person calling this is indeed a moderator
     context.user = await setUserDataOnContext({
@@ -167,6 +169,7 @@ export function createUnsuspendResolver ({
       actionDescription: unsuspendActionDescription,
       issueId
     })
+    console.log('moderationActionCreateInput:',JSON.stringify(moderationActionCreateInput))
 
     // 6. Update the Issue with the ModerationAction
     let updatedIssue
@@ -190,6 +193,7 @@ export function createUnsuspendResolver ({
           }
         }`
       })
+      console.log('updatedIssue:', JSON.stringify(updatedIssue))
     } catch (err) {
       throw new GraphQLError('Error updating issue')
     }
@@ -238,28 +242,17 @@ export function createUnsuspendResolver ({
         ]
       }
     }
-    console.log('channelUpdateInput:', channelUpdateInput)
+    console.log('channelUpdateInput:', JSON.stringify(channelUpdateInput))
 
     // 8. Update the channel with the suspension relationship
     if (channelUpdateInput) {
       try {
-        const channelData = await Channel.update({
+        await Channel.update({
           where: { uniqueName: channelUniqueName },
-          update: channelUpdateInput,
-          // If you need the updated fields
-          selectionSet: `{
-            channels {
-              uniqueName
-            }
-          }`
+          update: channelUpdateInput
         })
-
-        const updatedChannel = channelData.channels?.[0] || null
-        if (!updatedChannel?.uniqueName) {
-          throw new GraphQLError('Error updating channel')
-        }
       } catch (err) {
-        throw new GraphQLError('Error updating channel')
+        throw new GraphQLError('Error unsuspending user')
       }
     }
 

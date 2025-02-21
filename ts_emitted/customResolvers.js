@@ -43,6 +43,8 @@ import archiveEvent from './customResolvers/mutations/archiveEvent.js';
 import unarchiveEvent from './customResolvers/mutations/unarchiveEvent.js';
 import suspendUser from './customResolvers/mutations/suspendUser.js';
 import suspendMod from './customResolvers/mutations/suspendMod.js';
+import unsuspendUser from './customResolvers/mutations/unsuspendUser.js';
+import unsuspendMod from './customResolvers/mutations/unsuspendMod.js';
 import isOriginalPosterSuspended from './customResolvers/queries/isOriginalPosterSuspended.js';
 const { OGM } = pkg;
 export default function (driver) {
@@ -232,7 +234,21 @@ export default function (driver) {
                 Event,
                 Discussion
             }),
-            suspendMod: suspendMod({
+            unsuspendUser: unsuspendUser({
+                Issue,
+                Channel,
+                Comment,
+                Event,
+                Discussion
+            }),
+            suspendMod: unsuspendMod({
+                Issue,
+                Channel,
+                Comment,
+                Event,
+                Discussion
+            }),
+            unsuspendMod: suspendMod({
                 Issue,
                 Channel,
                 Comment,
