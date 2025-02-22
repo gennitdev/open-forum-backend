@@ -26,7 +26,6 @@ export default function getResolver(input: Input) {
     issueRelatedAccountField: "relatedModProfileName",
     channelSuspendedField: "SuspendedMods",
     suspendedEntityName: "mod",
-    suspensionActionDescription: "Suspended the mod",
     suspensionCommentText: "The mod has been suspended.",
   });
 }

@@ -6,7 +6,8 @@ import type {
   DiscussionModel,
   EventModel,
   ModerationProfile,
-  User
+  User,
+  IssueUpdateInput
 } from '../../../ogm_types.js'
 import { setUserDataOnContext } from '../../../rules/permission/userDataHelperFunctions.js'
 import { getModerationActionCreateInput } from '../reportComment.js'
@@ -27,8 +28,6 @@ type CreateUnsuspendResolverOptions = {
   // A short string describing who/what is being suspended
   suspendedEntityName: 'user' | 'mod'
 
-  // For constructing the moderation action message text (and description).
-  unsuspendActionDescription: string
   unsuspendCommentText: string
 }
 
@@ -44,7 +43,6 @@ export function createUnsuspendResolver ({
   Event,
   Comment,
   suspendedEntityName,
-  unsuspendActionDescription,
 }: CreateUnsuspendResolverOptions) {
   return async function unsuspendEntityResolver (
     parent: any,
@@ -161,28 +159,41 @@ export function createUnsuspendResolver ({
     }
 
     // 5. Create the moderation activity feed item
-    const moderationActionCreateInput = getModerationActionCreateInput({
+    const unsuspendModActionCreateInput = getModerationActionCreateInput({
       text: explanation,
       loggedInModName,
       channelUniqueName,
       actionType: 'unsuspend',
-      actionDescription: unsuspendActionDescription,
+      actionDescription: `Unsuspended ${relatedAccountName}`,
       issueId
     })
-    console.log('moderationActionCreateInput:',JSON.stringify(moderationActionCreateInput))
+    const closeIssueModActionCreateInput = getModerationActionCreateInput({
+      loggedInModName,
+      channelUniqueName,
+      actionType: 'close',
+      actionDescription: 'Closed the issue after unsuspending the user',
+      issueId
+    })
+
+    const issueUpdateInput: IssueUpdateInput = {
+      isOpen: false, // Close issue; unsuspension is often the final action.
+      ActivityFeed: [
+        {
+          create: [
+            { node: closeIssueModActionCreateInput },
+            { node: unsuspendModActionCreateInput },
+           
+          ]
+        }
+      ]
+    }
 
     // 6. Update the Issue with the ModerationAction
     let updatedIssue
     try {
       updatedIssue = await Issue.update({
         where: { id: issueId },
-        update: {
-          ActivityFeed: [
-            {
-              create: [{ node: moderationActionCreateInput }]
-            }
-          ]
-        },
+        update: issueUpdateInput,
         selectionSet: `{
           issues {
             id

@@ -6,7 +6,8 @@ import type {
   DiscussionModel,
   EventModel,
   ModerationProfile,
-  User
+  User,
+  IssueUpdateInput
 } from '../../../ogm_types.js'
 import { setUserDataOnContext } from '../../../rules/permission/userDataHelperFunctions.js'
 import { getModerationActionCreateInput } from '../reportComment.js'
@@ -26,9 +27,6 @@ type CreateSuspensionResolverOptions = {
 
   // A short string describing who/what is being suspended
   suspendedEntityName: 'user' | 'mod'
-
-  // For constructing the moderation action message text (and description).
-  suspensionActionDescription: string
   suspensionCommentText: string
 }
 
@@ -46,7 +44,6 @@ export function createSuspensionResolver ({
   Event,
   Comment,
   suspendedEntityName,
-  suspensionActionDescription,
   suspensionCommentText
 }: CreateSuspensionResolverOptions) {
   return async function suspendEntityResolver (
@@ -161,27 +158,41 @@ export function createSuspensionResolver ({
     }
 
     // 5. Create the moderation activity feed item
-    const moderationActionCreateInput = getModerationActionCreateInput({
+    const suspensionModActionCreateInput = getModerationActionCreateInput({
       text: explanation,
       loggedInModName,
       channelUniqueName,
       actionType: 'suspension',
-      actionDescription: suspensionActionDescription,
+      actionDescription: `Suspended ${relatedAccountName}`,
+      issueId
+    })
+
+    const closeIssueModActionCreateInput = getModerationActionCreateInput({
+      loggedInModName,
+      channelUniqueName,
+      actionType: 'close',
+      actionDescription: 'Closed the issue after suspending the user',
       issueId
     })
 
     // 6. Update the Issue with the ModerationAction
     let updatedIssue
+    const issueUpdateInput: IssueUpdateInput = {
+      isOpen: false, // Set the issue to closed; suspension is often the final action.
+      ActivityFeed: [
+        {
+          create: [
+            { node: closeIssueModActionCreateInput },
+            { node: suspensionModActionCreateInput },
+            
+          ]
+        }
+      ]
+    }
     try {
       updatedIssue = await Issue.update({
         where: { id: issueId },
-        update: {
-          ActivityFeed: [
-            {
-              create: [{ node: moderationActionCreateInput }]
-            }
-          ]
-        },
+        update: issueUpdateInput,
         selectionSet: `{
           issues {
             id

@@ -21,6 +21,5 @@ export default function getResolver(input: Input) {
     channelSuspendedField: "SuspendedUsers",
     suspendedEntityName: "user",
     suspensionCommentText: "The user has been suspended.",
-    suspensionActionDescription: "Suspended the user",
   });
 }

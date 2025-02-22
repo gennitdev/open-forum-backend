@@ -89,6 +89,7 @@ const getResolver = (input: Input) => {
       id: existingIssueId,
     };
     const issueUpdateInput: IssueUpdateInput = {
+      isOpen: false, // Close the issue; the event is no longer flagged.
       ActivityFeed: [
         {
           create: [

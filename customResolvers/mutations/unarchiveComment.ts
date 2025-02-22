@@ -104,6 +104,7 @@ const getResolver = (input: Input) => {
       id: existingIssueId,
     };
     const issueUpdateInput: IssueUpdateInput = {
+      isOpen: false, // Close the issue; un-archival is often the final action.
       ActivityFeed: [
         {
           create: [

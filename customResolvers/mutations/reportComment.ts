@@ -24,7 +24,7 @@ type Input = {
 };
 
 type ModActionInput = {
-  text: string;
+  text?: string;
   loggedInModName: string;
   channelUniqueName: string;
   actionType: string;

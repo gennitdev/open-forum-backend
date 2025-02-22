@@ -20,7 +20,6 @@ export default function getResolver(input: Input) {
     issueRelatedAccountField: "relatedUsername",
     channelSuspendedField: "SuspendedUsers",
     suspendedEntityName: "user",
-    unsuspendActionDescription: "Unsuspended the user",
     unsuspendCommentText: "The user has been unsuspended."
   });
 }
