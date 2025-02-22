@@ -5,19 +5,19 @@ import type {
   EventModel,
   User,
   ModerationProfile,
-  SuspensionModel
+  ChannelModel
 } from '../../ogm_types.js'
 
 type Input = {
+  Channel: ChannelModel
   Issue: IssueModel
   Comment: CommentModel
   Discussion: DiscussionModel
   Event: EventModel
-  Suspension: SuspensionModel
 }
 
 export default function getResolver (input: Input) {
-  const { Issue, Event, Comment, Discussion, Suspension } = input
+  const { Issue, Event, Comment, Discussion, Channel } = input
   return async (parent: any, args: any, context: any, resolveInfo: any) => {
     const { issueId } = args
     if (!issueId) {
@@ -113,29 +113,37 @@ export default function getResolver (input: Input) {
     }
     // Check for suspension with the original author username
     // and the given channel
-    if ('username' in originalPoster) {
-      const suspensions = await Suspension.find({
+    if ('username' in originalPoster && originalPoster.username) {
+      const channelData = await Channel.find({
         where: {
-          username: originalPoster.username,
-          channelUniqueName: issue.channelUniqueName
-        }
+          uniqueName: issue.channelUniqueName
+        },
+        selectionSet:`{
+          SuspendedUsers(where: { username: "${originalPoster.username}" }) {
+            id
+          }
+        }`
       })
-      if (!suspensions.length) {
-        return false
+      if (channelData && channelData[0].SuspendedUsers?.length > 0) {
+        return true
       }
-      return true
+      return false
     }
-    if ('displayName' in originalPoster) {
-      const suspensions = await Suspension.find({
+    if ('displayName' in originalPoster && originalPoster.displayName) {
+      const channelData = await Channel.find({
         where: {
-          modProfileName: originalPoster.displayName,
-          channelUniqueName: issue.channelUniqueName
-        }
+          uniqueName: issue.channelUniqueName
+        },
+        selectionSet:`{
+          SuspendedMods(where: { displayName: "${originalPoster.displayName}" }) {
+            id
+          }
+        }`
       })
-      if (!suspensions.length) {
-        return false
+      if (channelData && channelData[0].SuspendedUsers?.length > 0) {
+        return true
       }
-      return true
+      return false
     }
   }
 }

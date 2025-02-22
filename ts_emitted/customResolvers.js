@@ -113,7 +113,7 @@ export default function (driver) {
                 Discussion,
                 Event,
                 Comment,
-                Suspension
+                Channel
             }),
             safetyCheck: safetyCheck
         },
