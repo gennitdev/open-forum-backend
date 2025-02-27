@@ -6,6 +6,7 @@ import {
   isChannelOwner,
   isAccountOwner,
   isDiscussionOwner,
+  isDiscussionChannelOwner,
   isEventOwner,
   isCommentAuthor,
 } from "./permission/isOwner.js";
@@ -429,6 +430,7 @@ const issueIsValid = rule({ cache: "contextual" })(
 const ruleList = {
   isChannelOwner,
   isDiscussionOwner,
+  isDiscussionChannelOwner,
   isEventOwner,
   isCommentAuthor,
   isAuthenticatedAndVerified,

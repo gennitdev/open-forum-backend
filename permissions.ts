@@ -1,85 +1,112 @@
 import { and, shield, allow, deny, or } from "graphql-shield";
 import rules from "./rules/rules.js";
 
+const {
+  isAdmin,
+  isAccountOwner,
+  isChannelOwner,
+  isDiscussionOwner,
+  isEventOwner,
+  isCommentAuthor,
+  isDiscussionChannelOwner,
+  canCreateChannel,
+  canCreateDiscussion,
+  canCreateEvent,
+  canCreateComment,
+  canUploadFile,
+  canUpvoteComment,
+  canUpvoteDiscussion,
+  canGiveFeedback,
+  issueIsValid,
+  createChannelInputIsValid,
+  updateChannelInputIsValid,
+  createDiscussionInputIsValid,
+  updateDiscussionInputIsValid,
+  createEventInputIsValid,
+  updateEventInputIsValid,
+  createCommentInputIsValid,
+  updateCommentInputIsValid,
+} = rules;
+
 const permissionList = shield({
     Query: {
       "*": allow,
-      emails: allow// rules.isAdmin,
+      emails: allow// isAdmin,
     },
     Mutation: {
       "*": deny,
-      dropDataForCypressTests: rules.isAdmin,
-      seedDataForCypressTests: rules.isAdmin,
+      dropDataForCypressTests: isAdmin,
+      seedDataForCypressTests: isAdmin,
       createTags: allow,
       
-      createChannelRoles: rules.isAdmin,
-      createModChannelRoles: rules.isAdmin,
+      createChannelRoles: isAdmin,
+      createModChannelRoles: isAdmin,
 
-      createModServerRoles: rules.isAdmin,
-      createServerRoles: rules.isAdmin,
-      createServerConfigs: rules.isAdmin,
-      deleteServerConfigs: rules.isAdmin,
+      createModServerRoles: isAdmin,
+      createServerRoles: isAdmin,
+      createServerConfigs: isAdmin,
+      deleteServerConfigs: isAdmin,
 
-      updateServerConfigs: rules.isAdmin,
-      updateModServerRoles: rules.isAdmin,
-      deleteChannelRoles: or(rules.isAdmin, rules.isChannelOwner),
-      deleteServerRoles: rules.isAdmin,
+      updateServerConfigs: isAdmin,
+      updateModServerRoles: isAdmin,
+      deleteChannelRoles: or(isAdmin, isChannelOwner),
+      deleteServerRoles: isAdmin,
       
       createEmailAndUser: allow,
-      updateUsers: or(rules.isAccountOwner, rules.isAdmin),
+      updateUsers: or(isAccountOwner, isAdmin),
       
-      createChannels: and(rules.createChannelInputIsValid, rules.canCreateChannel),
-      updateChannels: and(rules.updateChannelInputIsValid, or(rules.isChannelOwner, rules.isAdmin)),
-      deleteChannels: or(rules.isAdmin, rules.isChannelOwner),
+      createChannels: and(createChannelInputIsValid, canCreateChannel),
+      updateChannels: and(updateChannelInputIsValid, or(isChannelOwner, isAdmin)),
+      deleteChannels: or(isAdmin, isChannelOwner),
 
-      deleteEmails: or(rules.isAccountOwner, rules.isAdmin),
-      deleteUsers: or(rules.isAdmin, rules.isAccountOwner),
+      deleteEmails: or(isAccountOwner, isAdmin),
+      deleteUsers: or(isAdmin, isAccountOwner),
     
-      createDiscussionWithChannelConnections:  and(rules.createDiscussionInputIsValid, or(rules.canCreateDiscussion, rules.isAdmin)),
-      updateDiscussionWithChannelConnections:  and(rules.updateDiscussionInputIsValid, or(rules.isDiscussionOwner, rules.isAdmin)),
-      deleteDiscussions: or(rules.isAdmin, rules.isDiscussionOwner),
-      deleteDiscussionChannels: rules.isAdmin,
+      createDiscussionWithChannelConnections:  and(createDiscussionInputIsValid, or(canCreateDiscussion, isAdmin)),
+      updateDiscussionWithChannelConnections:  and(updateDiscussionInputIsValid, or(isDiscussionOwner, isAdmin)),
+      deleteDiscussions: or(isAdmin, isDiscussionOwner),
+      deleteDiscussionChannels: isAdmin,
+      updateDiscussionChannels: or(isAdmin, isDiscussionChannelOwner),
       
-      createEventWithChannelConnections: and(rules.createEventInputIsValid, rules.canCreateEvent),
-      updateEventWithChannelConnections: and(rules.updateEventInputIsValid, or(rules.isEventOwner, rules.isAdmin)),
-      deleteEvents: or(rules.isAdmin, rules.isEventOwner),
-      deleteEventChannels: rules.isAdmin,
+      createEventWithChannelConnections: and(createEventInputIsValid, canCreateEvent),
+      updateEventWithChannelConnections: and(updateEventInputIsValid, or(isEventOwner, isAdmin)),
+      deleteEvents: or(isAdmin, isEventOwner),
+      deleteEventChannels: isAdmin,
 
-      createComments: and(rules.createCommentInputIsValid,rules.canCreateComment),
-      updateComments: and(rules.updateCommentInputIsValid, or(rules.isCommentAuthor, rules.isAdmin)),
-      deleteComments: or(rules.isAdmin, rules.isCommentAuthor),
+      createComments: and(createCommentInputIsValid,canCreateComment),
+      updateComments: and(updateCommentInputIsValid, or(isCommentAuthor, isAdmin)),
+      deleteComments: or(isAdmin, isCommentAuthor),
       
-      createSignedStorageURL: rules.canUploadFile,
-      addEmojiToComment: rules.canUpvoteComment,
-      removeEmojiFromComment: rules.canUpvoteComment,
-      addEmojiToDiscussionChannel: rules.canUpvoteDiscussion,
-      removeEmojiFromDiscussionChannel: rules.canUpvoteDiscussion,
-      upvoteComment: rules.canUpvoteComment,
-      undoUpvoteComment: rules.canUpvoteComment, // We are intentionally reusing the same rule for undoing an upvote as for upvoting.
+      createSignedStorageURL: canUploadFile,
+      addEmojiToComment: canUpvoteComment,
+      removeEmojiFromComment: canUpvoteComment,
+      addEmojiToDiscussionChannel: canUpvoteDiscussion,
+      removeEmojiFromDiscussionChannel: canUpvoteDiscussion,
+      upvoteComment: canUpvoteComment,
+      undoUpvoteComment: canUpvoteComment, // We are intentionally reusing the same rule for undoing an upvote as for upvoting.
       // Any user who can upvote a comment can undo their upvote. The undo upvote resolver 
       // checks if the user has upvoted the comment and if so, removes the upvote.
 
-      updateDiscussionChannels: rules.canGiveFeedback, // Need to check the update input to make sure the user is not trying to change the channel name or unique name.
-      upvoteDiscussionChannel: rules.canUpvoteDiscussion,
-      undoUpvoteDiscussionChannel: rules.canUpvoteDiscussion, // We are intentionally reusing the same rule for undoing an upvote as for upvoting.
+      upvoteDiscussionChannel: canUpvoteDiscussion,
+      undoUpvoteDiscussionChannel: canUpvoteDiscussion, // We are intentionally reusing the same rule for undoing an upvote as for upvoting.
       // Any user who can upvote a discussion can undo their upvote. The undo upvote resolver
       // checks if the user has upvoted the discussion and if so, removes the upvote.
       
-      createIssues: rules.issueIsValid,
-      deleteIssues: allow, // rules.canDeleteIssues,
-      updateIssues: allow, // rules.canUpdateIssues,
+      createIssues: issueIsValid,
+      deleteIssues: allow, // canDeleteIssues,
+      updateIssues: allow, // canUpdateIssues,
 
       createAlbums: allow,
       updateAlbums: allow,
       deleteAlbums: allow,
 
-      inviteForumOwner: rules.isChannelOwner,
-      cancelInviteForumOwner: rules.isChannelOwner,
-      removeForumOwner: rules.isChannelOwner,
+      inviteForumOwner: isChannelOwner,
+      cancelInviteForumOwner: isChannelOwner,
+      removeForumOwner: isChannelOwner,
       acceptForumOwnerInvite: allow,
-      inviteForumMod: rules.isChannelOwner,
-      cancelInviteForumMod: rules.isChannelOwner,
-      removeForumMod: rules.isChannelOwner,
+      inviteForumMod: isChannelOwner,
+      cancelInviteForumMod: isChannelOwner,
+      removeForumMod: isChannelOwner,
       acceptForumModInvite: allow,
 
       createNotifications: deny,

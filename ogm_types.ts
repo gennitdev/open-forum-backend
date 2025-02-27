@@ -45,6 +45,7 @@ export type Query = {
   getEventComments?: Maybe<EventCommentsFormat>;
   getCommentReplies?: Maybe<CommentRepliesFormat>;
   getSortedChannels?: Maybe<GetSortedChannelsResponse>;
+  isOriginalPosterSuspended?: Maybe<Scalars["Boolean"]["output"]>;
   safetyCheck?: Maybe<SafetyCheckResponse>;
   issueCommentAuthors: Array<IssueCommentAuthor>;
   commentAuthors: Array<CommentAuthor>;
@@ -222,6 +223,10 @@ export type QueryGetSortedChannelsArgs = {
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   tags?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
   searchInput?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type QueryIsOriginalPosterSuspendedArgs = {
+  issueId: Scalars["String"]["input"];
 };
 
 export type QueryIssueCommentAuthorsArgs = {
@@ -938,7 +943,9 @@ export type Mutation = {
   reportComment?: Maybe<Issue>;
   reportEvent?: Maybe<Issue>;
   suspendUser?: Maybe<Issue>;
+  unsuspendUser?: Maybe<Issue>;
   suspendMod?: Maybe<Issue>;
+  unsuspendMod?: Maybe<Issue>;
   archiveComment?: Maybe<Issue>;
   archiveDiscussion?: Maybe<Issue>;
   archiveEvent?: Maybe<Issue>;
@@ -1238,10 +1245,20 @@ export type MutationSuspendUserArgs = {
   explanation?: InputMaybe<Scalars["String"]["input"]>;
 };
 
+export type MutationUnsuspendUserArgs = {
+  issueId: Scalars["ID"]["input"];
+  explanation?: InputMaybe<Scalars["String"]["input"]>;
+};
+
 export type MutationSuspendModArgs = {
   issueId: Scalars["ID"]["input"];
   suspendUntil?: InputMaybe<Scalars["DateTime"]["input"]>;
   suspendIndefinitely?: InputMaybe<Scalars["Boolean"]["input"]>;
+  explanation?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type MutationUnsuspendModArgs = {
+  issueId: Scalars["ID"]["input"];
   explanation?: InputMaybe<Scalars["String"]["input"]>;
 };
 
@@ -4582,6 +4599,7 @@ export type DiscussionChannel = {
   weightedVotesCount?: Maybe<Scalars["Float"]["output"]>;
   emoji?: Maybe<Scalars["JSON"]["output"]>;
   archived?: Maybe<Scalars["Boolean"]["output"]>;
+  answered?: Maybe<Scalars["Boolean"]["output"]>;
   DiscussionAggregate?: Maybe<DiscussionChannelDiscussionDiscussionAggregationSelection>;
   Discussion?: Maybe<Discussion>;
   DiscussionConnection: DiscussionChannelDiscussionConnection;
@@ -4597,6 +4615,9 @@ export type DiscussionChannel = {
   RelatedIssuesAggregate?: Maybe<DiscussionChannelIssueRelatedIssuesAggregationSelection>;
   RelatedIssues: Array<Issue>;
   RelatedIssuesConnection: DiscussionChannelRelatedIssuesConnection;
+  AnswersAggregate?: Maybe<DiscussionChannelCommentAnswersAggregationSelection>;
+  Answers: Array<Comment>;
+  AnswersConnection: DiscussionChannelAnswersConnection;
 };
 
 export type DiscussionChannelDiscussionAggregateArgs = {
@@ -4694,6 +4715,25 @@ export type DiscussionChannelRelatedIssuesConnectionArgs = {
   sort?: InputMaybe<Array<DiscussionChannelRelatedIssuesConnectionSort>>;
 };
 
+export type DiscussionChannelAnswersAggregateArgs = {
+  where?: InputMaybe<CommentWhere>;
+  directed?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type DiscussionChannelAnswersArgs = {
+  where?: InputMaybe<CommentWhere>;
+  options?: InputMaybe<CommentOptions>;
+  directed?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+export type DiscussionChannelAnswersConnectionArgs = {
+  where?: InputMaybe<DiscussionChannelAnswersConnectionWhere>;
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  after?: InputMaybe<Scalars["String"]["input"]>;
+  directed?: InputMaybe<Scalars["Boolean"]["input"]>;
+  sort?: InputMaybe<Array<DiscussionChannelAnswersConnectionSort>>;
+};
+
 export type DiscussionChannelAggregateSelection = {
   __typename?: "DiscussionChannelAggregateSelection";
   count: Scalars["Int"]["output"];
@@ -4702,6 +4742,19 @@ export type DiscussionChannelAggregateSelection = {
   channelUniqueName: StringAggregateSelection;
   createdAt: DateTimeAggregateSelection;
   weightedVotesCount: FloatAggregateSelection;
+};
+
+export type DiscussionChannelAnswersConnection = {
+  __typename?: "DiscussionChannelAnswersConnection";
+  edges: Array<DiscussionChannelAnswersRelationship>;
+  totalCount: Scalars["Int"]["output"];
+  pageInfo: PageInfo;
+};
+
+export type DiscussionChannelAnswersRelationship = {
+  __typename?: "DiscussionChannelAnswersRelationship";
+  cursor: Scalars["String"]["output"];
+  node: Comment;
 };
 
 export type DiscussionChannelChannelChannelAggregationSelection = {
@@ -4731,6 +4784,21 @@ export type DiscussionChannelChannelRelationship = {
   __typename?: "DiscussionChannelChannelRelationship";
   cursor: Scalars["String"]["output"];
   node: Channel;
+};
+
+export type DiscussionChannelCommentAnswersAggregationSelection = {
+  __typename?: "DiscussionChannelCommentAnswersAggregationSelection";
+  count: Scalars["Int"]["output"];
+  node?: Maybe<DiscussionChannelCommentAnswersNodeAggregateSelection>;
+};
+
+export type DiscussionChannelCommentAnswersNodeAggregateSelection = {
+  __typename?: "DiscussionChannelCommentAnswersNodeAggregateSelection";
+  id: IdAggregateSelection;
+  text: StringAggregateSelection;
+  updatedAt: DateTimeAggregateSelection;
+  createdAt: DateTimeAggregateSelection;
+  weightedVotesCount: FloatAggregateSelection;
 };
 
 export type DiscussionChannelCommentCommentsAggregationSelection = {
@@ -24927,6 +24995,203 @@ export type DiscussionAuthorUpdateFieldInput = {
   delete?: InputMaybe<DiscussionAuthorDeleteFieldInput>;
 };
 
+export type DiscussionChannelAnswersAggregateInput = {
+  count?: InputMaybe<Scalars["Int"]["input"]>;
+  count_LT?: InputMaybe<Scalars["Int"]["input"]>;
+  count_LTE?: InputMaybe<Scalars["Int"]["input"]>;
+  count_GT?: InputMaybe<Scalars["Int"]["input"]>;
+  count_GTE?: InputMaybe<Scalars["Int"]["input"]>;
+  AND?: InputMaybe<Array<DiscussionChannelAnswersAggregateInput>>;
+  OR?: InputMaybe<Array<DiscussionChannelAnswersAggregateInput>>;
+  NOT?: InputMaybe<DiscussionChannelAnswersAggregateInput>;
+  node?: InputMaybe<DiscussionChannelAnswersNodeAggregationWhereInput>;
+};
+
+export type DiscussionChannelAnswersConnectFieldInput = {
+  where?: InputMaybe<CommentConnectWhere>;
+  /** Whether or not to overwrite any matching relationship with the new properties. */
+  overwrite?: Scalars["Boolean"]["input"];
+  connect?: InputMaybe<Array<CommentConnectInput>>;
+};
+
+export type DiscussionChannelAnswersConnectionSort = {
+  node?: InputMaybe<CommentSort>;
+};
+
+export type DiscussionChannelAnswersConnectionWhere = {
+  AND?: InputMaybe<Array<DiscussionChannelAnswersConnectionWhere>>;
+  OR?: InputMaybe<Array<DiscussionChannelAnswersConnectionWhere>>;
+  NOT?: InputMaybe<DiscussionChannelAnswersConnectionWhere>;
+  node?: InputMaybe<CommentWhere>;
+  /** @deprecated Negation filters will be deprecated, use the NOT operator to achieve the same behavior */
+  node_NOT?: InputMaybe<CommentWhere>;
+};
+
+export type DiscussionChannelAnswersCreateFieldInput = {
+  node: CommentCreateInput;
+};
+
+export type DiscussionChannelAnswersDeleteFieldInput = {
+  where?: InputMaybe<DiscussionChannelAnswersConnectionWhere>;
+  delete?: InputMaybe<CommentDeleteInput>;
+};
+
+export type DiscussionChannelAnswersDisconnectFieldInput = {
+  where?: InputMaybe<DiscussionChannelAnswersConnectionWhere>;
+  disconnect?: InputMaybe<CommentDisconnectInput>;
+};
+
+export type DiscussionChannelAnswersFieldInput = {
+  connect?: InputMaybe<Array<DiscussionChannelAnswersConnectFieldInput>>;
+  create?: InputMaybe<Array<DiscussionChannelAnswersCreateFieldInput>>;
+};
+
+export type DiscussionChannelAnswersNodeAggregationWhereInput = {
+  AND?: InputMaybe<Array<DiscussionChannelAnswersNodeAggregationWhereInput>>;
+  OR?: InputMaybe<Array<DiscussionChannelAnswersNodeAggregationWhereInput>>;
+  NOT?: InputMaybe<DiscussionChannelAnswersNodeAggregationWhereInput>;
+  /** @deprecated Aggregation filters that are not relying on an aggregating function will be deprecated. */
+  id_EQUAL?: InputMaybe<Scalars["ID"]["input"]>;
+  /** @deprecated Aggregation filters that are not relying on an aggregating function will be deprecated. */
+  text_EQUAL?: InputMaybe<Scalars["String"]["input"]>;
+  /** @deprecated Please use the explicit _LENGTH version for string aggregation. */
+  text_AVERAGE_EQUAL?: InputMaybe<Scalars["Float"]["input"]>;
+  /** @deprecated Please use the explicit _LENGTH version for string aggregation. */
+  text_LONGEST_EQUAL?: InputMaybe<Scalars["Int"]["input"]>;
+  /** @deprecated Please use the explicit _LENGTH version for string aggregation. */
+  text_SHORTEST_EQUAL?: InputMaybe<Scalars["Int"]["input"]>;
+  text_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars["Float"]["input"]>;
+  text_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars["Int"]["input"]>;
+  text_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars["Int"]["input"]>;
+  /** @deprecated Aggregation filters that are not relying on an aggregating function will be deprecated. */
+  text_GT?: InputMaybe<Scalars["Int"]["input"]>;
+  /** @deprecated Please use the explicit _LENGTH version for string aggregation. */
+  text_AVERAGE_GT?: InputMaybe<Scalars["Float"]["input"]>;
+  /** @deprecated Please use the explicit _LENGTH version for string aggregation. */
+  text_LONGEST_GT?: InputMaybe<Scalars["Int"]["input"]>;
+  /** @deprecated Please use the explicit _LENGTH version for string aggregation. */
+  text_SHORTEST_GT?: InputMaybe<Scalars["Int"]["input"]>;
+  text_AVERAGE_LENGTH_GT?: InputMaybe<Scalars["Float"]["input"]>;
+  text_LONGEST_LENGTH_GT?: InputMaybe<Scalars["Int"]["input"]>;
+  text_SHORTEST_LENGTH_GT?: InputMaybe<Scalars["Int"]["input"]>;
+  /** @deprecated Aggregation filters that are not relying on an aggregating function will be deprecated. */
+  text_GTE?: InputMaybe<Scalars["Int"]["input"]>;
+  /** @deprecated Please use the explicit _LENGTH version for string aggregation. */
+  text_AVERAGE_GTE?: InputMaybe<Scalars["Float"]["input"]>;
+  /** @deprecated Please use the explicit _LENGTH version for string aggregation. */
+  text_LONGEST_GTE?: InputMaybe<Scalars["Int"]["input"]>;
+  /** @deprecated Please use the explicit _LENGTH version for string aggregation. */
+  text_SHORTEST_GTE?: InputMaybe<Scalars["Int"]["input"]>;
+  text_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars["Float"]["input"]>;
+  text_LONGEST_LENGTH_GTE?: InputMaybe<Scalars["Int"]["input"]>;
+  text_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars["Int"]["input"]>;
+  /** @deprecated Aggregation filters that are not relying on an aggregating function will be deprecated. */
+  text_LT?: InputMaybe<Scalars["Int"]["input"]>;
+  /** @deprecated Please use the explicit _LENGTH version for string aggregation. */
+  text_AVERAGE_LT?: InputMaybe<Scalars["Float"]["input"]>;
+  /** @deprecated Please use the explicit _LENGTH version for string aggregation. */
+  text_LONGEST_LT?: InputMaybe<Scalars["Int"]["input"]>;
+  /** @deprecated Please use the explicit _LENGTH version for string aggregation. */
+  text_SHORTEST_LT?: InputMaybe<Scalars["Int"]["input"]>;
+  text_AVERAGE_LENGTH_LT?: InputMaybe<Scalars["Float"]["input"]>;
+  text_LONGEST_LENGTH_LT?: InputMaybe<Scalars["Int"]["input"]>;
+  text_SHORTEST_LENGTH_LT?: InputMaybe<Scalars["Int"]["input"]>;
+  /** @deprecated Aggregation filters that are not relying on an aggregating function will be deprecated. */
+  text_LTE?: InputMaybe<Scalars["Int"]["input"]>;
+  /** @deprecated Please use the explicit _LENGTH version for string aggregation. */
+  text_AVERAGE_LTE?: InputMaybe<Scalars["Float"]["input"]>;
+  /** @deprecated Please use the explicit _LENGTH version for string aggregation. */
+  text_LONGEST_LTE?: InputMaybe<Scalars["Int"]["input"]>;
+  /** @deprecated Please use the explicit _LENGTH version for string aggregation. */
+  text_SHORTEST_LTE?: InputMaybe<Scalars["Int"]["input"]>;
+  text_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars["Float"]["input"]>;
+  text_LONGEST_LENGTH_LTE?: InputMaybe<Scalars["Int"]["input"]>;
+  text_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars["Int"]["input"]>;
+  /** @deprecated Aggregation filters that are not relying on an aggregating function will be deprecated. */
+  updatedAt_EQUAL?: InputMaybe<Scalars["DateTime"]["input"]>;
+  updatedAt_MIN_EQUAL?: InputMaybe<Scalars["DateTime"]["input"]>;
+  updatedAt_MAX_EQUAL?: InputMaybe<Scalars["DateTime"]["input"]>;
+  /** @deprecated Aggregation filters that are not relying on an aggregating function will be deprecated. */
+  updatedAt_GT?: InputMaybe<Scalars["DateTime"]["input"]>;
+  updatedAt_MIN_GT?: InputMaybe<Scalars["DateTime"]["input"]>;
+  updatedAt_MAX_GT?: InputMaybe<Scalars["DateTime"]["input"]>;
+  /** @deprecated Aggregation filters that are not relying on an aggregating function will be deprecated. */
+  updatedAt_GTE?: InputMaybe<Scalars["DateTime"]["input"]>;
+  updatedAt_MIN_GTE?: InputMaybe<Scalars["DateTime"]["input"]>;
+  updatedAt_MAX_GTE?: InputMaybe<Scalars["DateTime"]["input"]>;
+  /** @deprecated Aggregation filters that are not relying on an aggregating function will be deprecated. */
+  updatedAt_LT?: InputMaybe<Scalars["DateTime"]["input"]>;
+  updatedAt_MIN_LT?: InputMaybe<Scalars["DateTime"]["input"]>;
+  updatedAt_MAX_LT?: InputMaybe<Scalars["DateTime"]["input"]>;
+  /** @deprecated Aggregation filters that are not relying on an aggregating function will be deprecated. */
+  updatedAt_LTE?: InputMaybe<Scalars["DateTime"]["input"]>;
+  updatedAt_MIN_LTE?: InputMaybe<Scalars["DateTime"]["input"]>;
+  updatedAt_MAX_LTE?: InputMaybe<Scalars["DateTime"]["input"]>;
+  /** @deprecated Aggregation filters that are not relying on an aggregating function will be deprecated. */
+  createdAt_EQUAL?: InputMaybe<Scalars["DateTime"]["input"]>;
+  createdAt_MIN_EQUAL?: InputMaybe<Scalars["DateTime"]["input"]>;
+  createdAt_MAX_EQUAL?: InputMaybe<Scalars["DateTime"]["input"]>;
+  /** @deprecated Aggregation filters that are not relying on an aggregating function will be deprecated. */
+  createdAt_GT?: InputMaybe<Scalars["DateTime"]["input"]>;
+  createdAt_MIN_GT?: InputMaybe<Scalars["DateTime"]["input"]>;
+  createdAt_MAX_GT?: InputMaybe<Scalars["DateTime"]["input"]>;
+  /** @deprecated Aggregation filters that are not relying on an aggregating function will be deprecated. */
+  createdAt_GTE?: InputMaybe<Scalars["DateTime"]["input"]>;
+  createdAt_MIN_GTE?: InputMaybe<Scalars["DateTime"]["input"]>;
+  createdAt_MAX_GTE?: InputMaybe<Scalars["DateTime"]["input"]>;
+  /** @deprecated Aggregation filters that are not relying on an aggregating function will be deprecated. */
+  createdAt_LT?: InputMaybe<Scalars["DateTime"]["input"]>;
+  createdAt_MIN_LT?: InputMaybe<Scalars["DateTime"]["input"]>;
+  createdAt_MAX_LT?: InputMaybe<Scalars["DateTime"]["input"]>;
+  /** @deprecated Aggregation filters that are not relying on an aggregating function will be deprecated. */
+  createdAt_LTE?: InputMaybe<Scalars["DateTime"]["input"]>;
+  createdAt_MIN_LTE?: InputMaybe<Scalars["DateTime"]["input"]>;
+  createdAt_MAX_LTE?: InputMaybe<Scalars["DateTime"]["input"]>;
+  /** @deprecated Aggregation filters that are not relying on an aggregating function will be deprecated. */
+  weightedVotesCount_EQUAL?: InputMaybe<Scalars["Float"]["input"]>;
+  weightedVotesCount_MIN_EQUAL?: InputMaybe<Scalars["Float"]["input"]>;
+  weightedVotesCount_MAX_EQUAL?: InputMaybe<Scalars["Float"]["input"]>;
+  weightedVotesCount_SUM_EQUAL?: InputMaybe<Scalars["Float"]["input"]>;
+  weightedVotesCount_AVERAGE_EQUAL?: InputMaybe<Scalars["Float"]["input"]>;
+  /** @deprecated Aggregation filters that are not relying on an aggregating function will be deprecated. */
+  weightedVotesCount_GT?: InputMaybe<Scalars["Float"]["input"]>;
+  weightedVotesCount_MIN_GT?: InputMaybe<Scalars["Float"]["input"]>;
+  weightedVotesCount_MAX_GT?: InputMaybe<Scalars["Float"]["input"]>;
+  weightedVotesCount_SUM_GT?: InputMaybe<Scalars["Float"]["input"]>;
+  weightedVotesCount_AVERAGE_GT?: InputMaybe<Scalars["Float"]["input"]>;
+  /** @deprecated Aggregation filters that are not relying on an aggregating function will be deprecated. */
+  weightedVotesCount_GTE?: InputMaybe<Scalars["Float"]["input"]>;
+  weightedVotesCount_MIN_GTE?: InputMaybe<Scalars["Float"]["input"]>;
+  weightedVotesCount_MAX_GTE?: InputMaybe<Scalars["Float"]["input"]>;
+  weightedVotesCount_SUM_GTE?: InputMaybe<Scalars["Float"]["input"]>;
+  weightedVotesCount_AVERAGE_GTE?: InputMaybe<Scalars["Float"]["input"]>;
+  /** @deprecated Aggregation filters that are not relying on an aggregating function will be deprecated. */
+  weightedVotesCount_LT?: InputMaybe<Scalars["Float"]["input"]>;
+  weightedVotesCount_MIN_LT?: InputMaybe<Scalars["Float"]["input"]>;
+  weightedVotesCount_MAX_LT?: InputMaybe<Scalars["Float"]["input"]>;
+  weightedVotesCount_SUM_LT?: InputMaybe<Scalars["Float"]["input"]>;
+  weightedVotesCount_AVERAGE_LT?: InputMaybe<Scalars["Float"]["input"]>;
+  /** @deprecated Aggregation filters that are not relying on an aggregating function will be deprecated. */
+  weightedVotesCount_LTE?: InputMaybe<Scalars["Float"]["input"]>;
+  weightedVotesCount_MIN_LTE?: InputMaybe<Scalars["Float"]["input"]>;
+  weightedVotesCount_MAX_LTE?: InputMaybe<Scalars["Float"]["input"]>;
+  weightedVotesCount_SUM_LTE?: InputMaybe<Scalars["Float"]["input"]>;
+  weightedVotesCount_AVERAGE_LTE?: InputMaybe<Scalars["Float"]["input"]>;
+};
+
+export type DiscussionChannelAnswersUpdateConnectionInput = {
+  node?: InputMaybe<CommentUpdateInput>;
+};
+
+export type DiscussionChannelAnswersUpdateFieldInput = {
+  where?: InputMaybe<DiscussionChannelAnswersConnectionWhere>;
+  connect?: InputMaybe<Array<DiscussionChannelAnswersConnectFieldInput>>;
+  disconnect?: InputMaybe<Array<DiscussionChannelAnswersDisconnectFieldInput>>;
+  create?: InputMaybe<Array<DiscussionChannelAnswersCreateFieldInput>>;
+  update?: InputMaybe<DiscussionChannelAnswersUpdateConnectionInput>;
+  delete?: InputMaybe<Array<DiscussionChannelAnswersDeleteFieldInput>>;
+};
+
 export type DiscussionChannelChannelAggregateInput = {
   count?: InputMaybe<Scalars["Int"]["input"]>;
   count_LT?: InputMaybe<Scalars["Int"]["input"]>;
@@ -25510,6 +25775,7 @@ export type DiscussionChannelConnectInput = {
   RelatedIssues?: InputMaybe<
     Array<DiscussionChannelRelatedIssuesConnectFieldInput>
   >;
+  Answers?: InputMaybe<Array<DiscussionChannelAnswersConnectFieldInput>>;
 };
 
 export type DiscussionChannelConnectOrCreateInput = {
@@ -25530,11 +25796,13 @@ export type DiscussionChannelCreateInput = {
   weightedVotesCount?: InputMaybe<Scalars["Float"]["input"]>;
   emoji?: InputMaybe<Scalars["JSON"]["input"]>;
   archived?: InputMaybe<Scalars["Boolean"]["input"]>;
+  answered?: InputMaybe<Scalars["Boolean"]["input"]>;
   Discussion?: InputMaybe<DiscussionChannelDiscussionFieldInput>;
   Channel?: InputMaybe<DiscussionChannelChannelFieldInput>;
   UpvotedByUsers?: InputMaybe<DiscussionChannelUpvotedByUsersFieldInput>;
   Comments?: InputMaybe<DiscussionChannelCommentsFieldInput>;
   RelatedIssues?: InputMaybe<DiscussionChannelRelatedIssuesFieldInput>;
+  Answers?: InputMaybe<DiscussionChannelAnswersFieldInput>;
 };
 
 export type DiscussionChannelDeleteInput = {
@@ -25547,6 +25815,7 @@ export type DiscussionChannelDeleteInput = {
   RelatedIssues?: InputMaybe<
     Array<DiscussionChannelRelatedIssuesDeleteFieldInput>
   >;
+  Answers?: InputMaybe<Array<DiscussionChannelAnswersDeleteFieldInput>>;
 };
 
 export type DiscussionChannelDisconnectInput = {
@@ -25559,6 +25828,7 @@ export type DiscussionChannelDisconnectInput = {
   RelatedIssues?: InputMaybe<
     Array<DiscussionChannelRelatedIssuesDisconnectFieldInput>
   >;
+  Answers?: InputMaybe<Array<DiscussionChannelAnswersDisconnectFieldInput>>;
 };
 
 export type DiscussionChannelDiscussionAggregateInput = {
@@ -26328,6 +26598,7 @@ export type DiscussionChannelRelationInput = {
   RelatedIssues?: InputMaybe<
     Array<DiscussionChannelRelatedIssuesCreateFieldInput>
   >;
+  Answers?: InputMaybe<Array<DiscussionChannelAnswersCreateFieldInput>>;
 };
 
 /** Fields to sort DiscussionChannels by. The order in which sorts are applied is not guaranteed when specifying many fields in one DiscussionChannelSort object. */
@@ -26340,6 +26611,7 @@ export type DiscussionChannelSort = {
   weightedVotesCount?: InputMaybe<SortDirection>;
   emoji?: InputMaybe<SortDirection>;
   archived?: InputMaybe<SortDirection>;
+  answered?: InputMaybe<SortDirection>;
 };
 
 export type DiscussionChannelUpdateInput = {
@@ -26354,6 +26626,7 @@ export type DiscussionChannelUpdateInput = {
   weightedVotesCount_DIVIDE?: InputMaybe<Scalars["Float"]["input"]>;
   emoji?: InputMaybe<Scalars["JSON"]["input"]>;
   archived?: InputMaybe<Scalars["Boolean"]["input"]>;
+  answered?: InputMaybe<Scalars["Boolean"]["input"]>;
   Discussion?: InputMaybe<DiscussionChannelDiscussionUpdateFieldInput>;
   Channel?: InputMaybe<DiscussionChannelChannelUpdateFieldInput>;
   UpvotedByUsers?: InputMaybe<
@@ -26363,6 +26636,7 @@ export type DiscussionChannelUpdateInput = {
   RelatedIssues?: InputMaybe<
     Array<DiscussionChannelRelatedIssuesUpdateFieldInput>
   >;
+  Answers?: InputMaybe<Array<DiscussionChannelAnswersUpdateFieldInput>>;
 };
 
 export type DiscussionChannelUpvotedByUsersAggregateInput = {
@@ -27173,6 +27447,9 @@ export type DiscussionChannelWhere = {
   archived?: InputMaybe<Scalars["Boolean"]["input"]>;
   /** @deprecated Negation filters will be deprecated, use the NOT operator to achieve the same behavior */
   archived_NOT?: InputMaybe<Scalars["Boolean"]["input"]>;
+  answered?: InputMaybe<Scalars["Boolean"]["input"]>;
+  /** @deprecated Negation filters will be deprecated, use the NOT operator to achieve the same behavior */
+  answered_NOT?: InputMaybe<Scalars["Boolean"]["input"]>;
   OR?: InputMaybe<Array<DiscussionChannelWhere>>;
   AND?: InputMaybe<Array<DiscussionChannelWhere>>;
   NOT?: InputMaybe<DiscussionChannelWhere>;
@@ -27261,6 +27538,31 @@ export type DiscussionChannelWhere = {
   /** Return DiscussionChannels where some of the related DiscussionChannelRelatedIssuesConnections match this filter */
   RelatedIssuesConnection_SOME?: InputMaybe<DiscussionChannelRelatedIssuesConnectionWhere>;
   RelatedIssuesAggregate?: InputMaybe<DiscussionChannelRelatedIssuesAggregateInput>;
+  /** @deprecated Use `Answers_SOME` instead. */
+  Answers?: InputMaybe<CommentWhere>;
+  /** @deprecated Use `Answers_NONE` instead. */
+  Answers_NOT?: InputMaybe<CommentWhere>;
+  /** Return DiscussionChannels where all of the related Comments match this filter */
+  Answers_ALL?: InputMaybe<CommentWhere>;
+  /** Return DiscussionChannels where none of the related Comments match this filter */
+  Answers_NONE?: InputMaybe<CommentWhere>;
+  /** Return DiscussionChannels where one of the related Comments match this filter */
+  Answers_SINGLE?: InputMaybe<CommentWhere>;
+  /** Return DiscussionChannels where some of the related Comments match this filter */
+  Answers_SOME?: InputMaybe<CommentWhere>;
+  /** @deprecated Use `AnswersConnection_SOME` instead. */
+  AnswersConnection?: InputMaybe<DiscussionChannelAnswersConnectionWhere>;
+  /** @deprecated Use `AnswersConnection_NONE` instead. */
+  AnswersConnection_NOT?: InputMaybe<DiscussionChannelAnswersConnectionWhere>;
+  /** Return DiscussionChannels where all of the related DiscussionChannelAnswersConnections match this filter */
+  AnswersConnection_ALL?: InputMaybe<DiscussionChannelAnswersConnectionWhere>;
+  /** Return DiscussionChannels where none of the related DiscussionChannelAnswersConnections match this filter */
+  AnswersConnection_NONE?: InputMaybe<DiscussionChannelAnswersConnectionWhere>;
+  /** Return DiscussionChannels where one of the related DiscussionChannelAnswersConnections match this filter */
+  AnswersConnection_SINGLE?: InputMaybe<DiscussionChannelAnswersConnectionWhere>;
+  /** Return DiscussionChannels where some of the related DiscussionChannelAnswersConnections match this filter */
+  AnswersConnection_SOME?: InputMaybe<DiscussionChannelAnswersConnectionWhere>;
+  AnswersAggregate?: InputMaybe<DiscussionChannelAnswersAggregateInput>;
 };
 
 export type DiscussionConnectInput = {

@@ -316,3 +316,10 @@ export const isAccountOwner = rule({ cache: "contextual" })(
     return true;
   }
 );
+
+export const isDiscussionChannelOwner = rule({ cache: "contextual" })(
+  async (parent: any, args: IsAccountOwnerArgs, ctx: any, info: any) => {
+
+    return true;
+  }
+);
