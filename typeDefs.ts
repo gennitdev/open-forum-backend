@@ -213,6 +213,8 @@ const typeDefinitions = gql`
     emoji: JSON
     archived: Boolean
     RelatedIssues: [Issue!]! @relationship(type: "CITED_ISSUE", direction: IN)
+    answered: Boolean
+    Answers: [Comment!]! @relationship(type: "IS_REPLY_TO", direction: IN)
   }
 
   type Discussion {
@@ -245,7 +247,7 @@ const typeDefinitions = gql`
     Channel: Channel @relationship(type: "POSTED_IN_CHANNEL", direction: OUT)
     Comments: [Comment!]!
       @relationship(type: "CONTAINS_COMMENT", direction: OUT)
-    archived: Boolean
+    archived: Boolean @default(value: false)
     RelatedIssues: [Issue!]! @relationship(type: "CITED_ISSUE", direction: IN)
   }
 

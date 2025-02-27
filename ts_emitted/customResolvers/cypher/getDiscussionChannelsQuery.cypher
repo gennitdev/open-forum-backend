@@ -113,6 +113,7 @@ WITH totalCount, dc, d, author, tagsText, loggedInUserUpvote, totalUpvoters,
 RETURN {
     id: dc.id,
     archived: dc.archived,
+    answered: dc.answered,
     locked: dc.locked,
     discussionId: d.id,
     createdAt: dc.createdAt,
