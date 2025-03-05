@@ -128,16 +128,14 @@ export const canCreateComment = rule({ cache: "contextual" })(
       DiscussionChannel, 
       Event,
       GivesFeedbackOnEvent,
-      Channel
+      GivesFeedbackOnDiscussion,
+      GivesFeedbackOnComment,
+      Channel,
     } = firstItemInInput;
 
     // Throw an error if no Channel is provided; all comments must be in the context of a channel.
     if (!Channel || !Channel.connect?.where?.node?.uniqueName) {
       throw new Error("Comment must be connected to a Channel.");
-    }
-
-    if (!DiscussionChannel && !Event && !GivesFeedbackOnEvent) {
-      throw new Error("Comment must be connected to a DiscussionChannel or an Event.");
     }
 
     let channelName = ''
@@ -213,6 +211,38 @@ export const canCreateComment = rule({ cache: "contextual" })(
       }
 
       channelName = Channel?.connect?.where?.node?.uniqueName
+    }
+
+    if (GivesFeedbackOnDiscussion) {
+      const discussionChannelId = GivesFeedbackOnDiscussion.connect?.where?.node?.id;
+
+      if (!discussionChannelId) {
+        throw new Error("No discussion channel ID found.");
+      }
+  
+      // Look up the channelUniqueName from the discussion channel ID.
+      const discussionChannelModel = ctx.ogm.model("DiscussionChannel");
+      const discussionChannel = await discussionChannelModel.find({
+        where: { id: discussionChannelId },
+        selectionSet: `{ channelUniqueName }`,
+      });
+  
+      if (!discussionChannel || !discussionChannel[0]) {
+        throw new Error("No discussion channel found.");
+      }
+  
+      channelName = discussionChannel[0]?.channelUniqueName;
+    }
+
+    if (GivesFeedbackOnComment) {
+      console.log('input', JSON.stringify(firstItemInInput, null, 2));
+      const commentId = GivesFeedbackOnComment?.connect?.where?.node?.id;
+
+      if (!commentId) {
+        throw new Error("No comment ID found.");
+      }
+  
+      channelName = Channel?.connect?.where?.node?.uniqueName;
     }
     
     if (!channelName) {
