@@ -55,6 +55,7 @@ RETURN {
     weightedVotesCount: child.weightedVotesCount,
     createdAt: child.createdAt,
     updatedAt: child.updatedAt,
+    archived: child.archived,
     ParentComment: {
         id: parentComment.id
     },

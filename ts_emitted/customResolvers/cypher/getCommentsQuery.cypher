@@ -55,6 +55,7 @@ RETURN {
     weightedVotesCount: c.weightedVotesCount,
     createdAt: c.createdAt,
     updatedAt: c.updatedAt,
+    archived: c.archived,
     // If the author is null, return null, otherwise return the author object.
     CommentAuthor: CASE WHEN author IS NULL THEN null ELSE {
         username: author.username,

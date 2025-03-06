@@ -50,6 +50,7 @@ const commentSelectionSet = `
                   }
                   createdAt
                   updatedAt
+                  archived
                   ChildCommentsAggregate {
                       count
                   }
@@ -85,6 +86,7 @@ const commentSelectionSet = `
                       }
                       createdAt
                       updatedAt
+                      archived
                       ChildCommentsAggregate {
                           count
                       }

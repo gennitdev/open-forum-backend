@@ -28,6 +28,7 @@ const commentSelectionSet = `
         }
         createdAt
         updatedAt
+        archived
         ChildCommentsAggregate {
             count
         }

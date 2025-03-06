@@ -49,6 +49,7 @@ RETURN {
     emoji: c.emoji,
     createdAt: c.createdAt,
     updatedAt: c.updatedAt,
+    archived: c.archived,
     CommentAuthor: CASE WHEN author IS NULL THEN null ELSE {
         username: author.username,
         displayName: author.displayName,

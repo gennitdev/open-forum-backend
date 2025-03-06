@@ -43,6 +43,7 @@ RETURN {
     weightedVotesCount: c.weightedVotesCount,
     createdAt: c.createdAt,
     updatedAt: c.updatedAt,
+    archived: c.archived,
     CommentAuthor: {
         username: author.username,
         displayName: author.displayName,
