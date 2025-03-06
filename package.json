@@ -34,7 +34,7 @@
     "graphql-type-json": "^0.3.2",
     "jsonwebtoken": "^9.0.2",
     "jwks-rsa": "^3.1.0",
-    "luxon": "^3.4.4",
+    "luxon": "^3.5.0",
     "mathjs": "^11.11.0",
     "ncp": "^2.0.0",
     "neo4j-driver": "^5.26.0",

@@ -32,7 +32,7 @@ type CreateSuspensionResolverOptions = {
 
 type Args = {
   issueId: string
-  suspendUntil: Date
+  suspendUntil: string
   suspendIndefinitely: boolean
   explanation: string
 }
@@ -44,7 +44,6 @@ export function createSuspensionResolver ({
   Event,
   Comment,
   suspendedEntityName,
-  suspensionCommentText
 }: CreateSuspensionResolverOptions) {
   return async function suspendEntityResolver (
     parent: any,
@@ -164,35 +163,49 @@ export function createSuspensionResolver ({
       channelUniqueName,
       actionType: 'suspension',
       actionDescription: `Suspended ${relatedAccountName}`,
-      issueId
+      issueId,
+      suspendUntil,
+      suspendIndefinitely
     })
 
     const closeIssueModActionCreateInput = getModerationActionCreateInput({
       loggedInModName,
       channelUniqueName,
       actionType: 'close',
-      actionDescription: 'Closed the issue after suspending the user',
+      actionDescription: 'Closed the issue while suspending the user',
       issueId
     })
 
     // 6. Update the Issue with the ModerationAction
     let updatedIssue
-    const issueUpdateInput: IssueUpdateInput = {
+    const closeIssueUpdateInput: IssueUpdateInput = {
       isOpen: false, // Set the issue to closed; suspension is often the final action.
       ActivityFeed: [
         {
           create: [
             { node: closeIssueModActionCreateInput },
+          ]
+        }
+      ]
+    }
+    const suspendUpdateInput: IssueUpdateInput = {
+      isOpen: false, // Set the issue to closed; suspension is often the final action.
+      ActivityFeed: [
+        {
+          create: [
             { node: suspensionModActionCreateInput },
-            
           ]
         }
       ]
     }
     try {
+      await Issue.update({
+        where: { id: issueId },
+        update: suspendUpdateInput,
+      })
       updatedIssue = await Issue.update({
         where: { id: issueId },
-        update: issueUpdateInput,
+        update: closeIssueUpdateInput,
         selectionSet: `{
           issues {
             id

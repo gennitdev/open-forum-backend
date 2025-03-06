@@ -148,7 +148,7 @@ const getResolver = (input: Input) => {
           loggedInModName,
           channelUniqueName,
           actionType: "archive",
-          actionDescription: "Archived the discussion and closed the issue",
+          actionDescription: "Archived the discussion, closing the issue",
           issueId: existingIssueId,
         });
       const issueUpdateWhere: IssueWhere = {

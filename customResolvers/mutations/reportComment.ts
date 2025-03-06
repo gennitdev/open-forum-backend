@@ -4,33 +4,42 @@ import type {
   IssueCreateInput,
   ModerationActionCreateInput,
   IssueWhere,
-  IssueUpdateInput,
-} from "../../ogm_types.js";
-import { setUserDataOnContext } from "../../rules/permission/userDataHelperFunctions.js";
-import { GraphQLError } from "graphql";
-import { getFinalCommentText } from "./reportDiscussion.js";
+  IssueUpdateInput
+} from '../../ogm_types.js'
+import { setUserDataOnContext } from '../../rules/permission/userDataHelperFunctions.js'
+import { GraphQLError } from 'graphql'
+import { getFinalCommentText } from './reportDiscussion.js'
+import { DateTime } from 'luxon'
 
 type Args = {
-  commentId: string;
-  reportText: string;
-  selectedForumRules: string[];
-  selectedServerRules: string[];
-  channelUniqueName: string;
-};
+  commentId: string
+  reportText: string
+  selectedForumRules: string[]
+  selectedServerRules: string[]
+  channelUniqueName: string
+}
 
 type Input = {
-  Issue: IssueModel;
-  Comment: CommentModel;
-};
+  Issue: IssueModel
+  Comment: CommentModel
+}
 
 type ModActionInput = {
-  text?: string;
-  loggedInModName: string;
-  channelUniqueName: string;
-  actionType: string;
-  actionDescription: string;
-  issueId: string;
-};
+  text?: string
+  loggedInModName: string
+  channelUniqueName: string
+  actionType: string
+  actionDescription: string
+  issueId: string
+  suspendUntil?: string
+  suspendIndefinitely?: boolean
+}
+
+const humanReadableDate = (dateISO: string) => {
+  // Example input: 2025-03-19T17:40:14.432-07:00
+  // Example conversion: "2021-09-01T00:00:00.000Z" -> "September 1, 2021"
+  return DateTime.fromISO(dateISO).toLocaleString(DateTime.DATE_FULL)
+}
 
 export const getModerationActionCreateInput = (input: ModActionInput) => {
   const {
@@ -40,73 +49,90 @@ export const getModerationActionCreateInput = (input: ModActionInput) => {
     actionType,
     actionDescription,
     issueId,
-  } = input;
+    suspendIndefinitely,
+    suspendUntil
+  } = input
 
   return {
     ModerationProfile: {
       connect: {
         where: {
           node: {
-            displayName: loggedInModName,
-          },
-        },
-      },
+            displayName: loggedInModName
+          }
+        }
+      }
     },
     actionType,
     actionDescription,
     Comment: {
       create: {
         node: {
-          text,
+          text: text ? `
+${text}
+${
+  suspendIndefinitely || suspendUntil
+    ? `Length of suspension: ${
+        suspendIndefinitely
+          ? 'Indefinite'
+          : `Until ${
+              suspendUntil
+                ? humanReadableDate(suspendUntil)
+                : 'unknown date'
+            }`
+      }`
+    : ''
+}
+`: null,
           isRootComment: true,
           CommentAuthor: {
             ModerationProfile: {
               connect: {
                 where: {
                   node: {
-                    displayName: loggedInModName,
-                  },
-                },
-              },
-            },
+                    displayName: loggedInModName
+                  }
+                }
+              }
+            }
           },
           Channel: {
             // Important for making user profile's permalinks work
             connect: {
               where: {
                 node: {
-                  uniqueName: channelUniqueName,
-                },
-              },
-            },
+                  uniqueName: channelUniqueName
+                }
+              }
+            }
           },
           Issue: {
             // Important for making user profile's permalinks work
             connect: {
               where: {
                 node: {
-                  id: issueId,
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-  };
-};
+                  id: issueId
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
 
 type InputIssueCreate = {
-  contextText: string;
-  selectedForumRules: string[];
-  selectedServerRules: string[];
-  loggedInModName: string;
-  channelUniqueName: string;
-  reportedContentType: "comment" | "discussion" | "event";
-  relatedCommentId?: string;
-  relatedDiscussionId?: string;
-  relatedEventId?: string;
-};
+  contextText: string
+  selectedForumRules: string[]
+  selectedServerRules: string[]
+  loggedInModName: string
+  channelUniqueName: string
+  reportedContentType: 'comment' | 'discussion' | 'event'
+  relatedCommentId?: string
+  relatedDiscussionId?: string
+  relatedEventId?: string
+}
 
 export const getIssueCreateInput = (
   input: InputIssueCreate
@@ -119,23 +145,23 @@ export const getIssueCreateInput = (
     reportedContentType,
     relatedCommentId,
     relatedDiscussionId,
-    relatedEventId,
-  } = input;
+    relatedEventId
+  } = input
 
-  if (reportedContentType === "comment" && !relatedCommentId) {
-    throw new GraphQLError("Comment ID is required");
+  if (reportedContentType === 'comment' && !relatedCommentId) {
+    throw new GraphQLError('Comment ID is required')
   }
-  if (reportedContentType === "discussion" && !relatedDiscussionId) {
-    throw new GraphQLError("Discussion ID is required");
+  if (reportedContentType === 'discussion' && !relatedDiscussionId) {
+    throw new GraphQLError('Discussion ID is required')
   }
-  if (reportedContentType === "event" && !relatedEventId) {
-    throw new GraphQLError("Event ID is required");
+  if (reportedContentType === 'event' && !relatedEventId) {
+    throw new GraphQLError('Event ID is required')
   }
 
-  const truncatedContextText = contextText?.substring(0, 50) || "";
+  const truncatedContextText = contextText?.substring(0, 50) || ''
   const output: IssueCreateInput = {
     title: `[Reported ${reportedContentType}] "${truncatedContextText}${
-      contextText.length > 50 ? "..." : ""
+      contextText.length > 50 ? '...' : ''
     }"`,
     isOpen: true,
     authorName: loggedInModName,
@@ -146,117 +172,117 @@ export const getIssueCreateInput = (
         connect: {
           where: {
             node: {
-              displayName: loggedInModName,
-            },
-          },
-        },
-      },
+              displayName: loggedInModName
+            }
+          }
+        }
+      }
     },
     Channel: {
       connect: {
         where: {
           node: {
-            uniqueName: channelUniqueName,
-          },
-        },
-      },
-    },
-  };
-  switch (reportedContentType) {
-    case "comment":
-      output.relatedCommentId = relatedCommentId;
-      break;
-    case "discussion":
-      output.relatedDiscussionId = relatedDiscussionId;
-      break;
-    case "event":
-      output.relatedEventId = relatedEventId;
-      break;
+            uniqueName: channelUniqueName
+          }
+        }
+      }
+    }
   }
-  return output;
-};
+  switch (reportedContentType) {
+    case 'comment':
+      output.relatedCommentId = relatedCommentId
+      break
+    case 'discussion':
+      output.relatedDiscussionId = relatedDiscussionId
+      break
+    case 'event':
+      output.relatedEventId = relatedEventId
+      break
+  }
+  return output
+}
 
 const getResolver = (input: Input) => {
-  const { Issue, Comment } = input;
+  const { Issue, Comment } = input
   return async (parent: any, args: Args, context: any, resolveInfo: any) => {
     const {
       commentId,
       reportText,
       selectedForumRules,
       selectedServerRules,
-      channelUniqueName,
-    } = args;
+      channelUniqueName
+    } = args
 
     if (!commentId) {
-      throw new GraphQLError("Comment ID is required");
+      throw new GraphQLError('Comment ID is required')
     }
     if (!channelUniqueName) {
-      throw new GraphQLError("Channel unique name is required");
+      throw new GraphQLError('Channel unique name is required')
     }
 
     const atLeastOneViolation =
-      selectedForumRules?.length > 0 || selectedServerRules?.length > 0;
+      selectedForumRules?.length > 0 || selectedServerRules?.length > 0
 
     if (!atLeastOneViolation) {
-      throw new GraphQLError("At least one rule must be selected");
+      throw new GraphQLError('At least one rule must be selected')
     }
 
     // Set loggedInUsername to null explicitly if not present
     context.user = await setUserDataOnContext({
       context,
-      getPermissionInfo: false,
-    });
+      getPermissionInfo: false
+    })
 
-    const loggedInUsername = context.user?.username || null;
+    const loggedInUsername = context.user?.username || null
 
     if (!loggedInUsername) {
-      throw new GraphQLError("User must be logged in");
+      throw new GraphQLError('User must be logged in')
     }
 
-    const loggedInModName = context.user.data.ModerationProfile.displayName;
+    const loggedInModName = context.user.data.ModerationProfile.displayName
     if (!loggedInModName) {
-      throw new GraphQLError(`User ${loggedInUsername} is not a moderator`);
+      throw new GraphQLError(`User ${loggedInUsername} is not a moderator`)
     }
 
-    let existingIssueId = "";
-    let existingIssueFlaggedServerRuleViolation = false;
+    let existingIssueId = ''
+    let existingIssueFlaggedServerRuleViolation = false
 
     // Check if an issue already exists for the comment ID and channel unique name.
     const issueData = await Issue.find({
       where: {
         channelUniqueName: channelUniqueName,
-        relatedCommentId: commentId,
+        relatedCommentId: commentId
       },
       selectionSet: `{
             id
             flaggedServerRuleViolation
-        }`,
-    });
+        }`
+    })
 
     if (issueData.length > 0) {
-      existingIssueId = issueData[0]?.id || "";
+      existingIssueId = issueData[0]?.id || ''
       existingIssueFlaggedServerRuleViolation =
-        issueData[0]?.flaggedServerRuleViolation || false;
+        issueData[0]?.flaggedServerRuleViolation || false
     }
 
     const finalCommentText = getFinalCommentText({
       reportText,
       selectedForumRules,
-      selectedServerRules,
-    });
+      selectedServerRules
+    })
 
     // If an issue does NOT already exist, create a new issue.
     if (!existingIssueId) {
       const commentData = await Comment.find({
         where: {
-          id: commentId,
+          id: commentId
         },
         selectionSet: `{
                 id
                 text            
-            }`,
-      });
-      const commentText = commentData[0]?.text || "";
+            }`
+      })
+      const commentText = commentData[0]?.text || ''
 
       const issueCreateInput: IssueCreateInput = getIssueCreateInput({
         contextText: commentText,
@@ -264,20 +290,20 @@ const getResolver = (input: Input) => {
         selectedServerRules,
         loggedInModName,
         channelUniqueName,
-        reportedContentType: "comment",
-        relatedCommentId: commentId,
-      });
+        reportedContentType: 'comment',
+        relatedCommentId: commentId
+      })
       try {
         const issueData = await Issue.create({
-          input: [issueCreateInput],
-        });
-        const issueId = issueData.issues[0]?.id || null;
+          input: [issueCreateInput]
+        })
+        const issueId = issueData.issues[0]?.id || null
         if (!issueId) {
-          throw new GraphQLError("Error creating issue");
+          throw new GraphQLError('Error creating issue')
         }
-        existingIssueId = issueId;
+        existingIssueId = issueId
       } catch (error) {
-        throw new GraphQLError("Error creating issue");
+        throw new GraphQLError('Error creating issue')
       }
     }
     const moderationActionCreateInput: ModerationActionCreateInput =
@@ -285,45 +311,45 @@ const getResolver = (input: Input) => {
         text: finalCommentText,
         loggedInModName,
         channelUniqueName,
-        actionType: "report",
-        actionDescription: "Reported the comment",
-        issueId: existingIssueId,
-      });
+        actionType: 'report',
+        actionDescription: 'Reported the comment',
+        issueId: existingIssueId
+      })
 
     // Update the issue with the new moderation action.
     const issueUpdateWhere: IssueWhere = {
-      id: existingIssueId,
-    };
+      id: existingIssueId
+    }
     const issueUpdateInput: IssueUpdateInput = {
       ActivityFeed: [
         {
           create: [
             {
-              node: moderationActionCreateInput,
-            },
-          ],
-        },
+              node: moderationActionCreateInput
+            }
+          ]
+        }
       ],
       isOpen: true, // Reopen the issue if it was closed
       flaggedServerRuleViolation:
         existingIssueFlaggedServerRuleViolation ||
-        selectedServerRules.length > 0,
-    };
+        selectedServerRules.length > 0
+    }
 
     try {
       const issueData = await Issue.update({
         where: issueUpdateWhere,
-        update: issueUpdateInput,
-      });
-      const issueId = issueData.issues[0]?.id || null;
+        update: issueUpdateInput
+      })
+      const issueId = issueData.issues[0]?.id || null
       if (!issueId) {
-        throw new GraphQLError("Error updating issue");
+        throw new GraphQLError('Error updating issue')
       }
-      return issueData.issues[0];
+      return issueData.issues[0]
     } catch (error) {
-      throw new GraphQLError("Error updating issue");
+      throw new GraphQLError('Error updating issue')
     }
-  };
-};
+  }
+}
 
-export default getResolver;
+export default getResolver
