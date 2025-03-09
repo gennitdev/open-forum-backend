@@ -6,54 +6,52 @@ import type {
   IssueWhere,
   IssueUpdateInput,
   CommentUpdateInput,
-  CommentWhere,
-} from "../../ogm_types.js";
-import { setUserDataOnContext } from "../../rules/permission/userDataHelperFunctions.js";
-import { GraphQLError } from "graphql";
-import {
-  getModerationActionCreateInput,
-} from "./reportComment.js";
+  CommentWhere
+} from '../../ogm_types.js'
+import { setUserDataOnContext } from '../../rules/permission/userDataHelperFunctions.js'
+import { GraphQLError } from 'graphql'
+import { getModerationActionCreateInput } from './reportComment.js'
 
 type Args = {
-  commentId: string;
-  explanation: string;
-};
+  commentId: string
+  explanation: string
+}
 
 type Input = {
-  Issue: IssueModel;
-  Comment: CommentModel;
-};
+  Issue: IssueModel
+  Comment: CommentModel
+}
 
 const getResolver = (input: Input) => {
-  const { Issue, Comment } = input;
+  const { Issue, Comment } = input
   return async (parent: any, args: Args, context: any, resolveInfo: any) => {
-    const { commentId, explanation } = args;
+    const { commentId, explanation } = args
 
     if (!commentId) {
-      throw new GraphQLError("Comment ID is required");
+      throw new GraphQLError('Comment ID is required')
     }
     // Set loggedInUsername to null explicitly if not present
     context.user = await setUserDataOnContext({
       context,
-      getPermissionInfo: false,
-    });
+      getPermissionInfo: false
+    })
 
-    const loggedInUsername = context.user?.username || null;
+    const loggedInUsername = context.user?.username || null
     if (!loggedInUsername) {
-      throw new GraphQLError("User must be logged in");
+      throw new GraphQLError('User must be logged in')
     }
 
-    const loggedInModName = context.user.data.ModerationProfile.displayName;
+    const loggedInModName = context.user.data.ModerationProfile.displayName
     if (!loggedInModName) {
-      throw new GraphQLError(`User ${loggedInUsername} is not a moderator`);
+      throw new GraphQLError(`User ${loggedInUsername} is not a moderator`)
     }
 
-    let existingIssueId = "";
-    let existingIssue: Issue | null = null;
+    let existingIssueId = ''
+    let existingIssue: Issue | null = null
 
     const commentData = await Comment.find({
       where: {
-        id: commentId,
+        id: commentId
       },
       selectionSet: `{
               id
@@ -61,95 +59,128 @@ const getResolver = (input: Input) => {
               Channel {
                 uniqueName
               }
-          }`,
-    });
-    const channelUniqueName = commentData[0]?.Channel?.uniqueName || "";
+          }`
+    })
+    const channelUniqueName = commentData[0]?.Channel?.uniqueName || ''
     if (!channelUniqueName) {
       throw new GraphQLError(
-        "Could not find the forum name attached to the comment."
-      );
+        'Could not find the forum name attached to the comment.'
+      )
     }
 
     // Check if an issue already exists for the comment ID and channel unique name.
     const issueData = await Issue.find({
       where: {
         channelUniqueName: channelUniqueName,
-        relatedCommentId: commentId,
+        relatedCommentId: commentId
       },
       selectionSet: `{
               id
               flaggedServerRuleViolation
-          }`,
-    });
+          }`
+    })
 
     if (issueData.length > 0) {
-      existingIssueId = issueData[0]?.id || "";
-      existingIssue = issueData[0];
+      existingIssueId = issueData[0]?.id || ''
+      existingIssue = issueData[0]
     } else {
-      throw new GraphQLError("Issue not found");
+      throw new GraphQLError('Issue not found')
     }
 
-    const moderationActionCreateInput: ModerationActionCreateInput =
+    const unarchiveModActionCreateInput: ModerationActionCreateInput =
       getModerationActionCreateInput({
         text: explanation,
         loggedInModName,
         channelUniqueName,
-        actionType: "un-archive",
-        actionDescription: "Un-archived the comment",
-        issueId: existingIssueId,
-      });
+        actionType: 'un-archive',
+        actionDescription: 'Un-archived the comment',
+        issueId: existingIssueId
+      })
+    console.log(
+      'unarchiveModActionCreateInput',
+      JSON.stringify(unarchiveModActionCreateInput)
+    )
 
+    const closeIssueModActionCreateInput: ModerationActionCreateInput =
+      getModerationActionCreateInput({
+        text: explanation,
+        loggedInModName,
+        channelUniqueName,
+        actionType: 'close-issue',
+        actionDescription: 'Closed the issue',
+        issueId: existingIssueId
+      })
+    console.log(
+      'closeIssueModActionCreateInput',
+      JSON.stringify(closeIssueModActionCreateInput)
+    )
     // Update the issue with the new moderation action.
     const issueUpdateWhere: IssueWhere = {
-      id: existingIssueId,
-    };
-    const issueUpdateInput: IssueUpdateInput = {
+      id: existingIssueId
+    }
+    const unarchiveCreateInput: IssueUpdateInput = {
+      ActivityFeed: [
+        {
+          create: [
+            {
+              node: unarchiveModActionCreateInput
+            }
+          ]
+        }
+      ]
+    }
+    const issueCloseCreateInput: IssueUpdateInput = {
       isOpen: false, // Close the issue; un-archival is often the final action.
       ActivityFeed: [
         {
           create: [
             {
-              node: moderationActionCreateInput,
-            },
-          ],
-        },
-      ],
-    };
+              node: closeIssueModActionCreateInput
+            }
+          ]
+        }
+      ]
+    }
 
     try {
+      await Issue.update({
+        where: issueUpdateWhere,
+        update: unarchiveCreateInput
+      })
       const issueData = await Issue.update({
         where: issueUpdateWhere,
-        update: issueUpdateInput,
-      });
-      const issueId = issueData.issues[0]?.id || null;
+        update: issueCloseCreateInput
+      })
+      console.log('issueData', JSON.stringify(issueData))
+      const issueId = issueData.issues[0]?.id || null
       if (!issueId) {
-        throw new GraphQLError("Error updating issue");
+        throw new GraphQLError('Error updating issue')
       }
     } catch (error) {
-      throw new GraphQLError("Error updating issue");
+      throw new GraphQLError('Error updating issue')
     }
 
     try {
       // Update the comment so that archived=false.
       const commentUpdateWhere: CommentWhere = {
-        id: commentId,
-      };
+        id: commentId
+      }
       const commentUpdateInput: CommentUpdateInput = {
-        archived: false,
-      };
+        archived: false
+      }
       const commentUpdateData = await Comment.update({
         where: commentUpdateWhere,
-        update: commentUpdateInput,
-      });
-      const commentUpdateId = commentUpdateData.comments[0]?.id || null;
+        update: commentUpdateInput
+      })
+      const commentUpdateId = commentUpdateData.comments[0]?.id || null
       if (!commentUpdateId) {
-        throw new GraphQLError("Error updating comment");
+        throw new GraphQLError('Error updating comment')
       }
-      return existingIssue;
+      return existingIssue
     } catch (error) {
-      throw new GraphQLError("Error updating comment");
+      throw new GraphQLError('Error updating comment')
     }
-  };
-};
+  }
+}
 
-export default getResolver;
+export default getResolver

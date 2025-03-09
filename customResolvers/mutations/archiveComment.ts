@@ -136,10 +136,8 @@ const getResolver = (input: Input) => {
       console.log("Error creating issue", error);
       return false;
     }
-
-   
-
-    const moderationActionCreateInput: ModerationActionCreateInput =
+    
+    const archiveCommentModActionCreateInput: ModerationActionCreateInput =
       getModerationActionCreateInput({
         text: finalCommentText,
         loggedInModName,
@@ -147,32 +145,63 @@ const getResolver = (input: Input) => {
         actionType: "archive",
         actionDescription: "Archived the comment and closed the issue",
         issueId: existingIssueId,
+        suspendUntil: undefined,
+        suspendIndefinitely: false,
       });
+
+      const closeIssueModActionCreateInput: ModerationActionCreateInput =
+      getModerationActionCreateInput({
+        text: finalCommentText,
+        loggedInModName,
+        channelUniqueName,
+        actionType: "close",
+        actionDescription: "Closed the issue",
+        issueId: existingIssueId,
+        suspendUntil: undefined,
+        suspendIndefinitely: false,
+      });
+      console.log('mod action create input ',JSON.stringify(archiveCommentModActionCreateInput))
 
     // Update the issue with the new moderation action.
     const issueUpdateWhere: IssueWhere = {
       id: existingIssueId,
     };
-    const issueUpdateInput: IssueUpdateInput = {
+    const archiveCommentUpdateIssueInput: IssueUpdateInput = {
       ActivityFeed: [
         {
           create: [
             {
-              node: moderationActionCreateInput,
+              node: archiveCommentModActionCreateInput,
             },
           ],
         },
       ],
-      isOpen: false, // Close the issue; archival is often the final action.
       flaggedServerRuleViolation:
         existingIssueFlaggedServerRuleViolation ||
         selectedServerRules.length > 0,
     };
 
+    const closeIssueUpdateIssueInput: IssueUpdateInput = {
+      isOpen: false, // Close the issue; un-archival is often the final action.
+      ActivityFeed: [
+        {
+          create: [
+            {
+              node: closeIssueModActionCreateInput,
+            },
+          ],
+        },
+      ],
+    };
+
     try {
+      await Issue.update({
+        where: issueUpdateWhere,
+        update: archiveCommentUpdateIssueInput,
+      });
       const issueData = await Issue.update({
         where: issueUpdateWhere,
-        update: issueUpdateInput,
+        update: closeIssueUpdateIssueInput,
       });
       const issueId = issueData.issues[0]?.id || null;
       if (!issueId) {
