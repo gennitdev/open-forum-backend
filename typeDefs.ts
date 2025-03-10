@@ -17,17 +17,20 @@ const typeDefinitions = gql`
     url: String
     alt: String
     caption: String
+    longDescription: String
     copyright: String
     createdAt: DateTime @timestamp(operations: [CREATE])
     hasSensitiveContent: Boolean
     hasSpoiler: Boolean
     Album: Album @relationship(type: "HAS_IMAGE", direction: IN)
+    Uploader: User @relationship(type: "UPLOADED_IMAGE", direction: IN)
   }
 
   type Album {
     id: ID! @id
     Owner: User @relationship(type: "HAS_ALBUM", direction: IN)
     Images: [Image!]! @relationship(type: "HAS_IMAGE", direction: OUT)
+    imageOrder: [String]
     Discussions: [Discussion!]! @relationship(type: "HAS_ALBUM", direction: IN)
   }
 
@@ -56,6 +59,7 @@ const typeDefinitions = gql`
 
   type User {
     Albums: [Album!]! @relationship(type: "HAS_ALBUM", direction: OUT)
+    Images: [Image!]! @relationship(type: "UPLOADED_IMAGE", direction: OUT)
     username: String! @unique
     Email: Email @relationship(type: "HAS_EMAIL", direction: IN)
     displayName: String
