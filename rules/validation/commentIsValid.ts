@@ -32,6 +32,7 @@ export const createCommentInputIsValid = rule({ cache: "contextual" })(
       return "Missing or empty input in args.";
     }
     const createCommentInput: CommentCreateInput = args.input[0]
+    console.log('validating comment input',JSON.stringify(createCommentInput, null, 2))
     return validateCommentInput({
       text: createCommentInput.text || "",
       modProfileName: createCommentInput?.CommentAuthor?.ModerationProfile?.connect?.where?.node?.displayName || "",

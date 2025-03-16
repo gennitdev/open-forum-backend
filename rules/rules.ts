@@ -153,7 +153,7 @@ export const canCreateComment = rule({ cache: "contextual" })(
         where: { id: discussionChannelId },
         selectionSet: `{ channelUniqueName }`,
       });
-  
+
       if (!discussionChannel || !discussionChannel[0]) {
         throw new Error("No discussion channel found.");
       }
@@ -214,7 +214,9 @@ export const canCreateComment = rule({ cache: "contextual" })(
     }
 
     if (GivesFeedbackOnDiscussion) {
-      const discussionChannelId = GivesFeedbackOnDiscussion.connect?.where?.node?.id;
+      // GivesFeedbackOnDiscussion is of type Discussion which doesn't directly have
+      // the channel on it, so we use the DiscussionChannel to get the channel name.
+      const discussionChannelId = DiscussionChannel?.connect?.where?.node?.id;
 
       if (!discussionChannelId) {
         throw new Error("No discussion channel ID found.");
