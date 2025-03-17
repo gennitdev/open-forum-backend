@@ -135,7 +135,7 @@ export default function getResolver (input: Input) {
           uniqueName: issue.channelUniqueName
         },
         selectionSet:`{
-          SuspendedMods(where: { displayName: "${originalPoster.displayName}" }) {
+          SuspendedMods(where: { modProfileName: "${originalPoster.displayName}" }) {
             id
           }
         }`
