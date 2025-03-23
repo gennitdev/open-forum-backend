@@ -140,7 +140,7 @@ export default function getResolver (input: Input) {
           }
         }`
       })
-      if (channelData && channelData[0].SuspendedUsers?.length > 0) {
+      if (channelData && channelData[0].SuspendedMods?.length > 0) {
         return true
       }
       return false
