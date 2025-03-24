@@ -25,6 +25,11 @@ const {
   updateEventInputIsValid,
   createCommentInputIsValid,
   updateCommentInputIsValid,
+  canReport,
+  canSuspendAndUnsuspendUser,
+  canArchiveAndUnarchiveComment,
+  canArchiveAndUnarchiveDiscussion,
+  canArchiveAndUnarchiveEvent,
 } = rules;
 
 const permissionList = shield({
@@ -116,9 +121,9 @@ const permissionList = shield({
       reportDiscussion: canReport,
       reportComment: canReport,
       reportEvent: canReport,
-      suspendMod: canSuspendAndUnsuspendMod,
+      suspendMod: canSuspendAndUnsuspendUser,
       suspendUser: canSuspendAndUnsuspendUser,
-      unsuspendMod: canSuspendAndUnsuspendMod,
+      unsuspendMod: canSuspendAndUnsuspendUser,
       unsuspendUser: canSuspendAndUnsuspendUser,
       archiveComment: canArchiveAndUnarchiveComment,
       archiveDiscussion: canArchiveAndUnarchiveDiscussion,

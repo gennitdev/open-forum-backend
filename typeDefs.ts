@@ -114,6 +114,10 @@ const typeDefinitions = gql`
       @relationship(type: "HAS_PENDING_INVITE", direction: IN)
     Suspensions: [Suspension!]!
       @relationship(type: "SUSPENDED_AS_USER", direction: OUT)
+    AuthoredWikiPages: [WikiPage!]!
+      @relationship(type: "AUTHORED_VERSION", direction: OUT)
+    AuthoredWikiPageVersions: [TextVersion!]!
+      @relationship(type: "AUTHORED_VERSION", direction: OUT)
   }
 
   type TextVersion {
@@ -131,6 +135,8 @@ const typeDefinitions = gql`
     slug: String!
     createdAt: DateTime! @timestamp(operations: [CREATE])
     updatedAt: DateTime @timestamp(operations: [UPDATE])
+    VersionAuthor: User
+      @relationship(type: "AUTHORED_VERSION", direction: IN)
     PastVersions: [TextVersion!]!
       @relationship(type: "HAS_VERSION", direction: OUT)
     ProposedEdits: [TextVersion!]!

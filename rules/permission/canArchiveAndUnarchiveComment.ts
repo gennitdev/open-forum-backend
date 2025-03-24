@@ -2,17 +2,17 @@ import { checkChannelModPermissions } from "./hasChannelModPermission.js";
 import { ModChannelPermission } from "./hasChannelModPermission.js";
 import { rule } from "graphql-shield";
 
-export const canArchiveAndUnarchiveDiscussion = rule({ cache: "contextual" })(
+export const canArchiveAndUnarchiveComment = rule({ cache: "contextual" })(
   async (parent: any, args: any, context: any, info: any) => {
     const channelUniqueName = args.channelUniqueName;
-    console.log('can archive and unarchive discussion');
+    console.log('can archive and unarchive comment');
     console.log("channelUniqueName", channelUniqueName);
     
     // Check if the user has the required permission in the specified channel
     const permissionResult = await checkChannelModPermissions({
         channelConnections: [channelUniqueName],
         context,
-        permissionCheck: ModChannelPermission.canHideDiscussion
+        permissionCheck: ModChannelPermission.canHideComment
     });
     
     // If the user does not have the required permission, return an error

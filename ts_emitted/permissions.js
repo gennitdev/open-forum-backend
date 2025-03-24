@@ -1,6 +1,6 @@
 import { and, shield, allow, deny, or } from "graphql-shield";
 import rules from "./rules/rules.js";
-const { isAdmin, isAccountOwner, isChannelOwner, isDiscussionOwner, isEventOwner, isCommentAuthor, isDiscussionChannelOwner, canCreateChannel, canCreateDiscussion, canCreateEvent, canCreateComment, canUploadFile, canUpvoteComment, canUpvoteDiscussion, canGiveFeedback, issueIsValid, createChannelInputIsValid, updateChannelInputIsValid, createDiscussionInputIsValid, updateDiscussionInputIsValid, createEventInputIsValid, updateEventInputIsValid, createCommentInputIsValid, updateCommentInputIsValid, } = rules;
+const { isAdmin, isAccountOwner, isChannelOwner, isDiscussionOwner, isEventOwner, isCommentAuthor, isDiscussionChannelOwner, canCreateChannel, canCreateDiscussion, canCreateEvent, canCreateComment, canUploadFile, canUpvoteComment, canUpvoteDiscussion, issueIsValid, createChannelInputIsValid, updateChannelInputIsValid, createDiscussionInputIsValid, updateDiscussionInputIsValid, createEventInputIsValid, updateEventInputIsValid, createCommentInputIsValid, updateCommentInputIsValid, canReport, canSuspendAndUnsuspendUser, canArchiveAndUnarchiveComment, canArchiveAndUnarchiveDiscussion, canArchiveAndUnarchiveEvent, } = rules;
 const permissionList = shield({
     Query: {
         "*": allow,
@@ -11,7 +11,6 @@ const permissionList = shield({
         dropDataForCypressTests: isAdmin,
         seedDataForCypressTests: isAdmin,
         createTags: allow,
-        deleteTags: allow,
         createChannelRoles: isAdmin,
         createModChannelRoles: isAdmin,
         createModServerRoles: isAdmin,
@@ -72,19 +71,19 @@ const permissionList = shield({
         createNotifications: deny,
         deleteNotifications: deny,
         updateNotifications: deny,
-        reportDiscussion: allow,
-        reportComment: allow,
-        reportEvent: allow,
-        suspendMod: allow,
-        suspendUser: allow,
-        unsuspendMod: allow,
-        unsuspendUser: allow,
-        archiveComment: allow,
-        archiveDiscussion: allow,
-        archiveEvent: allow,
-        unarchiveComment: allow,
-        unarchiveDiscussion: allow,
-        unarchiveEvent: allow,
+        reportDiscussion: canReport,
+        reportComment: canReport,
+        reportEvent: canReport,
+        suspendMod: canSuspendAndUnsuspendUser,
+        suspendUser: canSuspendAndUnsuspendUser,
+        unsuspendMod: canSuspendAndUnsuspendUser,
+        unsuspendUser: canSuspendAndUnsuspendUser,
+        archiveComment: canArchiveAndUnarchiveComment,
+        archiveDiscussion: canArchiveAndUnarchiveDiscussion,
+        archiveEvent: canArchiveAndUnarchiveEvent,
+        unarchiveComment: canArchiveAndUnarchiveComment,
+        unarchiveDiscussion: canArchiveAndUnarchiveDiscussion,
+        unarchiveEvent: canArchiveAndUnarchiveEvent,
     },
 }, {
     debug: true,

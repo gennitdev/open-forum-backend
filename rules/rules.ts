@@ -14,6 +14,11 @@ import {
   hasChannelPermission,
 } from "./permission/hasChannelPermission.js";
 import { checkChannelPermissions } from "./permission/hasChannelPermission.js";
+import { canArchiveAndUnarchiveDiscussion } from "./permission/canArchiveAndUnarchiveDiscussion.js";
+import { canArchiveAndUnarchiveEvent } from "./permission/canArchiveAndUnarchiveEvent.js";
+import { canArchiveAndUnarchiveComment } from "./permission/canArchiveAndUnarchiveComment.js";
+import { canReport } from "./permission/canReport.js";
+import { canSuspendAndUnsuspendUser } from "./permission/canSuspendAndUnsuspendUser.js";
 import {
   CommentCreateInput,
   DiscussionCreateInput,
@@ -487,6 +492,11 @@ const ruleList = {
   canUpvoteDiscussion,
   canGiveFeedback,
   canReportContent,
+  canArchiveAndUnarchiveDiscussion,
+  canArchiveAndUnarchiveEvent,
+  canArchiveAndUnarchiveComment,
+  canReport,
+  canSuspendAndUnsuspendUser,
 };
 
 export default ruleList;
