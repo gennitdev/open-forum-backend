@@ -31,6 +31,22 @@ const getResolver = (input: Input) => {
       throw new Error("User must be logged in");
     }
 
+    // Check if there's a pending owner invite first
+    const channelWithPendingInvite = await Channel.find({
+      where: {
+        uniqueName: channelUniqueName,
+      },
+      selectionSet: `{
+        PendingOwnerInvites {
+          username
+        }
+      }`,
+    });
+
+    if (!channelWithPendingInvite[0]?.PendingOwnerInvites?.some(invite => invite.username === loggedInUsername)) {
+      throw new Error(`No pending owner invite found for user ${loggedInUsername} in channel ${channelUniqueName}`);
+    }
+
     const addChannelOwnerInput: ChannelUpdateInput = {
       Admins: [
         {

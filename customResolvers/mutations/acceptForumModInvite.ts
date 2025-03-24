@@ -48,6 +48,23 @@ const getResolver = (input: Input) => {
     if (!displayName) {
       throw new Error(`User ${loggedInUsername} is not a moderator`);
     }
+
+    // Check if there's a pending invite first
+    const channelWithPendingInvite = await Channel.find({
+      where: {
+        uniqueName: channelUniqueName,
+      },
+      selectionSet: `{
+        PendingModInvites {
+          username
+        }
+      }`,
+    });
+
+    if (!channelWithPendingInvite[0]?.PendingModInvites?.some(invite => invite.username === loggedInUsername)) {
+      throw new Error(`No pending moderator invite found for user ${loggedInUsername} in channel ${channelUniqueName}`);
+    }
+
     const addChannelModInput: ChannelUpdateInput = {
       Moderators: [
         {

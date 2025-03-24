@@ -11,6 +11,7 @@ const permissionList = shield({
         dropDataForCypressTests: isAdmin,
         seedDataForCypressTests: isAdmin,
         createTags: allow,
+        deleteTags: allow,
         createChannelRoles: isAdmin,
         createModChannelRoles: isAdmin,
         createModServerRoles: isAdmin,
