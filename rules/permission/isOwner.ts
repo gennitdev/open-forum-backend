@@ -18,6 +18,7 @@ import { setUserDataOnContext } from "./userDataHelperFunctions.js";
 type IsChannelOwnerInput = {
   where: ChannelWhere;
   channelUniqueName: string;
+  issueId?: string;
 };
 
 export const isChannelOwner = rule({ cache: "contextual" })(
@@ -32,8 +33,8 @@ export const isChannelOwner = rule({ cache: "contextual" })(
     console.log("username: ", ctx.user);
 
     let ogm = ctx.ogm;
-    const { where, channelUniqueName } = args;
-    let uniqueName = '' ;
+    const { where, channelUniqueName, issueId } = args;
+    let uniqueName = '';
 
     if (where?.uniqueName) {
       // The channel name can be passed in the where object.
@@ -45,9 +46,27 @@ export const isChannelOwner = rule({ cache: "contextual" })(
       uniqueName = channelUniqueName;
     }
 
+    // If no channel name is provided but we have an issueId, look it up
+    if (!uniqueName && issueId) {
+      const Issue = ogm.model("Issue");
+      const issue = await Issue.find({
+        where: { id: issueId },
+        selectionSet: `{ 
+          channelUniqueName
+        }`,
+      });
+
+      if (!issue || !issue[0]) {
+        throw new Error(ERROR_MESSAGES.channel.notFound);
+      }
+
+      uniqueName = issue[0].channelUniqueName;
+    }
+
     if (!uniqueName) {
       throw new Error(ERROR_MESSAGES.channel.notFound);
     }
+
     const ChannelModel = ogm.model("Channel");
 
     // Get the list of channel owners by using the OGM on the
