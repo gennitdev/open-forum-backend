@@ -2,7 +2,8 @@ MATCH (e:Event {id: $eventId}), (c:Channel {uniqueName: $channelUniqueName})
 MERGE (ec:EventChannel {eventId: $eventId, channelUniqueName: $channelUniqueName})
 ON CREATE SET 
     ec.id = apoc.create.uuid(),
-    ec.createdAt = datetime()
+    ec.createdAt = datetime(),
+    ec.archived = false
 MERGE (ec)-[:POSTED_IN_CHANNEL]->(e)
 MERGE (ec)-[:POSTED_IN_CHANNEL]->(c)
 RETURN {
@@ -10,6 +11,7 @@ RETURN {
     eventId: ec.eventId,
     channelUniqueName: ec.channelUniqueName,
     createdAt: ec.createdAt,
+    archived: ec.archived,
     Event: e {.*},
     Channel: c {.*}
 } as eventChannel
