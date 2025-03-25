@@ -25,6 +25,7 @@ export const hasChannelModPermission: (
   const { permission, channelName, context } = input;
 
   const Channel = context.ogm.model("Channel");
+  const Suspension = context.ogm.model("Suspension");
 
   // 1. Check for mod roles on the user object
   context.user = await setUserDataOnContext({
@@ -75,13 +76,8 @@ export const hasChannelModPermission: (
         canReport
         canSuspendUser
       }
-      Moderators {
-        displayName
-      }
       SuspendedMods {
-        modProfile {
-          displayName
-        }
+        modProfileName
       }
     }`,
   });
@@ -97,13 +93,24 @@ export const hasChannelModPermission: (
   let roleToUse = null;
 
   // First check if the user is suspended
-  const isSuspended = channelData.SuspendedMods?.some(
-    (suspension: any) => suspension.modProfile.displayName === modProfileName
-  );
+  // Fetch Suspensions with channelUniqueName and modProfileName
+  const isSuspendedResult = await Suspension.find({
+    where: {
+      channelUniqueName: channelName,
+      modProfileName: modProfileName,
+    },
+    selectionSet: `{ 
+      id
+    }`,
+  });
+  const isSuspended = isSuspendedResult && isSuspendedResult.length > 0;
   if (isSuspended) {
     roleToUse = channelData.SuspendedModRole;
   }
   // Then check if the user is an elevated moderator
+  // May create custom cypher query to directly
+  // look up if such a mod is listed in the Moderators
+  // field on the Channel.
   else if (channelData.Moderators?.some(
     (mod: any) => mod.displayName === modProfileName
   )) {
@@ -123,7 +130,8 @@ export const hasChannelModPermission: (
     return true;
   }
 
-  // 6. If no channel role allows the permission, check the server's default mod role
+  // 6. If the user is neither on the elevated mod list, nor the suspended
+  // mod list, check the server's default mod role
   const ServerConfig = context.ogm.model("ServerConfig");
   const serverConfig = await ServerConfig.find({
     where: { serverName: process.env.SERVER_CONFIG_NAME },

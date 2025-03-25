@@ -19,6 +19,7 @@ type IsChannelOwnerInput = {
   where: ChannelWhere;
   channelUniqueName: string;
   issueId?: string;
+  commentId?: string;
 };
 
 export const isChannelOwner = rule({ cache: "contextual" })(
@@ -33,7 +34,8 @@ export const isChannelOwner = rule({ cache: "contextual" })(
     console.log("username: ", ctx.user);
 
     let ogm = ctx.ogm;
-    const { where, channelUniqueName, issueId } = args;
+    const { where, channelUniqueName, issueId, commentId } = args;
+    console.log('args: ', JSON.stringify(args));
     let uniqueName = '';
 
     if (where?.uniqueName) {
@@ -46,6 +48,34 @@ export const isChannelOwner = rule({ cache: "contextual" })(
       uniqueName = channelUniqueName;
     }
 
+    // If no channel name is provided but we have a commentId, look it up
+    if (!uniqueName && commentId) {
+      const Comment = ogm.model("Comment");
+      const comment = await Comment.find({
+        where: { id: commentId },
+        selectionSet: `{ 
+          DiscussionChannel {
+            channelUniqueName
+          }
+          Channel {
+            uniqueName
+          }
+        }`,
+      });
+
+      if (!comment || !comment[0]) {
+        throw new Error(ERROR_MESSAGES.channel.notFound);
+      }
+
+      // Try to get channel name from either DiscussionChannel or Channel
+      uniqueName = comment[0]?.DiscussionChannel?.channelUniqueName || 
+                  comment[0]?.Channel?.uniqueName;
+
+      if (!uniqueName) {
+        throw new Error(ERROR_MESSAGES.channel.notFound);
+      }
+    }
+
     // If no channel name is provided but we have an issueId, look it up
     if (!uniqueName && issueId) {
       const Issue = ogm.model("Issue");
@@ -55,6 +85,7 @@ export const isChannelOwner = rule({ cache: "contextual" })(
           channelUniqueName
         }`,
       });
+      console.log('issue', JSON.stringify(issue));
 
       if (!issue || !issue[0]) {
         throw new Error(ERROR_MESSAGES.channel.notFound);
