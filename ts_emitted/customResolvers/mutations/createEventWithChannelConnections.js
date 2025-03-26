@@ -25,6 +25,7 @@ const selectionSet = `
       createdAt
       channelUniqueName
       eventId
+      archived
       Channel {
         uniqueName
       }

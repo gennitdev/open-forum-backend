@@ -104,7 +104,7 @@ const undoUpvoteCommentResolver = (input: Input) => {
 
       // Update weighted votes count on the comment and remove the relationship
       const undoUpvoteCommentQuery = `
-       MATCH (c:Comment { id: $commentId })<-[r:UPVOTED_COMMENT]-(u:User { username: $username })
+       MATCH (u:User { username: $username })-[r:UPVOTED_COMMENT]->(c:Comment { id: $commentId })
        SET c.weightedVotesCount = coalesce(c.weightedVotesCount, 0) - 1 - $weightedVoteBonus
        DELETE r
        RETURN c

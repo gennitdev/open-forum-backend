@@ -126,7 +126,7 @@ export const isChannelOwner = rule({ cache: "contextual" })(
 
     // Check if the user is in the list of channel owners.
     if (!channelOwners.includes(username)) {
-      throw new Error(ERROR_MESSAGES.channel.notOwner);
+      return false;  // Permission check - return false to allow OR to work
     }
 
     return true;
@@ -186,9 +186,9 @@ export const isDiscussionOwner = rule({ cache: "contextual" })(
       throw new Error(ERROR_MESSAGES.discussion.noAuthor);
     }
 
-    // Check if the user is in the list of channel owners.
-    if (!discussionOwner === username) {
-      throw new Error(ERROR_MESSAGES.discussion.notOwner);
+    // Check if the user is the discussion owner
+    if (discussionOwner !== username) {
+      return false;  // Permission check - return false to allow OR to work
     }
     return true;
   }

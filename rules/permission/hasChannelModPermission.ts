@@ -115,6 +115,8 @@ export const hasChannelModPermission: (
     (mod: any) => mod.displayName === modProfileName
   )) {
     roleToUse = channelData.ElevatedModRole;
+    // if the channel doesn't have an elevated mod role,
+    // use the one from the server config.
   }
   // Finally, use the default mod role
   else {

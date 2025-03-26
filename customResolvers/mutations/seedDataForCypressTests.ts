@@ -117,6 +117,42 @@ const seedDataForCypressTestsResolver = (input: Input) => {
               overwrite: true,
             },
           },
+          DefaultSuspendedRole: {
+            connect: {
+              where: {
+                node: { name: "Suspended Role" },
+              },
+              overwrite: true,
+            },
+          },
+          DefaultElevatedModRole: {
+            connect: {
+              where: { 
+                node: {
+                  name: "DefaultElevatedModRole" 
+                },
+              },
+              overwrite: true,
+            }
+          },
+          DefaultModRole: {
+            connect: {
+              where: {
+                node: {
+                  name: "BasicModRole"
+                }
+              }
+            }
+          },
+          DefaultSuspendedModRole: {
+            connect: {
+              where: {
+                node: {
+                  name: "DefaultSuspendedModRole"
+                }
+              }
+            }
+          }
         },
       });
     } catch (error: any) {
