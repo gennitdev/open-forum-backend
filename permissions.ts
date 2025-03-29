@@ -75,6 +75,7 @@ const permissionList = shield({
       
       createEventWithChannelConnections: and(createEventInputIsValid, canCreateEvent),
       updateEventWithChannelConnections: and(updateEventInputIsValid, or(isEventOwner, isAdmin)),
+      updateEvents: or(isAdmin, isEventOwner),
       deleteEvents: or(isAdmin, isEventOwner),
       deleteEventChannels: isAdmin,
 
