@@ -32,15 +32,21 @@ const undoUpvoteCommentResolver = (input: Input) => {
         username,
         commentId,
       });
+      
       const singleRecord = result.records[0];
-      const upvotedByUser = singleRecord.get("result").upvotedByUser;
+      
+      if (!singleRecord) {
+        throw new Error("Comment not found");
+      }
+      
+      const upvotedByUser = singleRecord.get("result")?.upvotedByUser;
 
       if (!upvotedByUser) {
         throw new Error(
           "Can't undo upvote because you haven't upvoted this comment yet"
         );
       }
-      // Fetch comment
+      
       const commentSelectionSet = `
         {
           id
@@ -49,6 +55,10 @@ const undoUpvoteCommentResolver = (input: Input) => {
                   username
                   commentKarma
                   createdAt
+              }
+              ... on ModerationProfile {
+                displayName
+                createdAt
               }
           }
           weightedVotesCount
@@ -76,9 +86,6 @@ const undoUpvoteCommentResolver = (input: Input) => {
 
       const postAuthorUsername = comment.CommentAuthor?.username;
       const postAuthorKarma = comment.CommentAuthor?.commentKarma || 0;
-
-      // Fetch data of the user who is upvoting the comment
-      // because we need it to calculate the weighted vote bonus.
       const userSelectionSet = `
       {
           username
@@ -102,7 +109,6 @@ const undoUpvoteCommentResolver = (input: Input) => {
 
       let weightedVoteBonus = getWeightedVoteBonus(voterUser);
 
-      // Update weighted votes count on the comment and remove the relationship
       const undoUpvoteCommentQuery = `
        MATCH (u:User { username: $username })-[r:UPVOTED_COMMENT]->(c:Comment { id: $commentId })
        SET c.weightedVotesCount = coalesce(c.weightedVotesCount, 0) - 1 - $weightedVoteBonus
@@ -116,7 +122,6 @@ const undoUpvoteCommentResolver = (input: Input) => {
         weightedVoteBonus,
       });
 
-      // Update the post author's karma
       if (postAuthorUsername) {
         await User.update({
           where: { username: postAuthorUsername },
@@ -130,7 +135,7 @@ const undoUpvoteCommentResolver = (input: Input) => {
       const existingUpvotedByUsersAggregate =
         comment.UpvotedByUsersAggregate || { count: 0 };
 
-      return {
+      const returnValue = {
         id: commentId,
         weightedVotesCount: comment.weightedVotesCount - 1 - weightedVoteBonus,
         UpvotedByUsers: existingUpvotedByUsers.filter(
@@ -140,7 +145,9 @@ const undoUpvoteCommentResolver = (input: Input) => {
           count: existingUpvotedByUsersAggregate.count - 1,
         },
       };
+      return returnValue;
     } catch (e) {
+      console.error("Error in undoUpvoteComment:", e);
       if (tx) {
         try {
           await tx.rollback();
@@ -148,7 +155,7 @@ const undoUpvoteCommentResolver = (input: Input) => {
           console.error("Failed to rollback transaction", rollbackError);
         }
       }
-      console.error(e);
+      throw e; // Re-throw the error after logging
     } finally {
       if (session) {
         try {

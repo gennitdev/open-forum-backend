@@ -46,6 +46,10 @@ const upvoteCommentResolver = (input: Input) => {
                   commentKarma
                   createdAt
               }
+              ... on ModerationProfile {
+                displayName
+                createdAt
+              }
           }
           weightedVotesCount
           UpvotedByUsers {

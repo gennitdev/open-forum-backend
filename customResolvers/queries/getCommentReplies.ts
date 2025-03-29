@@ -25,6 +25,10 @@ const commentSelectionSet = `
                     showModTag
                 }
             }
+            ... on ModerationProfile {
+              displayName
+              createdAt
+            }
         }
         createdAt
         updatedAt

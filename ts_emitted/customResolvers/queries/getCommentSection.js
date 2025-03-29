@@ -28,7 +28,7 @@ const discussionChannelSelectionSet = `
                 ChannelRoles {
                   showModTag
                 }
-              }
+            }
         }
     }
     CommentsAggregate(where: { isFeedbackComment: false }) {
