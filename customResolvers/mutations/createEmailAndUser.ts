@@ -42,9 +42,20 @@ export const createUsersWithEmails = async (
     throw new Error("Email already taken");
   }
 
-  // Generate a random display name
-  const randomWords = generateSlug(4, { format: "camel" });
+  let newDisplayName = '';
 
+  // if we are in a test environment
+  if (process.env.SERVER_CONFIG_NAME === "Cypress Test Server") {
+    if (username === "cluse") {
+      newDisplayName = "testModProfile1";
+    }
+    if (username === "alice") {
+      newDisplayName = "testModProfile2";
+    }
+  } else {
+    // Generate a random display name
+    newDisplayName = generateSlug(4, { format: "camel" });
+  }
   // Prepare user creation input
   const userCreateInput: UserCreateInput = {
     username,
@@ -55,7 +66,7 @@ export const createUsersWithEmails = async (
     },
     ModerationProfile: {
       create: {
-        node: { displayName: randomWords },
+        node: { displayName: newDisplayName },
       },
     },
   };
