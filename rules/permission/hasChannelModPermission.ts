@@ -92,48 +92,6 @@ export const hasChannelModPermission: (
   // 4. Determine which role to use based on moderator status
   let roleToUse = null;
 
-  // First check if the user is suspended
-  // Fetch Suspensions with channelUniqueName and modProfileName
-  const isSuspendedResult = await Suspension.find({
-    where: {
-      channelUniqueName: channelName,
-      modProfileName: modProfileName,
-    },
-    selectionSet: `{ 
-      id
-    }`,
-  });
-  const isSuspended = isSuspendedResult && isSuspendedResult.length > 0;
-  if (isSuspended) {
-    roleToUse = channelData.SuspendedModRole;
-  }
-  // Then check if the user is an elevated moderator
-  // May create custom cypher query to directly
-  // look up if such a mod is listed in the Moderators
-  // field on the Channel.
-  else if (channelData.Moderators?.some(
-    (mod: any) => mod.displayName === modProfileName
-  )) {
-    roleToUse = channelData.ElevatedModRole;
-    // if the channel doesn't have an elevated mod role,
-    // use the one from the server config.
-  }
-  // Finally, use the default mod role
-  else {
-    roleToUse = channelData.DefaultModRole;
-  }
-
-  // 5. Check if the role exists and has the required permission
-  if (!roleToUse) {
-    return new Error(ERROR_MESSAGES.channel.noModRole);
-  }
-
-  if (roleToUse[permission] === true) {
-    return true;
-  }
-
-  // 6. If the user is neither on the elevated mod list, nor the suspended
-  // mod list, check the server's default mod role
   const ServerConfig = context.ogm.model("ServerConfig");
   const serverConfig = await ServerConfig.find({
     where: { serverName: process.env.SERVER_CONFIG_NAME },
@@ -152,11 +110,57 @@ export const hasChannelModPermission: (
     }`,
   });
 
-  if (serverConfig && serverConfig[0]?.DefaultModRole) {
-    const defaultModRole = serverConfig[0].DefaultModRole;
-    if (defaultModRole[permission] === true) {
-      return true;
+  // First check if the user is suspended
+  // Fetch Suspensions with channelUniqueName and modProfileName
+  const isSuspendedResult = await Suspension.find({
+    where: {
+      channelUniqueName: channelName,
+      modProfileName: modProfileName,
+    },
+    selectionSet: `{ 
+      id
+    }`,
+  });
+  const isSuspended = isSuspendedResult && isSuspendedResult.length > 0;
+  if (isSuspended) {
+    roleToUse = channelData.SuspendedModRole;
+    // if the channel doesn't have a suspended mod role,
+    // use the one from the server config.
+    if (!roleToUse) {
+      roleToUse = serverConfig[0]?.DefaultSuspendedModRole;
     }
+  }
+  // Then check if the user is an elevated moderator
+  // May create custom cypher query to directly
+  // look up if such a mod is listed in the Moderators
+  // field on the Channel.
+  else if (channelData.Moderators?.some(
+    (mod: any) => mod.displayName === modProfileName
+  )) {
+    roleToUse = channelData.ElevatedModRole;
+    // if the channel doesn't have an elevated mod role,
+    // use the one from the server config.
+    if (!roleToUse) {
+      roleToUse = serverConfig[0]?.DefaultElevatedModRole;
+    }
+  }
+  // Finally, use the default mod role
+  else {
+    roleToUse = channelData.DefaultModRole;
+    // if the channel doesn't have a default mod role,
+    // use the one from the server config.
+    if (!roleToUse) {
+      roleToUse = serverConfig[0]?.DefaultModRole;
+    }
+  }
+
+  // 5. Check if the role exists and has the required permission
+  if (!roleToUse) {
+    return new Error(ERROR_MESSAGES.channel.noModRole);
+  }
+
+  if (roleToUse[permission] === true) {
+    return true;
   }
 
   return false;

@@ -26,6 +26,7 @@ const dropDataForCypressTestsResolver = (input: Input) => {
           "MATCH (sr:ServerRole) DETACH DELETE sr",
           "MATCH (msr:ModServerRole) DETACH DELETE msr",
           "MATCH (sc:ServerConfig) DETACH DELETE sc",
+          "MATCH (mp:ModerationProfile) DETACH DELETE mp",
         ];
   
         // Execute each delete query sequentially
