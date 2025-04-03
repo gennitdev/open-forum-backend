@@ -49,8 +49,11 @@ export const createUsersWithEmails = async (
     if (username === "cluse") {
       newDisplayName = "testModProfile1";
     }
-    if (username === "alice") {
+    else if (username === "alice") {
       newDisplayName = "testModProfile2";
+    }
+    else {
+      newDisplayName = generateSlug(4, { format: "camel" });
     }
   } else {
     // Generate a random display name
