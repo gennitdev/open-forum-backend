@@ -79,6 +79,9 @@ export const hasChannelModPermission: (
       SuspendedMods {
         modProfileName
       }
+      Moderators {
+        displayName
+      }
     }`,
   });
 
@@ -106,7 +109,29 @@ export const hasChannelModPermission: (
         canGiveFeedback
         canReport
         canSuspendUser
-      } 
+      }
+      DefaultSuspendedModRole {
+        canOpenSupportTickets
+        canLockChannel
+        canCloseSupportTickets
+        canGiveFeedback
+        canHideComment
+        canHideDiscussion
+        canGiveFeedback
+        canReport
+        canSuspendUser
+      }
+      DefaultElevatedModRole {
+        canOpenSupportTickets
+        canLockChannel
+        canCloseSupportTickets
+        canGiveFeedback
+        canHideComment
+        canHideDiscussion
+        canGiveFeedback
+        canReport
+        canSuspendUser
+      }
     }`,
   });
 
@@ -138,6 +163,7 @@ export const hasChannelModPermission: (
     (mod: any) => mod.displayName === modProfileName
   )) {
     roleToUse = channelData.ElevatedModRole;
+    console.log("Elevated mod role found" + roleToUse);
     // if the channel doesn't have an elevated mod role,
     // use the one from the server config.
     if (!roleToUse) {
