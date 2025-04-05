@@ -6,7 +6,8 @@ CREATE (newDc:DiscussionChannel {
     discussionId: $discussionId, 
     channelUniqueName: $channelUniqueName, 
     id: apoc.create.uuid(), 
-    createdAt: datetime()
+    createdAt: datetime(),
+    archived: false
 })
 MERGE (newDc)-[:POSTED_IN_CHANNEL]->(d)
 MERGE (newDc)-[:POSTED_IN_CHANNEL]->(c)
