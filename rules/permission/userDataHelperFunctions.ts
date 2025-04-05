@@ -256,6 +256,8 @@ export const setUserDataOnContext = async (
           resolve(decoded);
         } 
         console.error("JWT Verification Error:", err);
+        // We'll handle the error differently based on whether this is a mutation or query
+        // Just resolve with null and let the rule handlers decide how to handle it
         resolve(null);
       });
     });
@@ -338,13 +340,30 @@ export const isAuthenticatedAndVerified = rule({ cache: "contextual" })(
       context,
       getPermissionInfo: false,
     });
+    
+    // Check if this is a mutation or a query
+    const isMutation = context.req?.isMutation === true;
+    
     if (!context.user?.username) {
-      throw new Error(ERROR_MESSAGES.channel.notAuthenticated);
+      // Only throw authentication errors for mutations
+      if (isMutation) {
+        throw new Error(ERROR_MESSAGES.channel.notAuthenticated);
+      } else {
+        // For queries, just return false without throwing an error
+        return false;
+      }
     }
 
     if (!context.user.email_verified) {
-      throw new Error(ERROR_MESSAGES.channel.notVerified);
+      // Only throw verification errors for mutations
+      if (isMutation) {
+        throw new Error(ERROR_MESSAGES.channel.notVerified);
+      } else {
+        // For queries, just return false without throwing an error
+        return false;
+      }
     }
+    
     return true;
   }
 );
