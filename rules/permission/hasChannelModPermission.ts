@@ -209,12 +209,12 @@ export async function checkChannelModPermissions(
       context: context,
     });
 
-    if (!permissionResult) {
-      return new Error("The user does not have moderator permission in this channel.");
-    }
-
     if (permissionResult instanceof Error) {
       return permissionResult;
+    }
+    
+    if (permissionResult === false) {
+      return new Error("The user does not have moderator permission in this channel.");
     }
   }
 
