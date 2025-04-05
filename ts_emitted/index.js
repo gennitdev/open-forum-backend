@@ -122,12 +122,16 @@ async function initializeServer() {
             persistedQueries: false,
             schema,
             context: async (input) => {
+                var _a;
                 const { req } = input;
                 const queryString = `Query: ${req.body.query}`;
+                const isMutation = (_a = req.body.query) === null || _a === void 0 ? void 0 : _a.trim().startsWith("mutation");
+                // Add this information to the context so it can be used by permission rules
+                req.isMutation = isMutation;
                 if (!queryString.includes("IntrospectionQuery")) {
                     console.log(queryString);
                     console.log(`Variables: ${JSON.stringify(req.body.variables, null, 2)}`);
-                    if (req.body.query.trim().startsWith("mutation")) {
+                    if (isMutation) {
                         const mutationName = extractMutationName(req.body.query);
                         const text = `Mutation: ${mutationName}\nVariables: ${JSON.stringify(req.body.variables, null, 2)}`;
                         // Send Slack notification

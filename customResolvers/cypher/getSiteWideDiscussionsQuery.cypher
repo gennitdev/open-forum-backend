@@ -1,21 +1,30 @@
 // First, calculate the total count of discussions matching the criteria
+// Only count discussions that have at least one non-archived discussion channel
 MATCH (d:Discussion)
-WHERE EXISTS((d)<-[:POSTED_IN_CHANNEL]-(:DiscussionChannel))
+WHERE EXISTS {
+  MATCH (d)<-[:POSTED_IN_CHANNEL]-(dc:DiscussionChannel)
+  WHERE dc.archived IS NULL OR dc.archived = false
+}
 AND (CASE WHEN $sortOption = "top" THEN datetime(d.createdAt).epochMillis > datetime($startOfTimeFrame).epochMillis ELSE TRUE END)
 AND ($searchInput = "" OR d.title =~ $titleRegex OR d.body =~ $bodyRegex)
 AND (SIZE($selectedTags) = 0 OR ANY(t IN $selectedTags WHERE EXISTS((d)-[:HAS_TAG]->(:Tag {text: t}))))
 WITH COUNT(d) AS totalCount
 
 // Now, fetch the discussions with pagination and other filters
+// Only match discussions that have at least one non-archived discussion channel
 MATCH (d:Discussion)
-WHERE EXISTS((d)<-[:POSTED_IN_CHANNEL]-(:DiscussionChannel))
+WHERE EXISTS {
+  MATCH (d)<-[:POSTED_IN_CHANNEL]-(dc:DiscussionChannel)
+  WHERE dc.archived IS NULL OR dc.archived = false
+}
 AND (CASE WHEN $sortOption = "top" THEN datetime(d.createdAt).epochMillis > datetime($startOfTimeFrame).epochMillis ELSE TRUE END)
 AND ($searchInput = "" OR d.title =~ $titleRegex OR d.body =~ $bodyRegex)
 
 // Collect all discussion channels associated with a discussion
 WITH d, totalCount
 MATCH (dc:DiscussionChannel)-[:POSTED_IN_CHANNEL]->(d)
-WHERE SIZE($selectedChannels) = 0 OR dc.channelUniqueName IN $selectedChannels
+WHERE (SIZE($selectedChannels) = 0 OR dc.channelUniqueName IN $selectedChannels)
+AND (dc.isArchived IS NULL OR dc.isArchived = false) // Only include non-archived channels
 WITH d, COLLECT(dc) AS discussionChannels, totalCount
 
 // Unwind the discussion channels to work with them individually for fetching related data
