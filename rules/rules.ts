@@ -340,6 +340,9 @@ const canUpvoteComment = rule({ cache: "contextual" })(
         DiscussionChannel {
           channelUniqueName
         }
+        Channel {
+          uniqueName
+        }
       }`,
     });
 
@@ -347,11 +350,16 @@ const canUpvoteComment = rule({ cache: "contextual" })(
       throw new Error("No comment found.");
     }
 
-    const channelThatCommentIsIn =
-      commentData[0]?.DiscussionChannel?.channelUniqueName;
+    // Try to get channel name either from DiscussionChannel or directly from Channel
+    let channelThatCommentIsIn = commentData[0]?.DiscussionChannel?.channelUniqueName;
+    
+    // If not found in DiscussionChannel, try the direct Channel relationship
+    if (!channelThatCommentIsIn) {
+      channelThatCommentIsIn = commentData[0]?.Channel?.uniqueName;
+    }
 
     if (!channelThatCommentIsIn) {
-      throw new Error("No channel found.");
+      throw new Error("No channel found. Comment must be associated with a channel.");
     }
 
     const permissionResult = await hasChannelPermission({
