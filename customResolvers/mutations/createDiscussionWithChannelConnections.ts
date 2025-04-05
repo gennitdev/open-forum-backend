@@ -46,6 +46,7 @@ const selectionSet = `
       createdAt
       channelUniqueName
       discussionId
+      archived
       Channel {
         uniqueName
       }
