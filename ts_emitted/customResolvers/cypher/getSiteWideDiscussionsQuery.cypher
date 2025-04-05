@@ -3,7 +3,7 @@
 MATCH (d:Discussion)
 WHERE EXISTS {
   MATCH (d)<-[:POSTED_IN_CHANNEL]-(dc:DiscussionChannel)
-  WHERE dc.isArchived IS NULL OR dc.isArchived = false
+  WHERE dc.archived IS NULL OR dc.archived = false
 }
 AND (CASE WHEN $sortOption = "top" THEN datetime(d.createdAt).epochMillis > datetime($startOfTimeFrame).epochMillis ELSE TRUE END)
 AND ($searchInput = "" OR d.title =~ $titleRegex OR d.body =~ $bodyRegex)
@@ -15,7 +15,7 @@ WITH COUNT(d) AS totalCount
 MATCH (d:Discussion)
 WHERE EXISTS {
   MATCH (d)<-[:POSTED_IN_CHANNEL]-(dc:DiscussionChannel)
-  WHERE dc.isArchived IS NULL OR dc.isArchived = false
+  WHERE dc.archived IS NULL OR dc.archived = false
 }
 AND (CASE WHEN $sortOption = "top" THEN datetime(d.createdAt).epochMillis > datetime($startOfTimeFrame).epochMillis ELSE TRUE END)
 AND ($searchInput = "" OR d.title =~ $titleRegex OR d.body =~ $bodyRegex)
