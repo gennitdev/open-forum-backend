@@ -106,6 +106,7 @@ export const hasChannelModPermission: (
         canGiveFeedback
         canHideComment
         canHideDiscussion
+        canHideEvent
         canGiveFeedback
         canReport
         canSuspendUser
@@ -117,6 +118,7 @@ export const hasChannelModPermission: (
         canGiveFeedback
         canHideComment
         canHideDiscussion
+        canHideEvent
         canGiveFeedback
         canReport
         canSuspendUser
@@ -128,6 +130,7 @@ export const hasChannelModPermission: (
         canGiveFeedback
         canHideComment
         canHideDiscussion
+        canHideEvent
         canGiveFeedback
         canReport
         canSuspendUser
@@ -163,7 +166,7 @@ export const hasChannelModPermission: (
     (mod: any) => mod.displayName === modProfileName
   )) {
     roleToUse = channelData.ElevatedModRole;
-    console.log("Elevated mod role found" + roleToUse);
+    console.log("Elevated mod role found:", roleToUse);
     // if the channel doesn't have an elevated mod role,
     // use the one from the server config.
     if (!roleToUse) {
@@ -189,6 +192,7 @@ export const hasChannelModPermission: (
     return true;
   }
 
+  console.log(`Permission check failed: ${permission} is ${roleToUse[permission]} for role:`, roleToUse);
   return false;
 };
 
@@ -214,7 +218,7 @@ export async function checkChannelModPermissions(
     }
     
     if (permissionResult === false) {
-      return new Error("The user does not have moderator permission in this channel.");
+      false;
     }
   }
 
