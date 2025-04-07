@@ -1,6 +1,6 @@
 import { and, shield, allow, deny, or } from "graphql-shield";
 import rules from "./rules/rules.js";
-const { isAdmin, isAccountOwner, isChannelOwner, isDiscussionOwner, isEventOwner, isCommentAuthor, isDiscussionChannelOwner, canCreateChannel, canCreateDiscussion, canCreateEvent, canCreateComment, canUploadFile, canUpvoteComment, canUpvoteDiscussion, issueIsValid, createChannelInputIsValid, updateChannelInputIsValid, createDiscussionInputIsValid, updateDiscussionInputIsValid, createEventInputIsValid, updateEventInputIsValid, createCommentInputIsValid, updateCommentInputIsValid, canReport, canSuspendAndUnsuspendUser, canArchiveAndUnarchiveComment, canArchiveAndUnarchiveDiscussion, canArchiveAndUnarchiveEvent, isAuthenticatedAndVerified, } = rules;
+const { isAdmin, isAccountOwner, isChannelOwner, isDiscussionOwner, isEventOwner, isCommentAuthor, isDiscussionChannelOwner, canCreateChannel, canCreateDiscussion, canCreateEvent, canCreateComment, canUploadFile, canUpvoteComment, canUpvoteDiscussion, issueIsValid, createChannelInputIsValid, updateChannelInputIsValid, createDiscussionInputIsValid, updateDiscussionInputIsValid, createEventInputIsValid, updateEventInputIsValid, createCommentInputIsValid, updateCommentInputIsValid, canReport, canSuspendAndUnsuspendUser, canArchiveAndUnarchiveComment, canArchiveAndUnarchiveDiscussion, canArchiveAndUnarchiveEvent, isAuthenticatedAndVerified, isAuthenticated, } = rules;
 const permissionList = shield({
     Query: {
         "*": allow,
@@ -79,12 +79,12 @@ const permissionList = shield({
         suspendUser: or(isChannelOwner, canSuspendAndUnsuspendUser),
         unsuspendMod: or(isChannelOwner, canSuspendAndUnsuspendUser),
         unsuspendUser: or(isChannelOwner, canSuspendAndUnsuspendUser),
-        archiveComment: and(isAuthenticatedAndVerified, or(isChannelOwner, canArchiveAndUnarchiveComment)),
-        archiveDiscussion: and(isAuthenticatedAndVerified, or(isChannelOwner, canArchiveAndUnarchiveDiscussion)),
-        archiveEvent: and(isAuthenticatedAndVerified, or(isChannelOwner, canArchiveAndUnarchiveEvent)),
-        unarchiveComment: and(isAuthenticatedAndVerified, or(isChannelOwner, canArchiveAndUnarchiveComment)),
-        unarchiveDiscussion: and(isAuthenticatedAndVerified, or(isChannelOwner, canArchiveAndUnarchiveDiscussion)),
-        unarchiveEvent: and(isAuthenticatedAndVerified, or(isChannelOwner, canArchiveAndUnarchiveEvent)),
+        archiveComment: and(isAuthenticated, or(isChannelOwner, canArchiveAndUnarchiveComment)),
+        archiveDiscussion: and(isAuthenticated, or(isChannelOwner, canArchiveAndUnarchiveDiscussion)),
+        archiveEvent: and(isAuthenticated, or(isChannelOwner, canArchiveAndUnarchiveEvent)),
+        unarchiveComment: and(isAuthenticated, or(isChannelOwner, canArchiveAndUnarchiveComment)),
+        unarchiveDiscussion: and(isAuthenticated, or(isChannelOwner, canArchiveAndUnarchiveDiscussion)),
+        unarchiveEvent: and(isAuthenticated, or(isChannelOwner, canArchiveAndUnarchiveEvent)),
     },
 }, {
     debug: true,

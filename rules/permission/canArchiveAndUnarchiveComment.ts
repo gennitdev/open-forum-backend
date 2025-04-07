@@ -2,30 +2,52 @@ import { checkChannelModPermissions } from "./hasChannelModPermission.js";
 import { ModChannelPermission } from "./hasChannelModPermission.js";
 import { rule } from "graphql-shield";
 
+export interface CanArchiveAndUnarchiveCommentArgs {
+  channelUniqueName?: string;
+  issueId?: string;
+  commentId?: string;
+}
+
 export const canArchiveAndUnarchiveComment = rule({ cache: "contextual" })(
-  async (parent: any, args: any, context: any, info: any) => {
+  async (parent: any, args: CanArchiveAndUnarchiveCommentArgs, context: any, info: any) => {
     let channelUniqueName = args.channelUniqueName;
     const issueId = args.issueId;
-    
-    console.log('can archive and unarchive comment');
-    console.log("channelUniqueName", channelUniqueName);
-    console.log("issueId", issueId);
+    const commentId = args.commentId;
     
     // If channelUniqueName is not provided, look it up from the issue
-    if (!channelUniqueName && issueId) {
-      const Issue = context.ogm.model("Issue");
-      const issue = await Issue.find({
-        where: { id: issueId },
-        selectionSet: `{ 
-          channelUniqueName
-        }`,
-      });
+    if (!channelUniqueName) {
+      if (issueId) {
+        const Issue = context.ogm.model("Issue");
+        const issue = await Issue.find({
+          where: { id: issueId },
+          selectionSet: `{ 
+            channelUniqueName
+          }`,
+        });
 
-      if (!issue || !issue[0]) {
-        return new Error("Could not find the issue or its associated channel.");
+        if (!issue || !issue[0]) {
+          return new Error("Could not find the issue or its associated channel.");
+        }
+
+        channelUniqueName = issue[0].channelUniqueName;
       }
+      if (commentId) {
+        const Comment = context.ogm.model("Comment");
+        const comment = await Comment.find({
+          where: { id: commentId },
+          selectionSet: `{ 
+            Channel {
+              uniqueName
+            }
+          }`,
+        });
 
-      channelUniqueName = issue[0].channelUniqueName;
+        if (!comment || !comment[0]) {
+          return new Error("Could not find the comment or its associated channel.");
+        }
+
+        channelUniqueName = comment[0].Channel?.uniqueName;
+      }
     }
 
     if (!channelUniqueName) {
