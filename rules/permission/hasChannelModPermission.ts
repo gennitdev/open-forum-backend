@@ -205,6 +205,16 @@ export async function checkChannelModPermissions(
   }
 ) {
   const { channelConnections, context, permissionCheck } = input;
+  
+  // Check for JWT errors first (expired tokens, etc.)
+  if (context.jwtError) {
+    return context.jwtError;
+  }
+  
+  // Check if we have valid channel connections
+  if (!channelConnections || channelConnections.length === 0 || !channelConnections[0]) {
+    return new Error("No channel specified for this operation.");
+  }
 
   for (const channelConnection of channelConnections) {
     const permissionResult = await hasChannelModPermission({
@@ -218,7 +228,7 @@ export async function checkChannelModPermissions(
     }
     
     if (permissionResult === false) {
-      false;
+      return new Error(`The user does not have the required permission (${permissionCheck}) in channel ${channelConnection}.`);
     }
   }
 

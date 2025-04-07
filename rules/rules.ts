@@ -1,5 +1,5 @@
 import { rule } from "graphql-shield";
-import { isAuthenticatedAndVerified } from "./permission/userDataHelperFunctions.js";
+import { isAuthenticatedAndVerified, isAuthenticated } from "./permission/userDataHelperFunctions.js";
 import { hasServerPermission } from "./permission/hasServerPermission.js";
 import { hasServerModPermission } from "./permission/hasServerModPermission.js";
 import {
@@ -479,6 +479,7 @@ const ruleList = {
   isEventOwner,
   isCommentAuthor,
   isAuthenticatedAndVerified,
+  isAuthenticated,
   issueIsValid,
   canCreateChannel,
   canCreateComment,

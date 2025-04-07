@@ -30,6 +30,8 @@ const {
   canArchiveAndUnarchiveComment,
   canArchiveAndUnarchiveDiscussion,
   canArchiveAndUnarchiveEvent,
+  isAuthenticatedAndVerified,
+  isAuthenticated,
 } = rules;
 
 const permissionList = shield({
@@ -126,12 +128,12 @@ const permissionList = shield({
       suspendUser: or(isChannelOwner, canSuspendAndUnsuspendUser),
       unsuspendMod: or(isChannelOwner, canSuspendAndUnsuspendUser),
       unsuspendUser: or(isChannelOwner, canSuspendAndUnsuspendUser),
-      archiveComment: or(isChannelOwner, canArchiveAndUnarchiveComment),
-      archiveDiscussion: or(isChannelOwner, canArchiveAndUnarchiveDiscussion),
-      archiveEvent: or(isChannelOwner, canArchiveAndUnarchiveEvent),
-      unarchiveComment: or(isChannelOwner, canArchiveAndUnarchiveComment),
-      unarchiveDiscussion: or(isChannelOwner, canArchiveAndUnarchiveDiscussion),
-      unarchiveEvent: or(isChannelOwner, canArchiveAndUnarchiveEvent),
+      archiveComment: and(isAuthenticated, or(isChannelOwner, canArchiveAndUnarchiveComment)),
+      archiveDiscussion: and(isAuthenticated, or(isChannelOwner, canArchiveAndUnarchiveDiscussion)),
+      archiveEvent: and(isAuthenticated, or(isChannelOwner, canArchiveAndUnarchiveEvent)),
+      unarchiveComment: and(isAuthenticated, or(isChannelOwner, canArchiveAndUnarchiveComment)),
+      unarchiveDiscussion: and(isAuthenticated, or(isChannelOwner, canArchiveAndUnarchiveDiscussion)),
+      unarchiveEvent: and(isAuthenticated, or(isChannelOwner, canArchiveAndUnarchiveEvent)),
     },
   },{
     debug: true,

@@ -59,7 +59,8 @@ const getKey = (header: any, callback: any) => {
 
 export const getModProfileNameFromUsername = async (
   username: string,
-  ogm: any
+  ogm: any,
+  jwtError?: any
 ) => {
   const User = ogm.model("User");
   try {
@@ -209,6 +210,7 @@ type SetUserDataInput = {
   context: {
     ogm: any;
     req: any;
+    jwtError?: any;
   };
   getPermissionInfo: boolean;
   checkSpecificChannel?: string;
@@ -254,8 +256,15 @@ export const setUserDataOnContext = async (
       jwt.verify(token, getKey, { algorithms: ["RS256"] }, (err, decoded) => {
         if (!err) {
           resolve(decoded);
+          return;
         } 
         console.error("JWT Verification Error:", err);
+        if (err.name === 'TokenExpiredError') {
+          // For expired tokens, make this error available on the context
+          context.jwtError = new Error(ERROR_MESSAGES.channel.tokenExpired || "Your session has expired. Please sign in again.");
+        } else {
+          context.jwtError = new Error(ERROR_MESSAGES.channel.invalidToken || "Your authentication token is invalid. Please sign in again.");
+        }
         // We'll handle the error differently based on whether this is a mutation or query
         // Just resolve with null and let the rule handlers decide how to handle it
         resolve(null);
@@ -344,6 +353,11 @@ export const isAuthenticatedAndVerified = rule({ cache: "contextual" })(
     // Check if this is a mutation or a query
     const isMutation = context.req?.isMutation === true;
     
+    // First check for JWT errors (expired or invalid token)
+    if (context.jwtError && isMutation) {
+      throw context.jwtError;
+    }
+    
     if (!context.user?.username) {
       // Only throw authentication errors for mutations
       if (isMutation) {
@@ -358,6 +372,37 @@ export const isAuthenticatedAndVerified = rule({ cache: "contextual" })(
       // Only throw verification errors for mutations
       if (isMutation) {
         throw new Error(ERROR_MESSAGES.channel.notVerified);
+      } else {
+        // For queries, just return false without throwing an error
+        return false;
+      }
+    }
+    
+    return true;
+  }
+);
+
+// Rule that only checks for authentication but not email verification
+export const isAuthenticated = rule({ cache: "contextual" })(
+  async (parent: any, args: any, context: any, info: any) => {
+    // Set user data on context
+    context.user = await setUserDataOnContext({
+      context,
+      getPermissionInfo: false,
+    });
+    
+    // Check if this is a mutation or a query
+    const isMutation = context.req?.isMutation === true;
+    
+    // First check for JWT errors (expired or invalid token)
+    if (context.jwtError && isMutation) {
+      throw context.jwtError;
+    }
+    
+    if (!context.user?.username) {
+      // Only throw authentication errors for mutations
+      if (isMutation) {
+        throw new Error(ERROR_MESSAGES.channel.notAuthenticated);
       } else {
         // For queries, just return false without throwing an error
         return false;

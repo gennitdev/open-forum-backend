@@ -33,6 +33,8 @@ export const ERROR_MESSAGES = {
     noChannelPermission: "You do not have permission to create channels.",
     notMod: "You need to be a moderator to do that.",
     noModRole: "You need to have a moderator role to do that.",
+    tokenExpired: "Your session has expired. Please sign in again.",
+    invalidToken: "Your authentication token is invalid. Please sign in again.",
   },
   user: {
     noUsername: "You must provide a username.",
