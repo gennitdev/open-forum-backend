@@ -832,6 +832,7 @@ const typeDefinitions = gql`
       username: String!
       startDate: String
       endDate: String
+      year: Int
     ): [[DayData!]!]!
     isOriginalPosterSuspended(issueId: String!): Boolean
     safetyCheck: SafetyCheckResponse

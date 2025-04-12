@@ -27,6 +27,7 @@ type Args = {
   username: string;
   startDate?: string;
   endDate?: string;
+  year?: number;
 };
 
 // Function to convert flat data to the required nested structure
@@ -53,9 +54,11 @@ function formatContributionData(flatData: any[]): ContributionData {
     if (!weeks[weekKey]) {
       weeks[weekKey] = [];
     }
+
+    const isoDate = day.date.includes('T') ? day.date.split('T')[0] : day.date;
     
     weeks[weekKey].push({
-      date: day.date,
+      date: isoDate,
       count: typeof day.count === 'object' && day.count !== null ? 
              (typeof day.count.low === 'number' ? day.count.low : parseInt(day.count.toString(), 10)) : 
              (typeof day.count === 'number' ? day.count : 0),
@@ -120,7 +123,7 @@ const getUserContributionsResolver = (input: Input) => {
   const { driver, User } = input;
   
   return async (_parent: any, args: Args, _context: any) => {
-    const { username, startDate, endDate } = args;
+    const { username, startDate, endDate, year } = args;
     const session = driver.session({ defaultAccessMode: 'READ' }); // Use READ mode for queries
     
     try {
@@ -138,20 +141,30 @@ const getUserContributionsResolver = (input: Input) => {
         throw new Error(`User ${username} not found`);
       }
 
-      // Default date range is last year (52 weeks)
-      const today = DateTime.now();
-      const defaultStartDate = today.minus({ days: 365 }).toISODate();
-      const defaultEndDate = today.toISODate();
+      let effectiveStartDate: string;
+      let effectiveEndDate: string;
       
-      // Ensure date range isn't too large (limit to 365 days max)
-      let effectiveStartDate = startDate || defaultStartDate;
-      let effectiveEndDate = endDate || defaultEndDate;
-      
-      const startDateTime = DateTime.fromISO(effectiveStartDate);
-      const endDateTime = DateTime.fromISO(effectiveEndDate);
-      
-      if (endDateTime.diff(startDateTime, 'days').days > 365) {
-        effectiveStartDate = endDateTime.minus({ days: 365 }).toISODate() || defaultStartDate;
+      // If year is provided, use it for date range
+      if (year) {
+        effectiveStartDate = `${year}-01-01`;
+        effectiveEndDate = `${year}-12-31`;
+      } else {
+        // Default date range is last year (52 weeks)
+        const today = DateTime.now();
+        const defaultStartDate = today.minus({ days: 365 }).toISODate();
+        const defaultEndDate = today.toISODate();
+        
+        // Use provided dates or defaults
+        effectiveStartDate = startDate || defaultStartDate;
+        effectiveEndDate = endDate || defaultEndDate;
+        
+        // Ensure date range isn't too large (limit to 365 days max)
+        const startDateTime = DateTime.fromISO(effectiveStartDate);
+        const endDateTime = DateTime.fromISO(effectiveEndDate);
+        
+        if (endDateTime.diff(startDateTime, 'days').days > 365) {
+          effectiveStartDate = endDateTime.minus({ days: 365 }).toISODate() || defaultStartDate;
+        }
       }
 
       // Execute contribution query with optimized parameters
