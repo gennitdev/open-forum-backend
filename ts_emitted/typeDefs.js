@@ -772,6 +772,19 @@ const typeDefinitions = gql `
     aggregateChannelCount: Int
   }
 
+  type Activity {
+    id: String!
+    type: String!
+    description: String!
+    timestamp: String!
+  }
+
+  type DayData {
+    date: String!
+    count: Int!
+    activities: [Activity!]!
+  }
+
   type Query {
     getDiscussionsInChannel(
       channelUniqueName: String!
@@ -814,6 +827,11 @@ const typeDefinitions = gql `
       tags: [String]
       searchInput: String
     ): GetSortedChannelsResponse
+    getUserContributions(
+      username: String!
+      startDate: String
+      endDate: String
+    ): [[DayData!]!]!
     isOriginalPosterSuspended(issueId: String!): Boolean
     safetyCheck: SafetyCheckResponse
   }
