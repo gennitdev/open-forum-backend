@@ -772,11 +772,31 @@ const typeDefinitions = gql `
     aggregateChannelCount: Int
   }
 
+  type CommentInfo {
+    id: ID!
+    text: String
+    createdAt: DateTime
+  }
+
+  type EventInfo {
+    id: ID!
+    title: String
+    createdAt: DateTime
+  }
+
+  type DiscussionInfo {
+    id: ID!
+    title: String
+    createdAt: DateTime
+  }
+
   type Activity {
     id: String!
     type: String!
     description: String!
-    timestamp: String!
+    Comments: [CommentInfo]
+    Discussions: [DiscussionInfo]
+    Events: [EventInfo]
   }
 
   type DayData {
@@ -831,6 +851,7 @@ const typeDefinitions = gql `
       username: String!
       startDate: String
       endDate: String
+      year: Int
     ): [[DayData!]!]!
     isOriginalPosterSuspended(issueId: String!): Boolean
     safetyCheck: SafetyCheckResponse

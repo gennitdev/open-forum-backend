@@ -773,11 +773,31 @@ const typeDefinitions = gql`
     aggregateChannelCount: Int
   }
 
+  type CommentInfo {
+    id: ID!
+    text: String
+    createdAt: DateTime
+  }
+
+  type EventInfo {
+    id: ID!
+    title: String
+    createdAt: DateTime
+  }
+
+  type DiscussionInfo {
+    id: ID!
+    title: String
+    createdAt: DateTime
+  }
+
   type Activity {
     id: String!
     type: String!
     description: String!
-    timestamp: String!
+    Comments: [CommentInfo!]!
+    Discussions: [DiscussionInfo!]!
+    Events: [EventInfo!]!
   }
 
   type DayData {

@@ -2,11 +2,31 @@ import { getUserContributionsQuery } from "../cypher/cypherQueries.js";
 import { DateTime } from "luxon";
 
 // The shape of the data to return matches the Vue component requirements
+interface CommentType {
+  id: string;
+  text?: string | null;
+  createdAt: string;
+}
+
+interface DiscussionType {
+  id: string;
+  title: string;
+  createdAt: string;
+}
+
+interface EventType {
+  id: string;
+  title: string;
+  createdAt: string;
+}
+
 interface Activity {
   id: string;
   type: string;
   description: string;
-  timestamp: string;
+  Comments: CommentType[];
+  Discussions: DiscussionType[];
+  Events: EventType[];
 }
 
 interface DayData {
@@ -174,12 +194,35 @@ const getUserContributionsResolver = (input: Input) => {
         endDate: effectiveEndDate
       });
 
-      // Transform Neo4j records into the expected format
+      // Transform Neo4j records into the expected format with strict validation
       const contributionData = result.records.map((record: any) => {
+        const activities = record.get('activities').map((activity: any) => {
+          // Helper function to validate objects in arrays
+          const validateArrayItem = (item: any) => {
+            return item && typeof item === 'object' && item.id && typeof item.id === 'string';
+          };
+          
+          return {
+            id: activity.id || `activity-${DateTime.now().toMillis()}`,
+            type: activity.type || 'unknown',
+            description: activity.description || '',
+            // Ensure arrays only contain valid objects with required fields
+            Comments: Array.isArray(activity.Comments) 
+              ? activity.Comments.filter(validateArrayItem) 
+              : [],
+            Discussions: Array.isArray(activity.Discussions) 
+              ? activity.Discussions.filter(validateArrayItem) 
+              : [],
+            Events: Array.isArray(activity.Events) 
+              ? activity.Events.filter(validateArrayItem) 
+              : []
+          };
+        });
+        
         return {
           date: record.get('date'),
           count: record.get('count'),
-          activities: record.get('activities')
+          activities
         };
       });
 
