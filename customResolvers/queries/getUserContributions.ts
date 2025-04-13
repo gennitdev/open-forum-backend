@@ -215,7 +215,7 @@ const getUserContributionsResolver = (input: Input) => {
         endDate: effectiveEndDate
       });
 
-      // Transform Neo4j records - simplified for debugging
+      // Transform Neo4j records - ensure proper format
       const contributionData = result.records.map((record: any) => {
         console.log("Processing record:", JSON.stringify({
           date: record.get('date'),
@@ -227,9 +227,23 @@ const getUserContributionsResolver = (input: Input) => {
           const rawActivities = record.get('activities');
           console.log(`Found ${rawActivities ? rawActivities.length : 0} activities`);
           
+          if (rawActivities && rawActivities.length > 0) {
+            // Detailed inspection of first activity
+            const firstActivity = rawActivities[0];
+            console.log('Activity structure:', 
+              JSON.stringify({
+                id: firstActivity.id,
+                type: firstActivity.type,
+                description: firstActivity.description,
+                hasComments: !!firstActivity.Comments,
+                commentsLength: firstActivity.Comments ? firstActivity.Comments.length : 0
+              })
+            );
+          }
+          
           const activities = Array.isArray(rawActivities) 
             ? rawActivities.map((activity: any) => {
-                // Ensure basic structure is present
+                // Ensure basic structure is present with all required arrays
                 return {
                   id: activity.id || `activity-${DateTime.now().toMillis()}`,
                   type: activity.type || 'unknown',

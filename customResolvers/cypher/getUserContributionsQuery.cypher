@@ -1,4 +1,4 @@
-// Simple query that works when users don't have any contributions
+// Simple query that works and includes comments in the result
 MATCH (u:User {username: $username})
 WHERE u.username IS NOT NULL
 
