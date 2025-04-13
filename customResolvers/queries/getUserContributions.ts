@@ -1,11 +1,32 @@
 import { getUserContributionsQuery } from "../cypher/cypherQueries.js";
 import { DateTime } from "luxon";
+import type { Comment } from "../../ogm_types.js";
 
-// The shape of the data to return matches the Vue component requirements
+// The shape of the data to return matches the GraphQL schema
+interface ChannelInfo {
+  uniqueName: string;
+}
+
+interface EventChannelInfo {
+  id: string;
+  Channel: ChannelInfo;
+}
+
+interface DiscussionChannelInfo {
+  id: string;
+  Channel: ChannelInfo;
+}
+
+interface UserInfo {
+  username: string;
+}
+
 interface CommentType {
   id: string;
   text?: string | null;
   createdAt: string;
+  Channel?: ChannelInfo | null;
+  CommentAuthor?: UserInfo | null;
 }
 
 interface DiscussionType {
@@ -194,36 +215,45 @@ const getUserContributionsResolver = (input: Input) => {
         endDate: effectiveEndDate
       });
 
-      // Transform Neo4j records into the expected format with strict validation
+      // Transform Neo4j records - simplified for debugging
       const contributionData = result.records.map((record: any) => {
-        const activities = record.get('activities').map((activity: any) => {
-          // Helper function to validate objects in arrays
-          const validateArrayItem = (item: any) => {
-            return item && typeof item === 'object' && item.id && typeof item.id === 'string';
-          };
-          
-          return {
-            id: activity.id || `activity-${DateTime.now().toMillis()}`,
-            type: activity.type || 'unknown',
-            description: activity.description || '',
-            // Ensure arrays only contain valid objects with required fields
-            Comments: Array.isArray(activity.Comments) 
-              ? activity.Comments.filter(validateArrayItem) 
-              : [],
-            Discussions: Array.isArray(activity.Discussions) 
-              ? activity.Discussions.filter(validateArrayItem) 
-              : [],
-            Events: Array.isArray(activity.Events) 
-              ? activity.Events.filter(validateArrayItem) 
-              : []
-          };
-        });
-        
-        return {
+        console.log("Processing record:", JSON.stringify({
           date: record.get('date'),
-          count: record.get('count'),
-          activities
-        };
+          count: record.get('count')
+        }));
+        
+        try {
+          // Get activities and validate at a basic level first
+          const rawActivities = record.get('activities');
+          console.log(`Found ${rawActivities ? rawActivities.length : 0} activities`);
+          
+          const activities = Array.isArray(rawActivities) 
+            ? rawActivities.map((activity: any) => {
+                // Ensure basic structure is present
+                return {
+                  id: activity.id || `activity-${DateTime.now().toMillis()}`,
+                  type: activity.type || 'unknown',
+                  description: activity.description || '',
+                  Comments: Array.isArray(activity.Comments) ? activity.Comments : [],
+                  Discussions: Array.isArray(activity.Discussions) ? activity.Discussions : [],
+                  Events: Array.isArray(activity.Events) ? activity.Events : []
+                };
+              })
+            : [];
+            
+          return {
+            date: record.get('date'),
+            count: typeof record.get('count') === 'number' ? record.get('count') : 0,
+            activities
+          };
+        } catch (error) {
+          console.error("Error processing record:", error);
+          return {
+            date: record.get('date'),
+            count: 0,
+            activities: []
+          };
+        }
       });
 
       // Format data into the expected structure

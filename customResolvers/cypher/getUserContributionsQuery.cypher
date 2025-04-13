@@ -1,99 +1,88 @@
-// More memory-efficient implementation
+// Simple query that works when users don't have any contributions
 MATCH (u:User {username: $username})
 WHERE u.username IS NOT NULL
 
-// Get all types of activity by date range
+// Define date range
 WITH u, date($startDate) as startDate, date($endDate) as endDate
 
-// Get all activity dates first
-OPTIONAL MATCH (u)-[:AUTHORED_COMMENT]->(c:Comment)
-WHERE date(c.createdAt) >= startDate AND date(c.createdAt) <= endDate
-WITH u, startDate, endDate, collect(distinct date(c.createdAt)) as commentDates
+// First check if the user has any activity at all
+OPTIONAL MATCH (u)-[:AUTHORED_COMMENT]->(comment:Comment)
+WHERE date(comment.createdAt) >= startDate AND date(comment.createdAt) <= endDate
 
-OPTIONAL MATCH (u)-[:POSTED_DISCUSSION]->(d:Discussion)
-WHERE date(d.createdAt) >= startDate AND date(d.createdAt) <= endDate
-WITH u, startDate, endDate, commentDates, collect(distinct date(d.createdAt)) as discussionDates
+OPTIONAL MATCH (u)-[:POSTED_DISCUSSION]->(discussion:Discussion)
+WHERE date(discussion.createdAt) >= startDate AND date(discussion.createdAt) <= endDate
 
-OPTIONAL MATCH (u)-[:POSTED_BY]->(e:Event)
-WHERE date(e.createdAt) >= startDate AND date(e.createdAt) <= endDate
-WITH u, startDate, endDate, commentDates, discussionDates, collect(distinct date(e.createdAt)) as eventDates
+OPTIONAL MATCH (u)-[:POSTED_BY]->(event:Event)
+WHERE date(event.createdAt) >= startDate AND date(event.createdAt) <= endDate
 
-// Combine all dates
-WITH u, startDate, endDate, commentDates + discussionDates + eventDates AS allDates
-UNWIND allDates AS dateKey
-WITH u, startDate, endDate, dateKey
+WITH u, startDate, endDate, count(comment) + count(discussion) + count(event) as totalActivityCount
+
+// If user has no activity, return a dummy day with zero count
+WITH u, startDate, endDate, totalActivityCount,
+     CASE WHEN totalActivityCount = 0 THEN [date()] ELSE [] END as emptyDates
+
+UNWIND 
+  CASE 
+    WHEN size(emptyDates) > 0 THEN emptyDates 
+    ELSE [null]
+  END as emptyDate
+  
+WITH u, startDate, endDate, totalActivityCount, emptyDate
+WHERE emptyDate IS NOT NULL AND totalActivityCount = 0
+
+// Return empty result for users with no activity
+RETURN toString(emptyDate) as date,
+       0 as count,
+       [] as activities
+
+// If there is activity, get it by date
+UNION
+
+// Regular query for users with activity
+MATCH (u:User {username: $username})
+WHERE u.username IS NOT NULL
+
+// Define date range
+WITH u, date($startDate) as startDate, date($endDate) as endDate
+
+// Get comments for this user
+OPTIONAL MATCH (u)-[:AUTHORED_COMMENT]->(comment:Comment)
+WHERE date(comment.createdAt) >= startDate AND date(comment.createdAt) <= endDate
+
+// Group by date to get comment counts
+WITH u, startDate, endDate, date(comment.createdAt) AS dateKey, count(comment) AS commentCount
 WHERE dateKey IS NOT NULL
 
-// Now collect activities for each date, ensuring no null values
-OPTIONAL MATCH (u)-[:AUTHORED_COMMENT]->(c:Comment)
-WHERE date(c.createdAt) = dateKey AND c.id IS NOT NULL
-// Collect only valid comments with all required fields
-WITH u, dateKey, [c IN collect(c) WHERE c.id IS NOT NULL AND c.createdAt IS NOT NULL | {
-  id: c.id, 
-  text: CASE WHEN c.text IS NULL THEN "" ELSE c.text END, 
-  createdAt: toString(c.createdAt)
-}] AS comments
+// For each date, get real comment data
+MATCH (u:User {username: $username})-[:AUTHORED_COMMENT]->(c:Comment)
+WHERE date(c.createdAt) = dateKey
+OPTIONAL MATCH (c)-[:POSTED_IN]->(ch:Channel)
+OPTIONAL MATCH (c)<-[:AUTHORED_COMMENT]-(ca:User)
+WITH dateKey, commentCount, collect({
+  id: c.id,
+  text: COALESCE(c.text, ""),
+  createdAt: toString(c.createdAt),
+  Channel: CASE WHEN ch IS NOT NULL THEN {
+    uniqueName: COALESCE(ch.uniqueName, "")
+  } ELSE null END,
+  CommentAuthor: CASE WHEN ca IS NOT NULL THEN {
+    username: COALESCE(ca.username, "")
+  } ELSE null END
+}) as commentDetails
 
-OPTIONAL MATCH (u)-[:POSTED_DISCUSSION]->(d:Discussion)
-WHERE date(d.createdAt) = dateKey AND d.id IS NOT NULL
-// Collect only valid discussions with all required fields
-WITH u, dateKey, comments, [d IN collect(d) WHERE d.id IS NOT NULL AND d.title IS NOT NULL AND d.createdAt IS NOT NULL | {
-  id: d.id, 
-  title: d.title, 
-  createdAt: toString(d.createdAt)
-}] AS discussions
-
-OPTIONAL MATCH (u)-[:POSTED_BY]->(e:Event)
-WHERE date(e.createdAt) = dateKey AND e.id IS NOT NULL
-// Collect only valid events with all required fields
-WITH dateKey, comments, discussions, [e IN collect(e) WHERE e.id IS NOT NULL AND e.title IS NOT NULL AND e.createdAt IS NOT NULL | {
-  id: e.id, 
-  title: e.title, 
-  createdAt: toString(e.createdAt)
-}] AS events
-
-// Calculate counts
-WITH dateKey, 
-     comments,
-     discussions,
-     events,
-     size(comments) AS commentCount,
-     size(discussions) AS discussionCount,
-     size(events) AS eventCount,
-     size(comments) + size(discussions) + size(events) AS totalCount
-
-// Create enriched activities for the day
-WITH dateKey, totalCount,
-     CASE WHEN commentCount > 0 THEN [{
+// Create activities array
+WITH dateKey, commentCount AS totalCount,
+     [{
        id: 'comment-' + toString(dateKey) + '-' + toString(commentCount),
        type: 'comment',
        description: 'Posted ' + commentCount + ' comment(s)',
-       Comments: comments,
+       Comments: commentDetails,
        Discussions: [],
        Events: []
-     }] ELSE [] END +
-     CASE WHEN discussionCount > 0 THEN [{
-       id: 'discussion-' + toString(dateKey) + '-' + toString(discussionCount),
-       type: 'discussion',
-       description: 'Created ' + discussionCount + ' discussion(s)',
-       Comments: [],
-       Discussions: discussions,
-       Events: []
-     }] ELSE [] END +
-     CASE WHEN eventCount > 0 THEN [{
-       id: 'event-' + toString(dateKey) + '-' + toString(eventCount),
-       type: 'event',
-       description: 'Created ' + eventCount + ' event(s)',
-       Comments: [],
-       Discussions: [],
-       Events: events
-     }] ELSE [] END AS activities
+     }] AS activities
      
-// Only return dates with activities
-WHERE totalCount > 0
-
-// Format results
+// Return the data
 RETURN toString(dateKey) AS date, 
        totalCount AS count,
        activities
-ORDER BY dateKey ASC // Ensures chronological ordering by date at the database level
+ORDER BY dateKey ASC
