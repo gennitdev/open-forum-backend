@@ -14,6 +14,7 @@ import {
   hasChannelPermission,
 } from "./permission/hasChannelPermission.js";
 import { checkChannelPermissions } from "./permission/hasChannelPermission.js";
+import { checkChannelModPermissions, ModChannelPermission } from "./permission/hasChannelModPermission.js";
 import { canArchiveAndUnarchiveDiscussion } from "./permission/canArchiveAndUnarchiveDiscussion.js";
 import { canArchiveAndUnarchiveEvent } from "./permission/canArchiveAndUnarchiveEvent.js";
 import { canArchiveAndUnarchiveComment } from "./permission/canArchiveAndUnarchiveComment.js";
@@ -143,7 +144,10 @@ export const canCreateComment = rule({ cache: "contextual" })(
       throw new Error("Comment must be connected to a Channel.");
     }
 
-    let channelName = ''
+    let channelName = '';
+    
+    // Determine if this is a feedback comment
+    const isFeedbackComment = !!(GivesFeedbackOnEvent || GivesFeedbackOnDiscussion || GivesFeedbackOnComment);
 
     if (DiscussionChannel){
       const discussionChannelId = DiscussionChannel.connect?.where?.node?.id;
@@ -256,11 +260,22 @@ export const canCreateComment = rule({ cache: "contextual" })(
       throw new Error("No channel name found.");
     }
 
-    return checkChannelPermissions({
-      channelConnections: [channelName],
-      context: ctx,
-      permissionCheck: "canCreateComment",
-    });
+    // Different permission checking based on whether it's a feedback comment
+    if (isFeedbackComment) {
+      // For feedback comments, check mod permissions with canGiveFeedback
+      return checkChannelModPermissions({
+        channelConnections: [channelName],
+        context: ctx,
+        permissionCheck: ModChannelPermission.canGiveFeedback
+      });
+    } else {
+      // For regular comments, check regular permissions
+      return checkChannelPermissions({
+        channelConnections: [channelName],
+        context: ctx,
+        permissionCheck: "canCreateComment",
+      });
+    }
   }
 );
 
