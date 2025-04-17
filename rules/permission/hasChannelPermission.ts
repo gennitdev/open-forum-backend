@@ -14,141 +14,136 @@ export const hasChannelPermission: (
   const { permission, channelName, context } = input;
 
   const Channel = context.ogm.model("Channel");
+  const Suspension = context.ogm.model("Suspension");
 
-  // 1. Check for server roles on the user object.
+  // Set user data on context
   context.user = await setUserDataOnContext({
     context,
     getPermissionInfo: true,
     checkSpecificChannel: channelName,
   });
 
-  const usersServerRoles = context.user?.data?.ServerRoles || [];
+  if (!context.user) {
+    return new Error(ERROR_MESSAGES.channel.noChannelPermission);
+  }
 
-  // 2. If there is at least one server role on the user
-  //    object, loop over them. All of them must explicitly
-  //    allow the permission. Otherwise, if one says false
-  //    or is not mentioned, return false.
-  if (usersServerRoles.length > 0) {
-    for (const serverRole of usersServerRoles) {
-      if (!serverRole[permission]) {
-        // We check if the user has been suspended
-        // from the server and reject the request if so.
-        return new Error(ERROR_MESSAGES.server.noServerPermission);
+  const username = context.user?.username;
+
+  // Check if user is a channel owner (admin) - channel owners have all permissions
+  const channel = await Channel.find({
+    where: {
+      uniqueName: channelName,
+    },
+    selectionSet: `{ 
+      Admins {
+        username
       }
-    }
-  }
-
-  // 3. Check the user's channel roles.
-  // Get the list of channel roles on the user object.
-  const channelRoles = context.user?.data?.ChannelRoles || [];
-
-  if (channelRoles.length > 0) {
-    for (const channelRole of channelRoles) {
-      if (!channelRole[permission]) {
-        // We check if the user has been suspended
-        // from the channel and reject the request if so.
-        return new Error(ERROR_MESSAGES.server.noServerPermission);
+      DefaultChannelRole { 
+        name
+        canCreateEvent
+        canCreateDiscussion
+        canCreateComment
+        canUpvoteComment
+        canUpvoteDiscussion
+        canUploadFile
+        canUpdateChannel
       }
-    }
+      SuspendedRole {
+        name
+        canCreateEvent
+        canCreateDiscussion
+        canCreateComment
+        canUpvoteComment
+        canUpvoteDiscussion
+        canUploadFile
+        canUpdateChannel
+      }
+    }`,
+  });
+
+  if (!channel || !channel[0]) {
+    return new Error(ERROR_MESSAGES.channel.notFound);
   }
 
-  // 4. If there are no channel roles on the user object,
-  // get the default channel role. This is located on the
-  // Channel object.
-  // We will allow the action only if the action is allowed
-  // by the default channel role AND the default server role.
-  if (!channelRoles.length) {
-    const channel = await Channel.find({
-      where: {
-        uniqueName: channelName,
-      },
-      selectionSet: `{ 
-            DefaultChannelRole { 
-              canCreateEvent
-              canCreateDiscussion
-              canCreateComment
-              canUpvoteComment
-              canUpvoteDiscussion
-            } 
-          }`,
-    });
+  const channelData = channel[0];
 
-    // @ts-ignore
-    const defaultChannelRole = channel[0]?.DefaultChannelRole;
-
-    if (defaultChannelRole) {
-      channelRoles.push(defaultChannelRole);
-    }
+  // Check if user is admin/owner - if so, grant all permissions
+  if (channelData.Admins?.some((admin: any) => admin.username === username)) {
+    return true;
   }
 
-  // Loop over the list of channel roles. They all
-  // must explicitly allow the permission.
-  // Otherwise, if one says false or is missing
-  // the permission, return false.
-  for (const channelRole of channelRoles) {
-    if (!channelRole.includes(permission)) {
-      return false;
-    }
-  }
+  // Check if user is suspended
+  const isSuspendedResult = await Suspension.find({
+    where: {
+      channelUniqueName: channelName,
+      username: username,
+    },
+    selectionSet: `{ 
+      id
+    }`,
+  });
+  
+  const isSuspended = isSuspendedResult && isSuspendedResult.length > 0;
+  
+  // Determine which role to use
+  let roleToUse = null;
 
-  // 5. We check if the user has been suspended
-  // from the server and reject the request if so.
+  // Fetch server config for default roles
   const ServerConfig = context.ogm.model("ServerConfig");
   const serverConfig = await ServerConfig.find({
     where: { serverName: process.env.SERVER_CONFIG_NAME },
-    selectionSet: `{ DefaultServerRole { 
+    selectionSet: `{ 
+      DefaultServerRole { 
         canCreateChannel
         canCreateEvent
         canCreateDiscussion
         canCreateComment
         canUpvoteComment
         canUpvoteDiscussion
-      } 
+        canUploadFile
+      }
+      DefaultSuspendedRole {
+        canCreateChannel
+        canCreateEvent
+        canCreateDiscussion
+        canCreateComment
+        canUpvoteComment
+        canUpvoteDiscussion
+        canUploadFile
+      }
     }`,
   });
 
-  if (!serverConfig || !serverConfig[0]) {
-    return new Error(
-      "While checking forum permissions, could not find the server config, which contains the default server role. Therefore could not check the user's permissions."
-    );
+  if (isSuspended) {
+    // Use suspended role
+    roleToUse = channelData.SuspendedRole;
+    // Use server default suspended role as fallback
+    if (!roleToUse) {
+      roleToUse = serverConfig[0]?.DefaultSuspendedRole;
+    }
+  } else {
+    
+    // If no specific role, use channel default
+    if (!roleToUse) {
+      roleToUse = channelData.DefaultChannelRole;
+    }
+    
+    // 7. If no channel default, fall back to server default
+    if (!roleToUse) {
+      roleToUse = serverConfig[0]?.DefaultServerRole;
+    }
   }
 
-  const defaultServerRole = serverConfig[0]?.DefaultServerRole;
-
-  if (!defaultServerRole) {
-    return new Error("Could not find the default server role.");
+  // 8. Check if the role exists and has the required permission
+  if (!roleToUse) {
+    return new Error(ERROR_MESSAGES.channel.noChannelPermission);
   }
 
-  usersServerRoles.push(defaultServerRole);
-
-  // Error handling: Make sure we could successfully fetch the
-  // default server role. If not, return an error.
-  if (!usersServerRoles[0]) {
-    return new Error(
-      "Could not find permission on user's role or on the default server role."
-    );
+  if (roleToUse[permission] === true) {
+    return true;
   }
 
-  // Check if the permission is allowed by the default
-  //    server role.
-  const serverRoleToCheck = usersServerRoles[0];
-
-  if (permission === "canCreateDiscussion") {
-    return !!serverRoleToCheck.canCreateDiscussion;
-  }
-  if (permission === "canCreateEvent") {
-    return !!serverRoleToCheck.canCreateEvent;
-  }
-  if (permission === "canCreateComment") {
-    return !!serverRoleToCheck.canCreateComment;
-  }
-  if (permission === "canUpvoteComment") {
-    return !!serverRoleToCheck.canUpvoteComment;
-  }
-  if (permission === "canUpvoteDiscussion") {
-    return !!serverRoleToCheck.canUpvoteDiscussion;
-  }
-  return new Error(ERROR_MESSAGES.generic.noPermission);
+  return new Error(`The user does not have the required permission (${permission}) in channel ${channelName}.`);
 };
 
 type CheckChannelPermissionInput = {
@@ -157,12 +152,21 @@ type CheckChannelPermissionInput = {
   permissionCheck: keyof ChannelRole;
 };
 
-
-// Helper function to check channel permissions
+// Helper function to check channel permissions across multiple channels
 export async function checkChannelPermissions(
   input: CheckChannelPermissionInput
 ) {
   const { channelConnections, context, permissionCheck } = input;
+  
+  // Check for JWT errors first (expired tokens, etc.)
+  if (context.jwtError) {
+    return context.jwtError;
+  }
+  
+  // Check if we have valid channel connections
+  if (!channelConnections || channelConnections.length === 0 || !channelConnections[0]) {
+    return new Error("No channel specified for this operation.");
+  }
 
   for (const channelConnection of channelConnections) {
     const permissionResult = await hasChannelPermission({
@@ -170,10 +174,6 @@ export async function checkChannelPermissions(
       channelName: channelConnection,
       context: context,
     });
-
-    if (!permissionResult) {
-      return new Error("The user does not have permission in this channel.");
-    }
 
     if (permissionResult instanceof Error) {
       return permissionResult;
