@@ -25,7 +25,6 @@ const getJwksClient = () => {
     client = jwksClient({
       jwksUri: `https://${process.env.AUTH0_DOMAIN}/.well-known/jwks.json`,
     });
-    console.log("Initialized JWKS Client");
   }
   return client;
 };
@@ -48,7 +47,6 @@ const getKey = (header: any, callback: any) => {
         return callback(err, null);
       }
       const signingKey = key.getPublicKey();
-      console.log("Retrieved Signing Key");
       callback(null, signingKey);
     });
   } catch (error) {
@@ -184,7 +182,6 @@ export const getUserDataFromUsername = async (
         }`,
     });
 
-    console.log("User data fetched:", userData);
     return {
       username,
       email: input.email,
@@ -226,13 +223,11 @@ export type UserDataOnContext = {
 export const setUserDataOnContext = async (
   input: SetUserDataInput
 ): Promise<UserDataOnContext> => {
-  console.log("Setting user data on context...");
   const { context } = input;
   const { ogm, req } = context;
   const token = req?.headers?.authorization?.replace("Bearer ", "");
 
   if (!token) {
-    console.log("No token found; setting user data to null.");
     return {
       username: null,
       email: null,
@@ -251,7 +246,6 @@ export const setUserDataOnContext = async (
   let modProfileName: string | null | undefined = null;
 
   if (token) {
-    console.log("Verifying token...");
     decoded = await new Promise((resolve, reject) => {
       jwt.verify(token, getKey, { algorithms: ["RS256"] }, (err, decoded) => {
         if (!err) {
@@ -273,31 +267,23 @@ export const setUserDataOnContext = async (
 
     // Check the audience of the token
     const audience = decoded?.aud;
-    console.log({
-      audience,
-      clientId: process.env.AUTH0_CLIENT_ID,
-    })
 
     if (audience === process.env.AUTH0_CLIENT_ID) {
       // UI-based token
-      console.log("Token is a UI-based token, extracting email directly.");
       email = decoded?.email;
     } else if (
       Array.isArray(audience) &&
       audience.includes("https://gennit.us.auth0.com/api/v2/")
     ) {
       // Programmatic token
-      console.log("Token is a programmatic token, using Auth0 Management API.");
 
       // Check if userinfo is cached
       const cachedUserInfo: CachedUserInfo | undefined =
         userInfoCache.get(token);
 
       if (cachedUserInfo) {
-        console.log("Using cached user info.");
         email = cachedUserInfo.email;
       } else {
-        console.log("Fetching email from Auth0 userinfo");
         try {
           const userInfoResponse = await axios.get(
             `https://${process.env.AUTH0_DOMAIN}/userinfo`,
@@ -308,7 +294,6 @@ export const setUserDataOnContext = async (
             }
           );
           email = userInfoResponse?.data?.email;
-          console.log("Fetched email from Auth0 userinfo:", email);
         } catch (error) {
           console.error("Error fetching email from Auth0 userinfo:", error);
         }
