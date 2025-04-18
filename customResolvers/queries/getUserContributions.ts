@@ -1,304 +1,63 @@
 import { getUserContributionsQuery } from "../cypher/cypherQueries.js";
 import { DateTime } from "luxon";
-import type { Comment } from "../../ogm_types.js";
 
-// The shape of the data to return matches the GraphQL schema
-interface ChannelInfo {
-  uniqueName: string;
-  displayName?: string;
-  description?: string;
-  channelIconURL?: string;
-}
-
-interface EventChannelInfo {
-  id: string;
-  Channel: ChannelInfo;
-}
-
-interface DiscussionChannelInfo {
-  id: string;
-  Channel: ChannelInfo;
-}
-
-interface UserInfo {
-  username: string;
-}
-
-interface CommentType {
-  id: string;
-  text?: string | null;
-  createdAt: string;
-  Channel?: ChannelInfo | null;
-  CommentAuthor?: UserInfo | null;
-  DiscussionChannel?: DiscussionChannelType | null;
-  Event?: EventType | null;
-}
-
-interface DiscussionChannelType {
-  id: string;
-  discussionId: string;
-  channelUniqueName: string;
-}
-
-interface DiscussionType {
-  id: string;
-  title: string;
-  createdAt: string;
-  DiscussionChannels: DiscussionChannelType[];
-  Author?: UserInfo | null;
-}
-
-interface EventChannelType {
-  id: string;
-  eventId: string;
-  channelUniqueName: string;
-}
-
-interface EventType {
-  id: string;
-  title: string;
-  createdAt: string;
-  EventChannels: EventChannelType[];
-  Poster?: UserInfo | null;
-}
-
-interface Activity {
-  id: string;
-  type: string;
-  description: string;
-  Comments: CommentType[];
-  Discussions: DiscussionType[];
-  Events: EventType[];
-}
-
-interface DayData {
-  date: string;
-  count: number;
-  activities: Activity[];
-}
-
-type WeekData = DayData[];
-type ContributionData = WeekData[];
-
-type Input = {
+interface Input {
   User: any;
   driver: any;
-};
+}
 
-type Args = {
+interface Args {
   username: string;
   startDate?: string;
   endDate?: string;
   year?: number;
-};
-
-// Function to convert flat data to the required nested structure
-function formatContributionData(flatData: any[]): ContributionData {
-  // If no data, return empty array
-  if (!flatData || flatData.length === 0) {
-    return [];
-  }
-
-  // Sort by date
-  flatData.sort((a, b) => a.date.localeCompare(b.date));
-
-  // Fill in missing dates with zero counts
-  const allDates = fillMissingDates(flatData);
-
-  // Group days by week
-  const weeks: { [weekKey: string]: DayData[] } = {};
-  
-  allDates.forEach(day => {
-    // Parse the date to get week number
-    const date = DateTime.fromISO(day.date);
-    const weekKey = `${date.year}-${date.weekNumber}`;
-    
-    if (!weeks[weekKey]) {
-      weeks[weekKey] = [];
-    }
-
-    const isoDate = day.date.includes('T') ? day.date.split('T')[0] : day.date;
-    
-    weeks[weekKey].push({
-      date: isoDate,
-      count: typeof day.count === 'object' && day.count !== null ? 
-             (typeof day.count.low === 'number' ? day.count.low : parseInt(day.count.toString(), 10)) : 
-             (typeof day.count === 'number' ? day.count : 0),
-      activities: day.activities || []
-    });
-  });
-
-  // Convert to array of arrays and sort by week
-  return Object.entries(weeks)
-    .sort(([a], [b]) => a.localeCompare(b))
-    .map(([_, days]) => days);
-}
-
-// Function to fill in missing dates with zero counts
-function fillMissingDates(data: any[]): any[] {
-  if (!data || data.length === 0) {
-    return [];
-  }
-
-  // Limit the range to avoid excessive memory usage
-  // Get min and max dates from actual data
-  const sortedData = [...data].sort((a, b) => a.date.localeCompare(b.date));
-  const startDate = DateTime.fromISO(sortedData[0].date);
-  const endDate = DateTime.fromISO(sortedData[sortedData.length - 1].date);
-  
-  // If range is too large, limit to 53 weeks (1 year + 1 week buffer)
-  const maxDays = 371; // 53 weeks
-  const actualDays = endDate.diff(startDate, 'days').days;
-  const effectiveEndDate = actualDays > maxDays ? 
-                          startDate.plus({ days: maxDays }) : 
-                          endDate;
-  
-  // Create a map of existing dates
-  const dateMap = new Map();
-  sortedData.forEach(item => {
-    dateMap.set(item.date, item);
-  });
-  
-  // Generate the full date range
-  const result = [];
-  let currentDate = startDate;
-  
-  while (currentDate <= effectiveEndDate) {
-    const dateString = currentDate.toISODate();
-    if (dateMap.has(dateString)) {
-      result.push(dateMap.get(dateString));
-    } else {
-      // Add a zero-count entry for missing dates
-      result.push({
-        date: dateString,
-        count: 0,
-        activities: []
-      });
-    }
-    currentDate = currentDate.plus({ days: 1 });
-  }
-  
-  return result;
 }
 
 const getUserContributionsResolver = (input: Input) => {
   const { driver, User } = input;
-  
-  return async (_parent: any, args: Args, _context: any) => {
-    const { username, startDate, endDate, year } = args;
-    const session = driver.session({ defaultAccessMode: 'READ' }); // Use READ mode for queries
-    
+
+  return async (_parent: any, args: Args) => {
+    const { username, year, startDate, endDate } = args;
+    const session = driver.session({ defaultAccessMode: 'READ' });
+
     try {
-      // Verify user exists
+      // Verify user existence
       const userExists = await User.find({
-        where: {
-          username
-        },
-        selectionSet: `{
-          username
-        }`
+        where: { username },
+        selectionSet: `{ username }`,
       });
 
       if (userExists.length === 0) {
-        throw new Error(`User ${username} not found`);
+        throw new Error(`User ${username} not found.`);
       }
 
-      let effectiveStartDate: string;
-      let effectiveEndDate: string;
-      
-      // If year is provided, use it for date range
-      if (year) {
-        effectiveStartDate = `${year}-01-01`;
-        effectiveEndDate = `${year}-12-31`;
-      } else {
-        // Default date range is last year (52 weeks)
-        const today = DateTime.now();
-        const defaultStartDate = today.minus({ days: 365 }).toISODate();
-        const defaultEndDate = today.toISODate();
-        
-        // Use provided dates or defaults
-        effectiveStartDate = startDate || defaultStartDate;
-        effectiveEndDate = endDate || defaultEndDate;
-        
-        // Ensure date range isn't too large (limit to 365 days max)
-        const startDateTime = DateTime.fromISO(effectiveStartDate);
-        const endDateTime = DateTime.fromISO(effectiveEndDate);
-        
-        if (endDateTime.diff(startDateTime, 'days').days > 365) {
-          effectiveStartDate = endDateTime.minus({ days: 365 }).toISODate() || defaultStartDate;
-        }
-      }
+      // Determine effective date range
+      const effectiveStartDate = year
+        ? `${year}-01-01`
+        : (startDate || DateTime.now().minus({ year: 1 }).toISODate());
 
-      // Execute contribution query with optimized parameters
+      const effectiveEndDate = year
+        ? `${year}-12-31`
+        : (endDate || DateTime.now().toISODate());
+
+      // Execute optimized Cypher query
       const result = await session.run(getUserContributionsQuery, {
         username,
         startDate: effectiveStartDate,
-        endDate: effectiveEndDate
+        endDate: effectiveEndDate,
       });
 
-      // Transform Neo4j records - ensure proper format
-      const contributionData = result.records.map((record: any) => {
-        console.log("Processing record:", JSON.stringify({
-          date: record.get('date'),
-          count: record.get('count')
-        }));
-        
-        try {
-          // Get activities and validate at a basic level first
-          const rawActivities = record.get('activities');
-          console.log(`Found ${rawActivities ? rawActivities.length : 0} activities`);
-          
-          if (rawActivities && rawActivities.length > 0) {
-            // Detailed inspection of first activity
-            const firstActivity = rawActivities[0];
-            console.log('Activity structure:', 
-              JSON.stringify({
-                id: firstActivity.id,
-                type: firstActivity.type,
-                description: firstActivity.description,
-                hasComments: !!firstActivity.Comments,
-                commentsLength: firstActivity.Comments ? firstActivity.Comments.length : 0
-              })
-            );
-          }
-          
-          const activities = Array.isArray(rawActivities) 
-            ? rawActivities.map((activity: any) => {
-                // Ensure basic structure is present with all required arrays
-                return {
-                  id: activity.id || `activity-${DateTime.now().toMillis()}`,
-                  type: activity.type || 'unknown',
-                  description: activity.description || '',
-                  Comments: Array.isArray(activity.Comments) ? activity.Comments : [],
-                  Discussions: Array.isArray(activity.Discussions) ? activity.Discussions : [],
-                  Events: Array.isArray(activity.Events) ? activity.Events : []
-                };
-              })
-            : [];
-            
-          return {
-            date: record.get('date'),
-            count: typeof record.get('count') === 'number' ? record.get('count') : 0,
-            activities
-          };
-        } catch (error) {
-          console.error("Error processing record:", error);
-          return {
-            date: record.get('date'),
-            count: 0,
-            activities: []
-          };
-        }
-      });
+      // Simplified mapping of results
+      const contributions = result.records.map((record: any) => ({
+        date: record.get('date'),
+        count: record.get('count').toNumber ? record.get('count').toNumber() : record.get('count'),
+        activities: record.get('activities'),
+      }));
 
-      // Format data into the expected structure
-      return formatContributionData(contributionData);
+      return contributions;
+
     } catch (error: any) {
       console.error("Error fetching user contributions:", error);
-      // More specific error handling
-      if (error.message && error.message.includes("memory")) {
-        throw new Error(`Memory limit reached. Try requesting a smaller date range.`);
-      }
       throw new Error(`Failed to fetch contributions for user ${username}: ${error.message}`);
     } finally {
       await session.close();
