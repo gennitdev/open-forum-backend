@@ -121,6 +121,9 @@ const permissionList = shield({
       deleteNotifications: deny,
       updateNotifications: deny,
 
+      updateImages: and(isAuthenticated, allow),
+      createImages: and(isAuthenticated, allow),
+
       reportDiscussion: and(isAuthenticated, or(isChannelOwner, canReport)),
       reportComment: and(isAuthenticated, or(isChannelOwner, canReport)),
       reportEvent: and(isAuthenticated, or(isChannelOwner, canReport)),
