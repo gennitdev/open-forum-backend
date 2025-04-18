@@ -35,6 +35,7 @@ export const ERROR_MESSAGES = {
     noModRole: "You need to have a moderator role to do that.",
     tokenExpired: "Your session has expired. Please sign in again.",
     invalidToken: "Your authentication token is invalid. Please sign in again.",
+    cantSuspendOwner: "Only site administrators can suspend forum owners from their own forums.",
   },
   user: {
     noUsername: "You must provide a username.",
