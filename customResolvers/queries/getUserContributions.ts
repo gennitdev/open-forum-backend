@@ -30,6 +30,8 @@ interface CommentType {
   createdAt: string;
   Channel?: ChannelInfo | null;
   CommentAuthor?: UserInfo | null;
+  DiscussionChannel?: DiscussionChannelType | null;
+  Event?: EventType | null;
 }
 
 interface DiscussionChannelType {
@@ -43,6 +45,7 @@ interface DiscussionType {
   title: string;
   createdAt: string;
   DiscussionChannels: DiscussionChannelType[];
+  Author?: UserInfo | null;
 }
 
 interface EventChannelType {
@@ -56,6 +59,7 @@ interface EventType {
   title: string;
   createdAt: string;
   EventChannels: EventChannelType[];
+  Poster?: UserInfo | null;
 }
 
 interface Activity {

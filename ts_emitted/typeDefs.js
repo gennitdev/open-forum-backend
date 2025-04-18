@@ -799,6 +799,8 @@ const typeDefinitions = gql `
     createdAt: DateTime
     Channel: ChannelInfo
     CommentAuthor: UserInfo
+    DiscussionChannel: DiscussionChannelInfo
+    Event: EventInfo
   }
 
   type EventChannelInfo {
@@ -818,6 +820,7 @@ const typeDefinitions = gql `
     title: String
     createdAt: DateTime
     EventChannels: [EventChannelInfo]
+    Poster: UserInfo
   }
 
   type DiscussionInfo {
@@ -825,6 +828,7 @@ const typeDefinitions = gql `
     title: String
     createdAt: DateTime
     DiscussionChannels: [DiscussionChannelInfo]
+    Author: UserInfo
   }
 
   type Activity {

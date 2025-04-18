@@ -57,17 +57,42 @@ WHERE dateKey IS NOT NULL
 MATCH (u:User {username: $username})-[:AUTHORED_COMMENT]->(c:Comment)
 WHERE date(c.createdAt) = dateKey
 
-// Get both direct Channel relationships and Channel relationships through DiscussionChannel
-OPTIONAL MATCH (c)-[:POSTED_IN]->(chDirect:Channel)
-OPTIONAL MATCH (c)-[:CONTAINS_COMMENT]-(dc:DiscussionChannel)-[:POSTED_IN_CHANNEL]->(chDiscussion:Channel)
-OPTIONAL MATCH (c)<-[:AUTHORED_COMMENT]-(ca:User)
+// Split into separate WITH clauses to avoid losing comments
 
-WITH dateKey, commentCount, c, chDirect, chDiscussion, ca
+// Get author
+OPTIONAL MATCH (c)<-[:AUTHORED_COMMENT]-(ca:User)
+WITH dateKey, commentCount, c, ca
+
+// Get direct channel
+OPTIONAL MATCH (c)-[:POSTED_IN]->(chDirect:Channel)
+WITH dateKey, commentCount, c, ca, chDirect
+
+// For DiscussionChannel relationship - keep separate to avoid losing rows
+OPTIONAL MATCH (c)<-[:CONTAINS_COMMENT]-(discChannel:DiscussionChannel)
+WITH dateKey, commentCount, c, ca, chDirect, discChannel
+  
+OPTIONAL MATCH (discChannel)-[:POSTED_IN_CHANNEL]->(discChChannel:Channel)
+WITH dateKey, commentCount, c, ca, chDirect, discChannel, discChChannel
+  
+// Fix relationship direction: DiscussionChannel points to Discussion
+OPTIONAL MATCH (discChannel)-[:POSTED_IN_CHANNEL]->(disc:Discussion)
+WITH dateKey, commentCount, c, ca, chDirect, discChannel, discChChannel, disc
+
+// For Event relationship - also keep separate
+OPTIONAL MATCH (c)<-[:HAS_COMMENT]-(e:Event)
+WITH dateKey, commentCount, c, ca, chDirect, discChannel, discChChannel, disc, e
+  
+OPTIONAL MATCH (e)<-[:POSTED_BY]-(eAuthor:User)
+WITH dateKey, commentCount, c, ca, chDirect, discChannel, discChChannel, disc, e, eAuthor
+
 // Determine which Channel to use - prefer direct relationship if available
 WITH dateKey, commentCount, c, ca, 
+     chDirect, 
+     discChannel, discChChannel, disc,
+     e, eAuthor,
      CASE 
        WHEN chDirect IS NOT NULL THEN chDirect
-       WHEN chDiscussion IS NOT NULL THEN chDiscussion
+       WHEN discChChannel IS NOT NULL THEN discChChannel
        ELSE null
      END as ch
 
@@ -83,6 +108,19 @@ WITH dateKey, commentCount, collect({
   } ELSE null END,
   CommentAuthor: CASE WHEN ca IS NOT NULL THEN {
     username: COALESCE(ca.username, "")
+  } ELSE null END,
+  DiscussionChannel: CASE WHEN discChannel IS NOT NULL THEN {
+    id: discChannel.id,
+    discussionId: COALESCE(discChannel.discussionId, CASE WHEN disc IS NOT NULL THEN disc.id ELSE null END),
+    channelUniqueName: CASE WHEN discChChannel IS NOT NULL THEN discChChannel.uniqueName ELSE null END
+  } ELSE null END,
+  Event: CASE WHEN e IS NOT NULL THEN {
+    id: e.id,
+    title: COALESCE(e.title, ""),
+    createdAt: toString(e.createdAt),
+    Poster: CASE WHEN eAuthor IS NOT NULL THEN {
+      username: eAuthor.username
+    } ELSE null END
   } ELSE null END
 }) as commentDetails
 
@@ -95,24 +133,34 @@ UNWIND CASE WHEN size(discussions) > 0 THEN discussions ELSE [null] END as d
 WITH dateKey, commentCount, commentDetails, d
 WHERE d IS NOT NULL
 
+// Get the author of the discussion
+OPTIONAL MATCH (d)<-[:POSTED_DISCUSSION]-(dAuthor:User)
+WITH dateKey, commentCount, commentDetails, d, dAuthor
+
 // Collect channels for this discussion
-OPTIONAL MATCH (d)<-[:POSTED_IN_CHANNEL]-(dc:DiscussionChannel)-[:POSTED_IN_CHANNEL]->(ch:Channel)
-WITH dateKey, commentCount, commentDetails, d, 
+// Fix relationship direction: Discussion is pointed to by DiscussionChannel 
+OPTIONAL MATCH (d)<-[:POSTED_IN_CHANNEL]-(dc:DiscussionChannel)
+OPTIONAL MATCH (dc)-[:POSTED_IN_CHANNEL]->(ch:Channel)
+WITH dateKey, commentCount, commentDetails, d, dAuthor, dc, ch
+WITH dateKey, commentCount, commentDetails, d, dAuthor,
      collect({
        id: CASE WHEN dc IS NOT NULL THEN dc.id ELSE null END,
-       discussionId: d.id,
+       discussionId: COALESCE(dc.discussionId, d.id),
        channelUniqueName: CASE WHEN ch IS NOT NULL THEN ch.uniqueName ELSE null END
      }) as rawChannels
 
 // Filter out any null entries
-WITH dateKey, commentCount, commentDetails, d, 
+WITH dateKey, commentCount, commentDetails, d, dAuthor,
      [x IN rawChannels WHERE x.id IS NOT NULL AND x.channelUniqueName IS NOT NULL] as discussionChannels
 
 WITH dateKey, commentCount, commentDetails, collect({
   id: d.id,
   title: COALESCE(d.title, ""),
   createdAt: toString(d.createdAt),
-  DiscussionChannels: discussionChannels
+  DiscussionChannels: discussionChannels,
+  Author: CASE WHEN dAuthor IS NOT NULL THEN {
+    username: dAuthor.username
+  } ELSE null END
 }) as discussionDetails
 
 // EVENTS - get events for this user on the same day
@@ -124,9 +172,13 @@ UNWIND CASE WHEN size(events) > 0 THEN events ELSE [null] END as e
 WITH dateKey, commentCount, commentDetails, discussionDetails, e
 WHERE e IS NOT NULL
 
+// Get the poster of the event
+OPTIONAL MATCH (e)<-[:POSTED_BY]-(ePoster:User)
+WITH dateKey, commentCount, commentDetails, discussionDetails, e, ePoster
+
 // Collect channels for this event
 OPTIONAL MATCH (e)<-[:POSTED_IN_CHANNEL]-(ec:EventChannel)-[:POSTED_IN_CHANNEL]->(ch:Channel)
-WITH dateKey, commentCount, commentDetails, discussionDetails, e,
+WITH dateKey, commentCount, commentDetails, discussionDetails, e, ePoster,
      collect({
        id: CASE WHEN ec IS NOT NULL THEN ec.id ELSE null END,
        eventId: e.id,
@@ -134,14 +186,17 @@ WITH dateKey, commentCount, commentDetails, discussionDetails, e,
      }) as rawChannels
 
 // Filter out any null entries
-WITH dateKey, commentCount, commentDetails, discussionDetails, e,
+WITH dateKey, commentCount, commentDetails, discussionDetails, e, ePoster,
      [x IN rawChannels WHERE x.id IS NOT NULL AND x.channelUniqueName IS NOT NULL] as eventChannels
 
 WITH dateKey, commentCount, commentDetails, discussionDetails, collect({
   id: e.id,
   title: COALESCE(e.title, ""),
   createdAt: toString(e.createdAt),
-  EventChannels: eventChannels
+  EventChannels: eventChannels,
+  Poster: CASE WHEN ePoster IS NOT NULL THEN {
+    username: ePoster.username
+  } ELSE null END
 }) as eventDetails
 
 // Count discussions and events for total count
