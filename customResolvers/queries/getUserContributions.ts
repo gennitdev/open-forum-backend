@@ -47,13 +47,13 @@ const getUserContributionsResolver = (input: Input) => {
         endDate: effectiveEndDate,
       });
 
-      // Simplified mapping of results
+      // Simplified mapping of results - return a flat array as is
       const contributions = result.records.map((record: any) => ({
         date: record.get('date'),
         count: record.get('count').toNumber ? record.get('count').toNumber() : record.get('count'),
         activities: record.get('activities'),
       }));
-
+      
       return contributions;
 
     } catch (error: any) {
