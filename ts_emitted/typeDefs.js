@@ -774,6 +774,9 @@ const typeDefinitions = gql `
 
   type ChannelInfo {
     uniqueName: String
+    displayName: String
+    description: String
+    channelIconURL: String
   }
 
   type EventChannelInfo {
@@ -798,16 +801,30 @@ const typeDefinitions = gql `
     CommentAuthor: UserInfo
   }
 
+  type EventChannelInfo {
+    id: ID
+    eventId: String
+    channelUniqueName: String
+  }
+
+  type DiscussionChannelInfo {
+    id: ID
+    discussionId: String
+    channelUniqueName: String
+  }
+
   type EventInfo {
-    id: ID!
+    id: ID
     title: String
     createdAt: DateTime
+    EventChannels: [EventChannelInfo]
   }
 
   type DiscussionInfo {
-    id: ID!
+    id: ID
     title: String
     createdAt: DateTime
+    DiscussionChannels: [DiscussionChannelInfo]
   }
 
   type Activity {

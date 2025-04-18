@@ -5,6 +5,9 @@ import type { Comment } from "../../ogm_types.js";
 // The shape of the data to return matches the GraphQL schema
 interface ChannelInfo {
   uniqueName: string;
+  displayName?: string;
+  description?: string;
+  channelIconURL?: string;
 }
 
 interface EventChannelInfo {
@@ -29,16 +32,30 @@ interface CommentType {
   CommentAuthor?: UserInfo | null;
 }
 
+interface DiscussionChannelType {
+  id: string;
+  discussionId: string;
+  channelUniqueName: string;
+}
+
 interface DiscussionType {
   id: string;
   title: string;
   createdAt: string;
+  DiscussionChannels: DiscussionChannelType[];
+}
+
+interface EventChannelType {
+  id: string;
+  eventId: string;
+  channelUniqueName: string;
 }
 
 interface EventType {
   id: string;
   title: string;
   createdAt: string;
+  EventChannels: EventChannelType[];
 }
 
 interface Activity {
