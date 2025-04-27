@@ -19,7 +19,7 @@ WITH u, startDate, endDate, collect({
   createdAt: toString(comment.createdAt),
   CommentAuthor: { 
     username: commentAuthor.username,
-    profilePicURL: commentAuthor.profilePicURL
+    profilePicURL: COALESCE(commentAuthor.profilePicURL, null)
   },
   Channel: null,
   DiscussionChannel: CASE 
@@ -47,7 +47,7 @@ WITH u, startDate, endDate, comments, collect({
   createdAt: toString(discussion.createdAt),
   Author: { 
     username: discussionAuthor.username,
-    profilePicURL: discussionAuthor.profilePicURL
+    profilePicURL: COALESCE(discussionAuthor.profilePicURL, null)
   },
   DiscussionChannels: CASE WHEN discussionChannel IS NOT NULL THEN [{
     id: discussionChannel.id,
@@ -68,7 +68,7 @@ WITH comments, discussions, collect({
   createdAt: toString(event.createdAt),
   Poster: {
     username: eventPoster.username,
-    profilePicURL: eventPoster.profilePicURL
+    profilePicURL: COALESCE(eventPoster.profilePicURL, null)
   },
   EventChannels: CASE WHEN eventChannel IS NOT NULL THEN [{
     id: eventChannel.id,
