@@ -792,6 +792,7 @@ const typeDefinitions = gql`
 
   type UserInfo {
     username: String
+    profilePicURL: String
   }
 
   type CommentInfo {
