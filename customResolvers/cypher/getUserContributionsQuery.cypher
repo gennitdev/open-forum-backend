@@ -17,7 +17,10 @@ WITH u, startDate, endDate, collect({
   id: comment.id,
   text: COALESCE(comment.text, ""),
   createdAt: toString(comment.createdAt),
-  CommentAuthor: { username: commentAuthor.username },
+  CommentAuthor: { 
+    username: commentAuthor.username,
+    profilePicURL: commentAuthor.profilePicURL
+  },
   Channel: null,
   DiscussionChannel: CASE 
     WHEN discussionChannel IS NOT NULL THEN { 
@@ -42,7 +45,10 @@ WITH u, startDate, endDate, comments, collect({
   id: discussion.id,
   title: COALESCE(discussion.title, ""),
   createdAt: toString(discussion.createdAt),
-  Author: { username: discussionAuthor.username },
+  Author: { 
+    username: discussionAuthor.username,
+    profilePicURL: discussionAuthor.profilePicURL
+  },
   DiscussionChannels: CASE WHEN discussionChannel IS NOT NULL THEN [{
     id: discussionChannel.id,
     channelUniqueName: discussionChannelNode.uniqueName,
@@ -60,7 +66,10 @@ WITH comments, discussions, collect({
   id: event.id,
   title: COALESCE(event.title, ""),
   createdAt: toString(event.createdAt),
-  Poster: { username: eventPoster.username },
+  Poster: {
+    username: eventPoster.username,
+    profilePicURL: eventPoster.profilePicURL
+  },
   EventChannels: CASE WHEN eventChannel IS NOT NULL THEN [{
     id: eventChannel.id,
     channelUniqueName: eventChannelNode.uniqueName,
