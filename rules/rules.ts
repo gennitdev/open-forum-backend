@@ -175,7 +175,7 @@ export const canCreateComment = rule({ cache: "contextual" })(
 
       if (!eventId) {
         throw new Error("No event ID found.");
-      }
+      }  
 
       // Validate that the user has permission to comment on the event.
       // The channel that they are posting in needs to match one of the
@@ -246,7 +246,6 @@ export const canCreateComment = rule({ cache: "contextual" })(
     }
 
     if (GivesFeedbackOnComment) {
-      console.log('input', JSON.stringify(firstItemInInput, null, 2));
       const commentId = GivesFeedbackOnComment?.connect?.where?.node?.id;
 
       if (!commentId) {
@@ -288,7 +287,6 @@ const isAdmin = rule({ cache: "contextual" })(
     });
 
     if (!ctx.user) {
-      console.log("No user");
       return false;
     }
     let isAdmin = false;
@@ -306,26 +304,22 @@ const isAdmin = rule({ cache: "contextual" })(
         isAdmin = true;
       }
     }
-    console.log("user data", ctx.user);
     return isAdmin;
   }
 );
 
 const canUploadFile = rule({ cache: "contextual" })(
   async (parent: any, args: any, ctx: any, info: any) => {
-    console.log("Checking if user can upload file");
     const permissionResult = await hasServerPermission(
       "canUploadFile",
       ctx
     );
 
     if (!permissionResult) {
-      console.log("no permission result");
       return false;
     }
 
     if (permissionResult instanceof Error) {
-      console.log("permission error");
       return permissionResult;
     }
 

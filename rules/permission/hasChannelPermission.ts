@@ -72,18 +72,17 @@ export const hasChannelPermission: (
     return true;
   }
 
-  // Check if user is suspended
-  const isSuspendedResult = await Suspension.find({
+  // Check if user is suspended by querying the Channel's SuspendedUsers relationship
+  const activeSuspensionsResult = await Channel.find({
     where: {
-      channelUniqueName: channelName,
-      username: username,
-    },
-    selectionSet: `{ 
-      id
-    }`,
+      uniqueName: channelName,
+      SuspendedUsers_SOME: {
+        username
+      }
+    }
   });
   
-  const isSuspended = isSuspendedResult && isSuspendedResult.length > 0;
+  const isSuspended = activeSuspensionsResult && activeSuspensionsResult.length > 0;
   
   // Determine which role to use
   let roleToUse = null;
@@ -121,10 +120,9 @@ export const hasChannelPermission: (
     if (!roleToUse) {
       roleToUse = serverConfig[0]?.DefaultSuspendedRole;
     }
-  } else {
-    
+  } else {    
     // If no specific role, use channel default
-    if (!roleToUse) {
+    if (!roleToUse && channelData.DefaultChannelRole) {
       roleToUse = channelData.DefaultChannelRole;
     }
     

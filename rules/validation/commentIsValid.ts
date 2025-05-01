@@ -21,18 +21,26 @@ const validateCommentInput = (input: CommentTextValidationInput): true | string 
   if (text.length > MAX_CHARS_IN_COMMENT_TEXT) {
     return `The comment text cannot exceed ${MAX_CHARS_IN_COMMENT_TEXT} characters.`;
   }
+  console.log('comment is valid')
 
   return true;
 };
 
 type CreateCommentInput = { input: CommentCreateInput[] };
+
 export const createCommentInputIsValid = rule({ cache: "contextual" })(
   async (parent: any, args: CreateCommentInput, ctx: any, info: any) => {
     if (!args.input || !args.input[0] || !args.input[0]) {
       return "Missing or empty input in args.";
     }
     const createCommentInput: CommentCreateInput = args.input[0]
-    console.log('validating comment input',JSON.stringify(createCommentInput, null, 2))
+    console.log('validating comment input')
+    console.log('arguments passed to validate comment input ', {
+      text: createCommentInput.text || "",
+      modProfileName: createCommentInput?.CommentAuthor?.ModerationProfile?.connect?.where?.node?.displayName || "",
+      username: createCommentInput?.CommentAuthor?.User?.connect?.where?.node?.username || "",
+      editMode: false
+    })
     return validateCommentInput({
       text: createCommentInput.text || "",
       modProfileName: createCommentInput?.CommentAuthor?.ModerationProfile?.connect?.where?.node?.displayName || "",
