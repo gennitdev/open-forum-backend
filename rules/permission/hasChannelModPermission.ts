@@ -140,16 +140,16 @@ export const hasChannelModPermission: (
 
   // First check if the user is suspended
   // Fetch Suspensions with channelUniqueName and modProfileName
-  const isSuspendedResult = await Suspension.find({
+  const activeSuspensionsResult = await Channel.find({
     where: {
-      channelUniqueName: channelName,
-      modProfileName: modProfileName,
-    },
-    selectionSet: `{ 
-      id
-    }`,
+      uniqueName: channelName,
+      SuspendedMods_SOME: {
+        modProfileName: modProfileName,
+      }
+    }
   });
-  const isSuspended = isSuspendedResult && isSuspendedResult.length > 0;
+  
+  const isSuspended = activeSuspensionsResult && activeSuspensionsResult.length > 0;
   if (isSuspended) {
     roleToUse = channelData.SuspendedModRole;
     // if the channel doesn't have a suspended mod role,
