@@ -123,8 +123,6 @@ export const isChannelOwner = rule({ cache: "contextual" })(
 
     // Get the list of channel owners.
     const channelOwners = channel[0].Admins.map((admin) => admin.username);
-    console.log("channel owners: ", channelOwners);
-    console.log("username: ", username);
 
     // Check if the user is in the list of channel owners.
     if (!channelOwners.includes(username)) {
