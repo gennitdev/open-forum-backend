@@ -9,7 +9,6 @@ logs
 neo4j
 docker-compose-local.yml
 docker-compose-remote.yml
-plugins
 ssl
 config
 ts_emitted

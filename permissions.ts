@@ -1,6 +1,5 @@
-import { and, shield, allow, deny, or, chain } from "graphql-shield";
+import { and, shield, allow, deny, or } from "graphql-shield";
 import rules from "./rules/rules.js";
-import { afterCreateComment } from "./rules/afterCreateComment.js";
 
 const {
   isAdmin,
@@ -82,7 +81,7 @@ const permissionList = shield({
       deleteEvents: and(isAuthenticated, or(isAdmin, isEventOwner)),
       deleteEventChannels: and(isAuthenticated, isAdmin),
 
-      createComments: chain(and(isAuthenticated, createCommentInputIsValid, canCreateComment), afterCreateComment),
+      createComments: and(isAuthenticated, createCommentInputIsValid, canCreateComment),
       updateComments: and(isAuthenticated, updateCommentInputIsValid, or(isCommentAuthor, isAdmin)),
       deleteComments: and(isAuthenticated, or(isAdmin, isCommentAuthor)),
       

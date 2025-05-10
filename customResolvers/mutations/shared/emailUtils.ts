@@ -133,9 +133,9 @@ export const createCommentNotificationEmail = (
   discussionId: string,
   commentId: string
 ): EmailContent => {
-  // Create URL to the comment
-  const commentUrl = `${process.env.FRONTEND_URL}/forums/${channelName}/discussion/${discussionId}?comment=${commentId}`;
-  
+  // Create URL to the comment using permalink format
+  const commentUrl = `${process.env.FRONTEND_URL}/forums/${channelName}/discussions/${discussionId}/comments/${commentId}`;
+
   // Create subject line
   const subject = `New comment on your discussion: ${discussionTitle}`;
   

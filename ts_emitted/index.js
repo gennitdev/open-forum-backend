@@ -10,6 +10,7 @@ import getCustomResolvers from "./customResolvers.js";
 import { fileURLToPath } from "url";
 import axios from "axios";
 import fs from "fs";
+import { commentNotificationPlugin } from "./plugins/commentNotificationPlugin.js";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const { generate } = pkg;
 dotenv.config();
@@ -121,6 +122,7 @@ async function initializeServer() {
         const server = new ApolloServer({
             persistedQueries: false,
             schema,
+            plugins: [commentNotificationPlugin],
             context: async (input) => {
                 var _a;
                 const { req } = input;

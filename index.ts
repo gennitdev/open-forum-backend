@@ -10,6 +10,7 @@ import getCustomResolvers from "./customResolvers.js";
 import { fileURLToPath } from "url";
 import axios from "axios";
 import fs from "fs";
+import { commentNotificationPlugin } from "./plugins/commentNotificationPlugin.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const { generate } = pkg;
@@ -142,14 +143,15 @@ async function initializeServer() {
     const server = new ApolloServer({
       persistedQueries: false,
       schema,
+      plugins: [commentNotificationPlugin],
       context: async (input: any) => {
         const { req } = input;
         const queryString = `Query: ${req.body.query}`;
         const isMutation = req.body.query?.trim().startsWith("mutation");
-        
+
         // Add this information to the context so it can be used by permission rules
         req.isMutation = isMutation;
-        
+
         if (!queryString.includes("IntrospectionQuery")) {
           console.log(queryString);
           console.log(
