@@ -71,12 +71,17 @@ const getResolver = (input: Input) => {
       }
 
       const comment = comments[0];
+
+      if (!comment) {
+        console.log("Comment not found");
+        return false;
+      }
       
       // Don't notify if this is a self-comment
-      const isUserComment = comment.CommentAuthor.__typename === 'User';
+      const isUserComment = comment.CommentAuthor && 'username' in comment.CommentAuthor;
       const commenterUsername = isUserComment 
-        ? comment.CommentAuthor.username 
-        : comment.CommentAuthor.displayName;
+        ? comment.CommentAuthor?.username 
+        : comment.CommentAuthor?.displayName;
       
       if (!comment.DiscussionChannel?.Discussion?.Author?.username) {
         console.log("Missing discussion or author data, cannot send notification");
@@ -92,7 +97,7 @@ const getResolver = (input: Input) => {
       }
 
       const discussionTitle = comment.DiscussionChannel.Discussion.title;
-      const channelName = comment.DiscussionChannel.Channel.uniqueName;
+      const channelName = comment.DiscussionChannel.Channel?.uniqueName;
       const discussionId = comment.DiscussionChannel.Discussion.id;
       
       // Create markdown notification text for in-app notification
@@ -102,10 +107,10 @@ ${commenterUsername} commented on your discussion [${discussionTitle}](${process
 
       // Create email content
       const emailContent = createCommentNotificationEmail(
-        comment.text,
+        comment?.text || "",
         discussionTitle,
         commenterUsername,
-        channelName,
+        channelName || "",
         discussionId,
         commentId
       );
