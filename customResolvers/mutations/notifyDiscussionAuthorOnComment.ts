@@ -25,7 +25,7 @@ type Input = {
  * It should be called after a comment is created
  */
 const getResolver = (input: Input) => {
-  const { Comment, DiscussionChannel, Discussion, User } = input;
+  const { Comment, User } = input;
 
   return async (parent: any, args: Args, context: any, resolveInfo: any) => {
     const { commentId } = args;
@@ -65,8 +65,8 @@ const getResolver = (input: Input) => {
           }
         }`
       });
-
-      if (!comments.length || !comments[0]) {
+console.log('comments', comments);
+      if (!comments || !comments.length || !comments[0]) {
         throw new Error(`Comment with ID ${commentId} not found`);
       }
 
@@ -78,10 +78,10 @@ const getResolver = (input: Input) => {
       }
       
       // Don't notify if this is a self-comment
-      const isUserComment = comment.CommentAuthor && 'username' in comment.CommentAuthor;
-      const commenterUsername = isUserComment 
-        ? comment.CommentAuthor?.username 
-        : comment.CommentAuthor?.displayName;
+      const isUserComment = comment.CommentAuthor?.__typename === 'User';
+      const commenterUsername = isUserComment
+        ? (comment.CommentAuthor as { username: string }).username
+        : (comment.CommentAuthor as { displayName: string }).displayName;
       
       if (!comment.DiscussionChannel?.Discussion?.Author?.username) {
         console.log("Missing discussion or author data, cannot send notification");
