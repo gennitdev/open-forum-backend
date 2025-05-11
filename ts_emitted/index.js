@@ -10,7 +10,7 @@ import getCustomResolvers from "./customResolvers.js";
 import { fileURLToPath } from "url";
 import axios from "axios";
 import fs from "fs";
-import { commentNotificationPlugin } from "./plugins/commentNotificationPlugin.js";
+import { CommentNotificationService } from "./services/commentNotificationService.js";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const { generate } = pkg;
 dotenv.config();
@@ -73,6 +73,8 @@ const features = {
             MATCHES: true,
         },
     },
+    // Enable subscriptions for change data capture
+    subscriptions: true
 };
 const neoSchema = new Neo4jGraphQL({
     typeDefs: typesDefinitions,
@@ -122,7 +124,6 @@ async function initializeServer() {
         const server = new ApolloServer({
             persistedQueries: false,
             schema,
-            plugins: [commentNotificationPlugin],
             context: async (input) => {
                 var _a;
                 const { req } = input;
@@ -164,6 +165,11 @@ async function initializeServer() {
             },
         }).then(({ url }) => {
             console.log(`🚀  Server ready at ${url}`);
+            // Start the comment notification service
+            const commentNotificationService = new CommentNotificationService(schema, ogm);
+            commentNotificationService.start().catch(error => {
+                console.error('Failed to start comment notification service:', error);
+            });
         });
     }
     catch (e) {

@@ -1,5 +1,7 @@
 import { gql } from 'apollo-server';
 const typeDefinitions = gql `
+  extend schema @subscription
+
   scalar JSON
 
   union IssueCommentAuthor = User | ModerationProfile
