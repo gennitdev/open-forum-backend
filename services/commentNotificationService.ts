@@ -126,12 +126,13 @@ export class CommentNotificationService {
     const UserModel = this.ogm.model('User');
     const DiscussionModel = this.ogm.model('Discussion');
 
-    // Fetch the full comment details
+    // Fetch the full comment details with a more comprehensive selection
     const fullComments = await CommentModel.find({
       where: { id: commentId },
       selectionSet: `{
         id
         text
+        isRootComment
         Channel {
           uniqueName
         }
@@ -148,9 +149,17 @@ export class CommentNotificationService {
         DiscussionChannel {
           id
           discussionId
+          channelUniqueName
           Channel {
             uniqueName
             displayName
+          }
+          Discussion {
+            id
+            title
+            Author {
+              username
+            }
           }
         }
         Event {
@@ -168,6 +177,7 @@ export class CommentNotificationService {
         }
         ParentComment {
           id
+          text
           CommentAuthor {
             ... on User {
               __typename
@@ -191,13 +201,32 @@ export class CommentNotificationService {
     console.log('Found comment details for ID:', commentId);
 
     // Get the commenter info
-    const commenterUsername = 
+    const commenterUsername =
       fullComment.CommentAuthor?.username ||
       fullComment.CommentAuthor?.displayName ||
       'Someone';
 
+    console.log('Processing notification for comment type:');
+    console.log('- Has DiscussionChannel:', !!fullComment.DiscussionChannel);
+    console.log('- Has Event:', !!fullComment.Event);
+    console.log('- Has ParentComment:', !!fullComment.ParentComment);
+    console.log('- Commenter username:', commenterUsername);
+
+    // COMMENT REPLY NOTIFICATION
+    // Check for replies first, as a reply can also have a DiscussionChannel or Event
+    if (fullComment.ParentComment) {
+      console.log('This is a REPLY to another comment');
+      await this.processCommentReplyNotification(
+        fullComment,
+        commentId,
+        commenterUsername,
+        CommentModel,
+        UserModel
+      );
+    }
     // DISCUSSION COMMENT NOTIFICATION
-    if (fullComment.DiscussionChannel) {
+    else if (fullComment.DiscussionChannel) {
+      console.log('This is a comment on a DISCUSSION');
       await this.processDiscussionCommentNotification(
         fullComment,
         commentId,
@@ -208,20 +237,11 @@ export class CommentNotificationService {
     }
     // EVENT COMMENT NOTIFICATION
     else if (fullComment.Event) {
+      console.log('This is a comment on an EVENT');
       await this.processEventCommentNotification(
         fullComment,
         commentId,
         commenterUsername,
-        UserModel
-      );
-    }
-    // COMMENT REPLY NOTIFICATION
-    else if (fullComment.ParentComment) {
-      await this.processCommentReplyNotification(
-        fullComment,
-        commentId,
-        commenterUsername,
-        CommentModel,
         UserModel
       );
     }
@@ -409,6 +429,10 @@ ${process.env.FRONTEND_URL}/forums/${channelName}/events/${event.id}/comments/${
 
     // Fetch more details about the parent comment
     const parentCommentId = parentComment.id;
+
+    console.log('Parent comment ID:', parentCommentId);
+    console.log('Current commenter username:', commenterUsername);
+
     const parentCommentDetails = await CommentModel.find({
       where: { id: parentCommentId },
       selectionSet: `{
@@ -455,11 +479,27 @@ ${process.env.FRONTEND_URL}/forums/${channelName}/events/${event.id}/comments/${
 
     const parentCommentWithDetails = parentCommentDetails[0];
 
+    console.log('Parent comment author type:', parentCommentWithDetails.CommentAuthor?.__typename);
+
     // Determine parent comment author's username and if it's a user
     const isParentUserComment = parentCommentWithDetails.CommentAuthor?.__typename === 'User';
-    const parentAuthorUsername = isParentUserComment
-      ? (parentCommentWithDetails.CommentAuthor as { username: string }).username
-      : (parentCommentWithDetails.CommentAuthor as { displayName: string }).displayName;
+    let parentAuthorUsername = null;
+
+    if (isParentUserComment) {
+      parentAuthorUsername = (parentCommentWithDetails.CommentAuthor as { username: string }).username;
+    } else if (parentCommentWithDetails.CommentAuthor?.__typename === 'ModerationProfile') {
+      parentAuthorUsername = (parentCommentWithDetails.CommentAuthor as { displayName: string }).displayName;
+    } else {
+      console.log('Could not determine parent comment author type');
+      return;
+    }
+
+    if (!parentAuthorUsername) {
+      console.log('Could not determine parent comment author username');
+      return;
+    }
+
+    console.log('Parent comment author username:', parentAuthorUsername);
 
     // Don't notify authors about their own replies
     if (commenterUsername === parentAuthorUsername) {
