@@ -98,8 +98,9 @@ LIMIT toInteger($limit)
 
 OPTIONAL MATCH (d)-[:HAS_ALBUM]->(album:Album)
 OPTIONAL MATCH (album)-[:HAS_IMAGE]->(image:Image)
+WHERE image.id IS NOT NULL
 
-WITH totalCount, dc, d, author, tagsText, loggedInUserUpvote, totalUpvoters, 
+WITH totalCount, dc, d, author, tagsText, loggedInUserUpvote, totalUpvoters,
      weightedVotesCount, comments, hotRank, serverRoles, channelRoles,
      album,
      COLLECT(DISTINCT {
@@ -149,6 +150,7 @@ RETURN {
                 WHEN album IS NULL THEN null 
                 ELSE {
                     id: album.id,
+                    imageOrder: album.imageOrder,
                     Images: albumImages
                 }
               END,
