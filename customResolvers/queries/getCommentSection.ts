@@ -11,6 +11,7 @@ const discussionChannelSelectionSet = `
     discussionId
     channelUniqueName
     emoji
+    answered
     archived
     Channel {
         uniqueName
