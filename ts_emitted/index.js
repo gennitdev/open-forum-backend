@@ -4,6 +4,7 @@ import { applyMiddleware } from "graphql-middleware";
 import typesDefinitions from "./typeDefs.js";
 import permissions from "./permissions.js";
 import discussionVersionHistoryMiddleware from "./middleware/discussionVersionHistoryMiddleware.js";
+import commentVersionHistoryMiddleware from "./middleware/commentVersionHistoryMiddleware.js";
 import path from "path";
 import dotenv from "dotenv";
 import pkg from "@neo4j/graphql-ogm";
@@ -13,6 +14,7 @@ import axios from "axios";
 import fs from "fs";
 import { CommentNotificationService } from "./services/commentNotificationService.js";
 import { DiscussionVersionHistoryService } from "./services/discussionVersionHistoryService.js";
+import { CommentVersionHistoryService } from "./services/commentVersionHistoryService.js";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const { generate } = pkg;
 dotenv.config();
@@ -119,7 +121,7 @@ async function initializeServer() {
             process.exit(1);
         }
         let schema = await neoSchema.getSchema();
-        schema = applyMiddleware(schema, permissions, discussionVersionHistoryMiddleware);
+        schema = applyMiddleware(schema, permissions, discussionVersionHistoryMiddleware, commentVersionHistoryMiddleware);
         await ogm.init();
         if (edition === "enterprise") {
             await neoSchema.assertIndexesAndConstraints();
@@ -177,6 +179,11 @@ async function initializeServer() {
             const discussionVersionHistoryService = new DiscussionVersionHistoryService(schema, ogm);
             discussionVersionHistoryService.start().catch(error => {
                 console.error('Failed to start discussion version history service:', error);
+            });
+            // Start the comment version history service
+            const commentVersionHistoryService = new CommentVersionHistoryService(schema, ogm);
+            commentVersionHistoryService.start().catch(error => {
+                console.error('Failed to start comment version history service:', error);
             });
         });
     }

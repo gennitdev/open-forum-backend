@@ -74,6 +74,8 @@ const permissionList = shield({
       updateDiscussions: and(isAuthenticated, or(isAdmin, isDiscussionOwner)),
       deleteDiscussionChannels: and(isAuthenticated, isAdmin),
       updateDiscussionChannels: and(isAuthenticated, or(isAdmin, isDiscussionChannelOwner)),
+
+      deleteTextVersions: allow,
       
       createEventWithChannelConnections: and(isAuthenticated, createEventInputIsValid, canCreateEvent),
       updateEventWithChannelConnections: and(isAuthenticated, updateEventInputIsValid, or(isEventOwner, isAdmin)),
