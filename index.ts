@@ -3,6 +3,7 @@ import { ApolloServer } from "apollo-server";
 import { applyMiddleware } from "graphql-middleware";
 import typesDefinitions from "./typeDefs.js";
 import permissions from "./permissions.js";
+import discussionVersionHistoryMiddleware from "./middleware/discussionVersionHistoryMiddleware.js";
 import path from "path";
 import dotenv from "dotenv";
 import pkg from "@neo4j/graphql-ogm";
@@ -11,6 +12,8 @@ import { fileURLToPath } from "url";
 import axios from "axios";
 import fs from "fs";
 import { CommentNotificationService } from "./services/commentNotificationService.js";
+import { DiscussionVersionHistoryService } from "./services/discussionVersionHistoryService.js";
+import { discussionVersionHistoryHandler } from "./hooks/discussionVersionHistoryHook.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const { generate } = pkg;
@@ -86,6 +89,7 @@ const features = {
   subscriptions: true
 };
 
+// Create Neo4j GraphQL schema
 const neoSchema = new Neo4jGraphQL({
   typeDefs: typesDefinitions,
   driver,
@@ -136,7 +140,7 @@ async function initializeServer() {
     }
 
     let schema = await neoSchema.getSchema();
-    schema = applyMiddleware(schema, permissions);
+    schema = applyMiddleware(schema, permissions, discussionVersionHistoryMiddleware);
     await ogm.init();
     if (edition === "enterprise") {
       await neoSchema.assertIndexesAndConstraints();
@@ -196,6 +200,12 @@ async function initializeServer() {
       const commentNotificationService = new CommentNotificationService(schema, ogm);
       commentNotificationService.start().catch(error => {
         console.error('Failed to start comment notification service:', error);
+      });
+
+      // Start the discussion version history service
+      const discussionVersionHistoryService = new DiscussionVersionHistoryService(schema, ogm);
+      discussionVersionHistoryService.start().catch(error => {
+        console.error('Failed to start discussion version history service:', error);
       });
     });
   } catch (e) {

@@ -1,3 +1,11 @@
+export var EventType;
+(function (EventType) {
+    EventType["Create"] = "CREATE";
+    EventType["CreateRelationship"] = "CREATE_RELATIONSHIP";
+    EventType["Delete"] = "DELETE";
+    EventType["DeleteRelationship"] = "DELETE_RELATIONSHIP";
+    EventType["Update"] = "UPDATE";
+})(EventType || (EventType = {}));
 export var RepeatUnit;
 (function (RepeatUnit) {
     RepeatUnit["Day"] = "DAY";

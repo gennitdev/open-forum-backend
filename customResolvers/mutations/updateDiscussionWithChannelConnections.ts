@@ -1,5 +1,6 @@
 import { updateDiscussionChannelQuery, severConnectionBetweenDiscussionAndChannelQuery } from "../cypher/cypherQueries.js";
 import { DiscussionWhere, DiscussionUpdateInput } from "../../src/generated/graphql";
+import { discussionVersionHistoryHandler } from "../../hooks/discussionVersionHistoryHook.js";
 
 type Input = {
   Discussion: any;
@@ -24,6 +25,17 @@ const getResolver = (input: Input) => {
     } = args;
     
     try {
+      // Track version history before updating the discussion
+      if (discussionUpdateInput.title || discussionUpdateInput.body) {
+        await discussionVersionHistoryHandler({ 
+          context, 
+          params: { 
+            where,
+            update: discussionUpdateInput
+          }
+        });
+      }
+      
       // Update the discussion
       await Discussion.update({
         where: where,
@@ -89,6 +101,22 @@ const getResolver = (input: Input) => {
           updatedAt
           Tags {
             text
+          }
+          PastTitleVersions {
+            id
+            body
+            createdAt
+            Author {
+              username
+            }
+          }
+          PastBodyVersions {
+            id
+            body
+            createdAt
+            Author {
+              username
+            }
           }
         }
       `;

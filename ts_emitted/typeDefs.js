@@ -237,8 +237,8 @@ const typeDefinitions = gql `
     updatedAt: DateTime @timestamp(operations: [UPDATE])
     deleted: Boolean
     Tags: [Tag!]! @relationship(type: "HAS_TAG", direction: OUT)
-    # PastTitleVersions:           [TextVersion]     @relationship(type: "HAS_VERSION", direction: OUT)
-    # PastBodyVersions:            [TextVersion]     @relationship(type: "HAS_VERSION", direction: OUT)
+    PastTitleVersions:           [TextVersion!]!     @relationship(type: "HAS_TITLE_VERSION", direction: OUT)
+    PastBodyVersions:            [TextVersion!]!     @relationship(type: "HAS_BODY_VERSION", direction: OUT)
     DiscussionChannels: [DiscussionChannel!]!
       @relationship(type: "POSTED_IN_CHANNEL", direction: IN)
     FeedbackComments: [Comment!]!
@@ -352,7 +352,7 @@ const typeDefinitions = gql `
     weightedVotesCount: Float
     UpvotedByUsers: [User!]!
       @relationship(type: "UPVOTED_COMMENT", direction: IN)
-    # PastVersions:            [CommentVersion]        @relationship(type: "HAS_VERSION", direction: OUT)
+    PastVersions:           [TextVersion!]!     @relationship(type: "HAS_VERSION", direction: OUT)
     emoji: JSON
     GivesFeedbackOnDiscussion: Discussion
       @relationship(type: "HAS_FEEDBACK_COMMENT", direction: OUT)
@@ -401,6 +401,8 @@ const typeDefinitions = gql `
   type ModerationAction {
     id: ID! @id
     ModerationProfile: ModerationProfile
+      @relationship(type: "PERFORMED_MODERATION_ACTION", direction: IN)
+    User: User
       @relationship(type: "PERFORMED_MODERATION_ACTION", direction: IN)
     Comment: Comment @relationship(type: "MODERATED_COMMENT", direction: OUT)
     createdAt: DateTime! @timestamp(operations: [CREATE])
