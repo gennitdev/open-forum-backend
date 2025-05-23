@@ -237,6 +237,7 @@ const typeDefinitions = gql `
     createdAt: DateTime! @timestamp(operations: [CREATE])
     updatedAt: DateTime @timestamp(operations: [UPDATE])
     deleted: Boolean
+    hasDownload: Boolean
     Tags: [Tag!]! @relationship(type: "HAS_TAG", direction: OUT)
     PastTitleVersions:           [TextVersion!]!     @relationship(type: "HAS_TITLE_VERSION", direction: OUT)
     PastBodyVersions:            [TextVersion!]!     @relationship(type: "HAS_BODY_VERSION", direction: OUT)
@@ -853,6 +854,7 @@ const typeDefinitions = gql `
       searchInput: String
       selectedTags: [String]
       showArchived: Boolean
+      hasDownload: Boolean
       options: DiscussionListOptions
     ): DiscussionChannelListFormat
     getSiteWideDiscussionList(
@@ -860,6 +862,7 @@ const typeDefinitions = gql `
       selectedChannels: [String]
       selectedTags: [String]
       showArchived: Boolean
+      hasDownload: Boolean
       options: DiscussionListOptions
     ): SiteWideDiscussionListFormat
     getCommentSection(

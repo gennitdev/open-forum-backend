@@ -10,7 +10,7 @@ var timeFrameOptionKeys;
 const getResolver = (input) => {
     const { driver, Discussion } = input;
     return async (parent, args, context, info) => {
-        const { searchInput, selectedChannels, selectedTags, options } = args;
+        const { searchInput, selectedChannels, selectedTags, showArchived, hasDownload, options } = args;
         const { offset, limit, resultsOrder, sort, timeFrame } = options || {};
         const session = driver.session();
         let titleRegex = `(?i).*${searchInput}.*`;
@@ -25,6 +25,8 @@ const getResolver = (input) => {
                         bodyRegex,
                         selectedChannels,
                         selectedTags,
+                        showArchived,
+                        hasDownload,
                         offset,
                         limit,
                         resultsOrder,
@@ -57,6 +59,8 @@ const getResolver = (input) => {
                         bodyRegex,
                         selectedChannels,
                         selectedTags,
+                        showArchived,
+                        hasDownload,
                         offset,
                         limit,
                         resultsOrder,
@@ -84,6 +88,8 @@ const getResolver = (input) => {
                         bodyRegex,
                         selectedChannels,
                         selectedTags,
+                        showArchived,
+                        hasDownload,
                         offset,
                         limit,
                         resultsOrder,

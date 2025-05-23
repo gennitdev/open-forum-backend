@@ -17,6 +17,8 @@ type Args = {
   searchInput: string;
   selectedChannels: string[];
   selectedTags: string[];
+  showArchived: boolean;
+  hasDownload: boolean;
   options: {
     offset: string;
     limit: string;
@@ -30,7 +32,7 @@ const getResolver = (input: Input) => {
   const { driver, Discussion } = input;
 
   return async (parent: any, args: Args, context: any, info: any) => {
-    const { searchInput, selectedChannels, selectedTags, options } = args;
+    const { searchInput, selectedChannels, selectedTags, showArchived, hasDownload, options } = args;
     const { offset, limit, resultsOrder, sort, timeFrame } = options || {};
 
     const session = driver.session();
@@ -49,6 +51,8 @@ const getResolver = (input: Input) => {
               bodyRegex,
               selectedChannels,
               selectedTags,
+              showArchived,
+              hasDownload,
               offset,
               limit,
               resultsOrder,
@@ -89,6 +93,8 @@ const getResolver = (input: Input) => {
               bodyRegex,
               selectedChannels,
               selectedTags,
+              showArchived,
+              hasDownload,
               offset,
               limit,
               resultsOrder,
@@ -124,6 +130,8 @@ const getResolver = (input: Input) => {
               bodyRegex,
               selectedChannels,
               selectedTags,
+              showArchived,
+              hasDownload,
               offset,
               limit,
               resultsOrder,

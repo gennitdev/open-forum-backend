@@ -855,6 +855,7 @@ const typeDefinitions = gql`
       searchInput: String
       selectedTags: [String]
       showArchived: Boolean
+      hasDownload: Boolean
       options: DiscussionListOptions
     ): DiscussionChannelListFormat
     getSiteWideDiscussionList(
@@ -862,6 +863,7 @@ const typeDefinitions = gql`
       selectedChannels: [String]
       selectedTags: [String]
       showArchived: Boolean
+      hasDownload: Boolean
       options: DiscussionListOptions
     ): SiteWideDiscussionListFormat
     getCommentSection(

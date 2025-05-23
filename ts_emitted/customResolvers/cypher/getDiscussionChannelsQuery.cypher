@@ -16,6 +16,11 @@ WHERE
     )
    // If archived=false, exclude archived. If archived=true, include archived.
     AND ($showArchived OR coalesce(dc.archived, false) = false)
+    // Filter by hasDownload if specified
+    AND ($hasDownload IS NULL OR EXISTS { 
+        MATCH (dc)-[:POSTED_IN_CHANNEL]->(d:Discussion) 
+        WHERE d.hasDownload = $hasDownload 
+    })
     
 
 WITH COUNT(dc) AS totalCount
@@ -37,6 +42,11 @@ WHERE
     )
     // If archived=false, exclude archived. If archived=true, include archived.
     AND ($showArchived OR coalesce(dc.archived, false) = false)
+    // Filter by hasDownload if specified
+    AND ($hasDownload IS NULL OR EXISTS { 
+        MATCH (dc)-[:POSTED_IN_CHANNEL]->(d:Discussion) 
+        WHERE d.hasDownload = $hasDownload 
+    })
 
 WITH dc, totalCount
 MATCH (dc)-[:POSTED_IN_CHANNEL]->(d:Discussion)
