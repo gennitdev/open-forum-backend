@@ -18,6 +18,7 @@ import { CommentNotificationService } from "./services/commentNotificationServic
 import { DiscussionVersionHistoryService } from "./services/discussionVersionHistoryService.js";
 import { CommentVersionHistoryService } from "./services/commentVersionHistoryService.js";
 import { WikiPageVersionHistoryService } from "./services/wikiPageVersionHistoryService.js";
+import { formatGraphQLError, logCriticalError } from "./errorHandling.js";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const { generate } = pkg;
 dotenv.config();
@@ -25,20 +26,31 @@ import neo4j from "neo4j-driver";
 async function connectToNeo4jWithRetry(driver, maxRetries = 10, retryDelay = 5000) {
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
         try {
-            console.log(`Attempting to connect to Neo4j (Attempt ${attempt}/${maxRetries})...`);
+            console.log(`🔌 Attempting to connect to Neo4j (Attempt ${attempt}/${maxRetries})...`);
             const session = driver.session();
             await session.run("RETURN 1");
-            console.log("Connected to Neo4j!");
+            console.log("✅ Connected to Neo4j!");
             session.close();
             return; // Exit loop on successful connection
         }
         catch (error) {
-            console.error(`Neo4j connection attempt ${attempt} failed: ${error.message}`);
+            console.error(`❌ Neo4j connection attempt ${attempt} failed:`, {
+                attempt,
+                maxRetries,
+                error: error.message,
+                stack: error.stack,
+                timestamp: new Date().toISOString()
+            });
             if (attempt === maxRetries) {
-                console.error("Max retries reached. Could not connect to Neo4j.");
-                throw error;
+                const criticalError = new Error(`Failed to connect to Neo4j after ${maxRetries} attempts: ${error.message}`);
+                logCriticalError(criticalError, {
+                    service: 'Neo4j',
+                    attempts: maxRetries,
+                    lastError: error.message
+                });
+                throw criticalError;
             }
-            console.log(`Retrying in ${retryDelay / 1000} seconds...`);
+            console.log(`⏳ Retrying in ${retryDelay / 1000} seconds...`);
             await new Promise((resolve) => setTimeout(resolve, retryDelay));
         }
     }
@@ -100,12 +112,12 @@ REQUIRE (ec.eventId, ec.channelUniqueName) IS NODE KEY
 `;
 async function initializeServer() {
     try {
-        console.log("Initializing server...");
+        console.log("🚀 Initializing server...");
         await connectToNeo4jWithRetry(driver);
         const session = driver.session();
         const result = await session.run("CALL dbms.components()");
         const edition = result.records[0].get("edition");
-        console.log(`Connected to Neo4j Edition: ${edition}`);
+        console.log(`✅ Connected to Neo4j Edition: ${edition}`);
         session.close();
         if (edition === "enterprise") {
             // These constraints are needed for data integrity, but can be skipped
@@ -133,15 +145,25 @@ async function initializeServer() {
             persistedQueries: false,
             schema,
             context: async (input) => {
-                var _a;
+                var _a, _b, _c;
                 const { req } = input;
                 const queryString = `Query: ${req.body.query}`;
                 const isMutation = (_a = req.body.query) === null || _a === void 0 ? void 0 : _a.trim().startsWith("mutation");
                 // Add this information to the context so it can be used by permission rules
                 req.isMutation = isMutation;
                 if (!queryString.includes("IntrospectionQuery")) {
-                    console.log(queryString);
-                    console.log(`Variables: ${JSON.stringify(req.body.variables, null, 2)}`);
+                    console.log('📊 GraphQL Operation:', {
+                        type: isMutation ? 'Mutation' : 'Query',
+                        operationName: req.body.operationName || 'Anonymous',
+                        timestamp: new Date().toISOString(),
+                        userAgent: (_b = req.headers) === null || _b === void 0 ? void 0 : _b['user-agent'],
+                        ip: req.ip || ((_c = req.connection) === null || _c === void 0 ? void 0 : _c.remoteAddress)
+                    });
+                    // Log query in development mode
+                    if (process.env.NODE_ENV === 'development') {
+                        console.log('📝 Query:', req.body.query);
+                        console.log('📝 Variables:', JSON.stringify(req.body.variables, null, 2));
+                    }
                     if (isMutation) {
                         const mutationName = extractMutationName(req.body.query);
                         const text = `Mutation: ${mutationName}\nVariables: ${JSON.stringify(req.body.variables, null, 2)}`;
@@ -155,14 +177,31 @@ async function initializeServer() {
                     ogm,
                 };
             },
-            formatError: (error) => {
-                var _a;
-                return ({
-                    message: error.message,
-                    locations: error.locations,
-                    path: error.path,
-                    code: (_a = error.extensions) === null || _a === void 0 ? void 0 : _a.code,
-                });
+            formatError: (error, requestContext) => {
+                var _a, _b, _c, _d, _e, _f;
+                try {
+                    return formatGraphQLError(error, {
+                        req: (_b = (_a = requestContext === null || requestContext === void 0 ? void 0 : requestContext.request) === null || _a === void 0 ? void 0 : _a.http) === null || _b === void 0 ? void 0 : _b.req,
+                        operationName: (_c = requestContext === null || requestContext === void 0 ? void 0 : requestContext.request) === null || _c === void 0 ? void 0 : _c.operationName,
+                        variables: (_d = requestContext === null || requestContext === void 0 ? void 0 : requestContext.request) === null || _d === void 0 ? void 0 : _d.variables,
+                        query: (_e = requestContext === null || requestContext === void 0 ? void 0 : requestContext.request) === null || _e === void 0 ? void 0 : _e.query
+                    });
+                }
+                catch (formatError) {
+                    // Fallback in case error formatting fails
+                    console.error('Error formatting GraphQL error:', formatError);
+                    logCriticalError(formatError, { originalError: error });
+                    return {
+                        message: error.message || 'An unexpected error occurred',
+                        locations: error.locations,
+                        path: error.path,
+                        extensions: {
+                            code: ((_f = error.extensions) === null || _f === void 0 ? void 0 : _f.code) || 'INTERNAL_SERVER_ERROR',
+                            timestamp: new Date().toISOString(),
+                            errorId: `fallback_${Date.now()}`
+                        }
+                    };
+                }
             },
         });
         server.listen({
@@ -172,31 +211,76 @@ async function initializeServer() {
                 credentials: true,
             },
         }).then(({ url }) => {
-            console.log(`🚀  Server ready at ${url}`);
-            // Start the comment notification service
-            const commentNotificationService = new CommentNotificationService(schema, ogm);
-            commentNotificationService.start().catch(error => {
-                console.error('Failed to start comment notification service:', error);
+            console.log(`🚀 Server ready at ${url}`);
+            console.log(`📊 GraphQL Playground available at ${url}`);
+            console.log(`🔧 Environment: ${process.env.NODE_ENV || 'development'}`);
+            // Start services with enhanced error handling
+            startBackgroundServices(schema, ogm);
+        }).catch(error => {
+            logCriticalError(error, {
+                service: 'Apollo Server',
+                port,
+                action: 'server.listen'
             });
-            // Start the discussion version history service
-            const discussionVersionHistoryService = new DiscussionVersionHistoryService(schema, ogm);
-            discussionVersionHistoryService.start().catch(error => {
-                console.error('Failed to start discussion version history service:', error);
-            });
-            // Start the comment version history service
-            const commentVersionHistoryService = new CommentVersionHistoryService(schema, ogm);
-            commentVersionHistoryService.start().catch(error => {
-                console.error('Failed to start comment version history service:', error);
-            });
-            // Start the wikiPage version history service
-            const wikiPageVersionHistoryService = new WikiPageVersionHistoryService(schema, ogm);
-            wikiPageVersionHistoryService.start().catch(error => {
-                console.error('Failed to start wikiPage version history service:', error);
-            });
+            throw error;
         });
     }
     catch (e) {
-        console.error("Failed to initialize server:", e);
+        console.error("💥 Failed to initialize server:", e);
+        logCriticalError(e, {
+            service: 'Server Initialization',
+            step: 'initializeServer'
+        });
+        process.exit(1);
+    }
+}
+/**
+ * Start background services with enhanced error handling
+ */
+async function startBackgroundServices(schema, ogm) {
+    const services = [
+        {
+            name: 'Comment Notification Service',
+            service: () => new CommentNotificationService(schema, ogm),
+            critical: false
+        },
+        {
+            name: 'Discussion Version History Service',
+            service: () => new DiscussionVersionHistoryService(schema, ogm),
+            critical: false
+        },
+        {
+            name: 'Comment Version History Service',
+            service: () => new CommentVersionHistoryService(schema, ogm),
+            critical: false
+        },
+        {
+            name: 'WikiPage Version History Service',
+            service: () => new WikiPageVersionHistoryService(schema, ogm),
+            critical: false
+        }
+    ];
+    for (const { name, service, critical } of services) {
+        try {
+            console.log(`🔄 Starting ${name}...`);
+            const serviceInstance = service();
+            await serviceInstance.start();
+            console.log(`✅ ${name} started successfully`);
+        }
+        catch (error) {
+            console.error(`❌ Failed to start ${name}:`, error);
+            if (critical) {
+                logCriticalError(error, {
+                    service: name,
+                    action: 'service.start'
+                });
+                throw error; // Stop server if critical service fails
+            }
+            else {
+                // Log non-critical service failures but continue
+                console.warn(`⚠️  ${name} failed to start but server will continue`);
+            }
+        }
     }
 }
 initializeServer();
