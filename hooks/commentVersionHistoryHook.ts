@@ -78,10 +78,11 @@ export const commentVersionHistoryHandler = async ({ context, params }: any) => 
     }
     
     // Track text version history if text is being updated
-    if (isTextUpdated && update.text !== comment.text && comment.text) {
+    // Save the NEW text (post-edit) with the current user attribution
+    if (isTextUpdated && update.text !== comment.text) {
       await trackTextVersionHistory(
         commentId,
-        comment.text,
+        update.text,
         username,
         CommentModel,
         TextVersionModel,
@@ -101,18 +102,18 @@ export const commentVersionHistoryHandler = async ({ context, params }: any) => 
  */
 async function trackTextVersionHistory(
   commentId: string,
-  previousText: string,
+  newText: string,
   username: string,
   CommentModel: any,
   TextVersionModel: any,
   UserModel: any
 ) {
-  console.log(`Tracking text version history for comment ${commentId}`);
+  console.log(`Tracking text version history for comment ${commentId} by user ${username}`);
 
   try {
-    // Skip tracking if previous text is null or empty
-    if (!previousText) {
-      console.log('Previous text is empty, skipping version history');
+    // Skip tracking if new text is null or empty
+    if (!newText) {
+      console.log('New text is empty, skipping version history');
       return;
     }
 
@@ -127,11 +128,11 @@ async function trackTextVersionHistory(
       return;
     }
 
-    // Create new TextVersion for previous text
+    // Create new TextVersion for the new text
     // The createdAt timestamp will be automatically set by @timestamp directive
     const textVersionResult = await TextVersionModel.create({
       input: [{
-        body: previousText,
+        body: newText,
         Author: {
           connect: { where: { node: { username } } }
         }

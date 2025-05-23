@@ -98,21 +98,29 @@ export class DiscussionVersionHistoryService {
         console.log('Processing version history for updated discussion:', discussionId);
 
         try {
-          // Check if title has changed
-          if (previousValues.title && previousValues.title !== updatedDiscussion.title) {
+          // Get the current user who made the update
+          const currentUsername = await this.getCurrentUserUsername(discussionId);
+          
+          if (!currentUsername) {
+            console.log('Could not determine current user, skipping version history');
+            continue;
+          }
+
+          // Check if title has changed - save the NEW title as a version
+          if (previousValues?.title && previousValues.title !== updatedDiscussion.title) {
             await this.trackTitleVersionHistory(
               discussionId, 
-              previousValues.title,
-              updatedDiscussion.Author?.username
+              updatedDiscussion.title,
+              currentUsername
             );
           }
 
-          // Check if body has changed
-          if (previousValues.body && previousValues.body !== updatedDiscussion.body) {
+          // Check if body has changed - save the NEW body as a version
+          if (previousValues?.body && previousValues.body !== updatedDiscussion.body) {
             await this.trackBodyVersionHistory(
               discussionId, 
-              previousValues.body,
-              updatedDiscussion.Author?.username
+              updatedDiscussion.body,
+              currentUsername
             );
           }
         } catch (error) {
@@ -132,38 +140,49 @@ export class DiscussionVersionHistoryService {
   }
 
   /**
+   * Get the current user who made the update from the Discussion's Author
+   */
+  private async getCurrentUserUsername(discussionId: string): Promise<string | null> {
+    try {
+      const DiscussionModel = this.ogm.model('Discussion');
+      const discussions = await DiscussionModel.find({
+        where: { id: discussionId },
+        selectionSet: `{
+          Author {
+            username
+          }
+        }`
+      });
+
+      if (!discussions.length || !discussions[0].Author?.username) {
+        return null;
+      }
+
+      return discussions[0].Author.username;
+    } catch (error) {
+      console.error('Error getting current user username:', error);
+      return null;
+    }
+  }
+
+  /**
    * Track title version history for a discussion
    */
-  private async trackTitleVersionHistory(discussionId: string, previousTitle: string, username: string) {
+  private async trackTitleVersionHistory(discussionId: string, newTitle: string, username: string) {
     // Get the OGM models
     const DiscussionModel = this.ogm.model('Discussion');
     const TextVersionModel = this.ogm.model('TextVersion');
     const UserModel = this.ogm.model('User');
 
-    console.log(`Tracking title version history for discussion ${discussionId}`);
-    console.log(`Previous title: "${previousTitle}"`);
+    console.log(`Tracking title version history for discussion ${discussionId} by user ${username}`);
+    console.log(`New title: "${newTitle}"`);
 
     try {
-      // Fetch the current discussion to get current title version order
-      const discussions = await DiscussionModel.find({
-        where: { id: discussionId },
-        selectionSet: `{
-          id
-          title
-          PastTitleVersions {
-            id
-            body
-            createdAt
-          }
-        }`
-      });
-
-      if (!discussions.length) {
-        console.log('Discussion not found');
+      // Skip tracking if content is null or empty
+      if (!newTitle) {
+        console.log('New title is empty, skipping version history');
         return;
       }
-
-      const discussion = discussions[0];
 
       // Get user by username
       const users = await UserModel.find({
@@ -172,17 +191,17 @@ export class DiscussionVersionHistoryService {
       });
 
       if (!users.length) {
-        console.log('User not found');
+        console.log('User not found:', username);
         return;
       }
 
-      // Create new TextVersion for previous title
+      // Create new TextVersion for the new title
       // The createdAt timestamp will be automatically set by @timestamp directive
       const textVersionResult = await TextVersionModel.create({
         input: [{
-          body: previousTitle,
+          body: newTitle,
           Author: {
-            connect: { where: { username } }
+            connect: { where: { node: { username } } }
           }
         }]
       });
@@ -204,35 +223,20 @@ export class DiscussionVersionHistoryService {
   /**
    * Track body version history for a discussion
    */
-  private async trackBodyVersionHistory(discussionId: string, previousBody: string, username: string) {
+  private async trackBodyVersionHistory(discussionId: string, newBody: string, username: string) {
     // Get the OGM models
     const DiscussionModel = this.ogm.model('Discussion');
     const TextVersionModel = this.ogm.model('TextVersion');
     const UserModel = this.ogm.model('User');
 
-    console.log(`Tracking body version history for discussion ${discussionId}`);
+    console.log(`Tracking body version history for discussion ${discussionId} by user ${username}`);
 
     try {
-      // Fetch the current discussion to get current body version order
-      const discussions = await DiscussionModel.find({
-        where: { id: discussionId },
-        selectionSet: `{
-          id
-          body
-          PastBodyVersions {
-            id
-            body
-            createdAt
-          }
-        }`
-      });
-
-      if (!discussions.length) {
-        console.log('Discussion not found');
+      // Skip tracking if content is null or empty
+      if (!newBody) {
+        console.log('New body is empty, skipping version history');
         return;
       }
-
-      const discussion = discussions[0];
 
       // Get user by username
       const users = await UserModel.find({
@@ -241,17 +245,17 @@ export class DiscussionVersionHistoryService {
       });
 
       if (!users.length) {
-        console.log('User not found');
+        console.log('User not found:', username);
         return;
       }
 
-      // Create new TextVersion for previous body
+      // Create new TextVersion for the new body
       // The createdAt timestamp will be automatically set by @timestamp directive
       const textVersionResult = await TextVersionModel.create({
         input: [{
-          body: previousBody,
+          body: newBody,
           Author: {
-            connect: { where: { username } }
+            connect: { where: { node: { username } } }
           }
         }]
       });

@@ -5,6 +5,8 @@ import typesDefinitions from "./typeDefs.js";
 import permissions from "./permissions.js";
 import discussionVersionHistoryMiddleware from "./middleware/discussionVersionHistoryMiddleware.js";
 import commentVersionHistoryMiddleware from "./middleware/commentVersionHistoryMiddleware.js";
+import wikiPageVersionHistoryMiddleware from "./middleware/wikiPageVersionHistoryMiddleware.js";
+// import channelMiddleware from "./middleware/channelMiddleware.js";
 import path from "path";
 import dotenv from "dotenv";
 import pkg from "@neo4j/graphql-ogm";
@@ -15,6 +17,7 @@ import fs from "fs";
 import { CommentNotificationService } from "./services/commentNotificationService.js";
 import { DiscussionVersionHistoryService } from "./services/discussionVersionHistoryService.js";
 import { CommentVersionHistoryService } from "./services/commentVersionHistoryService.js";
+import { WikiPageVersionHistoryService } from "./services/wikiPageVersionHistoryService.js";
 import { discussionVersionHistoryHandler } from "./hooks/discussionVersionHistoryHook.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -142,7 +145,7 @@ async function initializeServer() {
     }
 
     let schema = await neoSchema.getSchema();
-    schema = applyMiddleware(schema, permissions, discussionVersionHistoryMiddleware, commentVersionHistoryMiddleware);
+    schema = applyMiddleware(schema, permissions, discussionVersionHistoryMiddleware, commentVersionHistoryMiddleware, wikiPageVersionHistoryMiddleware);
     await ogm.init();
     if (edition === "enterprise") {
       await neoSchema.assertIndexesAndConstraints();
@@ -214,6 +217,12 @@ async function initializeServer() {
       const commentVersionHistoryService = new CommentVersionHistoryService(schema, ogm);
       commentVersionHistoryService.start().catch(error => {
         console.error('Failed to start comment version history service:', error);
+      });
+
+      // Start the wikiPage version history service
+      const wikiPageVersionHistoryService = new WikiPageVersionHistoryService(schema, ogm);
+      wikiPageVersionHistoryService.start().catch(error => {
+        console.error('Failed to start wikiPage version history service:', error);
       });
     });
   } catch (e) {

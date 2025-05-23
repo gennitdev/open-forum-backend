@@ -134,6 +134,7 @@ const typeDefinitions = gql `
     title: String!
     body: String
     slug: String!
+    channelUniqueName: String
     createdAt: DateTime! @timestamp(operations: [CREATE])
     updatedAt: DateTime @timestamp(operations: [UPDATE])
     VersionAuthor: User
