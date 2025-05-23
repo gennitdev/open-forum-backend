@@ -8,7 +8,7 @@ WHERE EXISTS {
 AND (CASE WHEN $sortOption = "top" THEN datetime(d.createdAt).epochMillis > datetime($startOfTimeFrame).epochMillis ELSE TRUE END)
 AND ($searchInput = "" OR d.title =~ $titleRegex OR d.body =~ $bodyRegex)
 AND (SIZE($selectedTags) = 0 OR ANY(t IN $selectedTags WHERE EXISTS((d)-[:HAS_TAG]->(:Tag {text: t}))))
-AND ($hasDownload IS NULL OR d.hasDownload = $hasDownload)
+AND ($hasDownload IS NULL OR ($hasDownload = true AND d.hasDownload = true) OR ($hasDownload = false AND (d.hasDownload = false OR d.hasDownload IS NULL)))
 WITH COUNT(d) AS totalCount
 
 // Now, fetch the discussions with pagination and other filters
@@ -21,7 +21,7 @@ WHERE EXISTS {
 AND (CASE WHEN $sortOption = "top" THEN datetime(d.createdAt).epochMillis > datetime($startOfTimeFrame).epochMillis ELSE TRUE END)
 AND ($searchInput = "" OR d.title =~ $titleRegex OR d.body =~ $bodyRegex)
 AND (SIZE($selectedTags) = 0 OR ANY(t IN $selectedTags WHERE EXISTS((d)-[:HAS_TAG]->(:Tag {text: t}))))
-AND ($hasDownload IS NULL OR d.hasDownload = $hasDownload)
+AND ($hasDownload IS NULL OR ($hasDownload = true AND d.hasDownload = true) OR ($hasDownload = false AND (d.hasDownload = false OR d.hasDownload IS NULL)))
 
 // Collect all discussion channels associated with a discussion
 WITH d, totalCount

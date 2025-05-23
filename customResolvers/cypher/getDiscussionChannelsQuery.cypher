@@ -19,7 +19,7 @@ WHERE
     // Filter by hasDownload if specified
     AND ($hasDownload IS NULL OR EXISTS { 
         MATCH (dc)-[:POSTED_IN_CHANNEL]->(d:Discussion) 
-        WHERE d.hasDownload = $hasDownload 
+        WHERE ($hasDownload = true AND d.hasDownload = true) OR ($hasDownload = false AND (d.hasDownload = false OR d.hasDownload IS NULL))
     })
     
 
@@ -45,7 +45,7 @@ WHERE
     // Filter by hasDownload if specified
     AND ($hasDownload IS NULL OR EXISTS { 
         MATCH (dc)-[:POSTED_IN_CHANNEL]->(d:Discussion) 
-        WHERE d.hasDownload = $hasDownload 
+        WHERE ($hasDownload = true AND d.hasDownload = true) OR ($hasDownload = false AND (d.hasDownload = false OR d.hasDownload IS NULL))
     })
 
 WITH dc, totalCount
