@@ -19,7 +19,7 @@ import { DiscussionVersionHistoryService } from "./services/discussionVersionHis
 import { CommentVersionHistoryService } from "./services/commentVersionHistoryService.js";
 import { WikiPageVersionHistoryService } from "./services/wikiPageVersionHistoryService.js";
 import { discussionVersionHistoryHandler } from "./hooks/discussionVersionHistoryHook.js";
-import { formatGraphQLError, logCriticalError } from "./errorHandling.js";
+import { formatGraphQLError, logCriticalError, errorHandlingPlugin } from "./errorHandling.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const { generate } = pkg;
@@ -167,6 +167,7 @@ async function initializeServer() {
     const server = new ApolloServer({
       persistedQueries: false,
       schema,
+      plugins: [errorHandlingPlugin],
       context: async (input: any) => {
         const { req } = input;
         const queryString = `Query: ${req.body.query}`;
@@ -204,31 +205,6 @@ async function initializeServer() {
           req,
           ogm,
         };
-      },
-      formatError: (error: any, requestContext?: any) => {
-        try {
-          return formatGraphQLError(error, {
-            req: requestContext?.request?.http?.req,
-            operationName: requestContext?.request?.operationName,
-            variables: requestContext?.request?.variables,
-            query: requestContext?.request?.query
-          });
-        } catch (formatError) {
-          // Fallback in case error formatting fails
-          console.error('Error formatting GraphQL error:', formatError);
-          logCriticalError(formatError as Error, { originalError: error });
-          
-          return {
-            message: error.message || 'An unexpected error occurred',
-            locations: error.locations,
-            path: error.path,
-            extensions: {
-              code: error.extensions?.code || 'INTERNAL_SERVER_ERROR',
-              timestamp: new Date().toISOString(),
-              errorId: `fallback_${Date.now()}`
-            }
-          };
-        }
       },
     });
     

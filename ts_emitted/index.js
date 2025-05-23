@@ -18,7 +18,7 @@ import { CommentNotificationService } from "./services/commentNotificationServic
 import { DiscussionVersionHistoryService } from "./services/discussionVersionHistoryService.js";
 import { CommentVersionHistoryService } from "./services/commentVersionHistoryService.js";
 import { WikiPageVersionHistoryService } from "./services/wikiPageVersionHistoryService.js";
-import { formatGraphQLError, logCriticalError } from "./errorHandling.js";
+import { logCriticalError, errorHandlingPlugin } from "./errorHandling.js";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const { generate } = pkg;
 dotenv.config();
@@ -144,6 +144,7 @@ async function initializeServer() {
         const server = new ApolloServer({
             persistedQueries: false,
             schema,
+            plugins: [errorHandlingPlugin],
             context: async (input) => {
                 var _a, _b, _c;
                 const { req } = input;
@@ -176,32 +177,6 @@ async function initializeServer() {
                     req,
                     ogm,
                 };
-            },
-            formatError: (error, requestContext) => {
-                var _a, _b, _c, _d, _e, _f;
-                try {
-                    return formatGraphQLError(error, {
-                        req: (_b = (_a = requestContext === null || requestContext === void 0 ? void 0 : requestContext.request) === null || _a === void 0 ? void 0 : _a.http) === null || _b === void 0 ? void 0 : _b.req,
-                        operationName: (_c = requestContext === null || requestContext === void 0 ? void 0 : requestContext.request) === null || _c === void 0 ? void 0 : _c.operationName,
-                        variables: (_d = requestContext === null || requestContext === void 0 ? void 0 : requestContext.request) === null || _d === void 0 ? void 0 : _d.variables,
-                        query: (_e = requestContext === null || requestContext === void 0 ? void 0 : requestContext.request) === null || _e === void 0 ? void 0 : _e.query
-                    });
-                }
-                catch (formatError) {
-                    // Fallback in case error formatting fails
-                    console.error('Error formatting GraphQL error:', formatError);
-                    logCriticalError(formatError, { originalError: error });
-                    return {
-                        message: error.message || 'An unexpected error occurred',
-                        locations: error.locations,
-                        path: error.path,
-                        extensions: {
-                            code: ((_f = error.extensions) === null || _f === void 0 ? void 0 : _f.code) || 'INTERNAL_SERVER_ERROR',
-                            timestamp: new Date().toISOString(),
-                            errorId: `fallback_${Date.now()}`
-                        }
-                    };
-                }
             },
         });
         server.listen({
