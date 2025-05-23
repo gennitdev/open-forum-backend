@@ -5866,6 +5866,21 @@ export type ChannelWikiHomePageNodeAggregationWhereInput = {
   body_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
   body_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
   body_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
   createdAt_MAX_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
   createdAt_MAX_GT?: InputMaybe<Scalars['DateTime']['input']>;
   createdAt_MAX_GTE?: InputMaybe<Scalars['DateTime']['input']>;
@@ -5950,6 +5965,7 @@ export type ChannelWikiPageWikiHomePageAggregationSelection = {
 export type ChannelWikiPageWikiHomePageNodeAggregateSelection = {
   __typename?: 'ChannelWikiPageWikiHomePageNodeAggregateSelection';
   body: StringAggregateSelection;
+  channelUniqueName: StringAggregateSelection;
   createdAt: DateTimeAggregateSelection;
   id: IdAggregateSelection;
   slug: StringAggregateSelection;
@@ -6021,7 +6037,6 @@ export type Comment = {
   isFeedbackComment?: Maybe<Scalars['Boolean']['output']>;
   isRootComment: Scalars['Boolean']['output'];
   text?: Maybe<Scalars['String']['output']>;
-  textVersionOrder?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
   weightedVotesCount?: Maybe<Scalars['Float']['output']>;
 };
@@ -7051,7 +7066,6 @@ export type CommentCreateInput = {
   isFeedbackComment?: InputMaybe<Scalars['Boolean']['input']>;
   isRootComment: Scalars['Boolean']['input'];
   text?: InputMaybe<Scalars['String']['input']>;
-  textVersionOrder?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
   weightedVotesCount?: InputMaybe<Scalars['Float']['input']>;
 };
@@ -7601,7 +7615,6 @@ export type CommentEventPayload = {
   isFeedbackComment?: Maybe<Scalars['Boolean']['output']>;
   isRootComment: Scalars['Boolean']['output'];
   text?: Maybe<Scalars['String']['output']>;
-  textVersionOrder?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
   weightedVotesCount?: Maybe<Scalars['Float']['output']>;
 };
@@ -9611,8 +9624,6 @@ export type CommentSubscriptionWhere = {
   isFeedbackComment?: InputMaybe<Scalars['Boolean']['input']>;
   isRootComment?: InputMaybe<Scalars['Boolean']['input']>;
   text?: InputMaybe<Scalars['String']['input']>;
-  textVersionOrder?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  textVersionOrder_INCLUDES?: InputMaybe<Scalars['String']['input']>;
   text_CONTAINS?: InputMaybe<Scalars['String']['input']>;
   text_ENDS_WITH?: InputMaybe<Scalars['String']['input']>;
   text_IN?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
@@ -9797,9 +9808,6 @@ export type CommentUpdateInput = {
   isFeedbackComment?: InputMaybe<Scalars['Boolean']['input']>;
   isRootComment?: InputMaybe<Scalars['Boolean']['input']>;
   text?: InputMaybe<Scalars['String']['input']>;
-  textVersionOrder?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  textVersionOrder_POP?: InputMaybe<Scalars['Int']['input']>;
-  textVersionOrder_PUSH?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   weightedVotesCount?: InputMaybe<Scalars['Float']['input']>;
   weightedVotesCount_ADD?: InputMaybe<Scalars['Float']['input']>;
   weightedVotesCount_DIVIDE?: InputMaybe<Scalars['Float']['input']>;
@@ -10296,8 +10304,6 @@ export type CommentWhere = {
   isFeedbackComment?: InputMaybe<Scalars['Boolean']['input']>;
   isRootComment?: InputMaybe<Scalars['Boolean']['input']>;
   text?: InputMaybe<Scalars['String']['input']>;
-  textVersionOrder?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  textVersionOrder_INCLUDES?: InputMaybe<Scalars['String']['input']>;
   text_CONTAINS?: InputMaybe<Scalars['String']['input']>;
   text_ENDS_WITH?: InputMaybe<Scalars['String']['input']>;
   text_IN?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
@@ -36992,6 +36998,21 @@ export type UserAuthoredWikiPagesNodeAggregationWhereInput = {
   body_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
   body_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
   body_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
   createdAt_MAX_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
   createdAt_MAX_GT?: InputMaybe<Scalars['DateTime']['input']>;
   createdAt_MAX_GTE?: InputMaybe<Scalars['DateTime']['input']>;
@@ -42501,6 +42522,7 @@ export type UserWikiPageAuthoredWikiPagesAggregationSelection = {
 export type UserWikiPageAuthoredWikiPagesNodeAggregateSelection = {
   __typename?: 'UserWikiPageAuthoredWikiPagesNodeAggregateSelection';
   body: StringAggregateSelection;
+  channelUniqueName: StringAggregateSelection;
   createdAt: DateTimeAggregateSelection;
   id: IdAggregateSelection;
   slug: StringAggregateSelection;
@@ -42530,6 +42552,7 @@ export type WikiPage = {
   VersionAuthorAggregate?: Maybe<WikiPageUserVersionAuthorAggregationSelection>;
   VersionAuthorConnection: WikiPageVersionAuthorConnection;
   body?: Maybe<Scalars['String']['output']>;
+  channelUniqueName?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
   id: Scalars['ID']['output'];
   slug: Scalars['String']['output'];
@@ -42628,6 +42651,7 @@ export type WikiPageVersionAuthorConnectionArgs = {
 export type WikiPageAggregateSelection = {
   __typename?: 'WikiPageAggregateSelection';
   body: StringAggregateSelection;
+  channelUniqueName: StringAggregateSelection;
   count: Scalars['Int']['output'];
   createdAt: DateTimeAggregateSelection;
   id: IdAggregateSelection;
@@ -42716,6 +42740,21 @@ export type WikiPageChildPagesNodeAggregationWhereInput = {
   body_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
   body_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
   body_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  channelUniqueName_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  channelUniqueName_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
   createdAt_MAX_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
   createdAt_MAX_GT?: InputMaybe<Scalars['DateTime']['input']>;
   createdAt_MAX_GTE?: InputMaybe<Scalars['DateTime']['input']>;
@@ -42820,6 +42859,7 @@ export type WikiPageCreateInput = {
   ProposedEdits?: InputMaybe<WikiPageProposedEditsFieldInput>;
   VersionAuthor?: InputMaybe<WikiPageVersionAuthorFieldInput>;
   body?: InputMaybe<Scalars['String']['input']>;
+  channelUniqueName?: InputMaybe<Scalars['String']['input']>;
   slug: Scalars['String']['input'];
   title: Scalars['String']['input'];
   updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
@@ -42862,6 +42902,7 @@ export type WikiPageEdge = {
 export type WikiPageEventPayload = {
   __typename?: 'WikiPageEventPayload';
   body?: Maybe<Scalars['String']['output']>;
+  channelUniqueName?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
   id: Scalars['ID']['output'];
   slug: Scalars['String']['output'];
@@ -43177,6 +43218,7 @@ export type WikiPageRelationshipsSubscriptionWhere = {
 /** Fields to sort WikiPages by. The order in which sorts are applied is not guaranteed when specifying many fields in one WikiPageSort object. */
 export type WikiPageSort = {
   body?: InputMaybe<SortDirection>;
+  channelUniqueName?: InputMaybe<SortDirection>;
   createdAt?: InputMaybe<SortDirection>;
   id?: InputMaybe<SortDirection>;
   slug?: InputMaybe<SortDirection>;
@@ -43194,6 +43236,12 @@ export type WikiPageSubscriptionWhere = {
   body_IN?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   body_MATCHES?: InputMaybe<Scalars['String']['input']>;
   body_STARTS_WITH?: InputMaybe<Scalars['String']['input']>;
+  channelUniqueName?: InputMaybe<Scalars['String']['input']>;
+  channelUniqueName_CONTAINS?: InputMaybe<Scalars['String']['input']>;
+  channelUniqueName_ENDS_WITH?: InputMaybe<Scalars['String']['input']>;
+  channelUniqueName_IN?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  channelUniqueName_MATCHES?: InputMaybe<Scalars['String']['input']>;
+  channelUniqueName_STARTS_WITH?: InputMaybe<Scalars['String']['input']>;
   createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   createdAt_GT?: InputMaybe<Scalars['DateTime']['input']>;
   createdAt_GTE?: InputMaybe<Scalars['DateTime']['input']>;
@@ -43259,6 +43307,7 @@ export type WikiPageUpdateInput = {
   ProposedEdits?: InputMaybe<Array<WikiPageProposedEditsUpdateFieldInput>>;
   VersionAuthor?: InputMaybe<WikiPageVersionAuthorUpdateFieldInput>;
   body?: InputMaybe<Scalars['String']['input']>;
+  channelUniqueName?: InputMaybe<Scalars['String']['input']>;
   createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   slug?: InputMaybe<Scalars['String']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
@@ -43646,6 +43695,12 @@ export type WikiPageWhere = {
   body_IN?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   body_MATCHES?: InputMaybe<Scalars['String']['input']>;
   body_STARTS_WITH?: InputMaybe<Scalars['String']['input']>;
+  channelUniqueName?: InputMaybe<Scalars['String']['input']>;
+  channelUniqueName_CONTAINS?: InputMaybe<Scalars['String']['input']>;
+  channelUniqueName_ENDS_WITH?: InputMaybe<Scalars['String']['input']>;
+  channelUniqueName_IN?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  channelUniqueName_MATCHES?: InputMaybe<Scalars['String']['input']>;
+  channelUniqueName_STARTS_WITH?: InputMaybe<Scalars['String']['input']>;
   createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   createdAt_GT?: InputMaybe<Scalars['DateTime']['input']>;
   createdAt_GTE?: InputMaybe<Scalars['DateTime']['input']>;
@@ -43686,6 +43741,7 @@ export type WikiPageWikiPageChildPagesAggregationSelection = {
 export type WikiPageWikiPageChildPagesNodeAggregateSelection = {
   __typename?: 'WikiPageWikiPageChildPagesNodeAggregateSelection';
   body: StringAggregateSelection;
+  channelUniqueName: StringAggregateSelection;
   createdAt: DateTimeAggregateSelection;
   id: IdAggregateSelection;
   slug: StringAggregateSelection;
@@ -51945,6 +52001,7 @@ export type ChannelWikiPageWikiHomePageAggregationSelectionResolvers<ContextType
 
 export type ChannelWikiPageWikiHomePageNodeAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ChannelWikiPageWikiHomePageNodeAggregateSelection'] = ResolversParentTypes['ChannelWikiPageWikiHomePageNodeAggregateSelection']> = {
   body?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  channelUniqueName?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['DateTimeAggregateSelection'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['IDAggregateSelection'], ParentType, ContextType>;
   slug?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
@@ -52016,7 +52073,6 @@ export type CommentResolvers<ContextType = any, ParentType extends ResolversPare
   isFeedbackComment?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   isRootComment?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   text?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  textVersionOrder?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
   updatedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
   weightedVotesCount?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -52329,7 +52385,6 @@ export type CommentEventPayloadResolvers<ContextType = any, ParentType extends R
   isFeedbackComment?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   isRootComment?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   text?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  textVersionOrder?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
   updatedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
   weightedVotesCount?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -60272,6 +60327,7 @@ export type UserWikiPageAuthoredWikiPagesAggregationSelectionResolvers<ContextTy
 
 export type UserWikiPageAuthoredWikiPagesNodeAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserWikiPageAuthoredWikiPagesNodeAggregateSelection'] = ResolversParentTypes['UserWikiPageAuthoredWikiPagesNodeAggregateSelection']> = {
   body?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  channelUniqueName?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['DateTimeAggregateSelection'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['IDAggregateSelection'], ParentType, ContextType>;
   slug?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
@@ -60301,6 +60357,7 @@ export type WikiPageResolvers<ContextType = any, ParentType extends ResolversPar
   VersionAuthorAggregate?: Resolver<Maybe<ResolversTypes['WikiPageUserVersionAuthorAggregationSelection']>, ParentType, ContextType, RequireFields<WikiPageVersionAuthorAggregateArgs, 'directed'>>;
   VersionAuthorConnection?: Resolver<ResolversTypes['WikiPageVersionAuthorConnection'], ParentType, ContextType, RequireFields<WikiPageVersionAuthorConnectionArgs, 'directed'>>;
   body?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  channelUniqueName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   slug?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -60311,6 +60368,7 @@ export type WikiPageResolvers<ContextType = any, ParentType extends ResolversPar
 
 export type WikiPageAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['WikiPageAggregateSelection'] = ResolversParentTypes['WikiPageAggregateSelection']> = {
   body?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  channelUniqueName?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
   count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['DateTimeAggregateSelection'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['IDAggregateSelection'], ParentType, ContextType>;
@@ -60368,6 +60426,7 @@ export type WikiPageEdgeResolvers<ContextType = any, ParentType extends Resolver
 
 export type WikiPageEventPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['WikiPageEventPayload'] = ResolversParentTypes['WikiPageEventPayload']> = {
   body?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  channelUniqueName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   slug?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -60514,6 +60573,7 @@ export type WikiPageWikiPageChildPagesAggregationSelectionResolvers<ContextType 
 
 export type WikiPageWikiPageChildPagesNodeAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['WikiPageWikiPageChildPagesNodeAggregateSelection'] = ResolversParentTypes['WikiPageWikiPageChildPagesNodeAggregateSelection']> = {
   body?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  channelUniqueName?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['DateTimeAggregateSelection'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['IDAggregateSelection'], ParentType, ContextType>;
   slug?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
