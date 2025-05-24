@@ -221,7 +221,7 @@ async function initializeServer() {
       console.log(`🔧 Environment: ${process.env.NODE_ENV || 'development'}`);
 
       // Start services with enhanced error handling
-      // startBackgroundServices(schema, ogm);
+      startBackgroundServices(schema, ogm);
     }).catch(error => {
       logCriticalError(error, {
         service: 'Apollo Server',
