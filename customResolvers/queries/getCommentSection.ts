@@ -1,7 +1,7 @@
 import {
   getCommentsQuery,
-  getNewCommentsQuery,
-} from "../cypher/cypherQueries.js";
+  getNewCommentsQuery
+} from '../cypher/cypherQueries.js'
 
 const discussionChannelSelectionSet = `
 {
@@ -45,69 +45,82 @@ const discussionChannelSelectionSet = `
     UpvotedByUsersAggregate {
         count
     }
+    Answers {
+        id
+        text
+        createdAt
+        CommentAuthor {
+          ... on User {
+              username
+          }
+          ... on ModerationProfile {
+              displayName
+          }
+        }
+    }
 }
-`;
+`
 
 type Input = {
-  driver: any;
-  DiscussionChannel: any;
-  Comment: any;
-};
+  driver: any
+  DiscussionChannel: any
+  Comment: any
+}
 
 type Args = {
-  channelUniqueName: string;
-  discussionId: string;
-  modName: string;
-  offset: string;
-  limit: string;
-  sort: string;
-};
+  channelUniqueName: string
+  discussionId: string
+  modName: string
+  offset: string
+  limit: string
+  sort: string
+}
 
 const getResolver = (input: Input) => {
-  const { driver, DiscussionChannel, Comment } = input;
+  const { driver, DiscussionChannel, Comment } = input
   return async (parent: any, args: Args, context: any, info: any) => {
     const { channelUniqueName, discussionId, modName, offset, limit, sort } =
-      args;
+      args
 
-    const session = driver.session();
+    const session = driver.session()
 
     try {
       const result = await DiscussionChannel.find({
         where: {
           discussionId,
-          channelUniqueName,
+          channelUniqueName
         },
         // get everything about the DiscussionChannel
         // except the comments
-        selectionSet: discussionChannelSelectionSet,
-      });
+        selectionSet: discussionChannelSelectionSet
+      })
 
       if (result.length === 0) {
         // If no DiscussionChannel is found, return null and an empty array
         return {
           DiscussionChannel: null,
-          Comments: [],
-        };
+          Comments: []
+        }
       }
 
-      const discussionChannel = result[0];
-      const discussionChannelId = discussionChannel.id;
+      const discussionChannel = result[0]
+      const discussionChannelId = discussionChannel.id
 
-      let commentsResult = [];
+      let commentsResult = []
 
-      if (sort === "new") {
+      if (sort === 'new') {
         // if sort is "new", get the comments sorted by createdAt.
         commentsResult = await session.run(getNewCommentsQuery, {
           discussionChannelId,
           modName,
           offset: parseInt(offset, 10),
-          limit: parseInt(limit, 10),
-        });
+          limit: parseInt(limit, 10)
+        })
 
         commentsResult = commentsResult.records.map((record: any) => {
-          return record.get("comment");
-        });
-      } else if (sort === "top") {
+          return record.get('comment')
+        })
+      } else if (sort === 'top') {
         // if sort is "top", get the comments sorted by weightedVotesCount.
         // Treat a null weightedVotesCount as 0.
         commentsResult = await session.run(getCommentsQuery, {
@@ -115,12 +128,12 @@ const getResolver = (input: Input) => {
           modName,
           offset: parseInt(offset, 10),
           limit: parseInt(limit, 10),
-          sortOption: "top",
-        });
+          sortOption: 'top'
+        })
 
         commentsResult = commentsResult.records.map((record: any) => {
-          return record.get("comment");
-        });
+          return record.get('comment')
+        })
       } else {
         // if sort is "hot", get the comments sorted by hotness,
         // which takes into account both weightedVotesCount and createdAt.
@@ -129,25 +142,25 @@ const getResolver = (input: Input) => {
           modName,
           offset: parseInt(offset, 10),
           limit: parseInt(limit, 10),
-          sortOption: "hot",
-        });
+          sortOption: 'hot'
+        })
 
         commentsResult = commentsResult.records.map((record: any) => {
-          return record.get("comment");
-        });
+          return record.get('comment')
+        })
       }
 
       return {
         DiscussionChannel: discussionChannel,
-        Comments: commentsResult,
-      };
+        Comments: commentsResult
+      }
     } catch (error: any) {
-      console.error("Error getting comment section:", error);
-      throw new Error(`Failed to fetch comment section. ${error.message}`);
+      console.error('Error getting comment section:', error)
+      throw new Error(`Failed to fetch comment section. ${error.message}`)
     } finally {
-      session.close();
+      session.close()
     }
-  };
-};
+  }
+}
 
-export default getResolver;
+export default getResolver

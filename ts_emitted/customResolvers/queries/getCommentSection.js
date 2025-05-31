@@ -1,4 +1,4 @@
-import { getCommentsQuery, getNewCommentsQuery, } from "../cypher/cypherQueries.js";
+import { getCommentsQuery, getNewCommentsQuery } from '../cypher/cypherQueries.js';
 const discussionChannelSelectionSet = `
 {
     id
@@ -41,6 +41,19 @@ const discussionChannelSelectionSet = `
     UpvotedByUsersAggregate {
         count
     }
+    Answers {
+        id
+        text
+        createdAt
+        CommentAuthor {
+          ... on User {
+              username
+          }
+          ... on ModerationProfile {
+              displayName
+          }
+        }
+    }
 }
 `;
 const getResolver = (input) => {
@@ -52,35 +65,35 @@ const getResolver = (input) => {
             const result = await DiscussionChannel.find({
                 where: {
                     discussionId,
-                    channelUniqueName,
+                    channelUniqueName
                 },
                 // get everything about the DiscussionChannel
                 // except the comments
-                selectionSet: discussionChannelSelectionSet,
+                selectionSet: discussionChannelSelectionSet
             });
             if (result.length === 0) {
                 // If no DiscussionChannel is found, return null and an empty array
                 return {
                     DiscussionChannel: null,
-                    Comments: [],
+                    Comments: []
                 };
             }
             const discussionChannel = result[0];
             const discussionChannelId = discussionChannel.id;
             let commentsResult = [];
-            if (sort === "new") {
+            if (sort === 'new') {
                 // if sort is "new", get the comments sorted by createdAt.
                 commentsResult = await session.run(getNewCommentsQuery, {
                     discussionChannelId,
                     modName,
                     offset: parseInt(offset, 10),
-                    limit: parseInt(limit, 10),
+                    limit: parseInt(limit, 10)
                 });
                 commentsResult = commentsResult.records.map((record) => {
-                    return record.get("comment");
+                    return record.get('comment');
                 });
             }
-            else if (sort === "top") {
+            else if (sort === 'top') {
                 // if sort is "top", get the comments sorted by weightedVotesCount.
                 // Treat a null weightedVotesCount as 0.
                 commentsResult = await session.run(getCommentsQuery, {
@@ -88,10 +101,10 @@ const getResolver = (input) => {
                     modName,
                     offset: parseInt(offset, 10),
                     limit: parseInt(limit, 10),
-                    sortOption: "top",
+                    sortOption: 'top'
                 });
                 commentsResult = commentsResult.records.map((record) => {
-                    return record.get("comment");
+                    return record.get('comment');
                 });
             }
             else {
@@ -102,19 +115,19 @@ const getResolver = (input) => {
                     modName,
                     offset: parseInt(offset, 10),
                     limit: parseInt(limit, 10),
-                    sortOption: "hot",
+                    sortOption: 'hot'
                 });
                 commentsResult = commentsResult.records.map((record) => {
-                    return record.get("comment");
+                    return record.get('comment');
                 });
             }
             return {
                 DiscussionChannel: discussionChannel,
-                Comments: commentsResult,
+                Comments: commentsResult
             };
         }
         catch (error) {
-            console.error("Error getting comment section:", error);
+            console.error('Error getting comment section:', error);
             throw new Error(`Failed to fetch comment section. ${error.message}`);
         }
         finally {
