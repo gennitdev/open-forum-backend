@@ -6,6 +6,30 @@ export var EventType;
     EventType["DeleteRelationship"] = "DELETE_RELATIONSHIP";
     EventType["Update"] = "UPDATE";
 })(EventType || (EventType = {}));
+export var FileKind;
+(function (FileKind) {
+    FileKind["Blend"] = "BLEND";
+    FileKind["Glb"] = "GLB";
+    FileKind["Jpg"] = "JPG";
+    FileKind["Other"] = "OTHER";
+    FileKind["Png"] = "PNG";
+    FileKind["Rar"] = "RAR";
+    FileKind["Stl"] = "STL";
+    FileKind["Zip"] = "ZIP";
+})(FileKind || (FileKind = {}));
+export var FilterMode;
+(function (FilterMode) {
+    FilterMode["Exclude"] = "EXCLUDE";
+    FilterMode["Include"] = "INCLUDE";
+})(FilterMode || (FilterMode = {}));
+export var PriceModel;
+(function (PriceModel) {
+    PriceModel["Fixed"] = "FIXED";
+    PriceModel["Free"] = "FREE";
+    PriceModel["NameYourPrice"] = "NAME_YOUR_PRICE";
+    PriceModel["Subscription"] = "SUBSCRIPTION";
+    PriceModel["Temporary"] = "TEMPORARY";
+})(PriceModel || (PriceModel = {}));
 export var RepeatUnit;
 (function (RepeatUnit) {
     RepeatUnit["Day"] = "DAY";
@@ -13,6 +37,14 @@ export var RepeatUnit;
     RepeatUnit["Week"] = "WEEK";
     RepeatUnit["Year"] = "YEAR";
 })(RepeatUnit || (RepeatUnit = {}));
+export var ScanStatus;
+(function (ScanStatus) {
+    ScanStatus["Clean"] = "CLEAN";
+    ScanStatus["Failed"] = "FAILED";
+    ScanStatus["Infected"] = "INFECTED";
+    ScanStatus["Pending"] = "PENDING";
+    ScanStatus["Suspicious"] = "SUSPICIOUS";
+})(ScanStatus || (ScanStatus = {}));
 /** An enum for sorting in either ascending or descending order. */
 export var SortDirection;
 (function (SortDirection) {

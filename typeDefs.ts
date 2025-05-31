@@ -1,28 +1,5 @@
 import { gql } from 'apollo-server'
 
-/* planned non-auto-generated queries and mutations, not implemented yet
-
-# | Name                                  | Key logic inside                                                                                    |   |             |
-# | ----------------------------------------------------- | --------------------------------------------------------------------------------------------------- | - | ----------- |
-# | `createCheckoutSession(fileId, buyer)`                | - validate `priceModel` <br>- call Stripe API → return session URL                                  |   |             |
-# | `stripeWebhook(event)` *(HTTP endpoint, not GraphQL)* | - verify signature <br>- if `payment_intent.succeeded` create **Purchase** node, increment counters |   |             |
-# | `downloadFreeFile(fileId)`                            | - create **Purchase** edge if it doesn’t exist (unique) <br>- bump counters                         |   |             |
-# | `uploadFileMeta(input)`                               | - run server‑side MIME/size checks <br>- write **DownloadableFile** + `scanStatus=PENDING`          |   |             |
-# | `scanCallback(fileId, status)`                        | set `scanStatus`, maybe quarantine                                                                  |   |             |
-# | `addVersion(fileId, versionInput)`                    | create **FileVersion**, update latest pointer                                                       |   |             |
-# | `addItemToCollection(collectionId, targetId)`         | single helper that figures out union type and calls `connect`                                       |   |             |
-# | `toggleIssueSubscription(issueId)`                    | connect/disconnect the viewer from `subscribedToNotifications`                                      |   |             |
-# | `setChannelFeatureFlags(channel, flags)`              | bulk update + permission check (\`isOwner                                                           |   |  isAdmin\`) |
-
-| Query                                                                                        | Why not auto‑generated?                                                                                   |
-| -------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| `getDownloadList(filter, includeLabels, excludeLabels)` returns `{ aggregateCounts, files }` | wants both **files** *and* **bucket counts** in one payload (needs custom Cypher with `collect/distinct`) |
-| `searchEverything(term, kinds, limit)`                                                       | fuzzy match across 4 types; easiest with a full‑text index + `apoc.search.vector`                         |
-| `getLibrary(username, filterPurchasedSince)`                                                 | returns purchases joined with latest file/price/license; easier as a tailored Cypher query                |
-| `getCollectionsWithSampleItems(owner)`                                                       | collection plus first N thumbnail URLs—requires sub‑query + limit per collection                          |
-
-*/
-
 const typeDefinitions = gql`
   enum FilterMode {
     INCLUDE
@@ -84,6 +61,7 @@ const typeDefinitions = gql`
 
     Album:    Album @relationship(type: "HAS_IMAGE", direction: IN)
     Uploader: User  @relationship(type: "UPLOADED_IMAGE", direction: IN)
+    RelatedIssues: [Issue!]! @relationship(type: "CITED_ISSUE", direction: IN)
   }
 
   """SPDX or custom content licence"""
@@ -125,9 +103,9 @@ const typeDefinitions = gql`
   type Collection {
     id: ID! @id
     title: String!
-
+    description: String
     owner: User!       @relationship(type: "OWNS_COLLECTION", direction: IN)
-    items: [Collectable!]! @relationship(type: "IN_COLLECTION", direction: OUT)
+    Items: [Collectable!]! @relationship(type: "IN_COLLECTION", direction: OUT)
   }
 
   type Album {
@@ -423,6 +401,8 @@ const typeDefinitions = gql`
     updatedAt: DateTime @timestamp(operations: [UPDATE])
     deleted: Boolean
     hasDownload: Boolean
+    hasSensitiveContent: Boolean
+    hasSpoiler: Boolean
     Tags: [Tag!]! @relationship(type: "HAS_TAG", direction: OUT)
     PastTitleVersions: [TextVersion!]!
       @relationship(type: "HAS_TITLE_VERSION", direction: OUT)
@@ -433,8 +413,7 @@ const typeDefinitions = gql`
     FeedbackComments: [Comment!]!
       @relationship(type: "HAS_FEEDBACK_COMMENT", direction: IN)
     Album: Album @relationship(type: "HAS_ALBUM", direction: OUT)
-    hasSensitiveContent: Boolean
-    hasSpoiler: Boolean
+    DownloadableFiles: [DownloadableFile!]!
   }
 
   type EventChannel {
