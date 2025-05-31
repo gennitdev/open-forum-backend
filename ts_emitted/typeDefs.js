@@ -1,5 +1,59 @@
 import { gql } from 'apollo-server';
+/* planned non-auto-generated queries and mutations, not implemented yet
+
+# | Name                                  | Key logic inside                                                                                    |   |             |
+# | ----------------------------------------------------- | --------------------------------------------------------------------------------------------------- | - | ----------- |
+# | `createCheckoutSession(fileId, buyer)`                | - validate `priceModel` <br>- call Stripe API → return session URL                                  |   |             |
+# | `stripeWebhook(event)` *(HTTP endpoint, not GraphQL)* | - verify signature <br>- if `payment_intent.succeeded` create **Purchase** node, increment counters |   |             |
+# | `downloadFreeFile(fileId)`                            | - create **Purchase** edge if it doesn’t exist (unique) <br>- bump counters                         |   |             |
+# | `uploadFileMeta(input)`                               | - run server‑side MIME/size checks <br>- write **DownloadableFile** + `scanStatus=PENDING`          |   |             |
+# | `scanCallback(fileId, status)`                        | set `scanStatus`, maybe quarantine                                                                  |   |             |
+# | `addVersion(fileId, versionInput)`                    | create **FileVersion**, update latest pointer                                                       |   |             |
+# | `addItemToCollection(collectionId, targetId)`         | single helper that figures out union type and calls `connect`                                       |   |             |
+# | `toggleIssueSubscription(issueId)`                    | connect/disconnect the viewer from `subscribedToNotifications`                                      |   |             |
+# | `setChannelFeatureFlags(channel, flags)`              | bulk update + permission check (\`isOwner                                                           |   |  isAdmin\`) |
+
+| Query                                                                                        | Why not auto‑generated?                                                                                   |
+| -------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| `getDownloadList(filter, includeLabels, excludeLabels)` returns `{ aggregateCounts, files }` | wants both **files** *and* **bucket counts** in one payload (needs custom Cypher with `collect/distinct`) |
+| `searchEverything(term, kinds, limit)`                                                       | fuzzy match across 4 types; easiest with a full‑text index + `apoc.search.vector`                         |
+| `getLibrary(username, filterPurchasedSince)`                                                 | returns purchases joined with latest file/price/license; easier as a tailored Cypher query                |
+| `getCollectionsWithSampleItems(owner)`                                                       | collection plus first N thumbnail URLs—requires sub‑query + limit per collection                          |
+
+*/
 const typeDefinitions = gql `
+  enum FilterMode {
+    INCLUDE
+    EXCLUDE
+  }
+
+  enum FileKind {
+    ZIP
+    RAR
+    PNG
+    JPG
+    BLEND
+    STL
+    GLB
+    OTHER
+  }
+
+  enum PriceModel {
+    FREE
+    FIXED
+    NAME_YOUR_PRICE
+    SUBSCRIPTION
+    TEMPORARY
+  }
+
+  enum ScanStatus {
+    PENDING
+    CLEAN
+    INFECTED
+    SUSPICIOUS
+    FAILED
+  }
+
   extend schema @subscription
 
   scalar JSON
@@ -23,8 +77,55 @@ const typeDefinitions = gql `
     createdAt: DateTime @timestamp(operations: [CREATE])
     hasSensitiveContent: Boolean
     hasSpoiler: Boolean
-    Album: Album @relationship(type: "HAS_IMAGE", direction: IN)
-    Uploader: User @relationship(type: "UPLOADED_IMAGE", direction: IN)
+    scanStatus: ScanStatus! @default(value: PENDING)
+    scanCheckedAt: DateTime
+
+    Album:    Album @relationship(type: "HAS_IMAGE", direction: IN)
+    Uploader: User  @relationship(type: "UPLOADED_IMAGE", direction: IN)
+  }
+
+  """SPDX or custom content licence"""
+  type License {
+    id: ID! @id
+    name:      String!  # human‑readable name ("Creative Commons BY 4.0")
+    shortName: String   # SPDX‑style short code ("CC‑BY‑4.0")
+    url:       String
+    text:      String
+  }
+
+  """Single checkout / acquisition (free or paid)"""
+  type Purchase {
+    id: ID! @id
+    createdAt: DateTime! @timestamp(operations: [CREATE])
+    priceCents: Int
+    priceCurrency: String
+
+    file:   DownloadableFile! @relationship(type: "PURCHASED_FILE", direction: OUT)
+    buyer:  User!             @relationship(type: "MADE_PURCHASE",   direction: IN)
+  }
+
+  """Older revision of a downloadable file"""
+  type FileVersion {
+    id: ID! @id
+    createdAt: DateTime! @timestamp(operations: [CREATE])
+
+    fileName: String!
+    kind:     FileKind!
+    size:     Int
+    url:      String!
+    changelog: String
+
+    mainFile: DownloadableFile! @relationship(type: "HAS_VERSION", direction: IN)
+  }
+
+  union Collectable = Channel | Discussion | Event | Comment | DownloadableFile | Image
+
+  type Collection {
+    id: ID! @id
+    title: String!
+
+    owner: User!       @relationship(type: "OWNS_COLLECTION", direction: IN)
+    items: [Collectable!]! @relationship(type: "IN_COLLECTION", direction: OUT)
   }
 
   type Album {
@@ -59,66 +160,75 @@ const typeDefinitions = gql `
   }
 
   type User {
-    Albums: [Album!]! @relationship(type: "HAS_ALBUM", direction: OUT)
-    Images: [Image!]! @relationship(type: "UPLOADED_IMAGE", direction: OUT)
+    # media
+    Albums:   [Album!]!  @relationship(type: "HAS_ALBUM", direction: OUT)
+    Images:   [Image!]!  @relationship(type: "UPLOADED_IMAGE", direction: OUT)
+
+    # identity
     username: String! @unique
-    Email: Email @relationship(type: "HAS_EMAIL", direction: IN)
+    Email: Email  @relationship(type: "HAS_EMAIL", direction: IN)
     displayName: String
     pronouns: String
     location: String
     bio: String
-    commentKarma: Int
-    discussionKarma: Int
     profilePicURL: String
     enableSensitiveContentByDefault: Boolean
-    Comments: [Comment!]!
-      @relationship(type: "AUTHORED_COMMENT", direction: OUT)
-    AdminOfChannels: [Channel!]!
-      @relationship(type: "ADMIN_OF_CHANNEL", direction: OUT)
-    ModOfChannels: [Channel!]!
-      @relationship(type: "MODERATOR_OF_CHANNEL", direction: OUT)
-    Discussions: [Discussion!]!
-      @relationship(type: "POSTED_DISCUSSION", direction: OUT)
-    Events: [Event!]! @relationship(type: "POSTED_BY", direction: OUT)
-    Feeds: [Feed!]! @relationship(type: "HAS_FEED_IN_LIBRARY", direction: OUT)
-    CreatedFeeds: [Feed!]! @relationship(type: "CREATED_FEED", direction: OUT)
-    DefaultFeed: Feed @relationship(type: "DEFAULT_FEED", direction: OUT)
+
+    # karma
+    commentKarma: Int
+    discussionKarma: Int
+
+    # content relationships
+    Comments: [Comment!]!           @relationship(type: "AUTHORED_COMMENT", direction: OUT)
+    Discussions: [Discussion!]!     @relationship(type: "POSTED_DISCUSSION", direction: OUT)
+    Events:      [Event!]!          @relationship(type: "POSTED_BY", direction: OUT)
+
+    # channel roles / admin
+    AdminOfChannels: [Channel!]!    @relationship(type: "ADMIN_OF_CHANNEL", direction: OUT)
+    ModOfChannels:   [Channel!]!    @relationship(type: "MODERATOR_OF_CHANNEL", direction: OUT)
+    FavoriteChannels: [Channel!]!   @relationship(type: "FAVORITE_CHANNEL", direction: OUT)
+    RecentlyVisitedChannels: [Channel!]! @relationship(type: "RECENTLY_VISITED_CHANNEL", direction: OUT)
+
+    # votes
+    UpvotedComments:           [Comment!]!           @relationship(type: "UPVOTED_COMMENT", direction: OUT)
+    UpvotedDiscussionChannels: [DiscussionChannel!]! @relationship(type: "UPVOTED_DISCUSSION_IN_CHANNEL", direction: OUT)
+
+    # notifications
+    Notifications: [Notification!]! @relationship(type: "HAS_NOTIFICATION", direction: OUT)
+
+    # moderation / suspensions
+    ModerationProfile: ModerationProfile @relationship(type: "MODERATION_PROFILE", direction: OUT)
+    Suspensions:        [Suspension!]!  @relationship(type: "SUSPENDED_AS_USER", direction: OUT)
+
+    # wiki authorship
+    AuthoredWikiPages:          [WikiPage!]!   @relationship(type: "AUTHORED_VERSION", direction: OUT)
+    AuthoredWikiPageVersions:   [TextVersion!]! @relationship(type: "AUTHORED_VERSION", direction: OUT)
+
+    # roles & perms
+    ChannelRoles: [ChannelRole!]! @relationship(type: "HAS_CHANNEL_ROLE", direction: OUT)
+    ServerRoles:  [ServerRole!]!  @relationship(type: "HAS_SERVER_ROLE", direction: OUT)
+
+    # pending invites
+    PendingModInvites:    [Channel!]! @relationship(type: "HAS_PENDING_MOD_INVITE", direction: IN)
+    PendingOwnerInvites:  [Channel!]! @relationship(type: "HAS_PENDING_INVITE", direction: IN)
+
+    # commerce
+    stripeAccountId: String
+    defaultLicense: License @relationship(type: "DEFAULT_LICENSE", direction: OUT)
+    purchases: [Purchase!]! @relationship(type: "MADE_PURCHASE", direction: OUT)
+    library: [DownloadableFile!]! @relationship(type: "PURCHASED_FILE", direction: IN)
+
+    # collections
+    collections: [Collection!]! @relationship(type: "OWNS_COLLECTION", direction: OUT)
+
+    # misc
+    defaultEmojiSkinTone: String
+    notificationBundleInterval: String
+    preferredTimeZone: String
+
+    # bookkeeping
     createdAt: DateTime! @timestamp(operations: [CREATE])
-    Notifications: [Notification!]!
-      @relationship(type: "HAS_NOTIFICATION", direction: OUT)
-    Blocked: User @relationship(type: "BLOCKED", direction: OUT)
-    IsBlockedBy: User @relationship(type: "BLOCKED", direction: IN)
-    FavoriteChannels: [Channel!]!
-      @relationship(type: "FAVORITE_CHANNEL", direction: OUT)
-    RecentlyVisitedChannels: [Channel!]!
-      @relationship(type: "RECENTLY_VISITED_CHANNEL", direction: OUT)
-    UpvotedComments: [Comment!]!
-      @relationship(type: "UPVOTED_COMMENT", direction: OUT)
-    UpvotedDiscussionChannels: [DiscussionChannel!]!
-      @relationship(type: "UPVOTED_DISCUSSION_IN_CHANNEL", direction: OUT)
-    ModerationProfile: ModerationProfile
-      @relationship(type: "MODERATION_PROFILE", direction: OUT)
-    DefaultEmojiSkinTone: String
-    NotificationBundleInterval: String
-    PreferredTimeZone: String
-    Issues: [Issue!]! @relationship(type: "AUTHORED_ISSUE", direction: OUT)
-    IssueComments: [Comment!]!
-      @relationship(type: "AUTHORED_ISSUE_COMMENT", direction: OUT)
     deleted: Boolean
-    ChannelRoles: [ChannelRole!]!
-      @relationship(type: "HAS_CHANNEL_ROLE", direction: OUT)
-    ServerRoles: [ServerRole!]!
-      @relationship(type: "HAS_SERVER_ROLE", direction: OUT)
-    PendingModInvites: [Channel!]!
-      @relationship(type: "HAS_PENDING_MOD_INVITE", direction: IN)
-    PendingOwnerInvites: [Channel!]!
-      @relationship(type: "HAS_PENDING_INVITE", direction: IN)
-    Suspensions: [Suspension!]!
-      @relationship(type: "SUSPENDED_AS_USER", direction: OUT)
-    AuthoredWikiPages: [WikiPage!]!
-      @relationship(type: "AUTHORED_VERSION", direction: OUT)
-    AuthoredWikiPageVersions: [TextVersion!]!
-      @relationship(type: "AUTHORED_VERSION", direction: OUT)
   }
 
   type TextVersion {
@@ -137,8 +247,7 @@ const typeDefinitions = gql `
     channelUniqueName: String
     createdAt: DateTime! @timestamp(operations: [CREATE])
     updatedAt: DateTime @timestamp(operations: [UPDATE])
-    VersionAuthor: User
-      @relationship(type: "AUTHORED_VERSION", direction: IN)
+    VersionAuthor: User @relationship(type: "AUTHORED_VERSION", direction: IN)
     PastVersions: [TextVersion!]!
       @relationship(type: "HAS_VERSION", direction: OUT)
     ProposedEdits: [TextVersion!]!
@@ -161,51 +270,125 @@ const typeDefinitions = gql `
     RelatedIssue: Issue @relationship(type: "HAS_CONTEXT", direction: OUT)
   }
 
+   type DownloadableFile {
+    id: ID! @id
+    fileName: String!
+    kind:     FileKind!
+    size:     Int
+    url:      String!
+    createdAt: DateTime! @timestamp(operations: [CREATE])
+
+    labelOptions: [FilterOption!]! @relationship(type: "HAS_LABEL_OPTION", direction: OUT)
+
+    # commerce fields
+    priceModel: PriceModel! @default(value: FREE)
+    priceCents: Int
+    priceCurrency: String @default(value: "USD")
+    paywallExpiresAt: DateTime
+    stripeProductId: String
+    stripePriceId:   String
+
+    # analytics
+    downloadCountTotal:  Int @default(value: 0)
+    downloadCountUnique: Int @default(value: 0)
+
+    # licence & versions
+    license: License @relationship(type: "USES_LICENSE", direction: OUT)
+    versions: [FileVersion!]! @relationship(type: "HAS_VERSION", direction: OUT)
+
+    # scanning
+    scanStatus: ScanStatus! @default(value: PENDING)
+    scanCheckedAt: DateTime
+
+    # purchases back‑ref
+    purchasers: [Purchase!]! @relationship(type: "PURCHASED_FILE", direction: IN)
+  }
+
+  type FilterGroup {
+    id: ID! # Neo4j auto ID
+    order: Int! # for manual re‑ordering
+    key: String! # computer‑friendly, e.g. "lot_size"
+    displayName: String! # human label, e.g. "Lot Size"
+    mode: FilterMode! # INCLUDE or EXCLUDE
+    # One channel owns many groups
+    channel: Channel! @relationship(type: "HAS_FILTER_GROUP", direction: IN)
+
+    # Each group owns many options
+    options: [FilterOption!]!
+      @relationship(type: "HAS_FILTER_OPTION", direction: OUT)
+  }
+
+  """
+  A single checkbox inside a group, e.g. “10×20”.
+  """
+  type FilterOption {
+    id: ID!
+    order: Int!
+    value: String! # computer‑friendly, e.g. "10x20"
+    displayName: String! # human‑friendly, e.g. "10 × 20"
+    group: FilterGroup! @relationship(type: "HAS_FILTER_OPTION", direction: IN)
+  }
+
   type Channel {
     uniqueName: String! @unique
     createdAt: DateTime! @timestamp(operations: [CREATE])
     displayName: String
     description: String
+
     locked: Boolean
     deleted: Boolean
+
     channelIconURL: String
     channelBannerURL: String
-    Tags: [Tag!]! @relationship(type: "HAS_TAG", direction: OUT)
     rules: JSON
-    Admins: [User!]! @relationship(type: "ADMIN_OF_CHANNEL", direction: IN)
-    PendingOwnerInvites: [User!]!
-      @relationship(type: "HAS_PENDING_INVITE", direction: OUT)
-    Moderators: [ModerationProfile!]!
-      @relationship(type: "MODERATOR_OF_CHANNEL", direction: IN)
-    PendingModInvites: [User!]!
-      @relationship(type: "HAS_PENDING_MOD_INVITE", direction: OUT)
-    RelatedChannels: [Channel!]!
-      @relationship(type: "RELATED_CHANNEL", direction: OUT)
-    EventChannels: [EventChannel!]!
-      @relationship(type: "POSTED_IN_CHANNEL", direction: IN)
-    DiscussionChannels: [DiscussionChannel!]!
-      @relationship(type: "POSTED_IN_CHANNEL", direction: IN)
-    Comments: [Comment!]! @relationship(type: "HAS_COMMENT", direction: OUT) # used for aggregated comment counts
-    DefaultChannelRole: ChannelRole
-      @relationship(type: "HAS_DEFAULT_CHANNEL_ROLE", direction: OUT)
-    DefaultModRole: ModChannelRole
-      @relationship(type: "HAS_DEFAULT_MOD_ROLE", direction: OUT)
-    ElevatedModRole: ModChannelRole
-      @relationship(type: "HAS_DEFAULT_ELEVATED_MOD_ROLE", direction: OUT)
-    SuspendedRole: ChannelRole
-      @relationship(type: "HAS_DEFAULT_SUSPENDED_ROLE", direction: OUT)
-    SuspendedModRole: ModChannelRole
-      @relationship(type: "HAS_DEFAULT_SUSPENDED_ROLE", direction: OUT)
-    Issues: [Issue!]! @relationship(type: "HAS_ISSUE", direction: OUT)
-    SuspendedUsers: [Suspension!]!
-      @relationship(type: "SUSPENDED_AS_USER", direction: OUT)
-    SuspendedMods: [Suspension!]!
-      @relationship(type: "SUSPENDED_AS_MOD", direction: OUT)
-    WikiHomePage: WikiPage
-      @relationship(type: "HAS_WIKI_HOME_PAGE", direction: OUT)
-    eventsEnabled: Boolean
-    wikiEnabled: Boolean
-    feedbackEnabled: Boolean
+
+    # feature toggles
+    eventsEnabled: Boolean @default(value: true)
+    wikiEnabled: Boolean @default(value: true)
+    feedbackEnabled: Boolean @default(value: true)
+    downloadsEnabled: Boolean @default(value: true)
+    emojiEnabled: Boolean @default(value: true)
+    imageUploadsEnabled: Boolean @default(value: true)
+    markdownImagesEnabled: Boolean @default(value: true)
+    allowPaidDownloads: Boolean @default(value: false)
+    allowPaywalledPosts: Boolean @default(value: false)
+    requireVerifiedPhoneForUploads: Boolean @default(value: false)
+    requireVerifiedEmailToPost: Boolean @default(value: false)
+    markAsAnsweredEnabled: Boolean @default(value: true)
+
+    allowedFileTypes: [String]
+    payoutPercent: Int @default(value: 98)
+
+    # tags & relationships (unchanged)
+    Tags: [Tag!]! @relationship(type: "HAS_TAG", direction: OUT)
+
+    Admins:     [User!]! @relationship(type: "ADMIN_OF_CHANNEL", direction: IN)
+    Moderators: [ModerationProfile!]! @relationship(type: "MODERATOR_OF_CHANNEL", direction: IN)
+    PendingOwnerInvites: [User!]! @relationship(type: "HAS_PENDING_INVITE", direction: OUT)
+    PendingModInvites:   [User!]! @relationship(type: "HAS_PENDING_MOD_INVITE", direction: OUT)
+
+    RelatedChannels: [Channel!]! @relationship(type: "RELATED_CHANNEL", direction: OUT)
+
+    # content posting
+    EventChannels:      [EventChannel!]!      @relationship(type: "POSTED_IN_CHANNEL", direction: IN)
+    DiscussionChannels: [DiscussionChannel!]! @relationship(type: "POSTED_IN_CHANNEL", direction: IN)
+    Comments:           [Comment!]!          @relationship(type: "HAS_COMMENT", direction: OUT)
+
+    # default roles
+    DefaultChannelRole:   ChannelRole  @relationship(type: "HAS_DEFAULT_CHANNEL_ROLE", direction: OUT)
+    DefaultModRole:       ModChannelRole @relationship(type: "HAS_DEFAULT_MOD_ROLE", direction: OUT)
+    ElevatedModRole:      ModChannelRole @relationship(type: "HAS_DEFAULT_ELEVATED_MOD_ROLE", direction: OUT)
+    SuspendedRole:        ChannelRole    @relationship(type: "HAS_DEFAULT_SUSPENDED_ROLE", direction: OUT)
+    SuspendedModRole:     ModChannelRole @relationship(type: "HAS_DEFAULT_SUSPENDED_ROLE", direction: OUT)
+
+    # moderation
+    Issues:         [Issue!]!       @relationship(type: "HAS_ISSUE", direction: OUT)
+    SuspendedUsers: [Suspension!]!  @relationship(type: "SUSPENDED_AS_USER", direction: OUT)
+    SuspendedMods:  [Suspension!]!  @relationship(type: "SUSPENDED_AS_MOD", direction: OUT)
+
+    # wiki + filters
+    WikiHomePage:  WikiPage   @relationship(type: "HAS_WIKI_HOME_PAGE", direction: OUT)
+    FilterGroups: [FilterGroup!]! @relationship(type: "HAS_FILTER_GROUP", direction: OUT)
   }
 
   type DiscussionChannel {
@@ -239,8 +422,10 @@ const typeDefinitions = gql `
     deleted: Boolean
     hasDownload: Boolean
     Tags: [Tag!]! @relationship(type: "HAS_TAG", direction: OUT)
-    PastTitleVersions:           [TextVersion!]!     @relationship(type: "HAS_TITLE_VERSION", direction: OUT)
-    PastBodyVersions:            [TextVersion!]!     @relationship(type: "HAS_BODY_VERSION", direction: OUT)
+    PastTitleVersions: [TextVersion!]!
+      @relationship(type: "HAS_TITLE_VERSION", direction: OUT)
+    PastBodyVersions: [TextVersion!]!
+      @relationship(type: "HAS_BODY_VERSION", direction: OUT)
     DiscussionChannels: [DiscussionChannel!]!
       @relationship(type: "POSTED_IN_CHANNEL", direction: IN)
     FeedbackComments: [Comment!]!
@@ -354,7 +539,8 @@ const typeDefinitions = gql `
     weightedVotesCount: Float
     UpvotedByUsers: [User!]!
       @relationship(type: "UPVOTED_COMMENT", direction: IN)
-    PastVersions:           [TextVersion!]!     @relationship(type: "HAS_VERSION", direction: OUT)
+    PastVersions: [TextVersion!]!
+      @relationship(type: "HAS_VERSION", direction: OUT)
     emoji: JSON
     GivesFeedbackOnDiscussion: Discussion
       @relationship(type: "HAS_FEEDBACK_COMMENT", direction: OUT)
@@ -404,8 +590,7 @@ const typeDefinitions = gql `
     id: ID! @id
     ModerationProfile: ModerationProfile
       @relationship(type: "PERFORMED_MODERATION_ACTION", direction: IN)
-    User: User
-      @relationship(type: "PERFORMED_MODERATION_ACTION", direction: IN)
+    User: User @relationship(type: "PERFORMED_MODERATION_ACTION", direction: IN)
     Comment: Comment @relationship(type: "MODERATED_COMMENT", direction: OUT)
     createdAt: DateTime! @timestamp(operations: [CREATE])
     actionType: String
@@ -431,6 +616,7 @@ const typeDefinitions = gql `
     flaggedServerRuleViolation: Boolean
     ActivityFeed: [ModerationAction!]!
       @relationship(type: "ACTIVITY_ON_ISSUE", direction: OUT)
+    SubscribedToNotifications: [User!]! @relationship(type: "SUBSCRIBED_TO_ISSUE", direction: IN)
   }
 
   type Feed {
@@ -448,7 +634,6 @@ const typeDefinitions = gql `
     Discussions: [Discussion!]! @relationship(type: "HAS_TAG", direction: IN)
     Events: [Event!]! @relationship(type: "HAS_TAG", direction: IN)
     Comments: [Comment!]! @relationship(type: "HAS_TAG", direction: IN)
-    Feeds: [Feed!]! @relationship(type: "HAS_TAG", direction: IN)
   }
 
   type SignedURL {
@@ -633,6 +818,7 @@ const typeDefinitions = gql `
       channelUniqueName: String!
       explanation: String
     ): Issue
+
   }
 
   input SiteWideDiscussionSortOrder {
@@ -752,6 +938,7 @@ const typeDefinitions = gql `
     serverDescription: String
     serverIconURL: String
     rules: JSON
+    allowedFileTypes: [String]
     DefaultServerRole: ServerRole
       @relationship(type: "HAS_DEFAULT_SERVER_ROLE", direction: OUT)
     DefaultModRole: ModServerRole
