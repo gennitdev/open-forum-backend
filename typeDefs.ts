@@ -1,5 +1,21 @@
 import { gql } from 'apollo-server'
 
+enum FilterMode {
+  INCLUDE,
+  EXCLUDE
+}
+
+enum FileKind {
+  ZIP,
+  RAR,
+  PNG,
+  JPG,
+  BLEND,
+  STL,
+  GLB,
+  OTHER
+}
+
 const typeDefinitions = gql`
   extend schema @subscription
 
@@ -138,8 +154,7 @@ const typeDefinitions = gql`
     channelUniqueName: String
     createdAt: DateTime! @timestamp(operations: [CREATE])
     updatedAt: DateTime @timestamp(operations: [UPDATE])
-    VersionAuthor: User
-      @relationship(type: "AUTHORED_VERSION", direction: IN)
+    VersionAuthor: User @relationship(type: "AUTHORED_VERSION", direction: IN)
     PastVersions: [TextVersion!]!
       @relationship(type: "HAS_VERSION", direction: OUT)
     ProposedEdits: [TextVersion!]!
@@ -162,6 +177,47 @@ const typeDefinitions = gql`
     RelatedIssue: Issue @relationship(type: "HAS_CONTEXT", direction: OUT)
   }
 
+  type DownloadableFile {
+    id: ID! @id
+    fileName: String!
+    kind: FileKind!
+    size: Int
+    url: String!
+    createdAt: DateTime! @timestamp(operations: [CREATE])
+    channel: Channel! @relationship(type: "IN_CHANNEL", direction: OUT)
+    """
+    Labels applied to this file, e.g.
+    (this)-[:HAS_LABEL_OPTION]->(:FilterOption {value:'10x20'})
+    """
+    labelOptions: [FilterOption!]!
+      @relationship(type: "HAS_LABEL_OPTION", direction: OUT)
+  }
+
+  type FilterGroup {
+    id: ID! # Neo4j auto ID
+    order: Int! # for manual re‑ordering
+    key: String! # computer‑friendly, e.g. "lot_size"
+    displayName: String! # human label, e.g. "Lot Size"
+    mode: FilterMode! # INCLUDE or EXCLUDE
+    # One channel owns many groups
+    channel: Channel! @relationship(type: "HAS_FILTER_GROUP", direction: IN)
+
+    # Each group owns many options
+    options: [FilterOption!]!
+      @relationship(type: "HAS_FILTER_OPTION", direction: OUT)
+  }
+
+  """
+  A single checkbox inside a group, e.g. “10×20”.
+  """
+  type FilterOption {
+    id: ID!
+    order: Int!
+    value: String! # computer‑friendly, e.g. "10x20"
+    displayName: String! # human‑friendly, e.g. "10 × 20"
+    group: FilterGroup! @relationship(type: "HAS_FILTER_OPTION", direction: IN)
+  }
+
   type Channel {
     uniqueName: String! @unique
     createdAt: DateTime! @timestamp(operations: [CREATE])
@@ -171,8 +227,15 @@ const typeDefinitions = gql`
     deleted: Boolean
     channelIconURL: String
     channelBannerURL: String
-    Tags: [Tag!]! @relationship(type: "HAS_TAG", direction: OUT)
     rules: JSON
+    eventsEnabled: Boolean
+    wikiEnabled: Boolean
+    feedbackEnabled: Boolean
+    downloadsEnabled: Boolean
+    emojiEnabled: Boolean
+    allowedFileTypes: [String]
+    markAsAnsweredEnabled: Boolean
+    Tags: [Tag!]! @relationship(type: "HAS_TAG", direction: OUT)
     Admins: [User!]! @relationship(type: "ADMIN_OF_CHANNEL", direction: IN)
     PendingOwnerInvites: [User!]!
       @relationship(type: "HAS_PENDING_INVITE", direction: OUT)
@@ -204,9 +267,8 @@ const typeDefinitions = gql`
       @relationship(type: "SUSPENDED_AS_MOD", direction: OUT)
     WikiHomePage: WikiPage
       @relationship(type: "HAS_WIKI_HOME_PAGE", direction: OUT)
-    eventsEnabled: Boolean
-    wikiEnabled: Boolean
-    feedbackEnabled: Boolean
+    FilterGroups: [FilterGroup!]!
+      @relationship(type: "HAS_FILTER_GROUP", direction: OUT)
   }
 
   type DiscussionChannel {
@@ -240,8 +302,10 @@ const typeDefinitions = gql`
     deleted: Boolean
     hasDownload: Boolean
     Tags: [Tag!]! @relationship(type: "HAS_TAG", direction: OUT)
-    PastTitleVersions:           [TextVersion!]!     @relationship(type: "HAS_TITLE_VERSION", direction: OUT)
-    PastBodyVersions:            [TextVersion!]!     @relationship(type: "HAS_BODY_VERSION", direction: OUT)
+    PastTitleVersions: [TextVersion!]!
+      @relationship(type: "HAS_TITLE_VERSION", direction: OUT)
+    PastBodyVersions: [TextVersion!]!
+      @relationship(type: "HAS_BODY_VERSION", direction: OUT)
     DiscussionChannels: [DiscussionChannel!]!
       @relationship(type: "POSTED_IN_CHANNEL", direction: IN)
     FeedbackComments: [Comment!]!
@@ -355,7 +419,8 @@ const typeDefinitions = gql`
     weightedVotesCount: Float
     UpvotedByUsers: [User!]!
       @relationship(type: "UPVOTED_COMMENT", direction: IN)
-    PastVersions:           [TextVersion!]!     @relationship(type: "HAS_VERSION", direction: OUT)
+    PastVersions: [TextVersion!]!
+      @relationship(type: "HAS_VERSION", direction: OUT)
     emoji: JSON
     GivesFeedbackOnDiscussion: Discussion
       @relationship(type: "HAS_FEEDBACK_COMMENT", direction: OUT)
@@ -405,8 +470,7 @@ const typeDefinitions = gql`
     id: ID! @id
     ModerationProfile: ModerationProfile
       @relationship(type: "PERFORMED_MODERATION_ACTION", direction: IN)
-    User: User
-      @relationship(type: "PERFORMED_MODERATION_ACTION", direction: IN)
+    User: User @relationship(type: "PERFORMED_MODERATION_ACTION", direction: IN)
     Comment: Comment @relationship(type: "MODERATED_COMMENT", direction: OUT)
     createdAt: DateTime! @timestamp(operations: [CREATE])
     actionType: String
@@ -753,6 +817,7 @@ const typeDefinitions = gql`
     serverDescription: String
     serverIconURL: String
     rules: JSON
+    allowedFileTypes: [String]
     DefaultServerRole: ServerRole
       @relationship(type: "HAS_DEFAULT_SERVER_ROLE", direction: OUT)
     DefaultModRole: ModServerRole
