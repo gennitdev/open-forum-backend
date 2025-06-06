@@ -203,12 +203,22 @@ const typeDefinitions = gql`
 
     # misc
     defaultEmojiSkinTone: String
-    notificationBundleInterval: String
+    
     preferredTimeZone: String
 
     # bookkeeping
     createdAt: DateTime! @timestamp(operations: [CREATE])
     deleted: Boolean
+
+    # notification settings
+    notifyOnReplyToCommentByDefault: Boolean @default(value: true)
+    notifyOnReplyToDiscussionByDefault: Boolean @default(value: true)
+    notifyOnReplyToEventByDefault: Boolean @default(value: true)
+    notifyWhenTagged: Boolean @default(value: true)
+    notifyOnFeedback: Boolean @default(value: true)
+    notificationBundleInterval: String
+    notificationBundleEnabled: Boolean @default(value: true)
+    notificationBundleContent: String
   }
 
   type TextVersion {
@@ -390,6 +400,8 @@ const typeDefinitions = gql`
     RelatedIssues: [Issue!]! @relationship(type: "CITED_ISSUE", direction: IN)
     answered: Boolean
     Answers: [Comment!]! @relationship(type: "IS_REPLY_TO", direction: IN)
+    SubscribedToNotifications: [User!]!
+      @relationship(type: "SUBSCRIBED_TO_NOTIFICATIONS", direction: IN)
   }
 
   type Discussion {
@@ -428,6 +440,8 @@ const typeDefinitions = gql`
       @relationship(type: "CONTAINS_COMMENT", direction: OUT)
     archived: Boolean @default(value: false)
     RelatedIssues: [Issue!]! @relationship(type: "CITED_ISSUE", direction: IN)
+    SubscribedToNotifications: [User!]!
+      @relationship(type: "SUBSCRIBED_TO_NOTIFICATIONS", direction: IN)
   }
 
   enum RepeatUnit {
@@ -535,6 +549,8 @@ const typeDefinitions = gql`
     ModerationAction: ModerationAction
       @relationship(type: "MODERATED_COMMENT", direction: IN)
     RelatedIssues: [Issue!]! @relationship(type: "CITED_ISSUE", direction: IN)
+    SubscribedToNotifications: [User!]!
+      @relationship(type: "SUBSCRIBED_TO_NOTIFICATIONS", direction: IN)
   }
 
   type Emoji {
