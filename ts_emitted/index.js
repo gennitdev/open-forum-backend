@@ -210,7 +210,7 @@ async function startBackgroundServices(schema, ogm) {
     const services = [
         {
             name: 'Comment Notification Service',
-            service: () => new CommentNotificationService(schema, ogm),
+            service: () => new CommentNotificationService(schema, ogm, driver),
             critical: false
         },
         {

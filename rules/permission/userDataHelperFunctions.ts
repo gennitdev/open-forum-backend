@@ -253,14 +253,41 @@ export const setUserDataOnContext = async (
           return;
         } 
         console.error("JWT Verification Error:", err);
+        
+        // Check if this is a mutation to determine how to handle the error
+        const isMutation = context.req?.isMutation === true;
+        console.log("🔍 JWT Error Debug:", {
+          errorName: err.name,
+          isMutation,
+          requestBody: context.req?.body?.query?.substring(0, 100)
+        });
+        
         if (err.name === 'TokenExpiredError') {
-          // For expired tokens, make this error available on the context
-          context.jwtError = new Error(ERROR_MESSAGES.channel.tokenExpired || "Your session has expired. Please sign in again.");
+          const errorMessage = ERROR_MESSAGES.channel.tokenExpired || "Your session has expired. Please sign in again.";
+          if (isMutation) {
+            // For mutations, throw the error immediately
+            console.log("🚨 Rejecting JWT promise for mutation with expired token");
+            reject(new Error(errorMessage));
+            return;
+          } else {
+            // For queries, store the error on context and let the rules handle it
+            console.log("📝 Setting JWT error on context for query");
+            context.jwtError = new Error(errorMessage);
+          }
         } else {
-          context.jwtError = new Error(ERROR_MESSAGES.channel.invalidToken || "Your authentication token is invalid. Please sign in again.");
+          const errorMessage = ERROR_MESSAGES.channel.invalidToken || "Your authentication token is invalid. Please sign in again.";
+          if (isMutation) {
+            // For mutations, throw the error immediately
+            console.log("🚨 Rejecting JWT promise for mutation with invalid token");
+            reject(new Error(errorMessage));
+            return;
+          } else {
+            // For queries, store the error on context and let the rules handle it
+            console.log("📝 Setting JWT error on context for query");
+            context.jwtError = new Error(errorMessage);
+          }
         }
-        // We'll handle the error differently based on whether this is a mutation or query
-        // Just resolve with null and let the rule handlers decide how to handle it
+        // For queries, resolve with null and let the rule handlers decide how to handle it
         resolve(null);
       });
     });
@@ -329,18 +356,23 @@ export const setUserDataOnContext = async (
 
 export const isAuthenticatedAndVerified = rule({ cache: "contextual" })(
   async (parent: any, args: any, context: any, info: any) => {
-    // Set user data on context
-    context.user = await setUserDataOnContext({
-      context,
-      getPermissionInfo: false,
-    });
+    try {
+      // Set user data on context - this may throw for mutations with JWT errors
+      context.user = await setUserDataOnContext({
+        context,
+        getPermissionInfo: false,
+      });
+    } catch (error) {
+      // JWT errors for mutations are thrown from setUserDataOnContext
+      throw error;
+    }
     
     // Check if this is a mutation or a query
     const isMutation = context.req?.isMutation === true;
     
-    // First check for JWT errors (expired or invalid token)
-    if (context.jwtError && isMutation) {
-      throw context.jwtError;
+    // For queries, check if there was a JWT error
+    if (context.jwtError && !isMutation) {
+      return false;
     }
     
     if (!context.user?.username) {
@@ -370,30 +402,47 @@ export const isAuthenticatedAndVerified = rule({ cache: "contextual" })(
 // Rule that only checks for authentication but not email verification
 export const isAuthenticated = rule({ cache: "contextual" })(
   async (parent: any, args: any, context: any, info: any) => {
-    // Set user data on context
-    context.user = await setUserDataOnContext({
-      context,
-      getPermissionInfo: false,
-    });
+    console.log("🔐 isAuthenticated rule called for:", context.req?.body?.operationName);
+    try {
+      // Set user data on context - this may throw for mutations with JWT errors
+      context.user = await setUserDataOnContext({
+        context,
+        getPermissionInfo: false,
+      });
+      console.log("✅ setUserDataOnContext completed successfully");
+    } catch (error) {
+      // JWT errors for mutations are thrown from setUserDataOnContext
+      console.log("🚨 isAuthenticated rule caught error from setUserDataOnContext:", (error as Error).message);
+      throw error;
+    }
     
     // Check if this is a mutation or a query
     const isMutation = context.req?.isMutation === true;
+    console.log("🔍 isAuthenticated debug:", {
+      isMutation,
+      hasUsername: !!context.user?.username,
+      hasJwtError: !!context.jwtError
+    });
     
-    // First check for JWT errors (expired or invalid token)
-    if (context.jwtError && isMutation) {
-      throw context.jwtError;
+    // For queries, check if there was a JWT error
+    if (context.jwtError && !isMutation) {
+      console.log("📝 Returning false for query with JWT error");
+      return false;
     }
     
     if (!context.user?.username) {
       // Only throw authentication errors for mutations
       if (isMutation) {
+        console.log("🚨 Throwing not authenticated error for mutation");
         throw new Error(ERROR_MESSAGES.channel.notAuthenticated);
       } else {
         // For queries, just return false without throwing an error
+        console.log("📝 Returning false for query without username");
         return false;
       }
     }
     
+    console.log("✅ isAuthenticated rule passed");
     return true;
   }
 );

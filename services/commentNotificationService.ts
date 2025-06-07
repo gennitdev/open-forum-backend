@@ -10,12 +10,14 @@ type AsyncIterableIterator<T> = AsyncIterable<T> & AsyncIterator<T>;
 export class CommentNotificationService {
   private schema: any;
   private ogm: any;
+  private driver: any;
   private isRunning: boolean = false;
   private subscriptionIterator: AsyncIterableIterator<any> | null = null;
 
-  constructor(schema: any, ogm: any) {
+  constructor(schema: any, ogm: any, driver?: any) {
     this.schema = schema;
     this.ogm = ogm;
+    this.driver = driver;
     console.log('Comment notification service initialized');
   }
 
@@ -161,6 +163,9 @@ export class CommentNotificationService {
               username
             }
           }
+          SubscribedToNotifications {
+            username
+          }
         }
         Event {
           id
@@ -173,6 +178,9 @@ export class CommentNotificationService {
             Channel {
               uniqueName
             }
+          }
+          SubscribedToNotifications {
+            username
           }
         }
         ParentComment {
@@ -187,6 +195,9 @@ export class CommentNotificationService {
               __typename
               displayName
             }
+          }
+          SubscribedToNotifications {
+            username
           }
         }
       }`
@@ -248,6 +259,51 @@ export class CommentNotificationService {
   }
 
   /**
+   * Create batch notifications for subscribed users using Cypher
+   */
+  private async createBatchNotifications(
+    driver: any,
+    notificationText: string,
+    commenterUsername: string,
+    entityType: 'DiscussionChannel' | 'Event' | 'Comment',
+    entityId: string
+  ) {
+    const session = driver.session();
+    
+    try {
+      const cypherQuery = `
+        MATCH (entity:${entityType} {id: $entityId})
+        MATCH (entity)<-[:SUBSCRIBED_TO_NOTIFICATIONS]-(user:User)
+        WHERE user.username <> $commenterUsername
+        CREATE (notification:Notification {
+          id: randomUUID(),
+          createdAt: datetime(),
+          read: false,
+          text: $notificationText
+        })
+        CREATE (user)-[:HAS_NOTIFICATION]->(notification)
+        RETURN count(notification) as notificationsCreated
+      `;
+
+      const result = await session.run(cypherQuery, {
+        entityId,
+        commenterUsername,
+        notificationText
+      });
+
+      const notificationsCreated = result.records[0]?.get('notificationsCreated')?.toNumber() || 0;
+      console.log(`Created ${notificationsCreated} batch notifications for ${entityType} ${entityId}`);
+      
+      return notificationsCreated;
+    } catch (error) {
+      console.error('Error creating batch notifications:', error);
+      throw error;
+    } finally {
+      session.close();
+    }
+  }
+
+  /**
    * Process notification for a comment on a discussion
    */
   private async processDiscussionCommentNotification(
@@ -259,69 +315,37 @@ export class CommentNotificationService {
   ) {
     console.log('Processing comment on discussion');
 
-    // We need to get the discussion details
-    const discussionId = fullComment.DiscussionChannel?.discussionId;
-    if (!discussionId) {
-      console.log('No discussion ID found');
+    const discussionChannel = fullComment.DiscussionChannel;
+    if (!discussionChannel) {
+      console.log('No discussion channel found');
       return;
     }
 
-    // Fetch the discussion and its author
-    const discussions = await DiscussionModel.find({
-      where: { id: discussionId },
-      selectionSet: `{
-        id
-        title
-        Author {
-          username
-        }
-      }`
-    });
-
-    if (!discussions.length || !discussions[0].Author) {
-      console.log('Discussion or author not found');
-      return;
-    }
-
-    const discussion = discussions[0];
-    const authorUsername = discussion.Author.username;
-
-    // Don't notify authors about their own comments
-    if (commenterUsername === authorUsername) {
-      console.log('Not notifying author of their own comment');
+    const discussion = discussionChannel.Discussion;
+    if (!discussion) {
+      console.log('Discussion not found');
       return;
     }
 
     const channelName = fullComment.Channel?.uniqueName;
-    console.log(
-      `Sending notification to ${authorUsername} about comment on discussion ${discussion.title}`
-    );
+    
+    // Create notification text for in-app notification
+    const notificationText = `${commenterUsername} commented on the discussion [${discussion.title}](${process.env.FRONTEND_URL}/forums/${channelName}/discussions/${discussion.id}/comments/${commentId})`;
 
-    // Create markdown notification text for in-app notification
-    const notificationMessage = `
-${commenterUsername} commented on your discussion [${discussion.title}](${process.env.FRONTEND_URL}/forums/${channelName}/discussions/${discussion.id}/comments/${commentId})
-    `;
+    console.log(`Creating batch notifications for discussion comment: ${discussion.title}`);
 
-    // Create email content
-    const emailContent = createCommentNotificationEmail(
-      fullComment.text,
-      discussion.title,
-      commenterUsername,
-      channelName || '',
-      discussion.id,
-      commentId
-    );
-
-    // Send both email and in-app notification
-    await sendEmailToUser(
-      authorUsername,
-      emailContent,
-      UserModel,
-      {
-        inAppText: notificationMessage,
-        createInAppNotification: true
-      }
-    );
+    // Use batch Cypher query to create notifications for all subscribed users
+    if (this.driver) {
+      await this.createBatchNotifications(
+        this.driver,
+        notificationText,
+        commenterUsername,
+        'DiscussionChannel',
+        discussionChannel.id
+      );
+    } else {
+      console.error('Driver not available for batch notifications');
+    }
   }
 
   /**
@@ -341,67 +365,29 @@ ${commenterUsername} commented on your discussion [${discussion.title}](${proces
       return;
     }
 
-    if (!event.Poster) {
-      console.log('Event poster not found');
-      return;
-    }
-
-    const posterUsername = event.Poster.username;
-
-    // Don't notify posters about their own comments
-    if (commenterUsername === posterUsername) {
-      console.log('Not notifying poster of their own comment');
-      return;
-    }
-
-    // Get channel name from event channels (use first one for notification)
-    if (!event.EventChannels || !event.EventChannels.length) {
+    const channelName = fullComment.Channel?.uniqueName;
+    if (!channelName) {
       console.log('No channel found for event');
       return;
     }
 
-    const channelName = fullComment.Channel?.uniqueName;
-    console.log(
-      `Sending notification to ${posterUsername} about comment on event ${event.title}`
-    );
+    // Create notification text for in-app notification
+    const notificationText = `${commenterUsername} commented on the event [${event.title}](${process.env.FRONTEND_URL}/forums/${channelName}/events/${event.id}/comments/${commentId})`;
 
-    // Create markdown notification text for in-app notification
-    const notificationMessage = `
-${commenterUsername} commented on your event [${event.title}](${process.env.FRONTEND_URL}/forums/${channelName}/events/${event.id}/comments/${commentId})
-    `;
+    console.log(`Creating batch notifications for event comment: ${event.title}`);
 
-    // Create email content for event notification
-    const emailContent = {
-      subject: `New comment on your event: ${event.title}`,
-      plainText: `
-${commenterUsername} commented on your event "${event.title}":
-
-"${fullComment.text}"
-
-View the comment at:
-${process.env.FRONTEND_URL}/forums/${channelName}/events/${event.id}/comments/${commentId}
-      `,
-      html: `
-<p><strong>${commenterUsername}</strong> commented on your event "<strong>${event.title}</strong>":</p>
-<blockquote style="border-left: 4px solid #ccc; padding-left: 16px; margin-left: 0;">
-  ${fullComment.text}
-</blockquote>
-<p>
-  <a href="${process.env.FRONTEND_URL}/forums/${channelName}/events/${event.id}/comments/${commentId}">View the comment</a>
-</p>
-      `
-    };
-
-    // Send both email and in-app notification
-    await sendEmailToUser(
-      posterUsername,
-      emailContent,
-      UserModel,
-      {
-        inAppText: notificationMessage,
-        createInAppNotification: true
-      }
-    );
+    // Use batch Cypher query to create notifications for all subscribed users
+    if (this.driver) {
+      await this.createBatchNotifications(
+        this.driver,
+        notificationText,
+        commenterUsername,
+        'Event',
+        event.id
+      );
+    } else {
+      console.error('Driver not available for batch notifications');
+    }
   }
 
   /**
@@ -422,155 +408,44 @@ ${process.env.FRONTEND_URL}/forums/${channelName}/events/${event.id}/comments/${
       return;
     }
 
-    if (!parentComment.CommentAuthor) {
-      console.log('Parent comment author not found');
-      return;
-    }
-
-    // Fetch more details about the parent comment
     const parentCommentId = parentComment.id;
-
     console.log('Parent comment ID:', parentCommentId);
-    console.log('Current commenter username:', commenterUsername);
 
-    const parentCommentDetails = await CommentModel.find({
-      where: { id: parentCommentId },
-      selectionSet: `{
-        id
-        Channel {
-          uniqueName
-        }
-        CommentAuthor {
-          ... on User {
-            __typename
-            username
-          }
-          ... on ModerationProfile {
-            __typename
-            displayName
-          }
-        }
-        DiscussionChannel {
-          discussionId
-          Channel {
-            uniqueName
-          }
-          Discussion {
-            id
-            title
-          }
-        }
-        Event {
-          id
-          title
-          EventChannels {
-            Channel {
-              uniqueName
-            }
-          }
-        }
-      }`
-    });
-
-    if (!parentCommentDetails.length) {
-      console.log('Could not fetch parent comment details');
-      return;
-    }
-
-    const parentCommentWithDetails = parentCommentDetails[0];
-
-    console.log('Parent comment author type:', parentCommentWithDetails.CommentAuthor?.__typename);
-
-    // Determine parent comment author's username and if it's a user
-    const isParentUserComment = parentCommentWithDetails.CommentAuthor?.__typename === 'User';
-    let parentAuthorUsername = null;
-
-    if (isParentUserComment) {
-      parentAuthorUsername = (parentCommentWithDetails.CommentAuthor as { username: string }).username;
-    } else if (parentCommentWithDetails.CommentAuthor?.__typename === 'ModerationProfile') {
-      parentAuthorUsername = (parentCommentWithDetails.CommentAuthor as { displayName: string }).displayName;
-    } else {
-      console.log('Could not determine parent comment author type');
-      return;
-    }
-
-    if (!parentAuthorUsername) {
-      console.log('Could not determine parent comment author username');
-      return;
-    }
-
-    console.log('Parent comment author username:', parentAuthorUsername);
-
-    // Don't notify authors about their own replies
-    if (commenterUsername === parentAuthorUsername) {
-      console.log('Not notifying author of reply to their own comment');
-      return;
-    }
-
-    console.log(`Sending notification to ${parentAuthorUsername} about reply to their comment`);
-
-    // Variable to store notification info
+    // Determine content title and URL based on parent comment's context
     let contentTitle, contentUrl, channelName;
 
-    // Determine if parent comment is on a discussion or event
-    if (parentCommentWithDetails.DiscussionChannel) {
-      contentTitle = parentCommentWithDetails.DiscussionChannel.Discussion.title;
-      channelName = parentCommentWithDetails.Channel?.uniqueName;
-      contentUrl = `${process.env.FRONTEND_URL}/forums/${channelName}/discussions/${parentCommentWithDetails.DiscussionChannel.Discussion.id}/comments/${parentCommentId}`;
-    } else if (parentCommentWithDetails.Event) {
-      contentTitle = parentCommentWithDetails.Event.title;
-
-      // Get the channel name from the first event channel
-      if (!parentCommentWithDetails.Channel?.uniqueName) {
-        console.log('No channel found for event');
-        return;
-      }
-
-      channelName = parentCommentWithDetails.Channel?.uniqueName;
-      contentUrl = `${process.env.FRONTEND_URL}/forums/${channelName}/events/${parentCommentWithDetails.Event.id}/comments/${parentCommentId}`;
+    // Check if the reply is on a discussion or event (from the current comment's context)
+    if (fullComment.DiscussionChannel) {
+      const discussion = fullComment.DiscussionChannel.Discussion;
+      contentTitle = discussion?.title || 'a discussion';
+      channelName = fullComment.Channel?.uniqueName;
+      contentUrl = `${process.env.FRONTEND_URL}/forums/${channelName}/discussions/${discussion?.id}/comments/${parentCommentId}`;
+    } else if (fullComment.Event) {
+      const event = fullComment.Event;
+      contentTitle = event?.title || 'an event';
+      channelName = fullComment.Channel?.uniqueName;
+      contentUrl = `${process.env.FRONTEND_URL}/forums/${channelName}/events/${event?.id}/comments/${parentCommentId}`;
     } else {
-      console.log('No content reference found for parent comment');
+      console.log('No content reference found for comment reply');
       return;
     }
 
-    // Create markdown notification text for in-app notification
-    const notificationMessage = `
-${commenterUsername} replied to your comment on [${contentTitle}](${contentUrl})
-    `;
+    // Create notification text for in-app notification
+    const notificationText = `${commenterUsername} replied to your comment on [${contentTitle}](${contentUrl})`;
 
-    // Create email content for reply notification
-    const emailContent = {
-      subject: `New reply to your comment on: ${contentTitle}`,
-      plainText: `
-${commenterUsername} replied to your comment on "${contentTitle}":
+    console.log(`Creating batch notifications for comment reply on: ${contentTitle}`);
 
-"${fullComment.text}"
-
-View the reply at:
-${contentUrl}
-      `,
-      html: `
-<p><strong>${commenterUsername}</strong> replied to your comment on "<strong>${contentTitle}</strong>":</p>
-<blockquote style="border-left: 4px solid #ccc; padding-left: 16px; margin-left: 0;">
-  ${fullComment.text}
-</blockquote>
-<p>
-  <a href="${contentUrl}">View the reply</a>
-</p>
-      `
-    };
-
-    // Send both email and in-app notification
-    if (isParentUserComment) {
-      await sendEmailToUser(
-        parentAuthorUsername,
-        emailContent,
-        UserModel,
-        {
-          inAppText: notificationMessage,
-          createInAppNotification: true
-        }
+    // Use batch Cypher query to create notifications for all users subscribed to the parent comment
+    if (this.driver) {
+      await this.createBatchNotifications(
+        this.driver,
+        notificationText,
+        commenterUsername,
+        'Comment',
+        parentCommentId
       );
+    } else {
+      console.error('Driver not available for batch notifications');
     }
   }
 
