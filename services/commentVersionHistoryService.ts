@@ -130,14 +130,6 @@ export class CommentVersionHistoryService {
             console.log('Could not determine username from comment author');
             continue;
           }
-
-          // Log that we got the subscription event (for debugging)
-          console.log(`Comment update event received for comment ${commentId}`);
-          console.log(`Current text: "${comment.text}"`);
-          
-          // The middleware approach is already handling the version history properly
-          // This subscription handler serves as a backup in case the middleware misses something
-          console.log('Version history is being handled by middleware');
         } catch (error) {
           console.error('Error processing comment version history:', error);
           // Continue processing other events even if one fails

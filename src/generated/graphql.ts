@@ -7506,6 +7506,8 @@ export type Comment = {
   RelatedIssuesAggregate?: Maybe<CommentIssueRelatedIssuesAggregationSelection>;
   RelatedIssuesConnection: CommentRelatedIssuesConnection;
   SubscribedToNotifications: Array<User>;
+  SubscribedToNotificationsAggregate?: Maybe<CommentUserSubscribedToNotificationsAggregationSelection>;
+  SubscribedToNotificationsConnection: CommentSubscribedToNotificationsConnection;
   Tags: Array<Tag>;
   TagsAggregate?: Maybe<CommentTagTagsAggregationSelection>;
   TagsConnection: CommentTagsConnection;
@@ -7823,6 +7825,28 @@ export type CommentRelatedIssuesConnectionArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<Array<CommentRelatedIssuesConnectionSort>>;
   where?: InputMaybe<CommentRelatedIssuesConnectionWhere>;
+};
+
+
+export type CommentSubscribedToNotificationsArgs = {
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  options?: InputMaybe<UserOptions>;
+  where?: InputMaybe<UserWhere>;
+};
+
+
+export type CommentSubscribedToNotificationsAggregateArgs = {
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  where?: InputMaybe<UserWhere>;
+};
+
+
+export type CommentSubscribedToNotificationsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<Array<CommentSubscribedToNotificationsConnectionSort>>;
+  where?: InputMaybe<CommentSubscribedToNotificationsConnectionWhere>;
 };
 
 
@@ -8512,6 +8536,7 @@ export type CommentConnectInput = {
   ParentComment?: InputMaybe<CommentParentCommentConnectFieldInput>;
   PastVersions?: InputMaybe<Array<CommentPastVersionsConnectFieldInput>>;
   RelatedIssues?: InputMaybe<Array<CommentRelatedIssuesConnectFieldInput>>;
+  SubscribedToNotifications?: InputMaybe<Array<CommentSubscribedToNotificationsConnectFieldInput>>;
   Tags?: InputMaybe<Array<CommentTagsConnectFieldInput>>;
   UpvotedByUsers?: InputMaybe<Array<CommentUpvotedByUsersConnectFieldInput>>;
 };
@@ -8519,6 +8544,7 @@ export type CommentConnectInput = {
 export type CommentConnectOrCreateInput = {
   Channel?: InputMaybe<CommentChannelConnectOrCreateFieldInput>;
   CommentAuthor?: InputMaybe<CommentCommentAuthorConnectOrCreateInput>;
+  SubscribedToNotifications?: InputMaybe<Array<CommentSubscribedToNotificationsConnectOrCreateFieldInput>>;
   Tags?: InputMaybe<Array<CommentTagsConnectOrCreateFieldInput>>;
   UpvotedByUsers?: InputMaybe<Array<CommentUpvotedByUsersConnectOrCreateFieldInput>>;
 };
@@ -8543,6 +8569,7 @@ export type CommentConnectedRelationships = {
   ParentComment?: Maybe<CommentParentCommentConnectedRelationship>;
   PastVersions?: Maybe<CommentPastVersionsConnectedRelationship>;
   RelatedIssues?: Maybe<CommentRelatedIssuesConnectedRelationship>;
+  SubscribedToNotifications?: Maybe<CommentSubscribedToNotificationsConnectedRelationship>;
   Tags?: Maybe<CommentTagsConnectedRelationship>;
   UpvotedByUsers?: Maybe<CommentUpvotedByUsersConnectedRelationship>;
 };
@@ -8562,6 +8589,7 @@ export type CommentCreateInput = {
   ParentComment?: InputMaybe<CommentParentCommentFieldInput>;
   PastVersions?: InputMaybe<CommentPastVersionsFieldInput>;
   RelatedIssues?: InputMaybe<CommentRelatedIssuesFieldInput>;
+  SubscribedToNotifications?: InputMaybe<CommentSubscribedToNotificationsFieldInput>;
   Tags?: InputMaybe<CommentTagsFieldInput>;
   UpvotedByUsers?: InputMaybe<CommentUpvotedByUsersFieldInput>;
   archived?: InputMaybe<Scalars['Boolean']['input']>;
@@ -8596,6 +8624,7 @@ export type CommentDeleteInput = {
   ParentComment?: InputMaybe<CommentParentCommentDeleteFieldInput>;
   PastVersions?: InputMaybe<Array<CommentPastVersionsDeleteFieldInput>>;
   RelatedIssues?: InputMaybe<Array<CommentRelatedIssuesDeleteFieldInput>>;
+  SubscribedToNotifications?: InputMaybe<Array<CommentSubscribedToNotificationsDeleteFieldInput>>;
   Tags?: InputMaybe<Array<CommentTagsDeleteFieldInput>>;
   UpvotedByUsers?: InputMaybe<Array<CommentUpvotedByUsersDeleteFieldInput>>;
 };
@@ -8622,6 +8651,7 @@ export type CommentDisconnectInput = {
   ParentComment?: InputMaybe<CommentParentCommentDisconnectFieldInput>;
   PastVersions?: InputMaybe<Array<CommentPastVersionsDisconnectFieldInput>>;
   RelatedIssues?: InputMaybe<Array<CommentRelatedIssuesDisconnectFieldInput>>;
+  SubscribedToNotifications?: InputMaybe<Array<CommentSubscribedToNotificationsDisconnectFieldInput>>;
   Tags?: InputMaybe<Array<CommentTagsDisconnectFieldInput>>;
   UpvotedByUsers?: InputMaybe<Array<CommentUpvotedByUsersDisconnectFieldInput>>;
 };
@@ -10874,6 +10904,7 @@ export type CommentRelationInput = {
   ParentComment?: InputMaybe<CommentParentCommentCreateFieldInput>;
   PastVersions?: InputMaybe<Array<CommentPastVersionsCreateFieldInput>>;
   RelatedIssues?: InputMaybe<Array<CommentRelatedIssuesCreateFieldInput>>;
+  SubscribedToNotifications?: InputMaybe<Array<CommentSubscribedToNotificationsCreateFieldInput>>;
   Tags?: InputMaybe<Array<CommentTagsCreateFieldInput>>;
   UpvotedByUsers?: InputMaybe<Array<CommentUpvotedByUsersCreateFieldInput>>;
 };
@@ -10927,6 +10958,7 @@ export type CommentRelationshipsSubscriptionWhere = {
   ParentComment?: InputMaybe<CommentParentCommentRelationshipSubscriptionWhere>;
   PastVersions?: InputMaybe<CommentPastVersionsRelationshipSubscriptionWhere>;
   RelatedIssues?: InputMaybe<CommentRelatedIssuesRelationshipSubscriptionWhere>;
+  SubscribedToNotifications?: InputMaybe<CommentSubscribedToNotificationsRelationshipSubscriptionWhere>;
   Tags?: InputMaybe<CommentTagsRelationshipSubscriptionWhere>;
   UpvotedByUsers?: InputMaybe<CommentUpvotedByUsersRelationshipSubscriptionWhere>;
 };
@@ -11104,6 +11136,322 @@ export type CommentSort = {
   text?: InputMaybe<SortDirection>;
   updatedAt?: InputMaybe<SortDirection>;
   weightedVotesCount?: InputMaybe<SortDirection>;
+};
+
+export type CommentSubscribedToNotificationsAggregateInput = {
+  AND?: InputMaybe<Array<CommentSubscribedToNotificationsAggregateInput>>;
+  NOT?: InputMaybe<CommentSubscribedToNotificationsAggregateInput>;
+  OR?: InputMaybe<Array<CommentSubscribedToNotificationsAggregateInput>>;
+  count?: InputMaybe<Scalars['Int']['input']>;
+  count_GT?: InputMaybe<Scalars['Int']['input']>;
+  count_GTE?: InputMaybe<Scalars['Int']['input']>;
+  count_LT?: InputMaybe<Scalars['Int']['input']>;
+  count_LTE?: InputMaybe<Scalars['Int']['input']>;
+  node?: InputMaybe<CommentSubscribedToNotificationsNodeAggregationWhereInput>;
+};
+
+export type CommentSubscribedToNotificationsConnectFieldInput = {
+  connect?: InputMaybe<Array<UserConnectInput>>;
+  /** Whether or not to overwrite any matching relationship with the new properties. */
+  overwrite?: Scalars['Boolean']['input'];
+  where?: InputMaybe<UserConnectWhere>;
+};
+
+export type CommentSubscribedToNotificationsConnectOrCreateFieldInput = {
+  onCreate: CommentSubscribedToNotificationsConnectOrCreateFieldInputOnCreate;
+  where: UserConnectOrCreateWhere;
+};
+
+export type CommentSubscribedToNotificationsConnectOrCreateFieldInputOnCreate = {
+  node: UserOnCreateInput;
+};
+
+export type CommentSubscribedToNotificationsConnectedRelationship = {
+  __typename?: 'CommentSubscribedToNotificationsConnectedRelationship';
+  node: UserEventPayload;
+};
+
+export type CommentSubscribedToNotificationsConnection = {
+  __typename?: 'CommentSubscribedToNotificationsConnection';
+  edges: Array<CommentSubscribedToNotificationsRelationship>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type CommentSubscribedToNotificationsConnectionSort = {
+  node?: InputMaybe<UserSort>;
+};
+
+export type CommentSubscribedToNotificationsConnectionWhere = {
+  AND?: InputMaybe<Array<CommentSubscribedToNotificationsConnectionWhere>>;
+  NOT?: InputMaybe<CommentSubscribedToNotificationsConnectionWhere>;
+  OR?: InputMaybe<Array<CommentSubscribedToNotificationsConnectionWhere>>;
+  node?: InputMaybe<UserWhere>;
+};
+
+export type CommentSubscribedToNotificationsCreateFieldInput = {
+  node: UserCreateInput;
+};
+
+export type CommentSubscribedToNotificationsDeleteFieldInput = {
+  delete?: InputMaybe<UserDeleteInput>;
+  where?: InputMaybe<CommentSubscribedToNotificationsConnectionWhere>;
+};
+
+export type CommentSubscribedToNotificationsDisconnectFieldInput = {
+  disconnect?: InputMaybe<UserDisconnectInput>;
+  where?: InputMaybe<CommentSubscribedToNotificationsConnectionWhere>;
+};
+
+export type CommentSubscribedToNotificationsFieldInput = {
+  connect?: InputMaybe<Array<CommentSubscribedToNotificationsConnectFieldInput>>;
+  connectOrCreate?: InputMaybe<Array<CommentSubscribedToNotificationsConnectOrCreateFieldInput>>;
+  create?: InputMaybe<Array<CommentSubscribedToNotificationsCreateFieldInput>>;
+};
+
+export type CommentSubscribedToNotificationsNodeAggregationWhereInput = {
+  AND?: InputMaybe<Array<CommentSubscribedToNotificationsNodeAggregationWhereInput>>;
+  NOT?: InputMaybe<CommentSubscribedToNotificationsNodeAggregationWhereInput>;
+  OR?: InputMaybe<Array<CommentSubscribedToNotificationsNodeAggregationWhereInput>>;
+  bio_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  bio_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  bio_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  bio_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  bio_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  bio_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  bio_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  bio_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  bio_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  bio_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  bio_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  bio_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  bio_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  bio_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  bio_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_AVERAGE_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  commentKarma_AVERAGE_GT?: InputMaybe<Scalars['Float']['input']>;
+  commentKarma_AVERAGE_GTE?: InputMaybe<Scalars['Float']['input']>;
+  commentKarma_AVERAGE_LT?: InputMaybe<Scalars['Float']['input']>;
+  commentKarma_AVERAGE_LTE?: InputMaybe<Scalars['Float']['input']>;
+  commentKarma_MAX_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_MAX_GT?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_MAX_GTE?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_MAX_LT?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_MAX_LTE?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_MIN_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_MIN_GT?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_MIN_GTE?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_MIN_LT?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_MIN_LTE?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_SUM_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_SUM_GT?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_SUM_GTE?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_SUM_LT?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_SUM_LTE?: InputMaybe<Scalars['Int']['input']>;
+  createdAt_MAX_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+  defaultEmojiSkinTone_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  defaultEmojiSkinTone_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  defaultEmojiSkinTone_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  defaultEmojiSkinTone_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  defaultEmojiSkinTone_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  defaultEmojiSkinTone_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  defaultEmojiSkinTone_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  defaultEmojiSkinTone_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  defaultEmojiSkinTone_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  defaultEmojiSkinTone_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  defaultEmojiSkinTone_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  defaultEmojiSkinTone_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  defaultEmojiSkinTone_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  defaultEmojiSkinTone_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  defaultEmojiSkinTone_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_AVERAGE_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  discussionKarma_AVERAGE_GT?: InputMaybe<Scalars['Float']['input']>;
+  discussionKarma_AVERAGE_GTE?: InputMaybe<Scalars['Float']['input']>;
+  discussionKarma_AVERAGE_LT?: InputMaybe<Scalars['Float']['input']>;
+  discussionKarma_AVERAGE_LTE?: InputMaybe<Scalars['Float']['input']>;
+  discussionKarma_MAX_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_MAX_GT?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_MAX_GTE?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_MAX_LT?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_MAX_LTE?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_MIN_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_MIN_GT?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_MIN_GTE?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_MIN_LT?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_MIN_LTE?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_SUM_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_SUM_GT?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_SUM_GTE?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_SUM_LT?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_SUM_LTE?: InputMaybe<Scalars['Int']['input']>;
+  displayName_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  displayName_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  displayName_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  displayName_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  displayName_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  displayName_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  displayName_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  displayName_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  displayName_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  displayName_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  displayName_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  displayName_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  displayName_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  displayName_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  displayName_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  location_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  location_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  location_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  location_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  location_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  location_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  location_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  location_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  location_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  location_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  location_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  location_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  location_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  location_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  location_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  notificationBundleContent_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  notificationBundleContent_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  notificationBundleContent_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  notificationBundleContent_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  notificationBundleContent_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  notificationBundleContent_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  notificationBundleContent_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  notificationBundleContent_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  notificationBundleContent_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  notificationBundleContent_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  notificationBundleContent_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  notificationBundleContent_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  notificationBundleContent_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  notificationBundleContent_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  notificationBundleContent_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  notificationBundleInterval_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  notificationBundleInterval_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  notificationBundleInterval_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  notificationBundleInterval_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  notificationBundleInterval_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  notificationBundleInterval_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  notificationBundleInterval_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  notificationBundleInterval_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  notificationBundleInterval_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  notificationBundleInterval_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  notificationBundleInterval_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  notificationBundleInterval_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  notificationBundleInterval_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  notificationBundleInterval_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  notificationBundleInterval_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  preferredTimeZone_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  preferredTimeZone_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  preferredTimeZone_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  preferredTimeZone_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  preferredTimeZone_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  preferredTimeZone_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  preferredTimeZone_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  preferredTimeZone_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  preferredTimeZone_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  preferredTimeZone_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  preferredTimeZone_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  preferredTimeZone_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  preferredTimeZone_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  preferredTimeZone_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  preferredTimeZone_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  profilePicURL_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  profilePicURL_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  profilePicURL_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  profilePicURL_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  profilePicURL_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  profilePicURL_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  profilePicURL_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  profilePicURL_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  profilePicURL_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  profilePicURL_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  profilePicURL_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  profilePicURL_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  profilePicURL_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  profilePicURL_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  profilePicURL_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  pronouns_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  pronouns_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  pronouns_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  pronouns_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  pronouns_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  pronouns_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  pronouns_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  pronouns_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  pronouns_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  pronouns_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  pronouns_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  pronouns_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  pronouns_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  pronouns_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  pronouns_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  stripeAccountId_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  stripeAccountId_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  stripeAccountId_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  stripeAccountId_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  stripeAccountId_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  stripeAccountId_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  stripeAccountId_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  stripeAccountId_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  stripeAccountId_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  stripeAccountId_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  stripeAccountId_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  stripeAccountId_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  stripeAccountId_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  stripeAccountId_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  stripeAccountId_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  username_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  username_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  username_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  username_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  username_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  username_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  username_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  username_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  username_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  username_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  username_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  username_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  username_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  username_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  username_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type CommentSubscribedToNotificationsRelationship = {
+  __typename?: 'CommentSubscribedToNotificationsRelationship';
+  cursor: Scalars['String']['output'];
+  node: User;
+};
+
+export type CommentSubscribedToNotificationsRelationshipSubscriptionWhere = {
+  node?: InputMaybe<UserSubscriptionWhere>;
+};
+
+export type CommentSubscribedToNotificationsUpdateConnectionInput = {
+  node?: InputMaybe<UserUpdateInput>;
+};
+
+export type CommentSubscribedToNotificationsUpdateFieldInput = {
+  connect?: InputMaybe<Array<CommentSubscribedToNotificationsConnectFieldInput>>;
+  connectOrCreate?: InputMaybe<Array<CommentSubscribedToNotificationsConnectOrCreateFieldInput>>;
+  create?: InputMaybe<Array<CommentSubscribedToNotificationsCreateFieldInput>>;
+  delete?: InputMaybe<Array<CommentSubscribedToNotificationsDeleteFieldInput>>;
+  disconnect?: InputMaybe<Array<CommentSubscribedToNotificationsDisconnectFieldInput>>;
+  update?: InputMaybe<CommentSubscribedToNotificationsUpdateConnectionInput>;
+  where?: InputMaybe<CommentSubscribedToNotificationsConnectionWhere>;
 };
 
 export type CommentSubscriptionWhere = {
@@ -11303,6 +11651,7 @@ export type CommentUpdateInput = {
   ParentComment?: InputMaybe<CommentParentCommentUpdateFieldInput>;
   PastVersions?: InputMaybe<Array<CommentPastVersionsUpdateFieldInput>>;
   RelatedIssues?: InputMaybe<Array<CommentRelatedIssuesUpdateFieldInput>>;
+  SubscribedToNotifications?: InputMaybe<Array<CommentSubscribedToNotificationsUpdateFieldInput>>;
   Tags?: InputMaybe<Array<CommentTagsUpdateFieldInput>>;
   UpvotedByUsers?: InputMaybe<Array<CommentUpvotedByUsersUpdateFieldInput>>;
   archived?: InputMaybe<Scalars['Boolean']['input']>;
@@ -11643,6 +11992,30 @@ export type CommentUpvotedByUsersUpdateFieldInput = {
   where?: InputMaybe<CommentUpvotedByUsersConnectionWhere>;
 };
 
+export type CommentUserSubscribedToNotificationsAggregationSelection = {
+  __typename?: 'CommentUserSubscribedToNotificationsAggregationSelection';
+  count: Scalars['Int']['output'];
+  node?: Maybe<CommentUserSubscribedToNotificationsNodeAggregateSelection>;
+};
+
+export type CommentUserSubscribedToNotificationsNodeAggregateSelection = {
+  __typename?: 'CommentUserSubscribedToNotificationsNodeAggregateSelection';
+  bio: StringAggregateSelection;
+  commentKarma: IntAggregateSelection;
+  createdAt: DateTimeAggregateSelection;
+  defaultEmojiSkinTone: StringAggregateSelection;
+  discussionKarma: IntAggregateSelection;
+  displayName: StringAggregateSelection;
+  location: StringAggregateSelection;
+  notificationBundleContent: StringAggregateSelection;
+  notificationBundleInterval: StringAggregateSelection;
+  preferredTimeZone: StringAggregateSelection;
+  profilePicURL: StringAggregateSelection;
+  pronouns: StringAggregateSelection;
+  stripeAccountId: StringAggregateSelection;
+  username: StringAggregateSelection;
+};
+
 export type CommentUserUpvotedByUsersAggregationSelection = {
   __typename?: 'CommentUserUpvotedByUsersAggregationSelection';
   count: Scalars['Int']['output'];
@@ -11788,6 +12161,23 @@ export type CommentWhere = {
   RelatedIssues_SINGLE?: InputMaybe<IssueWhere>;
   /** Return Comments where some of the related Issues match this filter */
   RelatedIssues_SOME?: InputMaybe<IssueWhere>;
+  SubscribedToNotificationsAggregate?: InputMaybe<CommentSubscribedToNotificationsAggregateInput>;
+  /** Return Comments where all of the related CommentSubscribedToNotificationsConnections match this filter */
+  SubscribedToNotificationsConnection_ALL?: InputMaybe<CommentSubscribedToNotificationsConnectionWhere>;
+  /** Return Comments where none of the related CommentSubscribedToNotificationsConnections match this filter */
+  SubscribedToNotificationsConnection_NONE?: InputMaybe<CommentSubscribedToNotificationsConnectionWhere>;
+  /** Return Comments where one of the related CommentSubscribedToNotificationsConnections match this filter */
+  SubscribedToNotificationsConnection_SINGLE?: InputMaybe<CommentSubscribedToNotificationsConnectionWhere>;
+  /** Return Comments where some of the related CommentSubscribedToNotificationsConnections match this filter */
+  SubscribedToNotificationsConnection_SOME?: InputMaybe<CommentSubscribedToNotificationsConnectionWhere>;
+  /** Return Comments where all of the related Users match this filter */
+  SubscribedToNotifications_ALL?: InputMaybe<UserWhere>;
+  /** Return Comments where none of the related Users match this filter */
+  SubscribedToNotifications_NONE?: InputMaybe<UserWhere>;
+  /** Return Comments where one of the related Users match this filter */
+  SubscribedToNotifications_SINGLE?: InputMaybe<UserWhere>;
+  /** Return Comments where some of the related Users match this filter */
+  SubscribedToNotifications_SOME?: InputMaybe<UserWhere>;
   TagsAggregate?: InputMaybe<CommentTagsAggregateInput>;
   /** Return Comments where all of the related CommentTagsConnections match this filter */
   TagsConnection_ALL?: InputMaybe<CommentTagsConnectionWhere>;
@@ -13556,6 +13946,8 @@ export type DiscussionChannel = {
   RelatedIssuesAggregate?: Maybe<DiscussionChannelIssueRelatedIssuesAggregationSelection>;
   RelatedIssuesConnection: DiscussionChannelRelatedIssuesConnection;
   SubscribedToNotifications: Array<User>;
+  SubscribedToNotificationsAggregate?: Maybe<DiscussionChannelUserSubscribedToNotificationsAggregationSelection>;
+  SubscribedToNotificationsConnection: DiscussionChannelSubscribedToNotificationsConnection;
   UpvotedByUsers: Array<User>;
   UpvotedByUsersAggregate?: Maybe<DiscussionChannelUserUpvotedByUsersAggregationSelection>;
   UpvotedByUsersConnection: DiscussionChannelUpvotedByUsersConnection;
@@ -13678,6 +14070,28 @@ export type DiscussionChannelRelatedIssuesConnectionArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<Array<DiscussionChannelRelatedIssuesConnectionSort>>;
   where?: InputMaybe<DiscussionChannelRelatedIssuesConnectionWhere>;
+};
+
+
+export type DiscussionChannelSubscribedToNotificationsArgs = {
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  options?: InputMaybe<UserOptions>;
+  where?: InputMaybe<UserWhere>;
+};
+
+
+export type DiscussionChannelSubscribedToNotificationsAggregateArgs = {
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  where?: InputMaybe<UserWhere>;
+};
+
+
+export type DiscussionChannelSubscribedToNotificationsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<Array<DiscussionChannelSubscribedToNotificationsConnectionSort>>;
+  where?: InputMaybe<DiscussionChannelSubscribedToNotificationsConnectionWhere>;
 };
 
 
@@ -14261,11 +14675,13 @@ export type DiscussionChannelConnectInput = {
   Comments?: InputMaybe<Array<DiscussionChannelCommentsConnectFieldInput>>;
   Discussion?: InputMaybe<DiscussionChannelDiscussionConnectFieldInput>;
   RelatedIssues?: InputMaybe<Array<DiscussionChannelRelatedIssuesConnectFieldInput>>;
+  SubscribedToNotifications?: InputMaybe<Array<DiscussionChannelSubscribedToNotificationsConnectFieldInput>>;
   UpvotedByUsers?: InputMaybe<Array<DiscussionChannelUpvotedByUsersConnectFieldInput>>;
 };
 
 export type DiscussionChannelConnectOrCreateInput = {
   Channel?: InputMaybe<DiscussionChannelChannelConnectOrCreateFieldInput>;
+  SubscribedToNotifications?: InputMaybe<Array<DiscussionChannelSubscribedToNotificationsConnectOrCreateFieldInput>>;
   UpvotedByUsers?: InputMaybe<Array<DiscussionChannelUpvotedByUsersConnectOrCreateFieldInput>>;
 };
 
@@ -14280,6 +14696,7 @@ export type DiscussionChannelConnectedRelationships = {
   Comments?: Maybe<DiscussionChannelCommentsConnectedRelationship>;
   Discussion?: Maybe<DiscussionChannelDiscussionConnectedRelationship>;
   RelatedIssues?: Maybe<DiscussionChannelRelatedIssuesConnectedRelationship>;
+  SubscribedToNotifications?: Maybe<DiscussionChannelSubscribedToNotificationsConnectedRelationship>;
   UpvotedByUsers?: Maybe<DiscussionChannelUpvotedByUsersConnectedRelationship>;
 };
 
@@ -14289,6 +14706,7 @@ export type DiscussionChannelCreateInput = {
   Comments?: InputMaybe<DiscussionChannelCommentsFieldInput>;
   Discussion?: InputMaybe<DiscussionChannelDiscussionFieldInput>;
   RelatedIssues?: InputMaybe<DiscussionChannelRelatedIssuesFieldInput>;
+  SubscribedToNotifications?: InputMaybe<DiscussionChannelSubscribedToNotificationsFieldInput>;
   UpvotedByUsers?: InputMaybe<DiscussionChannelUpvotedByUsersFieldInput>;
   answered?: InputMaybe<Scalars['Boolean']['input']>;
   archived?: InputMaybe<Scalars['Boolean']['input']>;
@@ -14312,6 +14730,7 @@ export type DiscussionChannelDeleteInput = {
   Comments?: InputMaybe<Array<DiscussionChannelCommentsDeleteFieldInput>>;
   Discussion?: InputMaybe<DiscussionChannelDiscussionDeleteFieldInput>;
   RelatedIssues?: InputMaybe<Array<DiscussionChannelRelatedIssuesDeleteFieldInput>>;
+  SubscribedToNotifications?: InputMaybe<Array<DiscussionChannelSubscribedToNotificationsDeleteFieldInput>>;
   UpvotedByUsers?: InputMaybe<Array<DiscussionChannelUpvotedByUsersDeleteFieldInput>>;
 };
 
@@ -14328,6 +14747,7 @@ export type DiscussionChannelDisconnectInput = {
   Comments?: InputMaybe<Array<DiscussionChannelCommentsDisconnectFieldInput>>;
   Discussion?: InputMaybe<DiscussionChannelDiscussionDisconnectFieldInput>;
   RelatedIssues?: InputMaybe<Array<DiscussionChannelRelatedIssuesDisconnectFieldInput>>;
+  SubscribedToNotifications?: InputMaybe<Array<DiscussionChannelSubscribedToNotificationsDisconnectFieldInput>>;
   UpvotedByUsers?: InputMaybe<Array<DiscussionChannelUpvotedByUsersDisconnectFieldInput>>;
 };
 
@@ -14968,6 +15388,7 @@ export type DiscussionChannelRelationInput = {
   Comments?: InputMaybe<Array<DiscussionChannelCommentsCreateFieldInput>>;
   Discussion?: InputMaybe<DiscussionChannelDiscussionCreateFieldInput>;
   RelatedIssues?: InputMaybe<Array<DiscussionChannelRelatedIssuesCreateFieldInput>>;
+  SubscribedToNotifications?: InputMaybe<Array<DiscussionChannelSubscribedToNotificationsCreateFieldInput>>;
   UpvotedByUsers?: InputMaybe<Array<DiscussionChannelUpvotedByUsersCreateFieldInput>>;
 };
 
@@ -15011,6 +15432,7 @@ export type DiscussionChannelRelationshipsSubscriptionWhere = {
   Comments?: InputMaybe<DiscussionChannelCommentsRelationshipSubscriptionWhere>;
   Discussion?: InputMaybe<DiscussionChannelDiscussionRelationshipSubscriptionWhere>;
   RelatedIssues?: InputMaybe<DiscussionChannelRelatedIssuesRelationshipSubscriptionWhere>;
+  SubscribedToNotifications?: InputMaybe<DiscussionChannelSubscribedToNotificationsRelationshipSubscriptionWhere>;
   UpvotedByUsers?: InputMaybe<DiscussionChannelUpvotedByUsersRelationshipSubscriptionWhere>;
 };
 
@@ -15025,6 +15447,322 @@ export type DiscussionChannelSort = {
   id?: InputMaybe<SortDirection>;
   locked?: InputMaybe<SortDirection>;
   weightedVotesCount?: InputMaybe<SortDirection>;
+};
+
+export type DiscussionChannelSubscribedToNotificationsAggregateInput = {
+  AND?: InputMaybe<Array<DiscussionChannelSubscribedToNotificationsAggregateInput>>;
+  NOT?: InputMaybe<DiscussionChannelSubscribedToNotificationsAggregateInput>;
+  OR?: InputMaybe<Array<DiscussionChannelSubscribedToNotificationsAggregateInput>>;
+  count?: InputMaybe<Scalars['Int']['input']>;
+  count_GT?: InputMaybe<Scalars['Int']['input']>;
+  count_GTE?: InputMaybe<Scalars['Int']['input']>;
+  count_LT?: InputMaybe<Scalars['Int']['input']>;
+  count_LTE?: InputMaybe<Scalars['Int']['input']>;
+  node?: InputMaybe<DiscussionChannelSubscribedToNotificationsNodeAggregationWhereInput>;
+};
+
+export type DiscussionChannelSubscribedToNotificationsConnectFieldInput = {
+  connect?: InputMaybe<Array<UserConnectInput>>;
+  /** Whether or not to overwrite any matching relationship with the new properties. */
+  overwrite?: Scalars['Boolean']['input'];
+  where?: InputMaybe<UserConnectWhere>;
+};
+
+export type DiscussionChannelSubscribedToNotificationsConnectOrCreateFieldInput = {
+  onCreate: DiscussionChannelSubscribedToNotificationsConnectOrCreateFieldInputOnCreate;
+  where: UserConnectOrCreateWhere;
+};
+
+export type DiscussionChannelSubscribedToNotificationsConnectOrCreateFieldInputOnCreate = {
+  node: UserOnCreateInput;
+};
+
+export type DiscussionChannelSubscribedToNotificationsConnectedRelationship = {
+  __typename?: 'DiscussionChannelSubscribedToNotificationsConnectedRelationship';
+  node: UserEventPayload;
+};
+
+export type DiscussionChannelSubscribedToNotificationsConnection = {
+  __typename?: 'DiscussionChannelSubscribedToNotificationsConnection';
+  edges: Array<DiscussionChannelSubscribedToNotificationsRelationship>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type DiscussionChannelSubscribedToNotificationsConnectionSort = {
+  node?: InputMaybe<UserSort>;
+};
+
+export type DiscussionChannelSubscribedToNotificationsConnectionWhere = {
+  AND?: InputMaybe<Array<DiscussionChannelSubscribedToNotificationsConnectionWhere>>;
+  NOT?: InputMaybe<DiscussionChannelSubscribedToNotificationsConnectionWhere>;
+  OR?: InputMaybe<Array<DiscussionChannelSubscribedToNotificationsConnectionWhere>>;
+  node?: InputMaybe<UserWhere>;
+};
+
+export type DiscussionChannelSubscribedToNotificationsCreateFieldInput = {
+  node: UserCreateInput;
+};
+
+export type DiscussionChannelSubscribedToNotificationsDeleteFieldInput = {
+  delete?: InputMaybe<UserDeleteInput>;
+  where?: InputMaybe<DiscussionChannelSubscribedToNotificationsConnectionWhere>;
+};
+
+export type DiscussionChannelSubscribedToNotificationsDisconnectFieldInput = {
+  disconnect?: InputMaybe<UserDisconnectInput>;
+  where?: InputMaybe<DiscussionChannelSubscribedToNotificationsConnectionWhere>;
+};
+
+export type DiscussionChannelSubscribedToNotificationsFieldInput = {
+  connect?: InputMaybe<Array<DiscussionChannelSubscribedToNotificationsConnectFieldInput>>;
+  connectOrCreate?: InputMaybe<Array<DiscussionChannelSubscribedToNotificationsConnectOrCreateFieldInput>>;
+  create?: InputMaybe<Array<DiscussionChannelSubscribedToNotificationsCreateFieldInput>>;
+};
+
+export type DiscussionChannelSubscribedToNotificationsNodeAggregationWhereInput = {
+  AND?: InputMaybe<Array<DiscussionChannelSubscribedToNotificationsNodeAggregationWhereInput>>;
+  NOT?: InputMaybe<DiscussionChannelSubscribedToNotificationsNodeAggregationWhereInput>;
+  OR?: InputMaybe<Array<DiscussionChannelSubscribedToNotificationsNodeAggregationWhereInput>>;
+  bio_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  bio_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  bio_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  bio_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  bio_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  bio_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  bio_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  bio_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  bio_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  bio_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  bio_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  bio_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  bio_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  bio_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  bio_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_AVERAGE_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  commentKarma_AVERAGE_GT?: InputMaybe<Scalars['Float']['input']>;
+  commentKarma_AVERAGE_GTE?: InputMaybe<Scalars['Float']['input']>;
+  commentKarma_AVERAGE_LT?: InputMaybe<Scalars['Float']['input']>;
+  commentKarma_AVERAGE_LTE?: InputMaybe<Scalars['Float']['input']>;
+  commentKarma_MAX_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_MAX_GT?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_MAX_GTE?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_MAX_LT?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_MAX_LTE?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_MIN_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_MIN_GT?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_MIN_GTE?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_MIN_LT?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_MIN_LTE?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_SUM_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_SUM_GT?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_SUM_GTE?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_SUM_LT?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_SUM_LTE?: InputMaybe<Scalars['Int']['input']>;
+  createdAt_MAX_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+  defaultEmojiSkinTone_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  defaultEmojiSkinTone_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  defaultEmojiSkinTone_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  defaultEmojiSkinTone_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  defaultEmojiSkinTone_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  defaultEmojiSkinTone_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  defaultEmojiSkinTone_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  defaultEmojiSkinTone_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  defaultEmojiSkinTone_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  defaultEmojiSkinTone_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  defaultEmojiSkinTone_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  defaultEmojiSkinTone_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  defaultEmojiSkinTone_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  defaultEmojiSkinTone_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  defaultEmojiSkinTone_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_AVERAGE_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  discussionKarma_AVERAGE_GT?: InputMaybe<Scalars['Float']['input']>;
+  discussionKarma_AVERAGE_GTE?: InputMaybe<Scalars['Float']['input']>;
+  discussionKarma_AVERAGE_LT?: InputMaybe<Scalars['Float']['input']>;
+  discussionKarma_AVERAGE_LTE?: InputMaybe<Scalars['Float']['input']>;
+  discussionKarma_MAX_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_MAX_GT?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_MAX_GTE?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_MAX_LT?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_MAX_LTE?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_MIN_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_MIN_GT?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_MIN_GTE?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_MIN_LT?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_MIN_LTE?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_SUM_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_SUM_GT?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_SUM_GTE?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_SUM_LT?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_SUM_LTE?: InputMaybe<Scalars['Int']['input']>;
+  displayName_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  displayName_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  displayName_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  displayName_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  displayName_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  displayName_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  displayName_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  displayName_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  displayName_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  displayName_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  displayName_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  displayName_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  displayName_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  displayName_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  displayName_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  location_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  location_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  location_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  location_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  location_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  location_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  location_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  location_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  location_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  location_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  location_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  location_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  location_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  location_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  location_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  notificationBundleContent_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  notificationBundleContent_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  notificationBundleContent_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  notificationBundleContent_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  notificationBundleContent_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  notificationBundleContent_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  notificationBundleContent_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  notificationBundleContent_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  notificationBundleContent_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  notificationBundleContent_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  notificationBundleContent_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  notificationBundleContent_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  notificationBundleContent_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  notificationBundleContent_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  notificationBundleContent_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  notificationBundleInterval_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  notificationBundleInterval_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  notificationBundleInterval_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  notificationBundleInterval_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  notificationBundleInterval_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  notificationBundleInterval_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  notificationBundleInterval_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  notificationBundleInterval_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  notificationBundleInterval_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  notificationBundleInterval_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  notificationBundleInterval_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  notificationBundleInterval_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  notificationBundleInterval_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  notificationBundleInterval_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  notificationBundleInterval_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  preferredTimeZone_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  preferredTimeZone_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  preferredTimeZone_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  preferredTimeZone_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  preferredTimeZone_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  preferredTimeZone_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  preferredTimeZone_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  preferredTimeZone_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  preferredTimeZone_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  preferredTimeZone_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  preferredTimeZone_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  preferredTimeZone_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  preferredTimeZone_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  preferredTimeZone_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  preferredTimeZone_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  profilePicURL_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  profilePicURL_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  profilePicURL_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  profilePicURL_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  profilePicURL_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  profilePicURL_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  profilePicURL_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  profilePicURL_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  profilePicURL_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  profilePicURL_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  profilePicURL_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  profilePicURL_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  profilePicURL_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  profilePicURL_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  profilePicURL_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  pronouns_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  pronouns_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  pronouns_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  pronouns_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  pronouns_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  pronouns_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  pronouns_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  pronouns_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  pronouns_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  pronouns_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  pronouns_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  pronouns_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  pronouns_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  pronouns_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  pronouns_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  stripeAccountId_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  stripeAccountId_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  stripeAccountId_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  stripeAccountId_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  stripeAccountId_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  stripeAccountId_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  stripeAccountId_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  stripeAccountId_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  stripeAccountId_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  stripeAccountId_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  stripeAccountId_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  stripeAccountId_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  stripeAccountId_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  stripeAccountId_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  stripeAccountId_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  username_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  username_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  username_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  username_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  username_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  username_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  username_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  username_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  username_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  username_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  username_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  username_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  username_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  username_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  username_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type DiscussionChannelSubscribedToNotificationsRelationship = {
+  __typename?: 'DiscussionChannelSubscribedToNotificationsRelationship';
+  cursor: Scalars['String']['output'];
+  node: User;
+};
+
+export type DiscussionChannelSubscribedToNotificationsRelationshipSubscriptionWhere = {
+  node?: InputMaybe<UserSubscriptionWhere>;
+};
+
+export type DiscussionChannelSubscribedToNotificationsUpdateConnectionInput = {
+  node?: InputMaybe<UserUpdateInput>;
+};
+
+export type DiscussionChannelSubscribedToNotificationsUpdateFieldInput = {
+  connect?: InputMaybe<Array<DiscussionChannelSubscribedToNotificationsConnectFieldInput>>;
+  connectOrCreate?: InputMaybe<Array<DiscussionChannelSubscribedToNotificationsConnectOrCreateFieldInput>>;
+  create?: InputMaybe<Array<DiscussionChannelSubscribedToNotificationsCreateFieldInput>>;
+  delete?: InputMaybe<Array<DiscussionChannelSubscribedToNotificationsDeleteFieldInput>>;
+  disconnect?: InputMaybe<Array<DiscussionChannelSubscribedToNotificationsDisconnectFieldInput>>;
+  update?: InputMaybe<DiscussionChannelSubscribedToNotificationsUpdateConnectionInput>;
+  where?: InputMaybe<DiscussionChannelSubscribedToNotificationsConnectionWhere>;
 };
 
 export type DiscussionChannelSubscriptionWhere = {
@@ -15072,6 +15810,7 @@ export type DiscussionChannelUpdateInput = {
   Comments?: InputMaybe<Array<DiscussionChannelCommentsUpdateFieldInput>>;
   Discussion?: InputMaybe<DiscussionChannelDiscussionUpdateFieldInput>;
   RelatedIssues?: InputMaybe<Array<DiscussionChannelRelatedIssuesUpdateFieldInput>>;
+  SubscribedToNotifications?: InputMaybe<Array<DiscussionChannelSubscribedToNotificationsUpdateFieldInput>>;
   UpvotedByUsers?: InputMaybe<Array<DiscussionChannelUpvotedByUsersUpdateFieldInput>>;
   answered?: InputMaybe<Scalars['Boolean']['input']>;
   archived?: InputMaybe<Scalars['Boolean']['input']>;
@@ -15411,6 +16150,30 @@ export type DiscussionChannelUpvotedByUsersUpdateFieldInput = {
   where?: InputMaybe<DiscussionChannelUpvotedByUsersConnectionWhere>;
 };
 
+export type DiscussionChannelUserSubscribedToNotificationsAggregationSelection = {
+  __typename?: 'DiscussionChannelUserSubscribedToNotificationsAggregationSelection';
+  count: Scalars['Int']['output'];
+  node?: Maybe<DiscussionChannelUserSubscribedToNotificationsNodeAggregateSelection>;
+};
+
+export type DiscussionChannelUserSubscribedToNotificationsNodeAggregateSelection = {
+  __typename?: 'DiscussionChannelUserSubscribedToNotificationsNodeAggregateSelection';
+  bio: StringAggregateSelection;
+  commentKarma: IntAggregateSelection;
+  createdAt: DateTimeAggregateSelection;
+  defaultEmojiSkinTone: StringAggregateSelection;
+  discussionKarma: IntAggregateSelection;
+  displayName: StringAggregateSelection;
+  location: StringAggregateSelection;
+  notificationBundleContent: StringAggregateSelection;
+  notificationBundleInterval: StringAggregateSelection;
+  preferredTimeZone: StringAggregateSelection;
+  profilePicURL: StringAggregateSelection;
+  pronouns: StringAggregateSelection;
+  stripeAccountId: StringAggregateSelection;
+  username: StringAggregateSelection;
+};
+
 export type DiscussionChannelUserUpvotedByUsersAggregationSelection = {
   __typename?: 'DiscussionChannelUserUpvotedByUsersAggregationSelection';
   count: Scalars['Int']['output'];
@@ -15500,6 +16263,23 @@ export type DiscussionChannelWhere = {
   RelatedIssues_SINGLE?: InputMaybe<IssueWhere>;
   /** Return DiscussionChannels where some of the related Issues match this filter */
   RelatedIssues_SOME?: InputMaybe<IssueWhere>;
+  SubscribedToNotificationsAggregate?: InputMaybe<DiscussionChannelSubscribedToNotificationsAggregateInput>;
+  /** Return DiscussionChannels where all of the related DiscussionChannelSubscribedToNotificationsConnections match this filter */
+  SubscribedToNotificationsConnection_ALL?: InputMaybe<DiscussionChannelSubscribedToNotificationsConnectionWhere>;
+  /** Return DiscussionChannels where none of the related DiscussionChannelSubscribedToNotificationsConnections match this filter */
+  SubscribedToNotificationsConnection_NONE?: InputMaybe<DiscussionChannelSubscribedToNotificationsConnectionWhere>;
+  /** Return DiscussionChannels where one of the related DiscussionChannelSubscribedToNotificationsConnections match this filter */
+  SubscribedToNotificationsConnection_SINGLE?: InputMaybe<DiscussionChannelSubscribedToNotificationsConnectionWhere>;
+  /** Return DiscussionChannels where some of the related DiscussionChannelSubscribedToNotificationsConnections match this filter */
+  SubscribedToNotificationsConnection_SOME?: InputMaybe<DiscussionChannelSubscribedToNotificationsConnectionWhere>;
+  /** Return DiscussionChannels where all of the related Users match this filter */
+  SubscribedToNotifications_ALL?: InputMaybe<UserWhere>;
+  /** Return DiscussionChannels where none of the related Users match this filter */
+  SubscribedToNotifications_NONE?: InputMaybe<UserWhere>;
+  /** Return DiscussionChannels where one of the related Users match this filter */
+  SubscribedToNotifications_SINGLE?: InputMaybe<UserWhere>;
+  /** Return DiscussionChannels where some of the related Users match this filter */
+  SubscribedToNotifications_SOME?: InputMaybe<UserWhere>;
   UpvotedByUsersAggregate?: InputMaybe<DiscussionChannelUpvotedByUsersAggregateInput>;
   /** Return DiscussionChannels where all of the related DiscussionChannelUpvotedByUsersConnections match this filter */
   UpvotedByUsersConnection_ALL?: InputMaybe<DiscussionChannelUpvotedByUsersConnectionWhere>;
@@ -19600,6 +20380,8 @@ export type EventChannel = {
   RelatedIssuesAggregate?: Maybe<EventChannelIssueRelatedIssuesAggregationSelection>;
   RelatedIssuesConnection: EventChannelRelatedIssuesConnection;
   SubscribedToNotifications: Array<User>;
+  SubscribedToNotificationsAggregate?: Maybe<EventChannelUserSubscribedToNotificationsAggregationSelection>;
+  SubscribedToNotificationsConnection: EventChannelSubscribedToNotificationsConnection;
   archived?: Maybe<Scalars['Boolean']['output']>;
   channelUniqueName: Scalars['String']['output'];
   createdAt: Scalars['DateTime']['output'];
@@ -19694,6 +20476,28 @@ export type EventChannelRelatedIssuesConnectionArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<Array<EventChannelRelatedIssuesConnectionSort>>;
   where?: InputMaybe<EventChannelRelatedIssuesConnectionWhere>;
+};
+
+
+export type EventChannelSubscribedToNotificationsArgs = {
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  options?: InputMaybe<UserOptions>;
+  where?: InputMaybe<UserWhere>;
+};
+
+
+export type EventChannelSubscribedToNotificationsAggregateArgs = {
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  where?: InputMaybe<UserWhere>;
+};
+
+
+export type EventChannelSubscribedToNotificationsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<Array<EventChannelSubscribedToNotificationsConnectionSort>>;
+  where?: InputMaybe<EventChannelSubscribedToNotificationsConnectionWhere>;
 };
 
 export type EventChannelAggregateSelection = {
@@ -20093,10 +20897,12 @@ export type EventChannelConnectInput = {
   Comments?: InputMaybe<Array<EventChannelCommentsConnectFieldInput>>;
   Event?: InputMaybe<EventChannelEventConnectFieldInput>;
   RelatedIssues?: InputMaybe<Array<EventChannelRelatedIssuesConnectFieldInput>>;
+  SubscribedToNotifications?: InputMaybe<Array<EventChannelSubscribedToNotificationsConnectFieldInput>>;
 };
 
 export type EventChannelConnectOrCreateInput = {
   Channel?: InputMaybe<EventChannelChannelConnectOrCreateFieldInput>;
+  SubscribedToNotifications?: InputMaybe<Array<EventChannelSubscribedToNotificationsConnectOrCreateFieldInput>>;
 };
 
 export type EventChannelConnectWhere = {
@@ -20109,6 +20915,7 @@ export type EventChannelConnectedRelationships = {
   Comments?: Maybe<EventChannelCommentsConnectedRelationship>;
   Event?: Maybe<EventChannelEventConnectedRelationship>;
   RelatedIssues?: Maybe<EventChannelRelatedIssuesConnectedRelationship>;
+  SubscribedToNotifications?: Maybe<EventChannelSubscribedToNotificationsConnectedRelationship>;
 };
 
 export type EventChannelCreateInput = {
@@ -20116,6 +20923,7 @@ export type EventChannelCreateInput = {
   Comments?: InputMaybe<EventChannelCommentsFieldInput>;
   Event?: InputMaybe<EventChannelEventFieldInput>;
   RelatedIssues?: InputMaybe<EventChannelRelatedIssuesFieldInput>;
+  SubscribedToNotifications?: InputMaybe<EventChannelSubscribedToNotificationsFieldInput>;
   archived?: InputMaybe<Scalars['Boolean']['input']>;
   channelUniqueName: Scalars['String']['input'];
   eventId: Scalars['ID']['input'];
@@ -20134,6 +20942,7 @@ export type EventChannelDeleteInput = {
   Comments?: InputMaybe<Array<EventChannelCommentsDeleteFieldInput>>;
   Event?: InputMaybe<EventChannelEventDeleteFieldInput>;
   RelatedIssues?: InputMaybe<Array<EventChannelRelatedIssuesDeleteFieldInput>>;
+  SubscribedToNotifications?: InputMaybe<Array<EventChannelSubscribedToNotificationsDeleteFieldInput>>;
 };
 
 export type EventChannelDeletedEvent = {
@@ -20148,6 +20957,7 @@ export type EventChannelDisconnectInput = {
   Comments?: InputMaybe<Array<EventChannelCommentsDisconnectFieldInput>>;
   Event?: InputMaybe<EventChannelEventDisconnectFieldInput>;
   RelatedIssues?: InputMaybe<Array<EventChannelRelatedIssuesDisconnectFieldInput>>;
+  SubscribedToNotifications?: InputMaybe<Array<EventChannelSubscribedToNotificationsDisconnectFieldInput>>;
 };
 
 export type EventChannelEdge = {
@@ -20840,6 +21650,7 @@ export type EventChannelRelationInput = {
   Comments?: InputMaybe<Array<EventChannelCommentsCreateFieldInput>>;
   Event?: InputMaybe<EventChannelEventCreateFieldInput>;
   RelatedIssues?: InputMaybe<Array<EventChannelRelatedIssuesCreateFieldInput>>;
+  SubscribedToNotifications?: InputMaybe<Array<EventChannelSubscribedToNotificationsCreateFieldInput>>;
 };
 
 export type EventChannelRelationshipCreatedEvent = {
@@ -20881,6 +21692,7 @@ export type EventChannelRelationshipsSubscriptionWhere = {
   Comments?: InputMaybe<EventChannelCommentsRelationshipSubscriptionWhere>;
   Event?: InputMaybe<EventChannelEventRelationshipSubscriptionWhere>;
   RelatedIssues?: InputMaybe<EventChannelRelatedIssuesRelationshipSubscriptionWhere>;
+  SubscribedToNotifications?: InputMaybe<EventChannelSubscribedToNotificationsRelationshipSubscriptionWhere>;
 };
 
 /** Fields to sort EventChannels by. The order in which sorts are applied is not guaranteed when specifying many fields in one EventChannelSort object. */
@@ -20891,6 +21703,322 @@ export type EventChannelSort = {
   eventId?: InputMaybe<SortDirection>;
   id?: InputMaybe<SortDirection>;
   locked?: InputMaybe<SortDirection>;
+};
+
+export type EventChannelSubscribedToNotificationsAggregateInput = {
+  AND?: InputMaybe<Array<EventChannelSubscribedToNotificationsAggregateInput>>;
+  NOT?: InputMaybe<EventChannelSubscribedToNotificationsAggregateInput>;
+  OR?: InputMaybe<Array<EventChannelSubscribedToNotificationsAggregateInput>>;
+  count?: InputMaybe<Scalars['Int']['input']>;
+  count_GT?: InputMaybe<Scalars['Int']['input']>;
+  count_GTE?: InputMaybe<Scalars['Int']['input']>;
+  count_LT?: InputMaybe<Scalars['Int']['input']>;
+  count_LTE?: InputMaybe<Scalars['Int']['input']>;
+  node?: InputMaybe<EventChannelSubscribedToNotificationsNodeAggregationWhereInput>;
+};
+
+export type EventChannelSubscribedToNotificationsConnectFieldInput = {
+  connect?: InputMaybe<Array<UserConnectInput>>;
+  /** Whether or not to overwrite any matching relationship with the new properties. */
+  overwrite?: Scalars['Boolean']['input'];
+  where?: InputMaybe<UserConnectWhere>;
+};
+
+export type EventChannelSubscribedToNotificationsConnectOrCreateFieldInput = {
+  onCreate: EventChannelSubscribedToNotificationsConnectOrCreateFieldInputOnCreate;
+  where: UserConnectOrCreateWhere;
+};
+
+export type EventChannelSubscribedToNotificationsConnectOrCreateFieldInputOnCreate = {
+  node: UserOnCreateInput;
+};
+
+export type EventChannelSubscribedToNotificationsConnectedRelationship = {
+  __typename?: 'EventChannelSubscribedToNotificationsConnectedRelationship';
+  node: UserEventPayload;
+};
+
+export type EventChannelSubscribedToNotificationsConnection = {
+  __typename?: 'EventChannelSubscribedToNotificationsConnection';
+  edges: Array<EventChannelSubscribedToNotificationsRelationship>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type EventChannelSubscribedToNotificationsConnectionSort = {
+  node?: InputMaybe<UserSort>;
+};
+
+export type EventChannelSubscribedToNotificationsConnectionWhere = {
+  AND?: InputMaybe<Array<EventChannelSubscribedToNotificationsConnectionWhere>>;
+  NOT?: InputMaybe<EventChannelSubscribedToNotificationsConnectionWhere>;
+  OR?: InputMaybe<Array<EventChannelSubscribedToNotificationsConnectionWhere>>;
+  node?: InputMaybe<UserWhere>;
+};
+
+export type EventChannelSubscribedToNotificationsCreateFieldInput = {
+  node: UserCreateInput;
+};
+
+export type EventChannelSubscribedToNotificationsDeleteFieldInput = {
+  delete?: InputMaybe<UserDeleteInput>;
+  where?: InputMaybe<EventChannelSubscribedToNotificationsConnectionWhere>;
+};
+
+export type EventChannelSubscribedToNotificationsDisconnectFieldInput = {
+  disconnect?: InputMaybe<UserDisconnectInput>;
+  where?: InputMaybe<EventChannelSubscribedToNotificationsConnectionWhere>;
+};
+
+export type EventChannelSubscribedToNotificationsFieldInput = {
+  connect?: InputMaybe<Array<EventChannelSubscribedToNotificationsConnectFieldInput>>;
+  connectOrCreate?: InputMaybe<Array<EventChannelSubscribedToNotificationsConnectOrCreateFieldInput>>;
+  create?: InputMaybe<Array<EventChannelSubscribedToNotificationsCreateFieldInput>>;
+};
+
+export type EventChannelSubscribedToNotificationsNodeAggregationWhereInput = {
+  AND?: InputMaybe<Array<EventChannelSubscribedToNotificationsNodeAggregationWhereInput>>;
+  NOT?: InputMaybe<EventChannelSubscribedToNotificationsNodeAggregationWhereInput>;
+  OR?: InputMaybe<Array<EventChannelSubscribedToNotificationsNodeAggregationWhereInput>>;
+  bio_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  bio_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  bio_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  bio_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  bio_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  bio_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  bio_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  bio_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  bio_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  bio_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  bio_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  bio_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  bio_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  bio_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  bio_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_AVERAGE_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  commentKarma_AVERAGE_GT?: InputMaybe<Scalars['Float']['input']>;
+  commentKarma_AVERAGE_GTE?: InputMaybe<Scalars['Float']['input']>;
+  commentKarma_AVERAGE_LT?: InputMaybe<Scalars['Float']['input']>;
+  commentKarma_AVERAGE_LTE?: InputMaybe<Scalars['Float']['input']>;
+  commentKarma_MAX_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_MAX_GT?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_MAX_GTE?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_MAX_LT?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_MAX_LTE?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_MIN_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_MIN_GT?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_MIN_GTE?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_MIN_LT?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_MIN_LTE?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_SUM_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_SUM_GT?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_SUM_GTE?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_SUM_LT?: InputMaybe<Scalars['Int']['input']>;
+  commentKarma_SUM_LTE?: InputMaybe<Scalars['Int']['input']>;
+  createdAt_MAX_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+  defaultEmojiSkinTone_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  defaultEmojiSkinTone_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  defaultEmojiSkinTone_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  defaultEmojiSkinTone_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  defaultEmojiSkinTone_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  defaultEmojiSkinTone_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  defaultEmojiSkinTone_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  defaultEmojiSkinTone_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  defaultEmojiSkinTone_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  defaultEmojiSkinTone_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  defaultEmojiSkinTone_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  defaultEmojiSkinTone_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  defaultEmojiSkinTone_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  defaultEmojiSkinTone_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  defaultEmojiSkinTone_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_AVERAGE_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  discussionKarma_AVERAGE_GT?: InputMaybe<Scalars['Float']['input']>;
+  discussionKarma_AVERAGE_GTE?: InputMaybe<Scalars['Float']['input']>;
+  discussionKarma_AVERAGE_LT?: InputMaybe<Scalars['Float']['input']>;
+  discussionKarma_AVERAGE_LTE?: InputMaybe<Scalars['Float']['input']>;
+  discussionKarma_MAX_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_MAX_GT?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_MAX_GTE?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_MAX_LT?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_MAX_LTE?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_MIN_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_MIN_GT?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_MIN_GTE?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_MIN_LT?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_MIN_LTE?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_SUM_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_SUM_GT?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_SUM_GTE?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_SUM_LT?: InputMaybe<Scalars['Int']['input']>;
+  discussionKarma_SUM_LTE?: InputMaybe<Scalars['Int']['input']>;
+  displayName_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  displayName_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  displayName_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  displayName_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  displayName_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  displayName_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  displayName_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  displayName_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  displayName_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  displayName_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  displayName_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  displayName_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  displayName_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  displayName_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  displayName_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  location_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  location_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  location_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  location_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  location_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  location_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  location_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  location_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  location_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  location_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  location_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  location_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  location_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  location_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  location_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  notificationBundleContent_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  notificationBundleContent_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  notificationBundleContent_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  notificationBundleContent_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  notificationBundleContent_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  notificationBundleContent_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  notificationBundleContent_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  notificationBundleContent_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  notificationBundleContent_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  notificationBundleContent_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  notificationBundleContent_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  notificationBundleContent_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  notificationBundleContent_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  notificationBundleContent_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  notificationBundleContent_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  notificationBundleInterval_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  notificationBundleInterval_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  notificationBundleInterval_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  notificationBundleInterval_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  notificationBundleInterval_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  notificationBundleInterval_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  notificationBundleInterval_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  notificationBundleInterval_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  notificationBundleInterval_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  notificationBundleInterval_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  notificationBundleInterval_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  notificationBundleInterval_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  notificationBundleInterval_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  notificationBundleInterval_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  notificationBundleInterval_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  preferredTimeZone_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  preferredTimeZone_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  preferredTimeZone_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  preferredTimeZone_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  preferredTimeZone_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  preferredTimeZone_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  preferredTimeZone_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  preferredTimeZone_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  preferredTimeZone_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  preferredTimeZone_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  preferredTimeZone_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  preferredTimeZone_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  preferredTimeZone_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  preferredTimeZone_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  preferredTimeZone_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  profilePicURL_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  profilePicURL_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  profilePicURL_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  profilePicURL_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  profilePicURL_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  profilePicURL_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  profilePicURL_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  profilePicURL_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  profilePicURL_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  profilePicURL_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  profilePicURL_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  profilePicURL_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  profilePicURL_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  profilePicURL_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  profilePicURL_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  pronouns_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  pronouns_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  pronouns_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  pronouns_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  pronouns_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  pronouns_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  pronouns_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  pronouns_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  pronouns_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  pronouns_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  pronouns_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  pronouns_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  pronouns_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  pronouns_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  pronouns_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  stripeAccountId_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  stripeAccountId_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  stripeAccountId_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  stripeAccountId_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  stripeAccountId_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  stripeAccountId_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  stripeAccountId_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  stripeAccountId_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  stripeAccountId_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  stripeAccountId_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  stripeAccountId_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  stripeAccountId_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  stripeAccountId_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  stripeAccountId_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  stripeAccountId_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  username_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  username_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  username_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  username_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  username_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  username_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  username_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  username_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  username_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  username_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  username_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  username_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  username_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  username_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  username_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type EventChannelSubscribedToNotificationsRelationship = {
+  __typename?: 'EventChannelSubscribedToNotificationsRelationship';
+  cursor: Scalars['String']['output'];
+  node: User;
+};
+
+export type EventChannelSubscribedToNotificationsRelationshipSubscriptionWhere = {
+  node?: InputMaybe<UserSubscriptionWhere>;
+};
+
+export type EventChannelSubscribedToNotificationsUpdateConnectionInput = {
+  node?: InputMaybe<UserUpdateInput>;
+};
+
+export type EventChannelSubscribedToNotificationsUpdateFieldInput = {
+  connect?: InputMaybe<Array<EventChannelSubscribedToNotificationsConnectFieldInput>>;
+  connectOrCreate?: InputMaybe<Array<EventChannelSubscribedToNotificationsConnectOrCreateFieldInput>>;
+  create?: InputMaybe<Array<EventChannelSubscribedToNotificationsCreateFieldInput>>;
+  delete?: InputMaybe<Array<EventChannelSubscribedToNotificationsDeleteFieldInput>>;
+  disconnect?: InputMaybe<Array<EventChannelSubscribedToNotificationsDisconnectFieldInput>>;
+  update?: InputMaybe<EventChannelSubscribedToNotificationsUpdateConnectionInput>;
+  where?: InputMaybe<EventChannelSubscribedToNotificationsConnectionWhere>;
 };
 
 export type EventChannelSubscriptionWhere = {
@@ -20928,6 +22056,7 @@ export type EventChannelUpdateInput = {
   Comments?: InputMaybe<Array<EventChannelCommentsUpdateFieldInput>>;
   Event?: InputMaybe<EventChannelEventUpdateFieldInput>;
   RelatedIssues?: InputMaybe<Array<EventChannelRelatedIssuesUpdateFieldInput>>;
+  SubscribedToNotifications?: InputMaybe<Array<EventChannelSubscribedToNotificationsUpdateFieldInput>>;
   archived?: InputMaybe<Scalars['Boolean']['input']>;
   channelUniqueName?: InputMaybe<Scalars['String']['input']>;
   createdAt?: InputMaybe<Scalars['DateTime']['input']>;
@@ -20941,6 +22070,30 @@ export type EventChannelUpdatedEvent = {
   previousState: EventChannelEventPayload;
   timestamp: Scalars['Float']['output'];
   updatedEventChannel: EventChannelEventPayload;
+};
+
+export type EventChannelUserSubscribedToNotificationsAggregationSelection = {
+  __typename?: 'EventChannelUserSubscribedToNotificationsAggregationSelection';
+  count: Scalars['Int']['output'];
+  node?: Maybe<EventChannelUserSubscribedToNotificationsNodeAggregateSelection>;
+};
+
+export type EventChannelUserSubscribedToNotificationsNodeAggregateSelection = {
+  __typename?: 'EventChannelUserSubscribedToNotificationsNodeAggregateSelection';
+  bio: StringAggregateSelection;
+  commentKarma: IntAggregateSelection;
+  createdAt: DateTimeAggregateSelection;
+  defaultEmojiSkinTone: StringAggregateSelection;
+  discussionKarma: IntAggregateSelection;
+  displayName: StringAggregateSelection;
+  location: StringAggregateSelection;
+  notificationBundleContent: StringAggregateSelection;
+  notificationBundleInterval: StringAggregateSelection;
+  preferredTimeZone: StringAggregateSelection;
+  profilePicURL: StringAggregateSelection;
+  pronouns: StringAggregateSelection;
+  stripeAccountId: StringAggregateSelection;
+  username: StringAggregateSelection;
 };
 
 export type EventChannelWhere = {
@@ -20991,6 +22144,23 @@ export type EventChannelWhere = {
   RelatedIssues_SINGLE?: InputMaybe<IssueWhere>;
   /** Return EventChannels where some of the related Issues match this filter */
   RelatedIssues_SOME?: InputMaybe<IssueWhere>;
+  SubscribedToNotificationsAggregate?: InputMaybe<EventChannelSubscribedToNotificationsAggregateInput>;
+  /** Return EventChannels where all of the related EventChannelSubscribedToNotificationsConnections match this filter */
+  SubscribedToNotificationsConnection_ALL?: InputMaybe<EventChannelSubscribedToNotificationsConnectionWhere>;
+  /** Return EventChannels where none of the related EventChannelSubscribedToNotificationsConnections match this filter */
+  SubscribedToNotificationsConnection_NONE?: InputMaybe<EventChannelSubscribedToNotificationsConnectionWhere>;
+  /** Return EventChannels where one of the related EventChannelSubscribedToNotificationsConnections match this filter */
+  SubscribedToNotificationsConnection_SINGLE?: InputMaybe<EventChannelSubscribedToNotificationsConnectionWhere>;
+  /** Return EventChannels where some of the related EventChannelSubscribedToNotificationsConnections match this filter */
+  SubscribedToNotificationsConnection_SOME?: InputMaybe<EventChannelSubscribedToNotificationsConnectionWhere>;
+  /** Return EventChannels where all of the related Users match this filter */
+  SubscribedToNotifications_ALL?: InputMaybe<UserWhere>;
+  /** Return EventChannels where none of the related Users match this filter */
+  SubscribedToNotifications_NONE?: InputMaybe<UserWhere>;
+  /** Return EventChannels where one of the related Users match this filter */
+  SubscribedToNotifications_SINGLE?: InputMaybe<UserWhere>;
+  /** Return EventChannels where some of the related Users match this filter */
+  SubscribedToNotifications_SOME?: InputMaybe<UserWhere>;
   archived?: InputMaybe<Scalars['Boolean']['input']>;
   channelUniqueName?: InputMaybe<Scalars['String']['input']>;
   channelUniqueName_CONTAINS?: InputMaybe<Scalars['String']['input']>;
@@ -32134,6 +33304,10 @@ export type Mutation = {
   reportDiscussion?: Maybe<Issue>;
   reportEvent?: Maybe<Issue>;
   seedDataForCypressTests?: Maybe<SeedDataResponse>;
+  subscribeToComment?: Maybe<Comment>;
+  subscribeToDiscussionChannel?: Maybe<DiscussionChannel>;
+  subscribeToEvent?: Maybe<Event>;
+  subscribeToIssue?: Maybe<Issue>;
   suspendMod?: Maybe<Issue>;
   suspendUser?: Maybe<Issue>;
   unarchiveComment?: Maybe<Issue>;
@@ -32141,6 +33315,10 @@ export type Mutation = {
   unarchiveEvent?: Maybe<Issue>;
   undoUpvoteComment?: Maybe<Comment>;
   undoUpvoteDiscussionChannel?: Maybe<DiscussionChannel>;
+  unsubscribeFromComment?: Maybe<Comment>;
+  unsubscribeFromDiscussionChannel?: Maybe<DiscussionChannel>;
+  unsubscribeFromEvent?: Maybe<Event>;
+  unsubscribeFromIssue?: Maybe<Issue>;
   unsuspendMod?: Maybe<Issue>;
   unsuspendUser?: Maybe<Issue>;
   updateActivities: UpdateActivitiesMutationResponse;
@@ -32972,6 +34150,26 @@ export type MutationSeedDataForCypressTestsArgs = {
 };
 
 
+export type MutationSubscribeToCommentArgs = {
+  commentId: Scalars['ID']['input'];
+};
+
+
+export type MutationSubscribeToDiscussionChannelArgs = {
+  discussionChannelId: Scalars['ID']['input'];
+};
+
+
+export type MutationSubscribeToEventArgs = {
+  eventId: Scalars['ID']['input'];
+};
+
+
+export type MutationSubscribeToIssueArgs = {
+  issueId: Scalars['ID']['input'];
+};
+
+
 export type MutationSuspendModArgs = {
   explanation?: InputMaybe<Scalars['String']['input']>;
   issueId: Scalars['ID']['input'];
@@ -33017,6 +34215,26 @@ export type MutationUndoUpvoteCommentArgs = {
 export type MutationUndoUpvoteDiscussionChannelArgs = {
   discussionChannelId: Scalars['ID']['input'];
   username: Scalars['String']['input'];
+};
+
+
+export type MutationUnsubscribeFromCommentArgs = {
+  commentId: Scalars['ID']['input'];
+};
+
+
+export type MutationUnsubscribeFromDiscussionChannelArgs = {
+  discussionChannelId: Scalars['ID']['input'];
+};
+
+
+export type MutationUnsubscribeFromEventArgs = {
+  eventId: Scalars['ID']['input'];
+};
+
+
+export type MutationUnsubscribeFromIssueArgs = {
+  issueId: Scalars['ID']['input'];
 };
 
 
@@ -35316,6 +36534,7 @@ export type QueryGetCommentSectionArgs = {
   modName?: InputMaybe<Scalars['String']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<Scalars['String']['input']>;
+  username?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -42971,9 +44190,9 @@ export type User = {
   notificationBundleEnabled?: Maybe<Scalars['Boolean']['output']>;
   notificationBundleInterval?: Maybe<Scalars['String']['output']>;
   notifyOnFeedback?: Maybe<Scalars['Boolean']['output']>;
-  notifyOnReplyToComment?: Maybe<Scalars['Boolean']['output']>;
-  notifyOnReplyToDiscussion?: Maybe<Scalars['Boolean']['output']>;
-  notifyOnReplyToEvent?: Maybe<Scalars['Boolean']['output']>;
+  notifyOnReplyToCommentByDefault?: Maybe<Scalars['Boolean']['output']>;
+  notifyOnReplyToDiscussionByDefault?: Maybe<Scalars['Boolean']['output']>;
+  notifyOnReplyToEventByDefault?: Maybe<Scalars['Boolean']['output']>;
   notifyWhenTagged?: Maybe<Scalars['Boolean']['output']>;
   preferredTimeZone?: Maybe<Scalars['String']['output']>;
   profilePicURL?: Maybe<Scalars['String']['output']>;
@@ -44837,9 +46056,9 @@ export type UserCreateInput = {
   notificationBundleEnabled?: InputMaybe<Scalars['Boolean']['input']>;
   notificationBundleInterval?: InputMaybe<Scalars['String']['input']>;
   notifyOnFeedback?: InputMaybe<Scalars['Boolean']['input']>;
-  notifyOnReplyToComment?: InputMaybe<Scalars['Boolean']['input']>;
-  notifyOnReplyToDiscussion?: InputMaybe<Scalars['Boolean']['input']>;
-  notifyOnReplyToEvent?: InputMaybe<Scalars['Boolean']['input']>;
+  notifyOnReplyToCommentByDefault?: InputMaybe<Scalars['Boolean']['input']>;
+  notifyOnReplyToDiscussionByDefault?: InputMaybe<Scalars['Boolean']['input']>;
+  notifyOnReplyToEventByDefault?: InputMaybe<Scalars['Boolean']['input']>;
   notifyWhenTagged?: InputMaybe<Scalars['Boolean']['input']>;
   preferredTimeZone?: InputMaybe<Scalars['String']['input']>;
   profilePicURL?: InputMaybe<Scalars['String']['input']>;
@@ -45432,9 +46651,9 @@ export type UserEventPayload = {
   notificationBundleEnabled?: Maybe<Scalars['Boolean']['output']>;
   notificationBundleInterval?: Maybe<Scalars['String']['output']>;
   notifyOnFeedback?: Maybe<Scalars['Boolean']['output']>;
-  notifyOnReplyToComment?: Maybe<Scalars['Boolean']['output']>;
-  notifyOnReplyToDiscussion?: Maybe<Scalars['Boolean']['output']>;
-  notifyOnReplyToEvent?: Maybe<Scalars['Boolean']['output']>;
+  notifyOnReplyToCommentByDefault?: Maybe<Scalars['Boolean']['output']>;
+  notifyOnReplyToDiscussionByDefault?: Maybe<Scalars['Boolean']['output']>;
+  notifyOnReplyToEventByDefault?: Maybe<Scalars['Boolean']['output']>;
   notifyWhenTagged?: Maybe<Scalars['Boolean']['output']>;
   preferredTimeZone?: Maybe<Scalars['String']['output']>;
   profilePicURL?: Maybe<Scalars['String']['output']>;
@@ -46909,9 +48128,9 @@ export type UserOnCreateInput = {
   notificationBundleEnabled?: InputMaybe<Scalars['Boolean']['input']>;
   notificationBundleInterval?: InputMaybe<Scalars['String']['input']>;
   notifyOnFeedback?: InputMaybe<Scalars['Boolean']['input']>;
-  notifyOnReplyToComment?: InputMaybe<Scalars['Boolean']['input']>;
-  notifyOnReplyToDiscussion?: InputMaybe<Scalars['Boolean']['input']>;
-  notifyOnReplyToEvent?: InputMaybe<Scalars['Boolean']['input']>;
+  notifyOnReplyToCommentByDefault?: InputMaybe<Scalars['Boolean']['input']>;
+  notifyOnReplyToDiscussionByDefault?: InputMaybe<Scalars['Boolean']['input']>;
+  notifyOnReplyToEventByDefault?: InputMaybe<Scalars['Boolean']['input']>;
   notifyWhenTagged?: InputMaybe<Scalars['Boolean']['input']>;
   preferredTimeZone?: InputMaybe<Scalars['String']['input']>;
   profilePicURL?: InputMaybe<Scalars['String']['input']>;
@@ -47939,9 +49158,9 @@ export type UserSort = {
   notificationBundleEnabled?: InputMaybe<SortDirection>;
   notificationBundleInterval?: InputMaybe<SortDirection>;
   notifyOnFeedback?: InputMaybe<SortDirection>;
-  notifyOnReplyToComment?: InputMaybe<SortDirection>;
-  notifyOnReplyToDiscussion?: InputMaybe<SortDirection>;
-  notifyOnReplyToEvent?: InputMaybe<SortDirection>;
+  notifyOnReplyToCommentByDefault?: InputMaybe<SortDirection>;
+  notifyOnReplyToDiscussionByDefault?: InputMaybe<SortDirection>;
+  notifyOnReplyToEventByDefault?: InputMaybe<SortDirection>;
   notifyWhenTagged?: InputMaybe<SortDirection>;
   preferredTimeZone?: InputMaybe<SortDirection>;
   profilePicURL?: InputMaybe<SortDirection>;
@@ -48012,9 +49231,9 @@ export type UserSubscriptionWhere = {
   notificationBundleInterval_MATCHES?: InputMaybe<Scalars['String']['input']>;
   notificationBundleInterval_STARTS_WITH?: InputMaybe<Scalars['String']['input']>;
   notifyOnFeedback?: InputMaybe<Scalars['Boolean']['input']>;
-  notifyOnReplyToComment?: InputMaybe<Scalars['Boolean']['input']>;
-  notifyOnReplyToDiscussion?: InputMaybe<Scalars['Boolean']['input']>;
-  notifyOnReplyToEvent?: InputMaybe<Scalars['Boolean']['input']>;
+  notifyOnReplyToCommentByDefault?: InputMaybe<Scalars['Boolean']['input']>;
+  notifyOnReplyToDiscussionByDefault?: InputMaybe<Scalars['Boolean']['input']>;
+  notifyOnReplyToEventByDefault?: InputMaybe<Scalars['Boolean']['input']>;
   notifyWhenTagged?: InputMaybe<Scalars['Boolean']['input']>;
   preferredTimeZone?: InputMaybe<Scalars['String']['input']>;
   preferredTimeZone_CONTAINS?: InputMaybe<Scalars['String']['input']>;
@@ -48279,9 +49498,9 @@ export type UserUpdateInput = {
   notificationBundleEnabled?: InputMaybe<Scalars['Boolean']['input']>;
   notificationBundleInterval?: InputMaybe<Scalars['String']['input']>;
   notifyOnFeedback?: InputMaybe<Scalars['Boolean']['input']>;
-  notifyOnReplyToComment?: InputMaybe<Scalars['Boolean']['input']>;
-  notifyOnReplyToDiscussion?: InputMaybe<Scalars['Boolean']['input']>;
-  notifyOnReplyToEvent?: InputMaybe<Scalars['Boolean']['input']>;
+  notifyOnReplyToCommentByDefault?: InputMaybe<Scalars['Boolean']['input']>;
+  notifyOnReplyToDiscussionByDefault?: InputMaybe<Scalars['Boolean']['input']>;
+  notifyOnReplyToEventByDefault?: InputMaybe<Scalars['Boolean']['input']>;
   notifyWhenTagged?: InputMaybe<Scalars['Boolean']['input']>;
   preferredTimeZone?: InputMaybe<Scalars['String']['input']>;
   profilePicURL?: InputMaybe<Scalars['String']['input']>;
@@ -49013,9 +50232,9 @@ export type UserWhere = {
   notificationBundleInterval_MATCHES?: InputMaybe<Scalars['String']['input']>;
   notificationBundleInterval_STARTS_WITH?: InputMaybe<Scalars['String']['input']>;
   notifyOnFeedback?: InputMaybe<Scalars['Boolean']['input']>;
-  notifyOnReplyToComment?: InputMaybe<Scalars['Boolean']['input']>;
-  notifyOnReplyToDiscussion?: InputMaybe<Scalars['Boolean']['input']>;
-  notifyOnReplyToEvent?: InputMaybe<Scalars['Boolean']['input']>;
+  notifyOnReplyToCommentByDefault?: InputMaybe<Scalars['Boolean']['input']>;
+  notifyOnReplyToDiscussionByDefault?: InputMaybe<Scalars['Boolean']['input']>;
+  notifyOnReplyToEventByDefault?: InputMaybe<Scalars['Boolean']['input']>;
   notifyWhenTagged?: InputMaybe<Scalars['Boolean']['input']>;
   preferredTimeZone?: InputMaybe<Scalars['String']['input']>;
   preferredTimeZone_CONTAINS?: InputMaybe<Scalars['String']['input']>;
@@ -51356,6 +52575,23 @@ export type ResolversTypes = {
   CommentSectionFormatWhere: CommentSectionFormatWhere;
   CommentSectionFormatsConnection: ResolverTypeWrapper<CommentSectionFormatsConnection>;
   CommentSort: CommentSort;
+  CommentSubscribedToNotificationsAggregateInput: CommentSubscribedToNotificationsAggregateInput;
+  CommentSubscribedToNotificationsConnectFieldInput: CommentSubscribedToNotificationsConnectFieldInput;
+  CommentSubscribedToNotificationsConnectOrCreateFieldInput: CommentSubscribedToNotificationsConnectOrCreateFieldInput;
+  CommentSubscribedToNotificationsConnectOrCreateFieldInputOnCreate: CommentSubscribedToNotificationsConnectOrCreateFieldInputOnCreate;
+  CommentSubscribedToNotificationsConnectedRelationship: ResolverTypeWrapper<CommentSubscribedToNotificationsConnectedRelationship>;
+  CommentSubscribedToNotificationsConnection: ResolverTypeWrapper<CommentSubscribedToNotificationsConnection>;
+  CommentSubscribedToNotificationsConnectionSort: CommentSubscribedToNotificationsConnectionSort;
+  CommentSubscribedToNotificationsConnectionWhere: CommentSubscribedToNotificationsConnectionWhere;
+  CommentSubscribedToNotificationsCreateFieldInput: CommentSubscribedToNotificationsCreateFieldInput;
+  CommentSubscribedToNotificationsDeleteFieldInput: CommentSubscribedToNotificationsDeleteFieldInput;
+  CommentSubscribedToNotificationsDisconnectFieldInput: CommentSubscribedToNotificationsDisconnectFieldInput;
+  CommentSubscribedToNotificationsFieldInput: CommentSubscribedToNotificationsFieldInput;
+  CommentSubscribedToNotificationsNodeAggregationWhereInput: CommentSubscribedToNotificationsNodeAggregationWhereInput;
+  CommentSubscribedToNotificationsRelationship: ResolverTypeWrapper<CommentSubscribedToNotificationsRelationship>;
+  CommentSubscribedToNotificationsRelationshipSubscriptionWhere: CommentSubscribedToNotificationsRelationshipSubscriptionWhere;
+  CommentSubscribedToNotificationsUpdateConnectionInput: CommentSubscribedToNotificationsUpdateConnectionInput;
+  CommentSubscribedToNotificationsUpdateFieldInput: CommentSubscribedToNotificationsUpdateFieldInput;
   CommentSubscriptionWhere: CommentSubscriptionWhere;
   CommentTagTagsAggregationSelection: ResolverTypeWrapper<CommentTagTagsAggregationSelection>;
   CommentTagTagsNodeAggregateSelection: ResolverTypeWrapper<CommentTagTagsNodeAggregateSelection>;
@@ -51397,6 +52633,8 @@ export type ResolversTypes = {
   CommentUpvotedByUsersRelationshipSubscriptionWhere: CommentUpvotedByUsersRelationshipSubscriptionWhere;
   CommentUpvotedByUsersUpdateConnectionInput: CommentUpvotedByUsersUpdateConnectionInput;
   CommentUpvotedByUsersUpdateFieldInput: CommentUpvotedByUsersUpdateFieldInput;
+  CommentUserSubscribedToNotificationsAggregationSelection: ResolverTypeWrapper<CommentUserSubscribedToNotificationsAggregationSelection>;
+  CommentUserSubscribedToNotificationsNodeAggregateSelection: ResolverTypeWrapper<CommentUserSubscribedToNotificationsNodeAggregateSelection>;
   CommentUserUpvotedByUsersAggregationSelection: ResolverTypeWrapper<CommentUserUpvotedByUsersAggregationSelection>;
   CommentUserUpvotedByUsersNodeAggregateSelection: ResolverTypeWrapper<CommentUserUpvotedByUsersNodeAggregateSelection>;
   CommentWhere: CommentWhere;
@@ -51725,6 +52963,23 @@ export type ResolversTypes = {
   DiscussionChannelRelationshipDeletedSubscriptionWhere: DiscussionChannelRelationshipDeletedSubscriptionWhere;
   DiscussionChannelRelationshipsSubscriptionWhere: DiscussionChannelRelationshipsSubscriptionWhere;
   DiscussionChannelSort: DiscussionChannelSort;
+  DiscussionChannelSubscribedToNotificationsAggregateInput: DiscussionChannelSubscribedToNotificationsAggregateInput;
+  DiscussionChannelSubscribedToNotificationsConnectFieldInput: DiscussionChannelSubscribedToNotificationsConnectFieldInput;
+  DiscussionChannelSubscribedToNotificationsConnectOrCreateFieldInput: DiscussionChannelSubscribedToNotificationsConnectOrCreateFieldInput;
+  DiscussionChannelSubscribedToNotificationsConnectOrCreateFieldInputOnCreate: DiscussionChannelSubscribedToNotificationsConnectOrCreateFieldInputOnCreate;
+  DiscussionChannelSubscribedToNotificationsConnectedRelationship: ResolverTypeWrapper<DiscussionChannelSubscribedToNotificationsConnectedRelationship>;
+  DiscussionChannelSubscribedToNotificationsConnection: ResolverTypeWrapper<DiscussionChannelSubscribedToNotificationsConnection>;
+  DiscussionChannelSubscribedToNotificationsConnectionSort: DiscussionChannelSubscribedToNotificationsConnectionSort;
+  DiscussionChannelSubscribedToNotificationsConnectionWhere: DiscussionChannelSubscribedToNotificationsConnectionWhere;
+  DiscussionChannelSubscribedToNotificationsCreateFieldInput: DiscussionChannelSubscribedToNotificationsCreateFieldInput;
+  DiscussionChannelSubscribedToNotificationsDeleteFieldInput: DiscussionChannelSubscribedToNotificationsDeleteFieldInput;
+  DiscussionChannelSubscribedToNotificationsDisconnectFieldInput: DiscussionChannelSubscribedToNotificationsDisconnectFieldInput;
+  DiscussionChannelSubscribedToNotificationsFieldInput: DiscussionChannelSubscribedToNotificationsFieldInput;
+  DiscussionChannelSubscribedToNotificationsNodeAggregationWhereInput: DiscussionChannelSubscribedToNotificationsNodeAggregationWhereInput;
+  DiscussionChannelSubscribedToNotificationsRelationship: ResolverTypeWrapper<DiscussionChannelSubscribedToNotificationsRelationship>;
+  DiscussionChannelSubscribedToNotificationsRelationshipSubscriptionWhere: DiscussionChannelSubscribedToNotificationsRelationshipSubscriptionWhere;
+  DiscussionChannelSubscribedToNotificationsUpdateConnectionInput: DiscussionChannelSubscribedToNotificationsUpdateConnectionInput;
+  DiscussionChannelSubscribedToNotificationsUpdateFieldInput: DiscussionChannelSubscribedToNotificationsUpdateFieldInput;
   DiscussionChannelSubscriptionWhere: DiscussionChannelSubscriptionWhere;
   DiscussionChannelUpdateInput: DiscussionChannelUpdateInput;
   DiscussionChannelUpdatedEvent: ResolverTypeWrapper<DiscussionChannelUpdatedEvent>;
@@ -51745,6 +53000,8 @@ export type ResolversTypes = {
   DiscussionChannelUpvotedByUsersRelationshipSubscriptionWhere: DiscussionChannelUpvotedByUsersRelationshipSubscriptionWhere;
   DiscussionChannelUpvotedByUsersUpdateConnectionInput: DiscussionChannelUpvotedByUsersUpdateConnectionInput;
   DiscussionChannelUpvotedByUsersUpdateFieldInput: DiscussionChannelUpvotedByUsersUpdateFieldInput;
+  DiscussionChannelUserSubscribedToNotificationsAggregationSelection: ResolverTypeWrapper<DiscussionChannelUserSubscribedToNotificationsAggregationSelection>;
+  DiscussionChannelUserSubscribedToNotificationsNodeAggregateSelection: ResolverTypeWrapper<DiscussionChannelUserSubscribedToNotificationsNodeAggregateSelection>;
   DiscussionChannelUserUpvotedByUsersAggregationSelection: ResolverTypeWrapper<DiscussionChannelUserUpvotedByUsersAggregationSelection>;
   DiscussionChannelUserUpvotedByUsersNodeAggregateSelection: ResolverTypeWrapper<DiscussionChannelUserUpvotedByUsersNodeAggregateSelection>;
   DiscussionChannelWhere: DiscussionChannelWhere;
@@ -52198,9 +53455,28 @@ export type ResolversTypes = {
   EventChannelRelationshipDeletedSubscriptionWhere: EventChannelRelationshipDeletedSubscriptionWhere;
   EventChannelRelationshipsSubscriptionWhere: EventChannelRelationshipsSubscriptionWhere;
   EventChannelSort: EventChannelSort;
+  EventChannelSubscribedToNotificationsAggregateInput: EventChannelSubscribedToNotificationsAggregateInput;
+  EventChannelSubscribedToNotificationsConnectFieldInput: EventChannelSubscribedToNotificationsConnectFieldInput;
+  EventChannelSubscribedToNotificationsConnectOrCreateFieldInput: EventChannelSubscribedToNotificationsConnectOrCreateFieldInput;
+  EventChannelSubscribedToNotificationsConnectOrCreateFieldInputOnCreate: EventChannelSubscribedToNotificationsConnectOrCreateFieldInputOnCreate;
+  EventChannelSubscribedToNotificationsConnectedRelationship: ResolverTypeWrapper<EventChannelSubscribedToNotificationsConnectedRelationship>;
+  EventChannelSubscribedToNotificationsConnection: ResolverTypeWrapper<EventChannelSubscribedToNotificationsConnection>;
+  EventChannelSubscribedToNotificationsConnectionSort: EventChannelSubscribedToNotificationsConnectionSort;
+  EventChannelSubscribedToNotificationsConnectionWhere: EventChannelSubscribedToNotificationsConnectionWhere;
+  EventChannelSubscribedToNotificationsCreateFieldInput: EventChannelSubscribedToNotificationsCreateFieldInput;
+  EventChannelSubscribedToNotificationsDeleteFieldInput: EventChannelSubscribedToNotificationsDeleteFieldInput;
+  EventChannelSubscribedToNotificationsDisconnectFieldInput: EventChannelSubscribedToNotificationsDisconnectFieldInput;
+  EventChannelSubscribedToNotificationsFieldInput: EventChannelSubscribedToNotificationsFieldInput;
+  EventChannelSubscribedToNotificationsNodeAggregationWhereInput: EventChannelSubscribedToNotificationsNodeAggregationWhereInput;
+  EventChannelSubscribedToNotificationsRelationship: ResolverTypeWrapper<EventChannelSubscribedToNotificationsRelationship>;
+  EventChannelSubscribedToNotificationsRelationshipSubscriptionWhere: EventChannelSubscribedToNotificationsRelationshipSubscriptionWhere;
+  EventChannelSubscribedToNotificationsUpdateConnectionInput: EventChannelSubscribedToNotificationsUpdateConnectionInput;
+  EventChannelSubscribedToNotificationsUpdateFieldInput: EventChannelSubscribedToNotificationsUpdateFieldInput;
   EventChannelSubscriptionWhere: EventChannelSubscriptionWhere;
   EventChannelUpdateInput: EventChannelUpdateInput;
   EventChannelUpdatedEvent: ResolverTypeWrapper<EventChannelUpdatedEvent>;
+  EventChannelUserSubscribedToNotificationsAggregationSelection: ResolverTypeWrapper<EventChannelUserSubscribedToNotificationsAggregationSelection>;
+  EventChannelUserSubscribedToNotificationsNodeAggregateSelection: ResolverTypeWrapper<EventChannelUserSubscribedToNotificationsNodeAggregateSelection>;
   EventChannelWhere: EventChannelWhere;
   EventChannelsConnection: ResolverTypeWrapper<EventChannelsConnection>;
   EventCommentCommentsAggregationSelection: ResolverTypeWrapper<EventCommentCommentsAggregationSelection>;
@@ -55296,6 +56572,23 @@ export type ResolversParentTypes = {
   CommentSectionFormatWhere: CommentSectionFormatWhere;
   CommentSectionFormatsConnection: CommentSectionFormatsConnection;
   CommentSort: CommentSort;
+  CommentSubscribedToNotificationsAggregateInput: CommentSubscribedToNotificationsAggregateInput;
+  CommentSubscribedToNotificationsConnectFieldInput: CommentSubscribedToNotificationsConnectFieldInput;
+  CommentSubscribedToNotificationsConnectOrCreateFieldInput: CommentSubscribedToNotificationsConnectOrCreateFieldInput;
+  CommentSubscribedToNotificationsConnectOrCreateFieldInputOnCreate: CommentSubscribedToNotificationsConnectOrCreateFieldInputOnCreate;
+  CommentSubscribedToNotificationsConnectedRelationship: CommentSubscribedToNotificationsConnectedRelationship;
+  CommentSubscribedToNotificationsConnection: CommentSubscribedToNotificationsConnection;
+  CommentSubscribedToNotificationsConnectionSort: CommentSubscribedToNotificationsConnectionSort;
+  CommentSubscribedToNotificationsConnectionWhere: CommentSubscribedToNotificationsConnectionWhere;
+  CommentSubscribedToNotificationsCreateFieldInput: CommentSubscribedToNotificationsCreateFieldInput;
+  CommentSubscribedToNotificationsDeleteFieldInput: CommentSubscribedToNotificationsDeleteFieldInput;
+  CommentSubscribedToNotificationsDisconnectFieldInput: CommentSubscribedToNotificationsDisconnectFieldInput;
+  CommentSubscribedToNotificationsFieldInput: CommentSubscribedToNotificationsFieldInput;
+  CommentSubscribedToNotificationsNodeAggregationWhereInput: CommentSubscribedToNotificationsNodeAggregationWhereInput;
+  CommentSubscribedToNotificationsRelationship: CommentSubscribedToNotificationsRelationship;
+  CommentSubscribedToNotificationsRelationshipSubscriptionWhere: CommentSubscribedToNotificationsRelationshipSubscriptionWhere;
+  CommentSubscribedToNotificationsUpdateConnectionInput: CommentSubscribedToNotificationsUpdateConnectionInput;
+  CommentSubscribedToNotificationsUpdateFieldInput: CommentSubscribedToNotificationsUpdateFieldInput;
   CommentSubscriptionWhere: CommentSubscriptionWhere;
   CommentTagTagsAggregationSelection: CommentTagTagsAggregationSelection;
   CommentTagTagsNodeAggregateSelection: CommentTagTagsNodeAggregateSelection;
@@ -55337,6 +56630,8 @@ export type ResolversParentTypes = {
   CommentUpvotedByUsersRelationshipSubscriptionWhere: CommentUpvotedByUsersRelationshipSubscriptionWhere;
   CommentUpvotedByUsersUpdateConnectionInput: CommentUpvotedByUsersUpdateConnectionInput;
   CommentUpvotedByUsersUpdateFieldInput: CommentUpvotedByUsersUpdateFieldInput;
+  CommentUserSubscribedToNotificationsAggregationSelection: CommentUserSubscribedToNotificationsAggregationSelection;
+  CommentUserSubscribedToNotificationsNodeAggregateSelection: CommentUserSubscribedToNotificationsNodeAggregateSelection;
   CommentUserUpvotedByUsersAggregationSelection: CommentUserUpvotedByUsersAggregationSelection;
   CommentUserUpvotedByUsersNodeAggregateSelection: CommentUserUpvotedByUsersNodeAggregateSelection;
   CommentWhere: CommentWhere;
@@ -55665,6 +56960,23 @@ export type ResolversParentTypes = {
   DiscussionChannelRelationshipDeletedSubscriptionWhere: DiscussionChannelRelationshipDeletedSubscriptionWhere;
   DiscussionChannelRelationshipsSubscriptionWhere: DiscussionChannelRelationshipsSubscriptionWhere;
   DiscussionChannelSort: DiscussionChannelSort;
+  DiscussionChannelSubscribedToNotificationsAggregateInput: DiscussionChannelSubscribedToNotificationsAggregateInput;
+  DiscussionChannelSubscribedToNotificationsConnectFieldInput: DiscussionChannelSubscribedToNotificationsConnectFieldInput;
+  DiscussionChannelSubscribedToNotificationsConnectOrCreateFieldInput: DiscussionChannelSubscribedToNotificationsConnectOrCreateFieldInput;
+  DiscussionChannelSubscribedToNotificationsConnectOrCreateFieldInputOnCreate: DiscussionChannelSubscribedToNotificationsConnectOrCreateFieldInputOnCreate;
+  DiscussionChannelSubscribedToNotificationsConnectedRelationship: DiscussionChannelSubscribedToNotificationsConnectedRelationship;
+  DiscussionChannelSubscribedToNotificationsConnection: DiscussionChannelSubscribedToNotificationsConnection;
+  DiscussionChannelSubscribedToNotificationsConnectionSort: DiscussionChannelSubscribedToNotificationsConnectionSort;
+  DiscussionChannelSubscribedToNotificationsConnectionWhere: DiscussionChannelSubscribedToNotificationsConnectionWhere;
+  DiscussionChannelSubscribedToNotificationsCreateFieldInput: DiscussionChannelSubscribedToNotificationsCreateFieldInput;
+  DiscussionChannelSubscribedToNotificationsDeleteFieldInput: DiscussionChannelSubscribedToNotificationsDeleteFieldInput;
+  DiscussionChannelSubscribedToNotificationsDisconnectFieldInput: DiscussionChannelSubscribedToNotificationsDisconnectFieldInput;
+  DiscussionChannelSubscribedToNotificationsFieldInput: DiscussionChannelSubscribedToNotificationsFieldInput;
+  DiscussionChannelSubscribedToNotificationsNodeAggregationWhereInput: DiscussionChannelSubscribedToNotificationsNodeAggregationWhereInput;
+  DiscussionChannelSubscribedToNotificationsRelationship: DiscussionChannelSubscribedToNotificationsRelationship;
+  DiscussionChannelSubscribedToNotificationsRelationshipSubscriptionWhere: DiscussionChannelSubscribedToNotificationsRelationshipSubscriptionWhere;
+  DiscussionChannelSubscribedToNotificationsUpdateConnectionInput: DiscussionChannelSubscribedToNotificationsUpdateConnectionInput;
+  DiscussionChannelSubscribedToNotificationsUpdateFieldInput: DiscussionChannelSubscribedToNotificationsUpdateFieldInput;
   DiscussionChannelSubscriptionWhere: DiscussionChannelSubscriptionWhere;
   DiscussionChannelUpdateInput: DiscussionChannelUpdateInput;
   DiscussionChannelUpdatedEvent: DiscussionChannelUpdatedEvent;
@@ -55685,6 +56997,8 @@ export type ResolversParentTypes = {
   DiscussionChannelUpvotedByUsersRelationshipSubscriptionWhere: DiscussionChannelUpvotedByUsersRelationshipSubscriptionWhere;
   DiscussionChannelUpvotedByUsersUpdateConnectionInput: DiscussionChannelUpvotedByUsersUpdateConnectionInput;
   DiscussionChannelUpvotedByUsersUpdateFieldInput: DiscussionChannelUpvotedByUsersUpdateFieldInput;
+  DiscussionChannelUserSubscribedToNotificationsAggregationSelection: DiscussionChannelUserSubscribedToNotificationsAggregationSelection;
+  DiscussionChannelUserSubscribedToNotificationsNodeAggregateSelection: DiscussionChannelUserSubscribedToNotificationsNodeAggregateSelection;
   DiscussionChannelUserUpvotedByUsersAggregationSelection: DiscussionChannelUserUpvotedByUsersAggregationSelection;
   DiscussionChannelUserUpvotedByUsersNodeAggregateSelection: DiscussionChannelUserUpvotedByUsersNodeAggregateSelection;
   DiscussionChannelWhere: DiscussionChannelWhere;
@@ -56138,9 +57452,28 @@ export type ResolversParentTypes = {
   EventChannelRelationshipDeletedSubscriptionWhere: EventChannelRelationshipDeletedSubscriptionWhere;
   EventChannelRelationshipsSubscriptionWhere: EventChannelRelationshipsSubscriptionWhere;
   EventChannelSort: EventChannelSort;
+  EventChannelSubscribedToNotificationsAggregateInput: EventChannelSubscribedToNotificationsAggregateInput;
+  EventChannelSubscribedToNotificationsConnectFieldInput: EventChannelSubscribedToNotificationsConnectFieldInput;
+  EventChannelSubscribedToNotificationsConnectOrCreateFieldInput: EventChannelSubscribedToNotificationsConnectOrCreateFieldInput;
+  EventChannelSubscribedToNotificationsConnectOrCreateFieldInputOnCreate: EventChannelSubscribedToNotificationsConnectOrCreateFieldInputOnCreate;
+  EventChannelSubscribedToNotificationsConnectedRelationship: EventChannelSubscribedToNotificationsConnectedRelationship;
+  EventChannelSubscribedToNotificationsConnection: EventChannelSubscribedToNotificationsConnection;
+  EventChannelSubscribedToNotificationsConnectionSort: EventChannelSubscribedToNotificationsConnectionSort;
+  EventChannelSubscribedToNotificationsConnectionWhere: EventChannelSubscribedToNotificationsConnectionWhere;
+  EventChannelSubscribedToNotificationsCreateFieldInput: EventChannelSubscribedToNotificationsCreateFieldInput;
+  EventChannelSubscribedToNotificationsDeleteFieldInput: EventChannelSubscribedToNotificationsDeleteFieldInput;
+  EventChannelSubscribedToNotificationsDisconnectFieldInput: EventChannelSubscribedToNotificationsDisconnectFieldInput;
+  EventChannelSubscribedToNotificationsFieldInput: EventChannelSubscribedToNotificationsFieldInput;
+  EventChannelSubscribedToNotificationsNodeAggregationWhereInput: EventChannelSubscribedToNotificationsNodeAggregationWhereInput;
+  EventChannelSubscribedToNotificationsRelationship: EventChannelSubscribedToNotificationsRelationship;
+  EventChannelSubscribedToNotificationsRelationshipSubscriptionWhere: EventChannelSubscribedToNotificationsRelationshipSubscriptionWhere;
+  EventChannelSubscribedToNotificationsUpdateConnectionInput: EventChannelSubscribedToNotificationsUpdateConnectionInput;
+  EventChannelSubscribedToNotificationsUpdateFieldInput: EventChannelSubscribedToNotificationsUpdateFieldInput;
   EventChannelSubscriptionWhere: EventChannelSubscriptionWhere;
   EventChannelUpdateInput: EventChannelUpdateInput;
   EventChannelUpdatedEvent: EventChannelUpdatedEvent;
+  EventChannelUserSubscribedToNotificationsAggregationSelection: EventChannelUserSubscribedToNotificationsAggregationSelection;
+  EventChannelUserSubscribedToNotificationsNodeAggregateSelection: EventChannelUserSubscribedToNotificationsNodeAggregateSelection;
   EventChannelWhere: EventChannelWhere;
   EventChannelsConnection: EventChannelsConnection;
   EventCommentCommentsAggregationSelection: EventCommentCommentsAggregationSelection;
@@ -59725,7 +61058,9 @@ export type CommentResolvers<ContextType = any, ParentType extends ResolversPare
   RelatedIssues?: Resolver<Array<ResolversTypes['Issue']>, ParentType, ContextType, RequireFields<CommentRelatedIssuesArgs, 'directed'>>;
   RelatedIssuesAggregate?: Resolver<Maybe<ResolversTypes['CommentIssueRelatedIssuesAggregationSelection']>, ParentType, ContextType, RequireFields<CommentRelatedIssuesAggregateArgs, 'directed'>>;
   RelatedIssuesConnection?: Resolver<ResolversTypes['CommentRelatedIssuesConnection'], ParentType, ContextType, RequireFields<CommentRelatedIssuesConnectionArgs, 'directed'>>;
-  SubscribedToNotifications?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
+  SubscribedToNotifications?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, RequireFields<CommentSubscribedToNotificationsArgs, 'directed'>>;
+  SubscribedToNotificationsAggregate?: Resolver<Maybe<ResolversTypes['CommentUserSubscribedToNotificationsAggregationSelection']>, ParentType, ContextType, RequireFields<CommentSubscribedToNotificationsAggregateArgs, 'directed'>>;
+  SubscribedToNotificationsConnection?: Resolver<ResolversTypes['CommentSubscribedToNotificationsConnection'], ParentType, ContextType, RequireFields<CommentSubscribedToNotificationsConnectionArgs, 'directed'>>;
   Tags?: Resolver<Array<ResolversTypes['Tag']>, ParentType, ContextType, RequireFields<CommentTagsArgs, 'directed'>>;
   TagsAggregate?: Resolver<Maybe<ResolversTypes['CommentTagTagsAggregationSelection']>, ParentType, ContextType, RequireFields<CommentTagsAggregateArgs, 'directed'>>;
   TagsConnection?: Resolver<ResolversTypes['CommentTagsConnection'], ParentType, ContextType, RequireFields<CommentTagsConnectionArgs, 'directed'>>;
@@ -59909,6 +61244,7 @@ export type CommentConnectedRelationshipsResolvers<ContextType = any, ParentType
   ParentComment?: Resolver<Maybe<ResolversTypes['CommentParentCommentConnectedRelationship']>, ParentType, ContextType>;
   PastVersions?: Resolver<Maybe<ResolversTypes['CommentPastVersionsConnectedRelationship']>, ParentType, ContextType>;
   RelatedIssues?: Resolver<Maybe<ResolversTypes['CommentRelatedIssuesConnectedRelationship']>, ParentType, ContextType>;
+  SubscribedToNotifications?: Resolver<Maybe<ResolversTypes['CommentSubscribedToNotificationsConnectedRelationship']>, ParentType, ContextType>;
   Tags?: Resolver<Maybe<ResolversTypes['CommentTagsConnectedRelationship']>, ParentType, ContextType>;
   UpvotedByUsers?: Resolver<Maybe<ResolversTypes['CommentUpvotedByUsersConnectedRelationship']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -60457,6 +61793,24 @@ export type CommentSectionFormatsConnectionResolvers<ContextType = any, ParentTy
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type CommentSubscribedToNotificationsConnectedRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['CommentSubscribedToNotificationsConnectedRelationship'] = ResolversParentTypes['CommentSubscribedToNotificationsConnectedRelationship']> = {
+  node?: Resolver<ResolversTypes['UserEventPayload'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CommentSubscribedToNotificationsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['CommentSubscribedToNotificationsConnection'] = ResolversParentTypes['CommentSubscribedToNotificationsConnection']> = {
+  edges?: Resolver<Array<ResolversTypes['CommentSubscribedToNotificationsRelationship']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CommentSubscribedToNotificationsRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['CommentSubscribedToNotificationsRelationship'] = ResolversParentTypes['CommentSubscribedToNotificationsRelationship']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type CommentTagTagsAggregationSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['CommentTagTagsAggregationSelection'] = ResolversParentTypes['CommentTagTagsAggregationSelection']> = {
   count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   node?: Resolver<Maybe<ResolversTypes['CommentTagTagsNodeAggregateSelection']>, ParentType, ContextType>;
@@ -60523,6 +61877,30 @@ export type CommentUpvotedByUsersConnectionResolvers<ContextType = any, ParentTy
 export type CommentUpvotedByUsersRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['CommentUpvotedByUsersRelationship'] = ResolversParentTypes['CommentUpvotedByUsersRelationship']> = {
   cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   node?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CommentUserSubscribedToNotificationsAggregationSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['CommentUserSubscribedToNotificationsAggregationSelection'] = ResolversParentTypes['CommentUserSubscribedToNotificationsAggregationSelection']> = {
+  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['CommentUserSubscribedToNotificationsNodeAggregateSelection']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CommentUserSubscribedToNotificationsNodeAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['CommentUserSubscribedToNotificationsNodeAggregateSelection'] = ResolversParentTypes['CommentUserSubscribedToNotificationsNodeAggregateSelection']> = {
+  bio?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  commentKarma?: Resolver<ResolversTypes['IntAggregateSelection'], ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['DateTimeAggregateSelection'], ParentType, ContextType>;
+  defaultEmojiSkinTone?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  discussionKarma?: Resolver<ResolversTypes['IntAggregateSelection'], ParentType, ContextType>;
+  displayName?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  location?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  notificationBundleContent?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  notificationBundleInterval?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  preferredTimeZone?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  profilePicURL?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  pronouns?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  stripeAccountId?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  username?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -61220,7 +62598,9 @@ export type DiscussionChannelResolvers<ContextType = any, ParentType extends Res
   RelatedIssues?: Resolver<Array<ResolversTypes['Issue']>, ParentType, ContextType, RequireFields<DiscussionChannelRelatedIssuesArgs, 'directed'>>;
   RelatedIssuesAggregate?: Resolver<Maybe<ResolversTypes['DiscussionChannelIssueRelatedIssuesAggregationSelection']>, ParentType, ContextType, RequireFields<DiscussionChannelRelatedIssuesAggregateArgs, 'directed'>>;
   RelatedIssuesConnection?: Resolver<ResolversTypes['DiscussionChannelRelatedIssuesConnection'], ParentType, ContextType, RequireFields<DiscussionChannelRelatedIssuesConnectionArgs, 'directed'>>;
-  SubscribedToNotifications?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
+  SubscribedToNotifications?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, RequireFields<DiscussionChannelSubscribedToNotificationsArgs, 'directed'>>;
+  SubscribedToNotificationsAggregate?: Resolver<Maybe<ResolversTypes['DiscussionChannelUserSubscribedToNotificationsAggregationSelection']>, ParentType, ContextType, RequireFields<DiscussionChannelSubscribedToNotificationsAggregateArgs, 'directed'>>;
+  SubscribedToNotificationsConnection?: Resolver<ResolversTypes['DiscussionChannelSubscribedToNotificationsConnection'], ParentType, ContextType, RequireFields<DiscussionChannelSubscribedToNotificationsConnectionArgs, 'directed'>>;
   UpvotedByUsers?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, RequireFields<DiscussionChannelUpvotedByUsersArgs, 'directed'>>;
   UpvotedByUsersAggregate?: Resolver<Maybe<ResolversTypes['DiscussionChannelUserUpvotedByUsersAggregationSelection']>, ParentType, ContextType, RequireFields<DiscussionChannelUpvotedByUsersAggregateArgs, 'directed'>>;
   UpvotedByUsersConnection?: Resolver<ResolversTypes['DiscussionChannelUpvotedByUsersConnection'], ParentType, ContextType, RequireFields<DiscussionChannelUpvotedByUsersConnectionArgs, 'directed'>>;
@@ -61353,6 +62733,7 @@ export type DiscussionChannelConnectedRelationshipsResolvers<ContextType = any, 
   Comments?: Resolver<Maybe<ResolversTypes['DiscussionChannelCommentsConnectedRelationship']>, ParentType, ContextType>;
   Discussion?: Resolver<Maybe<ResolversTypes['DiscussionChannelDiscussionConnectedRelationship']>, ParentType, ContextType>;
   RelatedIssues?: Resolver<Maybe<ResolversTypes['DiscussionChannelRelatedIssuesConnectedRelationship']>, ParentType, ContextType>;
+  SubscribedToNotifications?: Resolver<Maybe<ResolversTypes['DiscussionChannelSubscribedToNotificationsConnectedRelationship']>, ParentType, ContextType>;
   UpvotedByUsers?: Resolver<Maybe<ResolversTypes['DiscussionChannelUpvotedByUsersConnectedRelationship']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -61591,6 +62972,24 @@ export type DiscussionChannelRelationshipDeletedEventResolvers<ContextType = any
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type DiscussionChannelSubscribedToNotificationsConnectedRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscussionChannelSubscribedToNotificationsConnectedRelationship'] = ResolversParentTypes['DiscussionChannelSubscribedToNotificationsConnectedRelationship']> = {
+  node?: Resolver<ResolversTypes['UserEventPayload'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DiscussionChannelSubscribedToNotificationsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscussionChannelSubscribedToNotificationsConnection'] = ResolversParentTypes['DiscussionChannelSubscribedToNotificationsConnection']> = {
+  edges?: Resolver<Array<ResolversTypes['DiscussionChannelSubscribedToNotificationsRelationship']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DiscussionChannelSubscribedToNotificationsRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscussionChannelSubscribedToNotificationsRelationship'] = ResolversParentTypes['DiscussionChannelSubscribedToNotificationsRelationship']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type DiscussionChannelUpdatedEventResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscussionChannelUpdatedEvent'] = ResolversParentTypes['DiscussionChannelUpdatedEvent']> = {
   event?: Resolver<ResolversTypes['EventType'], ParentType, ContextType>;
   previousState?: Resolver<ResolversTypes['DiscussionChannelEventPayload'], ParentType, ContextType>;
@@ -61614,6 +63013,30 @@ export type DiscussionChannelUpvotedByUsersConnectionResolvers<ContextType = any
 export type DiscussionChannelUpvotedByUsersRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscussionChannelUpvotedByUsersRelationship'] = ResolversParentTypes['DiscussionChannelUpvotedByUsersRelationship']> = {
   cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   node?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DiscussionChannelUserSubscribedToNotificationsAggregationSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscussionChannelUserSubscribedToNotificationsAggregationSelection'] = ResolversParentTypes['DiscussionChannelUserSubscribedToNotificationsAggregationSelection']> = {
+  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['DiscussionChannelUserSubscribedToNotificationsNodeAggregateSelection']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DiscussionChannelUserSubscribedToNotificationsNodeAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscussionChannelUserSubscribedToNotificationsNodeAggregateSelection'] = ResolversParentTypes['DiscussionChannelUserSubscribedToNotificationsNodeAggregateSelection']> = {
+  bio?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  commentKarma?: Resolver<ResolversTypes['IntAggregateSelection'], ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['DateTimeAggregateSelection'], ParentType, ContextType>;
+  defaultEmojiSkinTone?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  discussionKarma?: Resolver<ResolversTypes['IntAggregateSelection'], ParentType, ContextType>;
+  displayName?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  location?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  notificationBundleContent?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  notificationBundleInterval?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  preferredTimeZone?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  profilePicURL?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  pronouns?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  stripeAccountId?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  username?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -62660,7 +64083,9 @@ export type EventChannelResolvers<ContextType = any, ParentType extends Resolver
   RelatedIssues?: Resolver<Array<ResolversTypes['Issue']>, ParentType, ContextType, RequireFields<EventChannelRelatedIssuesArgs, 'directed'>>;
   RelatedIssuesAggregate?: Resolver<Maybe<ResolversTypes['EventChannelIssueRelatedIssuesAggregationSelection']>, ParentType, ContextType, RequireFields<EventChannelRelatedIssuesAggregateArgs, 'directed'>>;
   RelatedIssuesConnection?: Resolver<ResolversTypes['EventChannelRelatedIssuesConnection'], ParentType, ContextType, RequireFields<EventChannelRelatedIssuesConnectionArgs, 'directed'>>;
-  SubscribedToNotifications?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
+  SubscribedToNotifications?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, RequireFields<EventChannelSubscribedToNotificationsArgs, 'directed'>>;
+  SubscribedToNotificationsAggregate?: Resolver<Maybe<ResolversTypes['EventChannelUserSubscribedToNotificationsAggregationSelection']>, ParentType, ContextType, RequireFields<EventChannelSubscribedToNotificationsAggregateArgs, 'directed'>>;
+  SubscribedToNotificationsConnection?: Resolver<ResolversTypes['EventChannelSubscribedToNotificationsConnection'], ParentType, ContextType, RequireFields<EventChannelSubscribedToNotificationsConnectionArgs, 'directed'>>;
   archived?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   channelUniqueName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
@@ -62752,6 +64177,7 @@ export type EventChannelConnectedRelationshipsResolvers<ContextType = any, Paren
   Comments?: Resolver<Maybe<ResolversTypes['EventChannelCommentsConnectedRelationship']>, ParentType, ContextType>;
   Event?: Resolver<Maybe<ResolversTypes['EventChannelEventConnectedRelationship']>, ParentType, ContextType>;
   RelatedIssues?: Resolver<Maybe<ResolversTypes['EventChannelRelatedIssuesConnectedRelationship']>, ParentType, ContextType>;
+  SubscribedToNotifications?: Resolver<Maybe<ResolversTypes['EventChannelSubscribedToNotificationsConnectedRelationship']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -62944,11 +64370,53 @@ export type EventChannelRelationshipDeletedEventResolvers<ContextType = any, Par
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type EventChannelSubscribedToNotificationsConnectedRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['EventChannelSubscribedToNotificationsConnectedRelationship'] = ResolversParentTypes['EventChannelSubscribedToNotificationsConnectedRelationship']> = {
+  node?: Resolver<ResolversTypes['UserEventPayload'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type EventChannelSubscribedToNotificationsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['EventChannelSubscribedToNotificationsConnection'] = ResolversParentTypes['EventChannelSubscribedToNotificationsConnection']> = {
+  edges?: Resolver<Array<ResolversTypes['EventChannelSubscribedToNotificationsRelationship']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type EventChannelSubscribedToNotificationsRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['EventChannelSubscribedToNotificationsRelationship'] = ResolversParentTypes['EventChannelSubscribedToNotificationsRelationship']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type EventChannelUpdatedEventResolvers<ContextType = any, ParentType extends ResolversParentTypes['EventChannelUpdatedEvent'] = ResolversParentTypes['EventChannelUpdatedEvent']> = {
   event?: Resolver<ResolversTypes['EventType'], ParentType, ContextType>;
   previousState?: Resolver<ResolversTypes['EventChannelEventPayload'], ParentType, ContextType>;
   timestamp?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   updatedEventChannel?: Resolver<ResolversTypes['EventChannelEventPayload'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type EventChannelUserSubscribedToNotificationsAggregationSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['EventChannelUserSubscribedToNotificationsAggregationSelection'] = ResolversParentTypes['EventChannelUserSubscribedToNotificationsAggregationSelection']> = {
+  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['EventChannelUserSubscribedToNotificationsNodeAggregateSelection']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type EventChannelUserSubscribedToNotificationsNodeAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['EventChannelUserSubscribedToNotificationsNodeAggregateSelection'] = ResolversParentTypes['EventChannelUserSubscribedToNotificationsNodeAggregateSelection']> = {
+  bio?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  commentKarma?: Resolver<ResolversTypes['IntAggregateSelection'], ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['DateTimeAggregateSelection'], ParentType, ContextType>;
+  defaultEmojiSkinTone?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  discussionKarma?: Resolver<ResolversTypes['IntAggregateSelection'], ParentType, ContextType>;
+  displayName?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  location?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  notificationBundleContent?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  notificationBundleInterval?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  preferredTimeZone?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  profilePicURL?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  pronouns?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  stripeAccountId?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  username?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -65587,6 +67055,10 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   reportDiscussion?: Resolver<Maybe<ResolversTypes['Issue']>, ParentType, ContextType, RequireFields<MutationReportDiscussionArgs, 'channelUniqueName' | 'discussionId' | 'reportText' | 'selectedForumRules' | 'selectedServerRules'>>;
   reportEvent?: Resolver<Maybe<ResolversTypes['Issue']>, ParentType, ContextType, RequireFields<MutationReportEventArgs, 'channelUniqueName' | 'eventId' | 'reportText' | 'selectedForumRules' | 'selectedServerRules'>>;
   seedDataForCypressTests?: Resolver<Maybe<ResolversTypes['SeedDataResponse']>, ParentType, ContextType, RequireFields<MutationSeedDataForCypressTestsArgs, 'channelRoles' | 'channels' | 'comments' | 'discussions' | 'events' | 'modChannelRoles' | 'modServerRoles' | 'serverConfigs' | 'serverRoles' | 'tags' | 'users'>>;
+  subscribeToComment?: Resolver<Maybe<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<MutationSubscribeToCommentArgs, 'commentId'>>;
+  subscribeToDiscussionChannel?: Resolver<Maybe<ResolversTypes['DiscussionChannel']>, ParentType, ContextType, RequireFields<MutationSubscribeToDiscussionChannelArgs, 'discussionChannelId'>>;
+  subscribeToEvent?: Resolver<Maybe<ResolversTypes['Event']>, ParentType, ContextType, RequireFields<MutationSubscribeToEventArgs, 'eventId'>>;
+  subscribeToIssue?: Resolver<Maybe<ResolversTypes['Issue']>, ParentType, ContextType, RequireFields<MutationSubscribeToIssueArgs, 'issueId'>>;
   suspendMod?: Resolver<Maybe<ResolversTypes['Issue']>, ParentType, ContextType, RequireFields<MutationSuspendModArgs, 'issueId'>>;
   suspendUser?: Resolver<Maybe<ResolversTypes['Issue']>, ParentType, ContextType, RequireFields<MutationSuspendUserArgs, 'issueId'>>;
   unarchiveComment?: Resolver<Maybe<ResolversTypes['Issue']>, ParentType, ContextType, RequireFields<MutationUnarchiveCommentArgs, 'commentId'>>;
@@ -65594,6 +67066,10 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   unarchiveEvent?: Resolver<Maybe<ResolversTypes['Issue']>, ParentType, ContextType, RequireFields<MutationUnarchiveEventArgs, 'channelUniqueName' | 'eventId'>>;
   undoUpvoteComment?: Resolver<Maybe<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<MutationUndoUpvoteCommentArgs, 'commentId' | 'username'>>;
   undoUpvoteDiscussionChannel?: Resolver<Maybe<ResolversTypes['DiscussionChannel']>, ParentType, ContextType, RequireFields<MutationUndoUpvoteDiscussionChannelArgs, 'discussionChannelId' | 'username'>>;
+  unsubscribeFromComment?: Resolver<Maybe<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<MutationUnsubscribeFromCommentArgs, 'commentId'>>;
+  unsubscribeFromDiscussionChannel?: Resolver<Maybe<ResolversTypes['DiscussionChannel']>, ParentType, ContextType, RequireFields<MutationUnsubscribeFromDiscussionChannelArgs, 'discussionChannelId'>>;
+  unsubscribeFromEvent?: Resolver<Maybe<ResolversTypes['Event']>, ParentType, ContextType, RequireFields<MutationUnsubscribeFromEventArgs, 'eventId'>>;
+  unsubscribeFromIssue?: Resolver<Maybe<ResolversTypes['Issue']>, ParentType, ContextType, RequireFields<MutationUnsubscribeFromIssueArgs, 'issueId'>>;
   unsuspendMod?: Resolver<Maybe<ResolversTypes['Issue']>, ParentType, ContextType, RequireFields<MutationUnsuspendModArgs, 'issueId'>>;
   unsuspendUser?: Resolver<Maybe<ResolversTypes['Issue']>, ParentType, ContextType, RequireFields<MutationUnsuspendUserArgs, 'issueId'>>;
   updateActivities?: Resolver<ResolversTypes['UpdateActivitiesMutationResponse'], ParentType, ContextType, Partial<MutationUpdateActivitiesArgs>>;
@@ -68099,9 +69575,9 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   notificationBundleEnabled?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   notificationBundleInterval?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   notifyOnFeedback?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
-  notifyOnReplyToComment?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
-  notifyOnReplyToDiscussion?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
-  notifyOnReplyToEvent?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  notifyOnReplyToCommentByDefault?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  notifyOnReplyToDiscussionByDefault?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  notifyOnReplyToEventByDefault?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   notifyWhenTagged?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   preferredTimeZone?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   profilePicURL?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -68634,9 +70110,9 @@ export type UserEventPayloadResolvers<ContextType = any, ParentType extends Reso
   notificationBundleEnabled?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   notificationBundleInterval?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   notifyOnFeedback?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
-  notifyOnReplyToComment?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
-  notifyOnReplyToDiscussion?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
-  notifyOnReplyToEvent?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  notifyOnReplyToCommentByDefault?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  notifyOnReplyToDiscussionByDefault?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  notifyOnReplyToEventByDefault?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   notifyWhenTagged?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   preferredTimeZone?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   profilePicURL?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -69606,6 +71082,9 @@ export type Resolvers<ContextType = any> = {
   CommentSectionFormatEdge?: CommentSectionFormatEdgeResolvers<ContextType>;
   CommentSectionFormatUpdatedEvent?: CommentSectionFormatUpdatedEventResolvers<ContextType>;
   CommentSectionFormatsConnection?: CommentSectionFormatsConnectionResolvers<ContextType>;
+  CommentSubscribedToNotificationsConnectedRelationship?: CommentSubscribedToNotificationsConnectedRelationshipResolvers<ContextType>;
+  CommentSubscribedToNotificationsConnection?: CommentSubscribedToNotificationsConnectionResolvers<ContextType>;
+  CommentSubscribedToNotificationsRelationship?: CommentSubscribedToNotificationsRelationshipResolvers<ContextType>;
   CommentTagTagsAggregationSelection?: CommentTagTagsAggregationSelectionResolvers<ContextType>;
   CommentTagTagsNodeAggregateSelection?: CommentTagTagsNodeAggregateSelectionResolvers<ContextType>;
   CommentTagsConnectedRelationship?: CommentTagsConnectedRelationshipResolvers<ContextType>;
@@ -69617,6 +71096,8 @@ export type Resolvers<ContextType = any> = {
   CommentUpvotedByUsersConnectedRelationship?: CommentUpvotedByUsersConnectedRelationshipResolvers<ContextType>;
   CommentUpvotedByUsersConnection?: CommentUpvotedByUsersConnectionResolvers<ContextType>;
   CommentUpvotedByUsersRelationship?: CommentUpvotedByUsersRelationshipResolvers<ContextType>;
+  CommentUserSubscribedToNotificationsAggregationSelection?: CommentUserSubscribedToNotificationsAggregationSelectionResolvers<ContextType>;
+  CommentUserSubscribedToNotificationsNodeAggregateSelection?: CommentUserSubscribedToNotificationsNodeAggregateSelectionResolvers<ContextType>;
   CommentUserUpvotedByUsersAggregationSelection?: CommentUserUpvotedByUsersAggregationSelectionResolvers<ContextType>;
   CommentUserUpvotedByUsersNodeAggregateSelection?: CommentUserUpvotedByUsersNodeAggregateSelectionResolvers<ContextType>;
   CommentsConnection?: CommentsConnectionResolvers<ContextType>;
@@ -69768,10 +71249,15 @@ export type Resolvers<ContextType = any> = {
   DiscussionChannelRelatedIssuesRelationship?: DiscussionChannelRelatedIssuesRelationshipResolvers<ContextType>;
   DiscussionChannelRelationshipCreatedEvent?: DiscussionChannelRelationshipCreatedEventResolvers<ContextType>;
   DiscussionChannelRelationshipDeletedEvent?: DiscussionChannelRelationshipDeletedEventResolvers<ContextType>;
+  DiscussionChannelSubscribedToNotificationsConnectedRelationship?: DiscussionChannelSubscribedToNotificationsConnectedRelationshipResolvers<ContextType>;
+  DiscussionChannelSubscribedToNotificationsConnection?: DiscussionChannelSubscribedToNotificationsConnectionResolvers<ContextType>;
+  DiscussionChannelSubscribedToNotificationsRelationship?: DiscussionChannelSubscribedToNotificationsRelationshipResolvers<ContextType>;
   DiscussionChannelUpdatedEvent?: DiscussionChannelUpdatedEventResolvers<ContextType>;
   DiscussionChannelUpvotedByUsersConnectedRelationship?: DiscussionChannelUpvotedByUsersConnectedRelationshipResolvers<ContextType>;
   DiscussionChannelUpvotedByUsersConnection?: DiscussionChannelUpvotedByUsersConnectionResolvers<ContextType>;
   DiscussionChannelUpvotedByUsersRelationship?: DiscussionChannelUpvotedByUsersRelationshipResolvers<ContextType>;
+  DiscussionChannelUserSubscribedToNotificationsAggregationSelection?: DiscussionChannelUserSubscribedToNotificationsAggregationSelectionResolvers<ContextType>;
+  DiscussionChannelUserSubscribedToNotificationsNodeAggregateSelection?: DiscussionChannelUserSubscribedToNotificationsNodeAggregateSelectionResolvers<ContextType>;
   DiscussionChannelUserUpvotedByUsersAggregationSelection?: DiscussionChannelUserUpvotedByUsersAggregationSelectionResolvers<ContextType>;
   DiscussionChannelUserUpvotedByUsersNodeAggregateSelection?: DiscussionChannelUserUpvotedByUsersNodeAggregateSelectionResolvers<ContextType>;
   DiscussionChannelsConnection?: DiscussionChannelsConnectionResolvers<ContextType>;
@@ -69937,7 +71423,12 @@ export type Resolvers<ContextType = any> = {
   EventChannelRelatedIssuesRelationship?: EventChannelRelatedIssuesRelationshipResolvers<ContextType>;
   EventChannelRelationshipCreatedEvent?: EventChannelRelationshipCreatedEventResolvers<ContextType>;
   EventChannelRelationshipDeletedEvent?: EventChannelRelationshipDeletedEventResolvers<ContextType>;
+  EventChannelSubscribedToNotificationsConnectedRelationship?: EventChannelSubscribedToNotificationsConnectedRelationshipResolvers<ContextType>;
+  EventChannelSubscribedToNotificationsConnection?: EventChannelSubscribedToNotificationsConnectionResolvers<ContextType>;
+  EventChannelSubscribedToNotificationsRelationship?: EventChannelSubscribedToNotificationsRelationshipResolvers<ContextType>;
   EventChannelUpdatedEvent?: EventChannelUpdatedEventResolvers<ContextType>;
+  EventChannelUserSubscribedToNotificationsAggregationSelection?: EventChannelUserSubscribedToNotificationsAggregationSelectionResolvers<ContextType>;
+  EventChannelUserSubscribedToNotificationsNodeAggregateSelection?: EventChannelUserSubscribedToNotificationsNodeAggregateSelectionResolvers<ContextType>;
   EventChannelsConnection?: EventChannelsConnectionResolvers<ContextType>;
   EventCommentCommentsAggregationSelection?: EventCommentCommentsAggregationSelectionResolvers<ContextType>;
   EventCommentCommentsNodeAggregateSelection?: EventCommentCommentsNodeAggregateSelectionResolvers<ContextType>;

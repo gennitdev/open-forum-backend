@@ -12,7 +12,10 @@ CREATE (newDc:DiscussionChannel {
 MERGE (newDc)-[:POSTED_IN_CHANNEL]->(d)
 MERGE (newDc)-[:POSTED_IN_CHANNEL]->(c)
 MERGE (u)-[:UPVOTED_DISCUSSION]->(newDc)
-MERGE (u)-[:SUBSCRIBED_TO_NOTIFICATIONS]->(newDc) 
+// Only subscribe to notifications if user has opted in
+FOREACH (ignoreMe IN CASE WHEN u.notifyOnReplyToDiscussionByDefault = true THEN [1] ELSE [] END |
+    MERGE (u)-[:SUBSCRIBED_TO_NOTIFICATIONS]->(newDc)
+) 
 WITH newDc, d, c, u
 WITH newDc, d, c, collect(u {username: u.username}) as upvotedByUsers
 RETURN {

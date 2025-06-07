@@ -58,6 +58,9 @@ const discussionChannelSelectionSet = `
           }
         }
     }
+    SubscribedToNotifications {
+        username
+    }
 }
 `
 
@@ -74,12 +77,13 @@ type Args = {
   offset: string
   limit: string
   sort: string
+  username?: string
 }
 
 const getResolver = (input: Input) => {
   const { driver, DiscussionChannel, Comment } = input
   return async (parent: any, args: Args, context: any, info: any) => {
-    const { channelUniqueName, discussionId, modName, offset, limit, sort } =
+    const { channelUniqueName, discussionId, modName, offset, limit, sort, username } =
       args
 
     const session = driver.session()
@@ -105,6 +109,14 @@ const getResolver = (input: Input) => {
 
       const discussionChannel = result[0]
       const discussionChannelId = discussionChannel.id
+
+      // Filter SubscribedToNotifications to only show current user's subscription status
+      if (username && discussionChannel.SubscribedToNotifications) {
+        const isSubscribed = discussionChannel.SubscribedToNotifications.some((sub: any) => sub.username === username)
+        discussionChannel.SubscribedToNotifications = isSubscribed ? [{ username }] : []
+      } else {
+        discussionChannel.SubscribedToNotifications = []
+      }
 
       let commentsResult = []
 

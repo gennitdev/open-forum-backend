@@ -54,12 +54,15 @@ const discussionChannelSelectionSet = `
           }
         }
     }
+    SubscribedToNotifications {
+        username
+    }
 }
 `;
 const getResolver = (input) => {
     const { driver, DiscussionChannel, Comment } = input;
     return async (parent, args, context, info) => {
-        const { channelUniqueName, discussionId, modName, offset, limit, sort } = args;
+        const { channelUniqueName, discussionId, modName, offset, limit, sort, username } = args;
         const session = driver.session();
         try {
             const result = await DiscussionChannel.find({
@@ -80,6 +83,14 @@ const getResolver = (input) => {
             }
             const discussionChannel = result[0];
             const discussionChannelId = discussionChannel.id;
+            // Filter SubscribedToNotifications to only show current user's subscription status
+            if (username && discussionChannel.SubscribedToNotifications) {
+                const isSubscribed = discussionChannel.SubscribedToNotifications.some((sub) => sub.username === username);
+                discussionChannel.SubscribedToNotifications = isSubscribed ? [{ username }] : [];
+            }
+            else {
+                discussionChannel.SubscribedToNotifications = [];
+            }
             let commentsResult = [];
             if (sort === 'new') {
                 // if sort is "new", get the comments sorted by createdAt.

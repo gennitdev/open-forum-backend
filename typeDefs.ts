@@ -815,7 +815,14 @@ const typeDefinitions = gql`
       channelUniqueName: String!
       explanation: String
     ): Issue
-
+    subscribeToDiscussionChannel(discussionChannelId: ID!): DiscussionChannel
+    unsubscribeFromDiscussionChannel(discussionChannelId: ID!): DiscussionChannel
+    subscribeToEvent(eventId: ID!): Event
+    unsubscribeFromEvent(eventId: ID!): Event
+    subscribeToComment(commentId: ID!): Comment
+    unsubscribeFromComment(commentId: ID!): Comment
+    subscribeToIssue(issueId: ID!): Issue
+    unsubscribeFromIssue(issueId: ID!): Issue
   }
 
   input SiteWideDiscussionSortOrder {
@@ -1056,6 +1063,7 @@ const typeDefinitions = gql`
       offset: Int
       limit: Int
       sort: String
+      username: String
     ): CommentSectionFormat
     getEventComments(
       eventId: ID!
