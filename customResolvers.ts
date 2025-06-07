@@ -61,6 +61,15 @@ import unsuspendUser from './customResolvers/mutations/unsuspendUser.js';
 import unsuspendMod from './customResolvers/mutations/unsuspendMod.js';
 import isOriginalPosterSuspended from './customResolvers/queries/isOriginalPosterSuspended.js';
 
+import subscribeToComment from './customResolvers/mutations/subscribeToComment.js';
+import unsubscribeFromComment from './customResolvers/mutations/unsubscribeFromComment.js';
+import subscribeToDiscussionChannel from './customResolvers/mutations/subscribeToDiscussionChannel.js';
+import unsubscribeFromDiscussionChannel from './customResolvers/mutations/unsubscribeFromDiscussionChannel.js';
+import subscribeToEvent from './customResolvers/mutations/subscribeToEvent.js';
+import unsubscribeFromEvent from './customResolvers/mutations/unsubscribeFromEvent.js';
+import subscribeToIssue from './customResolvers/mutations/subscribeToIssue.js';
+import unsubscribeFromIssue from './customResolvers/mutations/unsubscribeFromIssue.js';
+
 const { OGM } = pkg;
 
 export default function (driver: any) {
@@ -304,6 +313,38 @@ export default function (driver: any) {
       unarchiveEvent: unarchiveEvent({
         Issue,
         EventChannel
+      }),
+      subscribeToComment: subscribeToComment({
+        Comment,
+        driver
+      }),
+      unsubscribeFromComment: unsubscribeFromComment({
+        Comment,
+        driver
+      }),
+      subscribeToDiscussionChannel: subscribeToDiscussionChannel({
+        DiscussionChannel,
+        driver
+      }),
+      unsubscribeFromDiscussionChannel: unsubscribeFromDiscussionChannel({
+        DiscussionChannel,
+        driver
+      }),
+      subscribeToEvent: subscribeToEvent({
+        Event,
+        driver
+      }),
+      unsubscribeFromEvent: unsubscribeFromEvent({
+        Event,
+        driver
+      }),
+      subscribeToIssue: subscribeToIssue({
+        Issue,
+        driver
+      }),
+      unsubscribeFromIssue: unsubscribeFromIssue({
+        Issue,
+        driver
       }),
     },
   };

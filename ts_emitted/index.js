@@ -146,7 +146,7 @@ async function initializeServer() {
             schema,
             plugins: [errorHandlingPlugin],
             context: async (input) => {
-                var _a, _b, _c;
+                var _a;
                 const { req } = input;
                 const queryString = `Query: ${req.body.query}`;
                 const isMutation = (_a = req.body.query) === null || _a === void 0 ? void 0 : _a.trim().startsWith("mutation");
@@ -156,15 +156,9 @@ async function initializeServer() {
                     console.log('📊 GraphQL Operation:', {
                         type: isMutation ? 'Mutation' : 'Query',
                         operationName: req.body.operationName || 'Anonymous',
-                        timestamp: new Date().toISOString(),
-                        userAgent: (_b = req.headers) === null || _b === void 0 ? void 0 : _b['user-agent'],
-                        ip: req.ip || ((_c = req.connection) === null || _c === void 0 ? void 0 : _c.remoteAddress)
+                        query: req.body.query,
+                        variables: req.body.variables
                     });
-                    // Log query in development mode
-                    if (process.env.NODE_ENV === 'development') {
-                        console.log('📝 Query:', req.body.query);
-                        console.log('📝 Variables:', JSON.stringify(req.body.variables, null, 2));
-                    }
                     if (isMutation) {
                         const mutationName = extractMutationName(req.body.query);
                         const text = `Mutation: ${mutationName}\nVariables: ${JSON.stringify(req.body.variables, null, 2)}`;

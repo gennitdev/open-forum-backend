@@ -180,16 +180,9 @@ async function initializeServer() {
           console.log('📊 GraphQL Operation:', {
             type: isMutation ? 'Mutation' : 'Query',
             operationName: req.body.operationName || 'Anonymous',
-            timestamp: new Date().toISOString(),
-            userAgent: req.headers?.['user-agent'],
-            ip: req.ip || req.connection?.remoteAddress
+            query: req.body.query,
+            variables: req.body.variables
           });
-          
-          // Log query in development mode
-          if (process.env.NODE_ENV === 'development') {
-            console.log('📝 Query:', req.body.query);
-            console.log('📝 Variables:', JSON.stringify(req.body.variables, null, 2));
-          }
 
           if (isMutation) {
             const mutationName = extractMutationName(req.body.query);
