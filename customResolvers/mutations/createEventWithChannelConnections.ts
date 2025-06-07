@@ -63,7 +63,8 @@ const selectionSet = `
 export const createEventsFromInput = async (
   Event: any,
   driver: any,
-  input: EventCreateInputWithChannels[]
+  input: EventCreateInputWithChannels[],
+  context: any
 ): Promise<any[]> => {
   if (!input || input.length === 0) {
     throw new Error("Input cannot be empty");
@@ -94,6 +95,7 @@ export const createEventsFromInput = async (
             await session.run(createEventChannelQuery, {
               eventId: newEventId,
               channelUniqueName,
+              poster: context.user?.username,
             });
           } catch (error: any) {
             if (error.message.includes("Constraint validation failed")) {
@@ -149,7 +151,7 @@ const getResolver = (input: Input) => {
 
     try {
       // Use the extracted function to create events
-      const events = await createEventsFromInput(Event, driver, input);
+      const events = await createEventsFromInput(Event, driver, input, context);
       return events;
     } catch (error: any) {
       console.error(error);

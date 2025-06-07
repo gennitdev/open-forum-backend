@@ -43,7 +43,8 @@ const selectionSet = `
 /**
  * Function to create events from an input array.
  */
-export const createEventsFromInput = async (Event, driver, input) => {
+export const createEventsFromInput = async (Event, driver, input, context) => {
+    var _a;
     if (!input || input.length === 0) {
         throw new Error("Input cannot be empty");
     }
@@ -68,6 +69,7 @@ export const createEventsFromInput = async (Event, driver, input) => {
                         await session.run(createEventChannelQuery, {
                             eventId: newEventId,
                             channelUniqueName,
+                            poster: (_a = context.user) === null || _a === void 0 ? void 0 : _a.username,
                         });
                     }
                     catch (error) {
@@ -122,7 +124,7 @@ const getResolver = (input) => {
         const { input } = args;
         try {
             // Use the extracted function to create events
-            const events = await createEventsFromInput(Event, driver, input);
+            const events = await createEventsFromInput(Event, driver, input, context);
             return events;
         }
         catch (error) {

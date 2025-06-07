@@ -1,5 +1,5 @@
 import { createDiscussionChannelQuery } from "../cypher/cypherQueries.js";
-import { DiscussionCreateInput, Discussion } from "../../src/generated/graphql";
+import { DiscussionCreateInput } from "../../src/generated/graphql";
 
 type DiscussionCreateInputWithChannels = {
   discussionCreateInput: DiscussionCreateInput;

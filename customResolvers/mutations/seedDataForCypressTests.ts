@@ -178,7 +178,7 @@ const seedDataForCypressTestsResolver = (input: Input) => {
     await Channel.create({ input: channels });
     await Tag.create({ input: tags });
     await createDiscussionsFromInput(Discussion, driver, discussions);
-    await createEventsFromInput(Event, driver, events);
+    await createEventsFromInput(Event, driver, events, context);
     await Comment.create({ input: comments });
     return { success: true, message: "All test data has been created." };
   };
