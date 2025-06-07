@@ -440,8 +440,6 @@ const typeDefinitions = gql`
       @relationship(type: "CONTAINS_COMMENT", direction: OUT)
     archived: Boolean @default(value: false)
     RelatedIssues: [Issue!]! @relationship(type: "CITED_ISSUE", direction: IN)
-    SubscribedToNotifications: [User!]!
-      @relationship(type: "SUBSCRIBED_TO_NOTIFICATIONS", direction: IN)
   }
 
   enum RepeatUnit {
@@ -505,12 +503,13 @@ const typeDefinitions = gql`
       @relationship(type: "HAS_RECURRING_EVENT", direction: OUT)
     Poster: User @relationship(type: "POSTED_BY", direction: IN)
     Tags: [Tag!]! @relationship(type: "HAS_TAG", direction: OUT)
-    # PastVersions:          [EventVersion]    @relationship(type: "HAS_VERSION", direction: OUT)
     EventChannels: [EventChannel!]!
       @relationship(type: "POSTED_IN_CHANNEL", direction: IN)
     RelatedIssues: [Issue!]! @relationship(type: "CITED_ISSUE", direction: IN)
     FeedbackComments: [Comment!]!
       @relationship(type: "HAS_FEEDBACK_COMMENT", direction: IN)
+    SubscribedToNotifications: [User!]!
+      @relationship(type: "SUBSCRIBED_TO_NOTIFICATIONS", direction: IN)
   }
 
   type Comment {

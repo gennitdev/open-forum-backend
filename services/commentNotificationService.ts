@@ -69,10 +69,10 @@ export class CommentNotificationService {
 
         // Start processing comment events
         this.processCommentEvents();
-        console.log('Comment notification service started');
+        console.log('=== DEBUG: Comment notification service started successfully');
       } else {
         // If not an AsyncIterator, it's an error result
-        console.error('Subscription failed:', result);
+        console.error('=== DEBUG ERROR: Subscription failed:', result);
         this.isRunning = false;
       }
     } catch (error) {
@@ -123,6 +123,8 @@ export class CommentNotificationService {
    * Process a notification for a newly created comment
    */
   private async processCommentNotification(commentId: string) {
+    console.log('=== DEBUG: Starting processCommentNotification for comment:', commentId);
+    
     // Get the OGM models
     const CommentModel = this.ogm.model('Comment');
     const UserModel = this.ogm.model('User');
@@ -204,12 +206,21 @@ export class CommentNotificationService {
     });
 
     if (!fullComments || !fullComments.length) {
-      console.log('Could not find comment details for ID:', commentId);
+      console.error('=== DEBUG ERROR: Could not find comment details for ID:', commentId);
       return;
     }
 
     const fullComment = fullComments[0];
-    console.log('Found comment details for ID:', commentId);
+    console.log('=== DEBUG: Found comment details for ID:', commentId);
+    console.log('=== DEBUG: Comment structure:', {
+      hasDiscussionChannel: !!fullComment.DiscussionChannel,
+      hasEvent: !!fullComment.Event,
+      hasParentComment: !!fullComment.ParentComment,
+      discussionChannelId: fullComment.DiscussionChannel?.id,
+      eventId: fullComment.Event?.id,
+      parentCommentId: fullComment.ParentComment?.id,
+      channelName: fullComment.Channel?.uniqueName
+    });
 
     // Get the commenter info
     const commenterUsername =
@@ -237,7 +248,14 @@ export class CommentNotificationService {
     }
     // DISCUSSION COMMENT NOTIFICATION
     else if (fullComment.DiscussionChannel) {
-      console.log('This is a comment on a DISCUSSION');
+      console.log('=== DEBUG: This is a comment on a DISCUSSION');
+      console.log('=== DEBUG: DiscussionChannel details:', {
+        id: fullComment.DiscussionChannel.id,
+        discussionId: fullComment.DiscussionChannel.discussionId,
+        channelUniqueName: fullComment.DiscussionChannel.channelUniqueName,
+        subscribedUsersCount: fullComment.DiscussionChannel.SubscribedToNotifications?.length || 0,
+        subscribedUsers: fullComment.DiscussionChannel.SubscribedToNotifications?.map((u: any) => u.username) || []
+      });
       await this.processDiscussionCommentNotification(
         fullComment,
         commentId,
@@ -268,9 +286,40 @@ export class CommentNotificationService {
     entityType: 'DiscussionChannel' | 'Event' | 'Comment',
     entityId: string
   ) {
+    console.log('=== DEBUG: Starting createBatchNotifications');
+    console.log('=== DEBUG: Parameters:', {
+      entityType,
+      entityId,
+      commenterUsername,
+      notificationTextLength: notificationText.length
+    });
+    
     const session = driver.session();
     
     try {
+      // First, let's check what subscriptions exist
+      const checkSubscriptionsQuery = `
+        MATCH (entity:${entityType} {id: $entityId})
+        MATCH (entity)<-[:SUBSCRIBED_TO_NOTIFICATIONS]-(user:User)
+        RETURN user.username as subscribedUser
+      `;
+      
+      console.log('=== DEBUG: Checking existing subscriptions with query:', checkSubscriptionsQuery);
+      const subscriptionResult = await session.run(checkSubscriptionsQuery, { entityId });
+      const subscribedUsers = subscriptionResult.records.map((record: any) => record.get('subscribedUser'));
+      
+      console.log('=== DEBUG: Found subscribed users:', subscribedUsers);
+      console.log('=== DEBUG: Total subscribed users count:', subscribedUsers.length);
+      
+      // Filter out the commenter
+      const usersToNotify = subscribedUsers.filter((username: string) => username !== commenterUsername);
+      console.log('=== DEBUG: Users to notify (excluding commenter):', usersToNotify);
+      
+      if (usersToNotify.length === 0) {
+        console.log('=== DEBUG: No users to notify after filtering out commenter');
+        return 0;
+      }
+      
       const cypherQuery = `
         MATCH (entity:${entityType} {id: $entityId})
         MATCH (entity)<-[:SUBSCRIBED_TO_NOTIFICATIONS]-(user:User)
@@ -282,9 +331,10 @@ export class CommentNotificationService {
           text: $notificationText
         })
         CREATE (user)-[:HAS_NOTIFICATION]->(notification)
-        RETURN count(notification) as notificationsCreated
+        RETURN count(notification) as notificationsCreated, collect(user.username) as notifiedUsers
       `;
 
+      console.log('=== DEBUG: Executing notification creation query:', cypherQuery);
       const result = await session.run(cypherQuery, {
         entityId,
         commenterUsername,
@@ -292,11 +342,28 @@ export class CommentNotificationService {
       });
 
       const notificationsCreated = result.records[0]?.get('notificationsCreated')?.toNumber() || 0;
-      console.log(`Created ${notificationsCreated} batch notifications for ${entityType} ${entityId}`);
+      const notifiedUsers = result.records[0]?.get('notifiedUsers') || [];
+      
+      console.log('=== DEBUG: Notification creation results:', {
+        notificationsCreated,
+        notifiedUsers,
+        entityType,
+        entityId
+      });
+      
+      if (notificationsCreated === 0) {
+        console.log('=== DEBUG WARNING: No notifications were created - investigating why');
+        
+        // Debug: Check if entity exists
+        const entityExistsQuery = `MATCH (entity:${entityType} {id: $entityId}) RETURN count(entity) as entityCount`;
+        const entityResult = await session.run(entityExistsQuery, { entityId });
+        const entityCount = entityResult.records[0]?.get('entityCount')?.toNumber() || 0;
+        console.log('=== DEBUG: Entity exists check:', { entityType, entityId, entityCount });
+      }
       
       return notificationsCreated;
     } catch (error) {
-      console.error('Error creating batch notifications:', error);
+      console.error('=== DEBUG ERROR: Error in createBatchNotifications:', error);
       throw error;
     } finally {
       session.close();
@@ -313,38 +380,55 @@ export class CommentNotificationService {
     DiscussionModel: any,
     UserModel: any
   ) {
-    console.log('Processing comment on discussion');
+    console.log('=== DEBUG: Starting processDiscussionCommentNotification');
+    console.log('=== DEBUG: Commenter username:', commenterUsername);
 
     const discussionChannel = fullComment.DiscussionChannel;
     if (!discussionChannel) {
-      console.log('No discussion channel found');
+      console.error('=== DEBUG ERROR: No discussion channel found');
       return;
     }
+    
+    console.log('=== DEBUG: DiscussionChannel ID:', discussionChannel.id);
 
     const discussion = discussionChannel.Discussion;
     if (!discussion) {
-      console.log('Discussion not found');
+      console.error('=== DEBUG ERROR: Discussion not found in DiscussionChannel');
       return;
     }
+    
+    console.log('=== DEBUG: Discussion details:', {
+      id: discussion.id,
+      title: discussion.title,
+      authorUsername: discussion.Author?.username
+    });
 
     const channelName = fullComment.Channel?.uniqueName;
     
     // Create notification text for in-app notification
     const notificationText = `${commenterUsername} commented on the discussion [${discussion.title}](${process.env.FRONTEND_URL}/forums/${channelName}/discussions/${discussion.id}/comments/${commentId})`;
 
-    console.log(`Creating batch notifications for discussion comment: ${discussion.title}`);
+    console.log('=== DEBUG: Creating batch notifications for discussion comment:', discussion.title);
+    console.log('=== DEBUG: Notification text:', notificationText);
 
     // Use batch Cypher query to create notifications for all subscribed users
     if (this.driver) {
-      await this.createBatchNotifications(
+      console.log('=== DEBUG: Calling createBatchNotifications with:', {
+        entityType: 'DiscussionChannel',
+        entityId: discussionChannel.id,
+        commenterUsername,
+        driver: !!this.driver
+      });
+      const notificationsCreated = await this.createBatchNotifications(
         this.driver,
         notificationText,
         commenterUsername,
         'DiscussionChannel',
         discussionChannel.id
       );
+      console.log('=== DEBUG: Batch notifications result:', notificationsCreated);
     } else {
-      console.error('Driver not available for batch notifications');
+      console.error('=== DEBUG ERROR: Driver not available for batch notifications');
     }
   }
 

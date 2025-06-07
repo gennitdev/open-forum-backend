@@ -81,7 +81,12 @@ async function processDiscussionCommentNotification(
   DiscussionModel: any,
   UserModel: any
 ) {
-  console.log('Processing comment on discussion')
+  console.log('=== DEBUG: Hook processing comment on discussion')
+  console.log('=== DEBUG: Hook discussion details:', {
+    discussionId: fullComment.DiscussionChannel?.discussionId,
+    channelName: fullComment.Channel?.uniqueName,
+    commenterUsername
+  })
 
   // We need to get the discussion details
   const discussionId = fullComment.DiscussionChannel?.discussionId
@@ -108,14 +113,19 @@ async function processDiscussionCommentNotification(
 
   // Don't notify authors about their own comments
   if (commenterUsername === authorUsername) {
-    console.log('Not notifying author of their own comment')
+    console.log('=== DEBUG: Not notifying author of their own comment:', authorUsername)
     return
   }
+  
+  console.log('=== DEBUG: Will notify discussion author:', authorUsername)
 
   const channelName = fullComment.Channel?.uniqueName
-  console.log(
-    `Sending notification to ${authorUsername} about comment on discussion ${discussion.title}`
-  )
+  console.log('=== DEBUG: Hook sending notification details:', {
+    recipient: authorUsername,
+    discussionTitle: discussion.title,
+    channelName,
+    commentId
+  })
 
   // Create markdown notification text for in-app notification
   const notificationMessage = `
@@ -132,6 +142,7 @@ ${commenterUsername} commented on your discussion [${discussion.title}](${proces
     commentId
   )
 
+  console.log('=== DEBUG: Hook calling sendEmailToUser for discussion notification')
   // Send both email and in-app notification
   await sendEmailToUser(
     authorUsername,
@@ -142,6 +153,7 @@ ${commenterUsername} commented on your discussion [${discussion.title}](${proces
       createInAppNotification: true
     }
   )
+  console.log('=== DEBUG: Hook sendEmailToUser completed for discussion notification')
 }
 
 /**
@@ -426,17 +438,23 @@ async function processCommentNotification(
  */
 export const commentNotificationHandler = async ({ context, result }: any) => {
   try {
-    console.log('Comment notification hook running...')
+    console.log('=== DEBUG: Comment notification hook running...')
+    console.log('=== DEBUG: Hook result structure:', {
+      hasResult: !!result,
+      hasComments: !!result?.comments,
+      commentsLength: result?.comments?.length || 0,
+      firstCommentId: result?.comments?.[0]?.id
+    })
     
     // Make sure we have comment data and an ID
     if (!result?.comments?.[0]?.id) {
-      console.log('No comment found in result')
+      console.log('=== DEBUG WARNING: No comment found in hook result')
       return
     }
     
     // Get the newly created comment ID
     const commentId = result.comments[0].id
-    console.log('Processing notification for comment:', commentId)
+    console.log('=== DEBUG: Processing hook notification for comment:', commentId)
     
     // Access OGM models
     const { ogm } = context
@@ -501,12 +519,18 @@ export const commentNotificationHandler = async ({ context, result }: any) => {
     })
     
     if (!fullComments || !fullComments.length) {
-      console.log('Could not find comment details')
+      console.error('=== DEBUG ERROR: Could not find comment details in hook')
       return
     }
     
     const fullComment = fullComments[0] as Comment
-    console.log('Found comment details for ID:', commentId)
+    console.log('=== DEBUG: Found comment details in hook for ID:', commentId)
+    console.log('=== DEBUG: Hook comment structure:', {
+      hasDiscussionChannel: !!fullComment.DiscussionChannel,
+      hasEvent: !!fullComment.Event,
+      hasParentComment: !!fullComment.ParentComment,
+      channelName: fullComment.Channel?.uniqueName
+    })
     
     // Process the notification based on comment type
     await processCommentNotification(
@@ -517,7 +541,7 @@ export const commentNotificationHandler = async ({ context, result }: any) => {
       DiscussionModel
     )
   } catch (error) {
-    console.error('Error in comment notification hook:', error)
+    console.error('=== DEBUG ERROR: Error in comment notification hook:', error)
     // Don't re-throw the error, so we don't affect the mutation
   }
 }
