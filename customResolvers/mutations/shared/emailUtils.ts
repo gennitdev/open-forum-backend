@@ -166,3 +166,100 @@ ${commentUrl}
     html
   };
 };
+
+/**
+ * Creates email content for event comment notifications
+ * @param commentText The text of the comment
+ * @param eventTitle The title of the event
+ * @param commenterUsername Username of the person who commented
+ * @param channelName Name of the channel
+ * @param eventId ID of the event
+ * @param commentId ID of the comment
+ * @returns EmailContent object with subject, plainText, and HTML
+ */
+export const createEventCommentNotificationEmail = (
+  commentText: string,
+  eventTitle: string,
+  commenterUsername: string,
+  channelName: string,
+  eventId: string,
+  commentId: string
+): EmailContent => {
+  // Create URL to the comment using permalink format
+  const commentUrl = `${process.env.FRONTEND_URL}/forums/${channelName}/events/${eventId}/comments/${commentId}`;
+
+  // Create subject line
+  const subject = `New comment on event: ${eventTitle}`;
+  
+  // Create plain text version
+  const plainText = `
+${commenterUsername} commented on the event "${eventTitle}":
+
+"${commentText}"
+
+View the comment at:
+${commentUrl}
+`;
+
+  // Create HTML version with some basic formatting
+  const html = `
+<p><strong>${commenterUsername}</strong> commented on the event "<strong>${eventTitle}</strong>":</p>
+<blockquote style="border-left: 4px solid #ccc; padding-left: 16px; margin-left: 0;">
+  ${commentText}
+</blockquote>
+<p>
+  <a href="${commentUrl}">View the comment</a>
+</p>
+`;
+
+  return {
+    subject,
+    plainText,
+    html
+  };
+};
+
+/**
+ * Creates email content for comment reply notifications
+ * @param replyText The text of the reply
+ * @param contentTitle The title of the content (discussion or event)
+ * @param commenterUsername Username of the person who replied
+ * @param contentUrl URL to the parent comment
+ * @returns EmailContent object with subject, plainText, and HTML
+ */
+export const createCommentReplyNotificationEmail = (
+  replyText: string,
+  contentTitle: string,
+  commenterUsername: string,
+  contentUrl: string
+): EmailContent => {
+  // Create subject line
+  const subject = `New reply to your comment on: ${contentTitle}`;
+  
+  // Create plain text version
+  const plainText = `
+${commenterUsername} replied to your comment on "${contentTitle}":
+
+"${replyText}"
+
+View the reply at:
+${contentUrl}
+`;
+
+  // Create HTML version with some basic formatting
+  const html = `
+<p><strong>${commenterUsername}</strong> replied to your comment on "<strong>${contentTitle}</strong>":</p>
+<blockquote style="border-left: 4px solid #ccc; padding-left: 16px; margin-left: 0;">
+  ${replyText}
+</blockquote>
+<p>
+  <a href="${contentUrl}">View the reply</a>
+</p>
+`;
+
+  return {
+    subject,
+    plainText,
+    html
+  };
+};

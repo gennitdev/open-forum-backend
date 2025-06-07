@@ -1,5 +1,10 @@
 import { execute, parse, subscribe } from 'graphql';
-import { sendEmailToUser, createCommentNotificationEmail } from '../customResolvers/mutations/shared/emailUtils.js';
+import { 
+  sendEmailToUser, 
+  createCommentNotificationEmail, 
+  createEventCommentNotificationEmail,
+  createCommentReplyNotificationEmail 
+} from '../customResolvers/mutations/shared/emailUtils.js';
 import sgMail from '@sendgrid/mail';
 
 type AsyncIterableIterator<T> = AsyncIterable<T> & AsyncIterator<T>;
@@ -493,26 +498,14 @@ export class CommentNotificationService {
     const notificationText = `${commenterUsername} commented on the event [${event.title}](${process.env.FRONTEND_URL}/forums/${channelName}/events/${event.id}/comments/${commentId})`;
 
     // Create email content for event notification
-    const emailContent = {
-      subject: `New comment on event: ${event.title}`,
-      plainText: `
-${commenterUsername} commented on the event "${event.title}":
-
-"${fullComment.text}"
-
-View the comment at:
-${process.env.FRONTEND_URL}/forums/${channelName}/events/${event.id}/comments/${commentId}
-`,
-      html: `
-<p><strong>${commenterUsername}</strong> commented on the event "<strong>${event.title}</strong>":</p>
-<blockquote style="border-left: 4px solid #ccc; padding-left: 16px; margin-left: 0;">
-  ${fullComment.text}
-</blockquote>
-<p>
-  <a href="${process.env.FRONTEND_URL}/forums/${channelName}/events/${event.id}/comments/${commentId}">View the comment</a>
-</p>
-`
-    };
+    const emailContent = createEventCommentNotificationEmail(
+      fullComment.text,
+      event.title,
+      commenterUsername,
+      channelName,
+      event.id,
+      commentId
+    );
 
     console.log('=== DEBUG: Creating batch notifications for event comment:', event.title);
 
@@ -575,26 +568,12 @@ ${process.env.FRONTEND_URL}/forums/${channelName}/events/${event.id}/comments/${
     const notificationText = `${commenterUsername} replied to your comment on [${contentTitle}](${contentUrl})`;
 
     // Create email content for reply notification
-    const emailContent = {
-      subject: `New reply to your comment on: ${contentTitle}`,
-      plainText: `
-${commenterUsername} replied to your comment on "${contentTitle}":
-
-"${fullComment.text}"
-
-View the reply at:
-${contentUrl}
-`,
-      html: `
-<p><strong>${commenterUsername}</strong> replied to your comment on "<strong>${contentTitle}</strong>":</p>
-<blockquote style="border-left: 4px solid #ccc; padding-left: 16px; margin-left: 0;">
-  ${fullComment.text}
-</blockquote>
-<p>
-  <a href="${contentUrl}">View the reply</a>
-</p>
-`
-    };
+    const emailContent = createCommentReplyNotificationEmail(
+      fullComment.text,
+      contentTitle,
+      commenterUsername,
+      contentUrl
+    );
 
     console.log('=== DEBUG: Creating batch notifications for comment reply on:', contentTitle);
 

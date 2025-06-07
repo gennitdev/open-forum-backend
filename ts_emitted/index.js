@@ -6,7 +6,6 @@ import permissions from "./permissions.js";
 import discussionVersionHistoryMiddleware from "./middleware/discussionVersionHistoryMiddleware.js";
 import commentVersionHistoryMiddleware from "./middleware/commentVersionHistoryMiddleware.js";
 import wikiPageVersionHistoryMiddleware from "./middleware/wikiPageVersionHistoryMiddleware.js";
-// import channelMiddleware from "./middleware/channelMiddleware.js";
 import path from "path";
 import dotenv from "dotenv";
 import pkg from "@neo4j/graphql-ogm";

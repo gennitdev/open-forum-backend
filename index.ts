@@ -6,7 +6,6 @@ import permissions from "./permissions.js";
 import discussionVersionHistoryMiddleware from "./middleware/discussionVersionHistoryMiddleware.js";
 import commentVersionHistoryMiddleware from "./middleware/commentVersionHistoryMiddleware.js";
 import wikiPageVersionHistoryMiddleware from "./middleware/wikiPageVersionHistoryMiddleware.js";
-// import channelMiddleware from "./middleware/channelMiddleware.js";
 import path from "path";
 import dotenv from "dotenv";
 import pkg from "@neo4j/graphql-ogm";
@@ -18,8 +17,7 @@ import { CommentNotificationService } from "./services/commentNotificationServic
 import { DiscussionVersionHistoryService } from "./services/discussionVersionHistoryService.js";
 import { CommentVersionHistoryService } from "./services/commentVersionHistoryService.js";
 import { WikiPageVersionHistoryService } from "./services/wikiPageVersionHistoryService.js";
-import { discussionVersionHistoryHandler } from "./hooks/discussionVersionHistoryHook.js";
-import { formatGraphQLError, logCriticalError, errorHandlingPlugin } from "./errorHandling.js";
+import { logCriticalError, errorHandlingPlugin } from "./errorHandling.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const { generate } = pkg;
