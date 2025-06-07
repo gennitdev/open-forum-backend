@@ -1,5 +1,6 @@
 import { execute, parse, subscribe } from 'graphql';
 import { sendEmailToUser, createCommentNotificationEmail } from '../customResolvers/mutations/shared/emailUtils.js';
+import sgMail from '@sendgrid/mail';
 
 type AsyncIterableIterator<T> = AsyncIterable<T> & AsyncIterator<T>;
 
@@ -277,14 +278,15 @@ export class CommentNotificationService {
   }
 
   /**
-   * Create batch notifications for subscribed users using Cypher
+   * Create batch notifications and send emails for subscribed users using Cypher
    */
   private async createBatchNotifications(
     driver: any,
     notificationText: string,
     commenterUsername: string,
     entityType: 'DiscussionChannel' | 'Event' | 'Comment',
-    entityId: string
+    entityId: string,
+    emailContent?: { subject: string; plainText: string; html: string }
   ) {
     console.log('=== DEBUG: Starting createBatchNotifications');
     console.log('=== DEBUG: Parameters:', {
@@ -297,29 +299,55 @@ export class CommentNotificationService {
     const session = driver.session();
     
     try {
-      // First, let's check what subscriptions exist
-      const checkSubscriptionsQuery = `
-        MATCH (entity:${entityType} {id: $entityId})
-        MATCH (entity)<-[:SUBSCRIBED_TO_NOTIFICATIONS]-(user:User)
-        RETURN user.username as subscribedUser
-      `;
+      // First, let's check what subscriptions exist using OGM to get email addresses
+      console.log('=== DEBUG: Fetching subscribed users with emails using OGM');
       
-      console.log('=== DEBUG: Checking existing subscriptions with query:', checkSubscriptionsQuery);
-      const subscriptionResult = await session.run(checkSubscriptionsQuery, { entityId });
-      const subscribedUsers = subscriptionResult.records.map((record: any) => record.get('subscribedUser'));
+      // Get the entity model based on entityType
+      const EntityModel = this.ogm.model(entityType);
       
-      console.log('=== DEBUG: Found subscribed users:', subscribedUsers);
-      console.log('=== DEBUG: Total subscribed users count:', subscribedUsers.length);
+      // Fetch the entity with its subscribed users and their emails
+      const entityResults = await EntityModel.find({
+        where: { id: entityId },
+        selectionSet: `{
+          id
+          SubscribedToNotifications {
+            username
+            Email {
+              address
+            }
+          }
+        }`
+      });
+      
+      if (!entityResults || !entityResults.length) {
+        console.error('=== DEBUG ERROR: Entity not found:', { entityType, entityId });
+        return 0;
+      }
+      
+      const entity = entityResults[0];
+      const subscribedUsersData = entity.SubscribedToNotifications?.map((user: any) => ({
+        username: user.username,
+        email: user.Email?.address || null
+      })) || [];
+      
+      console.log('=== DEBUG: Found subscribed users with emails:', subscribedUsersData);
+      console.log('=== DEBUG: Total subscribed users count:', subscribedUsersData.length);
       
       // Filter out the commenter
-      const usersToNotify = subscribedUsers.filter((username: string) => username !== commenterUsername);
-      console.log('=== DEBUG: Users to notify (excluding commenter):', usersToNotify);
+      const usersToNotify = subscribedUsersData.filter((userData: any) => userData.username !== commenterUsername);
+      console.log('=== DEBUG: Users to notify (excluding commenter):', usersToNotify.map((u: any) => u.username));
       
       if (usersToNotify.length === 0) {
         console.log('=== DEBUG: No users to notify after filtering out commenter');
         return 0;
       }
       
+      // Send batch emails if email content is provided
+      if (emailContent) {
+        await this.sendBatchEmails(usersToNotify, emailContent);
+      }
+      
+      // Create notifications using Cypher (this part stays the same)
       const cypherQuery = `
         MATCH (entity:${entityType} {id: $entityId})
         MATCH (entity)<-[:SUBSCRIBED_TO_NOTIFICATIONS]-(user:User)
@@ -352,13 +380,7 @@ export class CommentNotificationService {
       });
       
       if (notificationsCreated === 0) {
-        console.log('=== DEBUG WARNING: No notifications were created - investigating why');
-        
-        // Debug: Check if entity exists
-        const entityExistsQuery = `MATCH (entity:${entityType} {id: $entityId}) RETURN count(entity) as entityCount`;
-        const entityResult = await session.run(entityExistsQuery, { entityId });
-        const entityCount = entityResult.records[0]?.get('entityCount')?.toNumber() || 0;
-        console.log('=== DEBUG: Entity exists check:', { entityType, entityId, entityCount });
+        console.log('=== DEBUG WARNING: No notifications were created');
       }
       
       return notificationsCreated;
@@ -408,6 +430,16 @@ export class CommentNotificationService {
     // Create notification text for in-app notification
     const notificationText = `${commenterUsername} commented on the discussion [${discussion.title}](${process.env.FRONTEND_URL}/forums/${channelName}/discussions/${discussion.id}/comments/${commentId})`;
 
+    // Create email content for discussion notification
+    const emailContent = createCommentNotificationEmail(
+      fullComment.text,
+      discussion.title,
+      commenterUsername,
+      channelName || '',
+      discussion.id,
+      commentId
+    );
+
     console.log('=== DEBUG: Creating batch notifications for discussion comment:', discussion.title);
     console.log('=== DEBUG: Notification text:', notificationText);
 
@@ -417,14 +449,16 @@ export class CommentNotificationService {
         entityType: 'DiscussionChannel',
         entityId: discussionChannel.id,
         commenterUsername,
-        driver: !!this.driver
+        driver: !!this.driver,
+        hasEmailContent: !!emailContent
       });
       const notificationsCreated = await this.createBatchNotifications(
         this.driver,
         notificationText,
         commenterUsername,
         'DiscussionChannel',
-        discussionChannel.id
+        discussionChannel.id,
+        emailContent
       );
       console.log('=== DEBUG: Batch notifications result:', notificationsCreated);
     } else {
@@ -458,7 +492,29 @@ export class CommentNotificationService {
     // Create notification text for in-app notification
     const notificationText = `${commenterUsername} commented on the event [${event.title}](${process.env.FRONTEND_URL}/forums/${channelName}/events/${event.id}/comments/${commentId})`;
 
-    console.log(`Creating batch notifications for event comment: ${event.title}`);
+    // Create email content for event notification
+    const emailContent = {
+      subject: `New comment on event: ${event.title}`,
+      plainText: `
+${commenterUsername} commented on the event "${event.title}":
+
+"${fullComment.text}"
+
+View the comment at:
+${process.env.FRONTEND_URL}/forums/${channelName}/events/${event.id}/comments/${commentId}
+`,
+      html: `
+<p><strong>${commenterUsername}</strong> commented on the event "<strong>${event.title}</strong>":</p>
+<blockquote style="border-left: 4px solid #ccc; padding-left: 16px; margin-left: 0;">
+  ${fullComment.text}
+</blockquote>
+<p>
+  <a href="${process.env.FRONTEND_URL}/forums/${channelName}/events/${event.id}/comments/${commentId}">View the comment</a>
+</p>
+`
+    };
+
+    console.log('=== DEBUG: Creating batch notifications for event comment:', event.title);
 
     // Use batch Cypher query to create notifications for all subscribed users
     if (this.driver) {
@@ -467,10 +523,11 @@ export class CommentNotificationService {
         notificationText,
         commenterUsername,
         'Event',
-        event.id
+        event.id,
+        emailContent
       );
     } else {
-      console.error('Driver not available for batch notifications');
+      console.error('=== DEBUG ERROR: Driver not available for batch notifications');
     }
   }
 
@@ -517,7 +574,29 @@ export class CommentNotificationService {
     // Create notification text for in-app notification
     const notificationText = `${commenterUsername} replied to your comment on [${contentTitle}](${contentUrl})`;
 
-    console.log(`Creating batch notifications for comment reply on: ${contentTitle}`);
+    // Create email content for reply notification
+    const emailContent = {
+      subject: `New reply to your comment on: ${contentTitle}`,
+      plainText: `
+${commenterUsername} replied to your comment on "${contentTitle}":
+
+"${fullComment.text}"
+
+View the reply at:
+${contentUrl}
+`,
+      html: `
+<p><strong>${commenterUsername}</strong> replied to your comment on "<strong>${contentTitle}</strong>":</p>
+<blockquote style="border-left: 4px solid #ccc; padding-left: 16px; margin-left: 0;">
+  ${fullComment.text}
+</blockquote>
+<p>
+  <a href="${contentUrl}">View the reply</a>
+</p>
+`
+    };
+
+    console.log('=== DEBUG: Creating batch notifications for comment reply on:', contentTitle);
 
     // Use batch Cypher query to create notifications for all users subscribed to the parent comment
     if (this.driver) {
@@ -526,10 +605,64 @@ export class CommentNotificationService {
         notificationText,
         commenterUsername,
         'Comment',
-        parentCommentId
+        parentCommentId,
+        emailContent
       );
     } else {
-      console.error('Driver not available for batch notifications');
+      console.error('=== DEBUG ERROR: Driver not available for batch notifications');
+    }
+  }
+
+  /**
+   * Send batch emails using SendGrid
+   */
+  private async sendBatchEmails(
+    usersToNotify: Array<{ username: string; email: string | null }>,
+    emailContent: { subject: string; plainText: string; html: string }
+  ) {
+    try {
+      // Set up SendGrid if API key is available
+      if (!process.env.SENDGRID_API_KEY) {
+        console.log('=== DEBUG: SENDGRID_API_KEY not set, skipping email sending');
+        return;
+      }
+      
+      if (!process.env.SENDGRID_FROM_EMAIL) {
+        console.log('=== DEBUG: SENDGRID_FROM_EMAIL not set, skipping email sending');
+        return;
+      }
+      
+      sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+      
+      // Filter users who have email addresses
+      const usersWithEmails = usersToNotify.filter(user => user.email);
+      
+      console.log('=== DEBUG: Users with emails to notify:', usersWithEmails.length);
+      
+      if (usersWithEmails.length === 0) {
+        console.log('=== DEBUG: No users with email addresses to notify');
+        return;
+      }
+      
+      // Prepare batch email data
+      const emailsToSend = usersWithEmails.map(user => ({
+        to: user.email!,
+        from: process.env.SENDGRID_FROM_EMAIL!,
+        subject: emailContent.subject,
+        text: emailContent.plainText,
+        html: emailContent.html
+      }));
+      
+      console.log('=== DEBUG: Sending batch emails to:', emailsToSend.map(email => email.to));
+      
+      // Send batch emails
+      await sgMail.send(emailsToSend);
+      
+      console.log('=== DEBUG: Successfully sent', emailsToSend.length, 'batch emails');
+      
+    } catch (error) {
+      console.error('=== DEBUG ERROR: Failed to send batch emails:', error);
+      // Don't throw - continue with in-app notifications even if emails fail
     }
   }
 
