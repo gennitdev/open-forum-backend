@@ -15,7 +15,13 @@ type Args = {
 const convertMarkdownToHtml = (text: string): string => {
   let html = text;
 
-  // Convert images: ![alt text](url)
+  // Convert code blocks first (to avoid interfering with other patterns): ```code```
+  html = html.replace(/```([\s\S]*?)```/g, '<pre style="background-color: #f4f4f4; padding: 10px; border-radius: 4px; overflow-x: auto;"><code>$1</code></pre>');
+
+  // Convert inline code: `code`
+  html = html.replace(/`([^`]+)`/g, '<code style="background-color: #f4f4f4; padding: 2px 4px; border-radius: 2px;">$1</code>');
+
+  // Convert images: ![alt text](url) - do this before links
   html = html.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, 
     '<img src="$2" alt="$1" style="max-width: 100%; height: auto; display: block; margin: 10px 0;" />');
 
@@ -31,28 +37,22 @@ const convertMarkdownToHtml = (text: string): string => {
   html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
   html = html.replace(/__(.*?)__/g, '<strong>$1</strong>');
 
-  // Convert italic: *text* or _text_
-  html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
-  html = html.replace(/_(.*?)_/g, '<em>$1</em>');
+  // Convert italic: *text* or _text_ (simple patterns to avoid conflicts)
+  html = html.replace(/\b\*([^*\n]+)\*\b/g, '<em>$1</em>');
+  html = html.replace(/\b_([^_\n]+)_\b/g, '<em>$1</em>');
 
-  // Convert code blocks: ```code```
-  html = html.replace(/```([\s\S]*?)```/g, '<pre style="background-color: #f4f4f4; padding: 10px; border-radius: 4px; overflow-x: auto;"><code>$1</code></pre>');
-
-  // Convert inline code: `code`
-  html = html.replace(/`([^`]+)`/g, '<code style="background-color: #f4f4f4; padding: 2px 4px; border-radius: 2px;">$1</code>');
-
-  // Convert line breaks
-  html = html.replace(/\n/g, '<br>');
-
-  // Convert blockquotes: > text
+  // Convert blockquotes: > text (do this before line breaks)
   html = html.replace(/^> (.*)$/gm, '<blockquote style="border-left: 4px solid #ddd; margin: 0; padding-left: 16px; color: #666;">$1</blockquote>');
 
   // Convert unordered lists: - item or * item
   html = html.replace(/^[-*] (.*)$/gm, '<li>$1</li>');
-  html = html.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
+  html = html.replace(/(<li>.*?<\/li>)/gs, '<ul>$1</ul>');
 
   // Convert ordered lists: 1. item
   html = html.replace(/^\d+\. (.*)$/gm, '<li>$1</li>');
+
+  // Convert line breaks last (so they don't interfere with other patterns)
+  html = html.replace(/\n/g, '<br>');
 
   return html;
 };
@@ -95,6 +95,8 @@ ${text}
 
       // Convert markdown message to HTML
       const htmlMessage = convertMarkdownToHtml(text);
+      console.log("Original text:", text);
+      console.log("Converted HTML:", htmlMessage);
 
       // Create HTML version with formatted content
       const html = `
