@@ -72,6 +72,9 @@ const getResolver = (input) => {
               id
             }
           }
+          SubscribedToNotifications {
+            username
+          }
           createdAt
           updatedAt
           Tags {
