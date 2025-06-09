@@ -821,6 +821,12 @@ const typeDefinitions = gql `
     unsubscribeFromComment(commentId: ID!): Comment
     subscribeToIssue(issueId: ID!): Issue
     unsubscribeFromIssue(issueId: ID!): Issue
+    sendBugReport(
+      contactEmail: String!
+      username: String
+      text: String!
+      subject: String!
+    ): Boolean
   }
 
   input SiteWideDiscussionSortOrder {

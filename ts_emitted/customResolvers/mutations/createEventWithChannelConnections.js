@@ -33,6 +33,9 @@ const selectionSet = `
         id
       }
     }
+    SubscribedToNotifications {
+      username
+    }
     createdAt
     updatedAt
     Tags {

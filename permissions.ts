@@ -150,6 +150,7 @@ const permissionList = shield({
       unsubscribeFromComment: and(isAuthenticated, allow),
       subscribeToIssue: and(isAuthenticated, allow),
       unsubscribeFromIssue: and(isAuthenticated, allow),
+      sendBugReport: allow, // Allow non-authenticated users to send bug reports
     },
   },{
     debug: true,

@@ -69,6 +69,7 @@ import subscribeToEvent from './customResolvers/mutations/subscribeToEvent.js';
 import unsubscribeFromEvent from './customResolvers/mutations/unsubscribeFromEvent.js';
 import subscribeToIssue from './customResolvers/mutations/subscribeToIssue.js';
 import unsubscribeFromIssue from './customResolvers/mutations/unsubscribeFromIssue.js';
+import sendBugReport from './customResolvers/mutations/sendBugReport.js';
 
 const { OGM } = pkg;
 
@@ -346,6 +347,7 @@ export default function (driver: any) {
         Issue,
         driver
       }),
+      sendBugReport: sendBugReport(),
     },
   };
   return {

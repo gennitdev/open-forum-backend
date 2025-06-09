@@ -1,0 +1,133 @@
+import sgMail from "@sendgrid/mail";
+
+type Args = {
+  contactEmail: string;
+  username?: string;
+  text: string;
+  subject: string;
+};
+
+/**
+ * Converts markdown text to HTML
+ * @param text The markdown text to convert
+ * @returns HTML formatted text
+ */
+const convertMarkdownToHtml = (text: string): string => {
+  let html = text;
+
+  // Convert images: ![alt text](url)
+  html = html.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, 
+    '<img src="$2" alt="$1" style="max-width: 100%; height: auto; display: block; margin: 10px 0;" />');
+
+  // Convert links: [text](url)
+  html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
+
+  // Convert headers
+  html = html.replace(/^### (.*$)/gm, '<h3>$1</h3>');
+  html = html.replace(/^## (.*$)/gm, '<h2>$1</h2>');
+  html = html.replace(/^# (.*$)/gm, '<h1>$1</h1>');
+
+  // Convert bold: **text** or __text__
+  html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  html = html.replace(/__(.*?)__/g, '<strong>$1</strong>');
+
+  // Convert italic: *text* or _text_
+  html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+  html = html.replace(/_(.*?)_/g, '<em>$1</em>');
+
+  // Convert code blocks: ```code```
+  html = html.replace(/```([\s\S]*?)```/g, '<pre style="background-color: #f4f4f4; padding: 10px; border-radius: 4px; overflow-x: auto;"><code>$1</code></pre>');
+
+  // Convert inline code: `code`
+  html = html.replace(/`([^`]+)`/g, '<code style="background-color: #f4f4f4; padding: 2px 4px; border-radius: 2px;">$1</code>');
+
+  // Convert line breaks
+  html = html.replace(/\n/g, '<br>');
+
+  // Convert blockquotes: > text
+  html = html.replace(/^> (.*)$/gm, '<blockquote style="border-left: 4px solid #ddd; margin: 0; padding-left: 16px; color: #666;">$1</blockquote>');
+
+  // Convert unordered lists: - item or * item
+  html = html.replace(/^[-*] (.*)$/gm, '<li>$1</li>');
+  html = html.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
+
+  // Convert ordered lists: 1. item
+  html = html.replace(/^\d+\. (.*)$/gm, '<li>$1</li>');
+
+  return html;
+};
+
+/**
+ * Main resolver for sending bug reports
+ */
+const getSendBugReportResolver = () => {
+  return async (_parent: any, args: Args, _context: any, _resolveInfo: any) => {
+    const { contactEmail, username, text, subject } = args;
+
+    try {
+      // Set up SendGrid (if API key provided)
+      if (process.env.SENDGRID_API_KEY) {
+        sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+      } else {
+        console.warn("SENDGRID_API_KEY is not set. Bug report email will not be sent.");
+        return false;
+      }
+
+      if (!process.env.SUPPORT_EMAIL) {
+        throw new Error("SUPPORT_EMAIL is not set");
+      }
+
+      if (!process.env.SENDGRID_FROM_EMAIL) {
+        throw new Error("SENDGRID_FROM_EMAIL is not set");
+      }
+
+      // Create email content for the bug report
+      const plainText = `
+Bug Report
+
+Subject: ${subject}
+From: ${contactEmail}
+${username ? `Username: ${username}` : ''}
+
+Message:
+${text}
+`;
+
+      // Convert markdown message to HTML
+      const htmlMessage = convertMarkdownToHtml(text);
+
+      // Create HTML version with formatted content
+      const html = `
+<h2>Bug Report</h2>
+<p><strong>Subject:</strong> ${subject}</p>
+<p><strong>From:</strong> ${contactEmail}</p>
+${username ? `<p><strong>Username:</strong> ${username}</p>` : ''}
+<hr>
+<h3>Message:</h3>
+<div>${htmlMessage}</div>
+`;
+
+      // Send the email to support
+      const msg = {
+        to: process.env.SUPPORT_EMAIL,
+        from: process.env.SENDGRID_FROM_EMAIL,
+        subject: `Bug Report: ${subject}`,
+        text: plainText,
+        html: html,
+        replyTo: contactEmail,
+      };
+
+      console.log("Sending bug report email to", process.env.SUPPORT_EMAIL);
+      await sgMail.send(msg);
+
+      return true;
+    } catch (e: any) {
+      console.error("Error sending bug report email:", e);
+      throw new Error(
+        `An error occurred while sending the bug report: ${e?.message}`
+      );
+    }
+  };
+};
+
+export default getSendBugReportResolver;
