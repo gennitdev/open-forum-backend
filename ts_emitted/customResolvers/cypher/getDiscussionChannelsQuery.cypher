@@ -143,6 +143,8 @@ RETURN {
         body: d.body,
         createdAt: d.createdAt,
         updatedAt: d.updatedAt,
+        hasSensitiveContent: d.hasSensitiveContent,
+        hasSpoiler: d.hasSpoiler,
         Author: CASE
                   WHEN author IS NULL THEN null
                   ELSE {
