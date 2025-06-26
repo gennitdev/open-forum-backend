@@ -947,6 +947,8 @@ const typeDefinitions = gql `
     serverIconURL: String
     rules: JSON
     allowedFileTypes: [String]
+    enableDownloads: Boolean
+    enableEvents: Boolean
     DefaultServerRole: ServerRole
       @relationship(type: "HAS_DEFAULT_SERVER_ROLE", direction: OUT)
     DefaultModRole: ModServerRole
