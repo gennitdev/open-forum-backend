@@ -42,6 +42,10 @@ import {
   createChannelInputIsValid,
   updateChannelInputIsValid,
 } from "./validation/channelIsValid.js";
+import {
+  createDownloadableFileInputIsValid,
+  updateDownloadableFileInputIsValid,
+} from "./validation/downloadableFileIsValid.js";
 import { setUserDataOnContext } from "./permission/userDataHelperFunctions.js";
 
 const canCreateChannel = rule({ cache: "contextual" })(
@@ -502,6 +506,8 @@ const ruleList = {
   updateDiscussionInputIsValid,
   createEventInputIsValid,
   updateEventInputIsValid,
+  createDownloadableFileInputIsValid,
+  updateDownloadableFileInputIsValid,
   hasChannelPermission,
   isAdmin,
   isAccountOwner,

@@ -324,10 +324,8 @@ const typeDefinitions = gql`
     createdAt: DateTime! @timestamp(operations: [CREATE])
     displayName: String
     description: String
-
     locked: Boolean
     deleted: Boolean
-
     channelIconURL: String
     channelBannerURL: String
     rules: JSON
@@ -426,6 +424,7 @@ const typeDefinitions = gql`
       @relationship(type: "HAS_FEEDBACK_COMMENT", direction: IN)
     Album: Album @relationship(type: "HAS_ALBUM", direction: OUT)
     DownloadableFiles: [DownloadableFile!]!
+      @relationship(type: "HAS_DOWNLOADABLE_FILE", direction: OUT)
   }
 
   type EventChannel {
@@ -712,7 +711,7 @@ const typeDefinitions = gql`
       discussionChannelId: ID!
       username: String!
     ): DiscussionChannel
-    createSignedStorageURL(filename: String!, contentType: String!): SignedURL
+    createSignedStorageURL(filename: String!, contentType: String!, channelConnections: [String!]): SignedURL
     createEmailAndUser(emailAddress: String!, username: String!): User
     dropDataForCypressTests: DropDataResponse
     seedDataForCypressTests(

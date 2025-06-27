@@ -3,16 +3,12 @@ import { Storage, GetSignedUrlConfig } from "@google-cloud/storage";
 type Args = {
   filename: string;
   contentType: string;
-  fileSize: number; // Add fileSize to arguments
+  channelConnections?: string[]; // Optional array of channel names
 };
 
-const ALLOWED_FILE_TYPES = [
-  'image/png',
-  'image/jpeg',
-  'image/jpg'
-];
-
-const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB in bytes
+interface ValidationContext {
+  ogm: any;
+}
 
 const isUrlEncoded = (filename: string): boolean => {
   try {
@@ -22,42 +18,106 @@ const isUrlEncoded = (filename: string): boolean => {
   }
 };
 
-const validateFile = (filename: string, contentType: string, fileSize: number): void => {
-  if (!ALLOWED_FILE_TYPES.includes(contentType)) {
-    throw new Error(
-      `Invalid file type. Allowed types are: ${ALLOWED_FILE_TYPES.join(', ')}`
-    );
+/**
+ * Validate file type against ServerConfig and Channel allowed file types
+ */
+const validateFileType = async (
+  filename: string,
+  channelConnections: string[] = [],
+  ctx: ValidationContext
+): Promise<void> => {
+  // Extract file extension
+  const fileExtension = filename.split('.').pop()?.toLowerCase();
+  if (!fileExtension) {
+    throw new Error("File must have a valid extension");
   }
 
-  // Validate file extension matches content type
-  const extension = filename.split('.').pop()?.toLowerCase();
-  const expectedExtensions = {
-    'image/png': 'png',
-    'image/jpeg': ['jpg', 'jpeg'],
-    'image/jpg': ['jpg', 'jpeg']
-  };
-  
-  const allowedExtensions = expectedExtensions[contentType as keyof typeof expectedExtensions];
-  const isValidExtension = Array.isArray(allowedExtensions) 
-    ? allowedExtensions.includes(extension || '')
-    : extension === allowedExtensions;
+  const ServerConfigModel = ctx.ogm.model("ServerConfig");
+  const ChannelModel = ctx.ogm.model("Channel");
 
-  if (!isValidExtension) {
-    throw new Error('File extension does not match content type');
-  }
-  if (fileSize > MAX_FILE_SIZE) {
-    throw new Error(`File size exceeds maximum allowed size of ${MAX_FILE_SIZE / (1024 * 1024)}MB`);
+  try {
+    // Get server-wide allowed file types
+    const serverConfigs = await ServerConfigModel.find({
+      selectionSet: `{
+        allowedFileTypes
+      }`
+    });
+
+    const serverConfig = serverConfigs?.[0];
+    const serverAllowedFileTypes = serverConfig?.allowedFileTypes || [];
+
+    // Check if file type is allowed server-wide
+    // Handle both formats: with dot (.stl) and without dot (stl)
+    const isAllowedByServer = serverAllowedFileTypes.length === 0 || 
+      serverAllowedFileTypes.includes(fileExtension) || 
+      serverAllowedFileTypes.includes(`.${fileExtension}`);
+      
+    if (!isAllowedByServer) {
+      throw new Error(
+        `File type '${fileExtension}' is not allowed by server configuration. Allowed types: ${serverAllowedFileTypes.join(', ')}`
+      );
+    }
+
+    // If there are channel connections, check each channel's allowed file types
+    if (channelConnections.length > 0) {
+      for (const channelName of channelConnections) {
+        const channels = await ChannelModel.find({
+          where: { uniqueName: channelName },
+          selectionSet: `{
+            uniqueName
+            allowedFileTypes
+          }`
+        });
+
+        const channel = channels?.[0];
+        if (!channel) {
+          throw new Error(`Channel '${channelName}' not found`);
+        }
+
+        const channelAllowedFileTypes = channel.allowedFileTypes || [];
+        
+        // Check if file type is allowed in this channel
+        // Handle both formats: with dot (.stl) and without dot (stl)
+        const isAllowedByChannel = channelAllowedFileTypes.length === 0 || 
+          channelAllowedFileTypes.includes(fileExtension) || 
+          channelAllowedFileTypes.includes(`.${fileExtension}`);
+          
+        if (!isAllowedByChannel) {
+          throw new Error(
+            `File type '${fileExtension}' is not allowed in channel '${channelName}'. Allowed types: ${channelAllowedFileTypes.join(', ')}`
+          );
+        }
+      }
+    }
+  } catch (error) {
+    // If it's already a validation error, re-throw it
+    if (error instanceof Error) {
+      throw error;
+    }
+    console.error("Error validating file type:", error);
+    throw new Error("Failed to validate file type permissions");
   }
 };
 
+const validateFile = async (
+  filename: string,
+  channelConnections: string[] = [],
+  ctx: ValidationContext
+): Promise<void> => {
+  // Validate file type against server and channel configurations
+  await validateFileType(filename, channelConnections, ctx);
+};
+
 const createSignedStorageURL = () => {
-  return async (parent: any, args: Args) => {
-    let { filename, contentType, fileSize } = args;
+  return async (parent: any, args: Args, ctx: ValidationContext) => {
+    let { filename, contentType, channelConnections = [] } = args;
 
     if (!isUrlEncoded(filename)) {
       throw new Error("Filename is not properly URL encoded");
     }
-    validateFile(filename, contentType, fileSize);
+
+    // Validate file against server and channel configurations
+    await validateFile(filename, channelConnections, ctx);
 
     const storage = new Storage();
     const bucketName = process.env.GCS_BUCKET_NAME;

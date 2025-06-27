@@ -25,6 +25,8 @@ const {
   updateEventInputIsValid,
   createCommentInputIsValid,
   updateCommentInputIsValid,
+  createDownloadableFileInputIsValid,
+  updateDownloadableFileInputIsValid,
   canReport,
   canSuspendAndUnsuspendUser,
   canArchiveAndUnarchiveComment,
@@ -127,6 +129,10 @@ const permissionList = shield({
 
       updateImages: and(isAuthenticated, allow),
       createImages: and(isAuthenticated, allow),
+
+      createDownloadableFiles: and(isAuthenticated, createDownloadableFileInputIsValid, canUploadFile),
+      updateDownloadableFiles: and(isAuthenticated, updateDownloadableFileInputIsValid, canUploadFile),
+      deleteDownloadableFiles: and(isAuthenticated, canUploadFile),
 
       reportDiscussion: and(isAuthenticated, or(isChannelOwner, canReport)),
       reportComment: and(isAuthenticated, or(isChannelOwner, canReport)),

@@ -13324,6 +13324,8 @@ export type Discussion = {
   DiscussionChannelsAggregate?: Maybe<DiscussionDiscussionChannelDiscussionChannelsAggregationSelection>;
   DiscussionChannelsConnection: DiscussionDiscussionChannelsConnection;
   DownloadableFiles: Array<DownloadableFile>;
+  DownloadableFilesAggregate?: Maybe<DiscussionDownloadableFileDownloadableFilesAggregationSelection>;
+  DownloadableFilesConnection: DiscussionDownloadableFilesConnection;
   FeedbackComments: Array<Comment>;
   FeedbackCommentsAggregate?: Maybe<DiscussionCommentFeedbackCommentsAggregationSelection>;
   FeedbackCommentsConnection: DiscussionFeedbackCommentsConnection;
@@ -13411,6 +13413,28 @@ export type DiscussionDiscussionChannelsConnectionArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<Array<DiscussionDiscussionChannelsConnectionSort>>;
   where?: InputMaybe<DiscussionDiscussionChannelsConnectionWhere>;
+};
+
+
+export type DiscussionDownloadableFilesArgs = {
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  options?: InputMaybe<DownloadableFileOptions>;
+  where?: InputMaybe<DownloadableFileWhere>;
+};
+
+
+export type DiscussionDownloadableFilesAggregateArgs = {
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  where?: InputMaybe<DownloadableFileWhere>;
+};
+
+
+export type DiscussionDownloadableFilesConnectionArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<Array<DiscussionDownloadableFilesConnectionSort>>;
+  where?: InputMaybe<DiscussionDownloadableFilesConnectionWhere>;
 };
 
 
@@ -16358,6 +16382,7 @@ export type DiscussionConnectInput = {
   Album?: InputMaybe<DiscussionAlbumConnectFieldInput>;
   Author?: InputMaybe<DiscussionAuthorConnectFieldInput>;
   DiscussionChannels?: InputMaybe<Array<DiscussionDiscussionChannelsConnectFieldInput>>;
+  DownloadableFiles?: InputMaybe<Array<DiscussionDownloadableFilesConnectFieldInput>>;
   FeedbackComments?: InputMaybe<Array<DiscussionFeedbackCommentsConnectFieldInput>>;
   PastBodyVersions?: InputMaybe<Array<DiscussionPastBodyVersionsConnectFieldInput>>;
   PastTitleVersions?: InputMaybe<Array<DiscussionPastTitleVersionsConnectFieldInput>>;
@@ -16378,6 +16403,7 @@ export type DiscussionConnectedRelationships = {
   Album?: Maybe<DiscussionAlbumConnectedRelationship>;
   Author?: Maybe<DiscussionAuthorConnectedRelationship>;
   DiscussionChannels?: Maybe<DiscussionDiscussionChannelsConnectedRelationship>;
+  DownloadableFiles?: Maybe<DiscussionDownloadableFilesConnectedRelationship>;
   FeedbackComments?: Maybe<DiscussionFeedbackCommentsConnectedRelationship>;
   PastBodyVersions?: Maybe<DiscussionPastBodyVersionsConnectedRelationship>;
   PastTitleVersions?: Maybe<DiscussionPastTitleVersionsConnectedRelationship>;
@@ -16388,6 +16414,7 @@ export type DiscussionCreateInput = {
   Album?: InputMaybe<DiscussionAlbumFieldInput>;
   Author?: InputMaybe<DiscussionAuthorFieldInput>;
   DiscussionChannels?: InputMaybe<DiscussionDiscussionChannelsFieldInput>;
+  DownloadableFiles?: InputMaybe<DiscussionDownloadableFilesFieldInput>;
   FeedbackComments?: InputMaybe<DiscussionFeedbackCommentsFieldInput>;
   PastBodyVersions?: InputMaybe<DiscussionPastBodyVersionsFieldInput>;
   PastTitleVersions?: InputMaybe<DiscussionPastTitleVersionsFieldInput>;
@@ -16417,6 +16444,7 @@ export type DiscussionDeleteInput = {
   Album?: InputMaybe<DiscussionAlbumDeleteFieldInput>;
   Author?: InputMaybe<DiscussionAuthorDeleteFieldInput>;
   DiscussionChannels?: InputMaybe<Array<DiscussionDiscussionChannelsDeleteFieldInput>>;
+  DownloadableFiles?: InputMaybe<Array<DiscussionDownloadableFilesDeleteFieldInput>>;
   FeedbackComments?: InputMaybe<Array<DiscussionFeedbackCommentsDeleteFieldInput>>;
   PastBodyVersions?: InputMaybe<Array<DiscussionPastBodyVersionsDeleteFieldInput>>;
   PastTitleVersions?: InputMaybe<Array<DiscussionPastTitleVersionsDeleteFieldInput>>;
@@ -16434,6 +16462,7 @@ export type DiscussionDisconnectInput = {
   Album?: InputMaybe<DiscussionAlbumDisconnectFieldInput>;
   Author?: InputMaybe<DiscussionAuthorDisconnectFieldInput>;
   DiscussionChannels?: InputMaybe<Array<DiscussionDiscussionChannelsDisconnectFieldInput>>;
+  DownloadableFiles?: InputMaybe<Array<DiscussionDownloadableFilesDisconnectFieldInput>>;
   FeedbackComments?: InputMaybe<Array<DiscussionFeedbackCommentsDisconnectFieldInput>>;
   PastBodyVersions?: InputMaybe<Array<DiscussionPastBodyVersionsDisconnectFieldInput>>;
   PastTitleVersions?: InputMaybe<Array<DiscussionPastTitleVersionsDisconnectFieldInput>>;
@@ -16588,6 +16617,304 @@ export type DiscussionDiscussionChannelsUpdateFieldInput = {
   disconnect?: InputMaybe<Array<DiscussionDiscussionChannelsDisconnectFieldInput>>;
   update?: InputMaybe<DiscussionDiscussionChannelsUpdateConnectionInput>;
   where?: InputMaybe<DiscussionDiscussionChannelsConnectionWhere>;
+};
+
+export type DiscussionDownloadableFileDownloadableFilesAggregationSelection = {
+  __typename?: 'DiscussionDownloadableFileDownloadableFilesAggregationSelection';
+  count: Scalars['Int']['output'];
+  node?: Maybe<DiscussionDownloadableFileDownloadableFilesNodeAggregateSelection>;
+};
+
+export type DiscussionDownloadableFileDownloadableFilesNodeAggregateSelection = {
+  __typename?: 'DiscussionDownloadableFileDownloadableFilesNodeAggregateSelection';
+  createdAt: DateTimeAggregateSelection;
+  downloadCountTotal: IntAggregateSelection;
+  downloadCountUnique: IntAggregateSelection;
+  fileName: StringAggregateSelection;
+  id: IdAggregateSelection;
+  paywallExpiresAt: DateTimeAggregateSelection;
+  priceCents: IntAggregateSelection;
+  priceCurrency: StringAggregateSelection;
+  scanCheckedAt: DateTimeAggregateSelection;
+  size: IntAggregateSelection;
+  stripePriceId: StringAggregateSelection;
+  stripeProductId: StringAggregateSelection;
+  url: StringAggregateSelection;
+};
+
+export type DiscussionDownloadableFilesAggregateInput = {
+  AND?: InputMaybe<Array<DiscussionDownloadableFilesAggregateInput>>;
+  NOT?: InputMaybe<DiscussionDownloadableFilesAggregateInput>;
+  OR?: InputMaybe<Array<DiscussionDownloadableFilesAggregateInput>>;
+  count?: InputMaybe<Scalars['Int']['input']>;
+  count_GT?: InputMaybe<Scalars['Int']['input']>;
+  count_GTE?: InputMaybe<Scalars['Int']['input']>;
+  count_LT?: InputMaybe<Scalars['Int']['input']>;
+  count_LTE?: InputMaybe<Scalars['Int']['input']>;
+  node?: InputMaybe<DiscussionDownloadableFilesNodeAggregationWhereInput>;
+};
+
+export type DiscussionDownloadableFilesConnectFieldInput = {
+  connect?: InputMaybe<Array<DownloadableFileConnectInput>>;
+  /** Whether or not to overwrite any matching relationship with the new properties. */
+  overwrite?: Scalars['Boolean']['input'];
+  where?: InputMaybe<DownloadableFileConnectWhere>;
+};
+
+export type DiscussionDownloadableFilesConnectedRelationship = {
+  __typename?: 'DiscussionDownloadableFilesConnectedRelationship';
+  node: DownloadableFileEventPayload;
+};
+
+export type DiscussionDownloadableFilesConnection = {
+  __typename?: 'DiscussionDownloadableFilesConnection';
+  edges: Array<DiscussionDownloadableFilesRelationship>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type DiscussionDownloadableFilesConnectionSort = {
+  node?: InputMaybe<DownloadableFileSort>;
+};
+
+export type DiscussionDownloadableFilesConnectionWhere = {
+  AND?: InputMaybe<Array<DiscussionDownloadableFilesConnectionWhere>>;
+  NOT?: InputMaybe<DiscussionDownloadableFilesConnectionWhere>;
+  OR?: InputMaybe<Array<DiscussionDownloadableFilesConnectionWhere>>;
+  node?: InputMaybe<DownloadableFileWhere>;
+};
+
+export type DiscussionDownloadableFilesCreateFieldInput = {
+  node: DownloadableFileCreateInput;
+};
+
+export type DiscussionDownloadableFilesDeleteFieldInput = {
+  delete?: InputMaybe<DownloadableFileDeleteInput>;
+  where?: InputMaybe<DiscussionDownloadableFilesConnectionWhere>;
+};
+
+export type DiscussionDownloadableFilesDisconnectFieldInput = {
+  disconnect?: InputMaybe<DownloadableFileDisconnectInput>;
+  where?: InputMaybe<DiscussionDownloadableFilesConnectionWhere>;
+};
+
+export type DiscussionDownloadableFilesFieldInput = {
+  connect?: InputMaybe<Array<DiscussionDownloadableFilesConnectFieldInput>>;
+  create?: InputMaybe<Array<DiscussionDownloadableFilesCreateFieldInput>>;
+};
+
+export type DiscussionDownloadableFilesNodeAggregationWhereInput = {
+  AND?: InputMaybe<Array<DiscussionDownloadableFilesNodeAggregationWhereInput>>;
+  NOT?: InputMaybe<DiscussionDownloadableFilesNodeAggregationWhereInput>;
+  OR?: InputMaybe<Array<DiscussionDownloadableFilesNodeAggregationWhereInput>>;
+  createdAt_MAX_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MAX_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_MIN_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+  downloadCountTotal_AVERAGE_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  downloadCountTotal_AVERAGE_GT?: InputMaybe<Scalars['Float']['input']>;
+  downloadCountTotal_AVERAGE_GTE?: InputMaybe<Scalars['Float']['input']>;
+  downloadCountTotal_AVERAGE_LT?: InputMaybe<Scalars['Float']['input']>;
+  downloadCountTotal_AVERAGE_LTE?: InputMaybe<Scalars['Float']['input']>;
+  downloadCountTotal_MAX_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  downloadCountTotal_MAX_GT?: InputMaybe<Scalars['Int']['input']>;
+  downloadCountTotal_MAX_GTE?: InputMaybe<Scalars['Int']['input']>;
+  downloadCountTotal_MAX_LT?: InputMaybe<Scalars['Int']['input']>;
+  downloadCountTotal_MAX_LTE?: InputMaybe<Scalars['Int']['input']>;
+  downloadCountTotal_MIN_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  downloadCountTotal_MIN_GT?: InputMaybe<Scalars['Int']['input']>;
+  downloadCountTotal_MIN_GTE?: InputMaybe<Scalars['Int']['input']>;
+  downloadCountTotal_MIN_LT?: InputMaybe<Scalars['Int']['input']>;
+  downloadCountTotal_MIN_LTE?: InputMaybe<Scalars['Int']['input']>;
+  downloadCountTotal_SUM_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  downloadCountTotal_SUM_GT?: InputMaybe<Scalars['Int']['input']>;
+  downloadCountTotal_SUM_GTE?: InputMaybe<Scalars['Int']['input']>;
+  downloadCountTotal_SUM_LT?: InputMaybe<Scalars['Int']['input']>;
+  downloadCountTotal_SUM_LTE?: InputMaybe<Scalars['Int']['input']>;
+  downloadCountUnique_AVERAGE_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  downloadCountUnique_AVERAGE_GT?: InputMaybe<Scalars['Float']['input']>;
+  downloadCountUnique_AVERAGE_GTE?: InputMaybe<Scalars['Float']['input']>;
+  downloadCountUnique_AVERAGE_LT?: InputMaybe<Scalars['Float']['input']>;
+  downloadCountUnique_AVERAGE_LTE?: InputMaybe<Scalars['Float']['input']>;
+  downloadCountUnique_MAX_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  downloadCountUnique_MAX_GT?: InputMaybe<Scalars['Int']['input']>;
+  downloadCountUnique_MAX_GTE?: InputMaybe<Scalars['Int']['input']>;
+  downloadCountUnique_MAX_LT?: InputMaybe<Scalars['Int']['input']>;
+  downloadCountUnique_MAX_LTE?: InputMaybe<Scalars['Int']['input']>;
+  downloadCountUnique_MIN_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  downloadCountUnique_MIN_GT?: InputMaybe<Scalars['Int']['input']>;
+  downloadCountUnique_MIN_GTE?: InputMaybe<Scalars['Int']['input']>;
+  downloadCountUnique_MIN_LT?: InputMaybe<Scalars['Int']['input']>;
+  downloadCountUnique_MIN_LTE?: InputMaybe<Scalars['Int']['input']>;
+  downloadCountUnique_SUM_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  downloadCountUnique_SUM_GT?: InputMaybe<Scalars['Int']['input']>;
+  downloadCountUnique_SUM_GTE?: InputMaybe<Scalars['Int']['input']>;
+  downloadCountUnique_SUM_LT?: InputMaybe<Scalars['Int']['input']>;
+  downloadCountUnique_SUM_LTE?: InputMaybe<Scalars['Int']['input']>;
+  fileName_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  fileName_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  fileName_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  fileName_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  fileName_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  fileName_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  fileName_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  fileName_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  fileName_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  fileName_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  fileName_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  fileName_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  fileName_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  fileName_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  fileName_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  paywallExpiresAt_MAX_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
+  paywallExpiresAt_MAX_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  paywallExpiresAt_MAX_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  paywallExpiresAt_MAX_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  paywallExpiresAt_MAX_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+  paywallExpiresAt_MIN_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
+  paywallExpiresAt_MIN_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  paywallExpiresAt_MIN_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  paywallExpiresAt_MIN_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  paywallExpiresAt_MIN_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+  priceCents_AVERAGE_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  priceCents_AVERAGE_GT?: InputMaybe<Scalars['Float']['input']>;
+  priceCents_AVERAGE_GTE?: InputMaybe<Scalars['Float']['input']>;
+  priceCents_AVERAGE_LT?: InputMaybe<Scalars['Float']['input']>;
+  priceCents_AVERAGE_LTE?: InputMaybe<Scalars['Float']['input']>;
+  priceCents_MAX_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  priceCents_MAX_GT?: InputMaybe<Scalars['Int']['input']>;
+  priceCents_MAX_GTE?: InputMaybe<Scalars['Int']['input']>;
+  priceCents_MAX_LT?: InputMaybe<Scalars['Int']['input']>;
+  priceCents_MAX_LTE?: InputMaybe<Scalars['Int']['input']>;
+  priceCents_MIN_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  priceCents_MIN_GT?: InputMaybe<Scalars['Int']['input']>;
+  priceCents_MIN_GTE?: InputMaybe<Scalars['Int']['input']>;
+  priceCents_MIN_LT?: InputMaybe<Scalars['Int']['input']>;
+  priceCents_MIN_LTE?: InputMaybe<Scalars['Int']['input']>;
+  priceCents_SUM_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  priceCents_SUM_GT?: InputMaybe<Scalars['Int']['input']>;
+  priceCents_SUM_GTE?: InputMaybe<Scalars['Int']['input']>;
+  priceCents_SUM_LT?: InputMaybe<Scalars['Int']['input']>;
+  priceCents_SUM_LTE?: InputMaybe<Scalars['Int']['input']>;
+  priceCurrency_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  priceCurrency_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  priceCurrency_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  priceCurrency_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  priceCurrency_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  priceCurrency_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  priceCurrency_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  priceCurrency_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  priceCurrency_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  priceCurrency_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  priceCurrency_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  priceCurrency_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  priceCurrency_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  priceCurrency_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  priceCurrency_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  scanCheckedAt_MAX_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
+  scanCheckedAt_MAX_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  scanCheckedAt_MAX_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  scanCheckedAt_MAX_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  scanCheckedAt_MAX_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+  scanCheckedAt_MIN_EQUAL?: InputMaybe<Scalars['DateTime']['input']>;
+  scanCheckedAt_MIN_GT?: InputMaybe<Scalars['DateTime']['input']>;
+  scanCheckedAt_MIN_GTE?: InputMaybe<Scalars['DateTime']['input']>;
+  scanCheckedAt_MIN_LT?: InputMaybe<Scalars['DateTime']['input']>;
+  scanCheckedAt_MIN_LTE?: InputMaybe<Scalars['DateTime']['input']>;
+  size_AVERAGE_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  size_AVERAGE_GT?: InputMaybe<Scalars['Float']['input']>;
+  size_AVERAGE_GTE?: InputMaybe<Scalars['Float']['input']>;
+  size_AVERAGE_LT?: InputMaybe<Scalars['Float']['input']>;
+  size_AVERAGE_LTE?: InputMaybe<Scalars['Float']['input']>;
+  size_MAX_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  size_MAX_GT?: InputMaybe<Scalars['Int']['input']>;
+  size_MAX_GTE?: InputMaybe<Scalars['Int']['input']>;
+  size_MAX_LT?: InputMaybe<Scalars['Int']['input']>;
+  size_MAX_LTE?: InputMaybe<Scalars['Int']['input']>;
+  size_MIN_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  size_MIN_GT?: InputMaybe<Scalars['Int']['input']>;
+  size_MIN_GTE?: InputMaybe<Scalars['Int']['input']>;
+  size_MIN_LT?: InputMaybe<Scalars['Int']['input']>;
+  size_MIN_LTE?: InputMaybe<Scalars['Int']['input']>;
+  size_SUM_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  size_SUM_GT?: InputMaybe<Scalars['Int']['input']>;
+  size_SUM_GTE?: InputMaybe<Scalars['Int']['input']>;
+  size_SUM_LT?: InputMaybe<Scalars['Int']['input']>;
+  size_SUM_LTE?: InputMaybe<Scalars['Int']['input']>;
+  stripePriceId_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  stripePriceId_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  stripePriceId_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  stripePriceId_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  stripePriceId_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  stripePriceId_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  stripePriceId_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  stripePriceId_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  stripePriceId_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  stripePriceId_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  stripePriceId_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  stripePriceId_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  stripePriceId_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  stripePriceId_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  stripePriceId_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  stripeProductId_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  stripeProductId_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  stripeProductId_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  stripeProductId_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  stripeProductId_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  stripeProductId_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  stripeProductId_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  stripeProductId_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  stripeProductId_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  stripeProductId_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  stripeProductId_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  stripeProductId_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  stripeProductId_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  stripeProductId_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  stripeProductId_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  url_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  url_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  url_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  url_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  url_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  url_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  url_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  url_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  url_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  url_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  url_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  url_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  url_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  url_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  url_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type DiscussionDownloadableFilesRelationship = {
+  __typename?: 'DiscussionDownloadableFilesRelationship';
+  cursor: Scalars['String']['output'];
+  node: DownloadableFile;
+};
+
+export type DiscussionDownloadableFilesRelationshipSubscriptionWhere = {
+  node?: InputMaybe<DownloadableFileSubscriptionWhere>;
+};
+
+export type DiscussionDownloadableFilesUpdateConnectionInput = {
+  node?: InputMaybe<DownloadableFileUpdateInput>;
+};
+
+export type DiscussionDownloadableFilesUpdateFieldInput = {
+  connect?: InputMaybe<Array<DiscussionDownloadableFilesConnectFieldInput>>;
+  create?: InputMaybe<Array<DiscussionDownloadableFilesCreateFieldInput>>;
+  delete?: InputMaybe<Array<DiscussionDownloadableFilesDeleteFieldInput>>;
+  disconnect?: InputMaybe<Array<DiscussionDownloadableFilesDisconnectFieldInput>>;
+  update?: InputMaybe<DiscussionDownloadableFilesUpdateConnectionInput>;
+  where?: InputMaybe<DiscussionDownloadableFilesConnectionWhere>;
 };
 
 export type DiscussionEdge = {
@@ -17153,6 +17480,7 @@ export type DiscussionRelationInput = {
   Album?: InputMaybe<DiscussionAlbumCreateFieldInput>;
   Author?: InputMaybe<DiscussionAuthorCreateFieldInput>;
   DiscussionChannels?: InputMaybe<Array<DiscussionDiscussionChannelsCreateFieldInput>>;
+  DownloadableFiles?: InputMaybe<Array<DiscussionDownloadableFilesCreateFieldInput>>;
   FeedbackComments?: InputMaybe<Array<DiscussionFeedbackCommentsCreateFieldInput>>;
   PastBodyVersions?: InputMaybe<Array<DiscussionPastBodyVersionsCreateFieldInput>>;
   PastTitleVersions?: InputMaybe<Array<DiscussionPastTitleVersionsCreateFieldInput>>;
@@ -17197,6 +17525,7 @@ export type DiscussionRelationshipsSubscriptionWhere = {
   Album?: InputMaybe<DiscussionAlbumRelationshipSubscriptionWhere>;
   Author?: InputMaybe<DiscussionAuthorRelationshipSubscriptionWhere>;
   DiscussionChannels?: InputMaybe<DiscussionDiscussionChannelsRelationshipSubscriptionWhere>;
+  DownloadableFiles?: InputMaybe<DiscussionDownloadableFilesRelationshipSubscriptionWhere>;
   FeedbackComments?: InputMaybe<DiscussionFeedbackCommentsRelationshipSubscriptionWhere>;
   PastBodyVersions?: InputMaybe<DiscussionPastBodyVersionsRelationshipSubscriptionWhere>;
   PastTitleVersions?: InputMaybe<DiscussionPastTitleVersionsRelationshipSubscriptionWhere>;
@@ -17414,6 +17743,7 @@ export type DiscussionUpdateInput = {
   Album?: InputMaybe<DiscussionAlbumUpdateFieldInput>;
   Author?: InputMaybe<DiscussionAuthorUpdateFieldInput>;
   DiscussionChannels?: InputMaybe<Array<DiscussionDiscussionChannelsUpdateFieldInput>>;
+  DownloadableFiles?: InputMaybe<Array<DiscussionDownloadableFilesUpdateFieldInput>>;
   FeedbackComments?: InputMaybe<Array<DiscussionFeedbackCommentsUpdateFieldInput>>;
   PastBodyVersions?: InputMaybe<Array<DiscussionPastBodyVersionsUpdateFieldInput>>;
   PastTitleVersions?: InputMaybe<Array<DiscussionPastTitleVersionsUpdateFieldInput>>;
@@ -17488,6 +17818,23 @@ export type DiscussionWhere = {
   DiscussionChannels_SINGLE?: InputMaybe<DiscussionChannelWhere>;
   /** Return Discussions where some of the related DiscussionChannels match this filter */
   DiscussionChannels_SOME?: InputMaybe<DiscussionChannelWhere>;
+  DownloadableFilesAggregate?: InputMaybe<DiscussionDownloadableFilesAggregateInput>;
+  /** Return Discussions where all of the related DiscussionDownloadableFilesConnections match this filter */
+  DownloadableFilesConnection_ALL?: InputMaybe<DiscussionDownloadableFilesConnectionWhere>;
+  /** Return Discussions where none of the related DiscussionDownloadableFilesConnections match this filter */
+  DownloadableFilesConnection_NONE?: InputMaybe<DiscussionDownloadableFilesConnectionWhere>;
+  /** Return Discussions where one of the related DiscussionDownloadableFilesConnections match this filter */
+  DownloadableFilesConnection_SINGLE?: InputMaybe<DiscussionDownloadableFilesConnectionWhere>;
+  /** Return Discussions where some of the related DiscussionDownloadableFilesConnections match this filter */
+  DownloadableFilesConnection_SOME?: InputMaybe<DiscussionDownloadableFilesConnectionWhere>;
+  /** Return Discussions where all of the related DownloadableFiles match this filter */
+  DownloadableFiles_ALL?: InputMaybe<DownloadableFileWhere>;
+  /** Return Discussions where none of the related DownloadableFiles match this filter */
+  DownloadableFiles_NONE?: InputMaybe<DownloadableFileWhere>;
+  /** Return Discussions where one of the related DownloadableFiles match this filter */
+  DownloadableFiles_SINGLE?: InputMaybe<DownloadableFileWhere>;
+  /** Return Discussions where some of the related DownloadableFiles match this filter */
+  DownloadableFiles_SOME?: InputMaybe<DownloadableFileWhere>;
   FeedbackCommentsAggregate?: InputMaybe<DiscussionFeedbackCommentsAggregateInput>;
   /** Return Discussions where all of the related DiscussionFeedbackCommentsConnections match this filter */
   FeedbackCommentsConnection_ALL?: InputMaybe<DiscussionFeedbackCommentsConnectionWhere>;
@@ -33717,6 +34064,7 @@ export type MutationCreateServerRolesArgs = {
 
 
 export type MutationCreateSignedStorageUrlArgs = {
+  channelConnections?: InputMaybe<Array<Scalars['String']['input']>>;
   contentType: Scalars['String']['input'];
   filename: Scalars['String']['input'];
 };
@@ -53058,6 +53406,23 @@ export type ResolversTypes = {
   DiscussionDiscussionChannelsRelationshipSubscriptionWhere: DiscussionDiscussionChannelsRelationshipSubscriptionWhere;
   DiscussionDiscussionChannelsUpdateConnectionInput: DiscussionDiscussionChannelsUpdateConnectionInput;
   DiscussionDiscussionChannelsUpdateFieldInput: DiscussionDiscussionChannelsUpdateFieldInput;
+  DiscussionDownloadableFileDownloadableFilesAggregationSelection: ResolverTypeWrapper<DiscussionDownloadableFileDownloadableFilesAggregationSelection>;
+  DiscussionDownloadableFileDownloadableFilesNodeAggregateSelection: ResolverTypeWrapper<DiscussionDownloadableFileDownloadableFilesNodeAggregateSelection>;
+  DiscussionDownloadableFilesAggregateInput: DiscussionDownloadableFilesAggregateInput;
+  DiscussionDownloadableFilesConnectFieldInput: DiscussionDownloadableFilesConnectFieldInput;
+  DiscussionDownloadableFilesConnectedRelationship: ResolverTypeWrapper<DiscussionDownloadableFilesConnectedRelationship>;
+  DiscussionDownloadableFilesConnection: ResolverTypeWrapper<DiscussionDownloadableFilesConnection>;
+  DiscussionDownloadableFilesConnectionSort: DiscussionDownloadableFilesConnectionSort;
+  DiscussionDownloadableFilesConnectionWhere: DiscussionDownloadableFilesConnectionWhere;
+  DiscussionDownloadableFilesCreateFieldInput: DiscussionDownloadableFilesCreateFieldInput;
+  DiscussionDownloadableFilesDeleteFieldInput: DiscussionDownloadableFilesDeleteFieldInput;
+  DiscussionDownloadableFilesDisconnectFieldInput: DiscussionDownloadableFilesDisconnectFieldInput;
+  DiscussionDownloadableFilesFieldInput: DiscussionDownloadableFilesFieldInput;
+  DiscussionDownloadableFilesNodeAggregationWhereInput: DiscussionDownloadableFilesNodeAggregationWhereInput;
+  DiscussionDownloadableFilesRelationship: ResolverTypeWrapper<DiscussionDownloadableFilesRelationship>;
+  DiscussionDownloadableFilesRelationshipSubscriptionWhere: DiscussionDownloadableFilesRelationshipSubscriptionWhere;
+  DiscussionDownloadableFilesUpdateConnectionInput: DiscussionDownloadableFilesUpdateConnectionInput;
+  DiscussionDownloadableFilesUpdateFieldInput: DiscussionDownloadableFilesUpdateFieldInput;
   DiscussionEdge: ResolverTypeWrapper<DiscussionEdge>;
   DiscussionEventPayload: ResolverTypeWrapper<DiscussionEventPayload>;
   DiscussionFeedbackCommentsAggregateInput: DiscussionFeedbackCommentsAggregateInput;
@@ -57055,6 +57420,23 @@ export type ResolversParentTypes = {
   DiscussionDiscussionChannelsRelationshipSubscriptionWhere: DiscussionDiscussionChannelsRelationshipSubscriptionWhere;
   DiscussionDiscussionChannelsUpdateConnectionInput: DiscussionDiscussionChannelsUpdateConnectionInput;
   DiscussionDiscussionChannelsUpdateFieldInput: DiscussionDiscussionChannelsUpdateFieldInput;
+  DiscussionDownloadableFileDownloadableFilesAggregationSelection: DiscussionDownloadableFileDownloadableFilesAggregationSelection;
+  DiscussionDownloadableFileDownloadableFilesNodeAggregateSelection: DiscussionDownloadableFileDownloadableFilesNodeAggregateSelection;
+  DiscussionDownloadableFilesAggregateInput: DiscussionDownloadableFilesAggregateInput;
+  DiscussionDownloadableFilesConnectFieldInput: DiscussionDownloadableFilesConnectFieldInput;
+  DiscussionDownloadableFilesConnectedRelationship: DiscussionDownloadableFilesConnectedRelationship;
+  DiscussionDownloadableFilesConnection: DiscussionDownloadableFilesConnection;
+  DiscussionDownloadableFilesConnectionSort: DiscussionDownloadableFilesConnectionSort;
+  DiscussionDownloadableFilesConnectionWhere: DiscussionDownloadableFilesConnectionWhere;
+  DiscussionDownloadableFilesCreateFieldInput: DiscussionDownloadableFilesCreateFieldInput;
+  DiscussionDownloadableFilesDeleteFieldInput: DiscussionDownloadableFilesDeleteFieldInput;
+  DiscussionDownloadableFilesDisconnectFieldInput: DiscussionDownloadableFilesDisconnectFieldInput;
+  DiscussionDownloadableFilesFieldInput: DiscussionDownloadableFilesFieldInput;
+  DiscussionDownloadableFilesNodeAggregationWhereInput: DiscussionDownloadableFilesNodeAggregationWhereInput;
+  DiscussionDownloadableFilesRelationship: DiscussionDownloadableFilesRelationship;
+  DiscussionDownloadableFilesRelationshipSubscriptionWhere: DiscussionDownloadableFilesRelationshipSubscriptionWhere;
+  DiscussionDownloadableFilesUpdateConnectionInput: DiscussionDownloadableFilesUpdateConnectionInput;
+  DiscussionDownloadableFilesUpdateFieldInput: DiscussionDownloadableFilesUpdateFieldInput;
   DiscussionEdge: DiscussionEdge;
   DiscussionEventPayload: DiscussionEventPayload;
   DiscussionFeedbackCommentsAggregateInput: DiscussionFeedbackCommentsAggregateInput;
@@ -62523,7 +62905,9 @@ export type DiscussionResolvers<ContextType = any, ParentType extends ResolversP
   DiscussionChannels?: Resolver<Array<ResolversTypes['DiscussionChannel']>, ParentType, ContextType, RequireFields<DiscussionDiscussionChannelsArgs, 'directed'>>;
   DiscussionChannelsAggregate?: Resolver<Maybe<ResolversTypes['DiscussionDiscussionChannelDiscussionChannelsAggregationSelection']>, ParentType, ContextType, RequireFields<DiscussionDiscussionChannelsAggregateArgs, 'directed'>>;
   DiscussionChannelsConnection?: Resolver<ResolversTypes['DiscussionDiscussionChannelsConnection'], ParentType, ContextType, RequireFields<DiscussionDiscussionChannelsConnectionArgs, 'directed'>>;
-  DownloadableFiles?: Resolver<Array<ResolversTypes['DownloadableFile']>, ParentType, ContextType>;
+  DownloadableFiles?: Resolver<Array<ResolversTypes['DownloadableFile']>, ParentType, ContextType, RequireFields<DiscussionDownloadableFilesArgs, 'directed'>>;
+  DownloadableFilesAggregate?: Resolver<Maybe<ResolversTypes['DiscussionDownloadableFileDownloadableFilesAggregationSelection']>, ParentType, ContextType, RequireFields<DiscussionDownloadableFilesAggregateArgs, 'directed'>>;
+  DownloadableFilesConnection?: Resolver<ResolversTypes['DiscussionDownloadableFilesConnection'], ParentType, ContextType, RequireFields<DiscussionDownloadableFilesConnectionArgs, 'directed'>>;
   FeedbackComments?: Resolver<Array<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<DiscussionFeedbackCommentsArgs, 'directed'>>;
   FeedbackCommentsAggregate?: Resolver<Maybe<ResolversTypes['DiscussionCommentFeedbackCommentsAggregationSelection']>, ParentType, ContextType, RequireFields<DiscussionFeedbackCommentsAggregateArgs, 'directed'>>;
   FeedbackCommentsConnection?: Resolver<ResolversTypes['DiscussionFeedbackCommentsConnection'], ParentType, ContextType, RequireFields<DiscussionFeedbackCommentsConnectionArgs, 'directed'>>;
@@ -63113,6 +63497,7 @@ export type DiscussionConnectedRelationshipsResolvers<ContextType = any, ParentT
   Album?: Resolver<Maybe<ResolversTypes['DiscussionAlbumConnectedRelationship']>, ParentType, ContextType>;
   Author?: Resolver<Maybe<ResolversTypes['DiscussionAuthorConnectedRelationship']>, ParentType, ContextType>;
   DiscussionChannels?: Resolver<Maybe<ResolversTypes['DiscussionDiscussionChannelsConnectedRelationship']>, ParentType, ContextType>;
+  DownloadableFiles?: Resolver<Maybe<ResolversTypes['DiscussionDownloadableFilesConnectedRelationship']>, ParentType, ContextType>;
   FeedbackComments?: Resolver<Maybe<ResolversTypes['DiscussionFeedbackCommentsConnectedRelationship']>, ParentType, ContextType>;
   PastBodyVersions?: Resolver<Maybe<ResolversTypes['DiscussionPastBodyVersionsConnectedRelationship']>, ParentType, ContextType>;
   PastTitleVersions?: Resolver<Maybe<ResolversTypes['DiscussionPastTitleVersionsConnectedRelationship']>, ParentType, ContextType>;
@@ -63164,6 +63549,47 @@ export type DiscussionDiscussionChannelsConnectionResolvers<ContextType = any, P
 export type DiscussionDiscussionChannelsRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscussionDiscussionChannelsRelationship'] = ResolversParentTypes['DiscussionDiscussionChannelsRelationship']> = {
   cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   node?: Resolver<ResolversTypes['DiscussionChannel'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DiscussionDownloadableFileDownloadableFilesAggregationSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscussionDownloadableFileDownloadableFilesAggregationSelection'] = ResolversParentTypes['DiscussionDownloadableFileDownloadableFilesAggregationSelection']> = {
+  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['DiscussionDownloadableFileDownloadableFilesNodeAggregateSelection']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DiscussionDownloadableFileDownloadableFilesNodeAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscussionDownloadableFileDownloadableFilesNodeAggregateSelection'] = ResolversParentTypes['DiscussionDownloadableFileDownloadableFilesNodeAggregateSelection']> = {
+  createdAt?: Resolver<ResolversTypes['DateTimeAggregateSelection'], ParentType, ContextType>;
+  downloadCountTotal?: Resolver<ResolversTypes['IntAggregateSelection'], ParentType, ContextType>;
+  downloadCountUnique?: Resolver<ResolversTypes['IntAggregateSelection'], ParentType, ContextType>;
+  fileName?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['IDAggregateSelection'], ParentType, ContextType>;
+  paywallExpiresAt?: Resolver<ResolversTypes['DateTimeAggregateSelection'], ParentType, ContextType>;
+  priceCents?: Resolver<ResolversTypes['IntAggregateSelection'], ParentType, ContextType>;
+  priceCurrency?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  scanCheckedAt?: Resolver<ResolversTypes['DateTimeAggregateSelection'], ParentType, ContextType>;
+  size?: Resolver<ResolversTypes['IntAggregateSelection'], ParentType, ContextType>;
+  stripePriceId?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  stripeProductId?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  url?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DiscussionDownloadableFilesConnectedRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscussionDownloadableFilesConnectedRelationship'] = ResolversParentTypes['DiscussionDownloadableFilesConnectedRelationship']> = {
+  node?: Resolver<ResolversTypes['DownloadableFileEventPayload'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DiscussionDownloadableFilesConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscussionDownloadableFilesConnection'] = ResolversParentTypes['DiscussionDownloadableFilesConnection']> = {
+  edges?: Resolver<Array<ResolversTypes['DiscussionDownloadableFilesRelationship']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DiscussionDownloadableFilesRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscussionDownloadableFilesRelationship'] = ResolversParentTypes['DiscussionDownloadableFilesRelationship']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['DownloadableFile'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -71299,6 +71725,11 @@ export type Resolvers<ContextType = any> = {
   DiscussionDiscussionChannelsConnectedRelationship?: DiscussionDiscussionChannelsConnectedRelationshipResolvers<ContextType>;
   DiscussionDiscussionChannelsConnection?: DiscussionDiscussionChannelsConnectionResolvers<ContextType>;
   DiscussionDiscussionChannelsRelationship?: DiscussionDiscussionChannelsRelationshipResolvers<ContextType>;
+  DiscussionDownloadableFileDownloadableFilesAggregationSelection?: DiscussionDownloadableFileDownloadableFilesAggregationSelectionResolvers<ContextType>;
+  DiscussionDownloadableFileDownloadableFilesNodeAggregateSelection?: DiscussionDownloadableFileDownloadableFilesNodeAggregateSelectionResolvers<ContextType>;
+  DiscussionDownloadableFilesConnectedRelationship?: DiscussionDownloadableFilesConnectedRelationshipResolvers<ContextType>;
+  DiscussionDownloadableFilesConnection?: DiscussionDownloadableFilesConnectionResolvers<ContextType>;
+  DiscussionDownloadableFilesRelationship?: DiscussionDownloadableFilesRelationshipResolvers<ContextType>;
   DiscussionEdge?: DiscussionEdgeResolvers<ContextType>;
   DiscussionEventPayload?: DiscussionEventPayloadResolvers<ContextType>;
   DiscussionFeedbackCommentsConnectedRelationship?: DiscussionFeedbackCommentsConnectedRelationshipResolvers<ContextType>;
