@@ -27,6 +27,7 @@ import seedDataForCypressTestsResolver from "./customResolvers/mutations/seedDat
 import inviteForumOwner from './customResolvers/mutations/inviteForumOwner.js';
 import removeForumOwner from './customResolvers/mutations/removeForumOwner.js';
 import acceptForumOwnerInvite from './customResolvers/mutations/acceptForumOwnerInvite.js';
+import becomeForumAdmin from './customResolvers/mutations/becomeForumAdmin.js';
 import inviteForumMod from './customResolvers/mutations/inviteForumMod.js';
 import removeForumMod from './customResolvers/mutations/removeForumMod.js';
 import acceptForumModInvite from './customResolvers/mutations/acceptForumModInvite.js';
@@ -196,6 +197,9 @@ export default function (driver) {
                 Channel
             }),
             acceptForumOwnerInvite: acceptForumOwnerInvite({
+                Channel,
+            }),
+            becomeForumAdmin: becomeForumAdmin({
                 Channel,
             }),
             inviteForumMod: inviteForumMod({

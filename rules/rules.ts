@@ -20,6 +20,7 @@ import { canArchiveAndUnarchiveEvent } from "./permission/canArchiveAndUnarchive
 import { canArchiveAndUnarchiveComment } from "./permission/canArchiveAndUnarchiveComment.js";
 import { canReport } from "./permission/canReport.js";
 import { canSuspendAndUnsuspendUser } from "./permission/canSuspendAndUnsuspendUser.js";
+import { canBecomeForumAdmin } from "./permission/canBecomeForumAdmin.js";
 import {
   CommentCreateInput,
   DiscussionCreateInput,
@@ -521,6 +522,7 @@ const ruleList = {
   canArchiveAndUnarchiveComment,
   canReport,
   canSuspendAndUnsuspendUser,
+  canBecomeForumAdmin,
 };
 
 export default ruleList;

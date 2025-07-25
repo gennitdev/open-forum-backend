@@ -34,6 +34,7 @@ const {
   canArchiveAndUnarchiveEvent,
   isAuthenticatedAndVerified,
   isAuthenticated,
+  canBecomeForumAdmin,
 } = rules;
 
 const permissionList = shield({
@@ -118,6 +119,7 @@ const permissionList = shield({
       cancelInviteForumOwner: and(isAuthenticated, isChannelOwner),
       removeForumOwner: and(isAuthenticated, isChannelOwner),
       acceptForumOwnerInvite: and(isAuthenticated),
+      becomeForumAdmin: and(isAuthenticated, canBecomeForumAdmin),
       inviteForumMod: and(isAuthenticated, isChannelOwner),
       cancelInviteForumMod: and(isAuthenticated, isChannelOwner),
       removeForumMod: and(isAuthenticated, isChannelOwner),

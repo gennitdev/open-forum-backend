@@ -1,6 +1,6 @@
 import { and, shield, allow, deny, or } from "graphql-shield";
 import rules from "./rules/rules.js";
-const { isAdmin, isAccountOwner, isChannelOwner, isDiscussionOwner, isEventOwner, isCommentAuthor, isDiscussionChannelOwner, canCreateChannel, canCreateDiscussion, canCreateEvent, canCreateComment, canUploadFile, canUpvoteComment, canUpvoteDiscussion, issueIsValid, createChannelInputIsValid, updateChannelInputIsValid, createDiscussionInputIsValid, updateDiscussionInputIsValid, createEventInputIsValid, updateEventInputIsValid, createCommentInputIsValid, updateCommentInputIsValid, createDownloadableFileInputIsValid, updateDownloadableFileInputIsValid, canReport, canSuspendAndUnsuspendUser, canArchiveAndUnarchiveComment, canArchiveAndUnarchiveDiscussion, canArchiveAndUnarchiveEvent, isAuthenticatedAndVerified, isAuthenticated, } = rules;
+const { isAdmin, isAccountOwner, isChannelOwner, isDiscussionOwner, isEventOwner, isCommentAuthor, isDiscussionChannelOwner, canCreateChannel, canCreateDiscussion, canCreateEvent, canCreateComment, canUploadFile, canUpvoteComment, canUpvoteDiscussion, issueIsValid, createChannelInputIsValid, updateChannelInputIsValid, createDiscussionInputIsValid, updateDiscussionInputIsValid, createEventInputIsValid, updateEventInputIsValid, createCommentInputIsValid, updateCommentInputIsValid, createDownloadableFileInputIsValid, updateDownloadableFileInputIsValid, canReport, canSuspendAndUnsuspendUser, canArchiveAndUnarchiveComment, canArchiveAndUnarchiveDiscussion, canArchiveAndUnarchiveEvent, isAuthenticatedAndVerified, isAuthenticated, canBecomeForumAdmin, } = rules;
 const permissionList = shield({
     Query: {
         "*": allow,
@@ -68,6 +68,7 @@ const permissionList = shield({
         cancelInviteForumOwner: and(isAuthenticated, isChannelOwner),
         removeForumOwner: and(isAuthenticated, isChannelOwner),
         acceptForumOwnerInvite: and(isAuthenticated),
+        becomeForumAdmin: and(isAuthenticated, canBecomeForumAdmin),
         inviteForumMod: and(isAuthenticated, isChannelOwner),
         cancelInviteForumMod: and(isAuthenticated, isChannelOwner),
         removeForumMod: and(isAuthenticated, isChannelOwner),

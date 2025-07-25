@@ -736,6 +736,7 @@ const typeDefinitions = gql `
     ): Boolean
     removeForumOwner(channelUniqueName: String!, username: String!): Boolean
     acceptForumOwnerInvite(channelUniqueName: String!): Boolean
+    becomeForumAdmin(channelUniqueName: String!): Boolean
     inviteForumMod(
       inviteeUsername: String!
       channelUniqueName: String!
