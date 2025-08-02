@@ -29,11 +29,12 @@ const getSortedChannelsResolver = (input: Input) => {
         WITH c, COLLECT(DISTINCT t) AS tags
         WHERE SIZE($tags) = 0 OR ANY(tag IN tags WHERE tag.text IN $tags)
         
-        // Count valid DiscussionChannels
+        // Count valid DiscussionChannels (excluding hasDownload: true)
         CALL {
           WITH c
           MATCH (c)<-[:POSTED_IN_CHANNEL]-(dc:DiscussionChannel)
-          WHERE EXISTS((dc)-[:POSTED_IN_CHANNEL]->(:Discussion))
+          MATCH (dc)-[:POSTED_IN_CHANNEL]->(d:Discussion)
+          WHERE d.hasDownload IS NULL OR d.hasDownload = false
           RETURN COUNT(DISTINCT dc) AS validDiscussionChannelsCount
         }
         
