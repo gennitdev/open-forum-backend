@@ -24,7 +24,7 @@
     "@graphql-tools/schema": "^10.0.2",
     "@neo4j/graphql": "^5.10.0",
     "@neo4j/graphql-ogm": "^5.9.1",
-    "@sendgrid/mail": "^8.1.4",
+    "@sendgrid/mail": "^8.1.5",
     "apollo-server": "^3.13.0",
     "axios": "^1.7.7",
     "dotenv": "^16.0.0",
