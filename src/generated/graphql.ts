@@ -33520,6 +33520,7 @@ export type Mutation = {
   archiveComment?: Maybe<Issue>;
   archiveDiscussion?: Maybe<Issue>;
   archiveEvent?: Maybe<Issue>;
+  becomeForumAdmin?: Maybe<Scalars['Boolean']['output']>;
   cancelInviteForumMod?: Maybe<Scalars['Boolean']['output']>;
   cancelInviteForumOwner?: Maybe<Scalars['Boolean']['output']>;
   createActivities: CreateActivitiesMutationResponse;
@@ -33782,6 +33783,11 @@ export type MutationArchiveEventArgs = {
   reportText: Scalars['String']['input'];
   selectedForumRules: Array<Scalars['String']['input']>;
   selectedServerRules: Array<Scalars['String']['input']>;
+};
+
+
+export type MutationBecomeForumAdminArgs = {
+  channelUniqueName: Scalars['String']['input'];
 };
 
 
@@ -67373,6 +67379,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   archiveComment?: Resolver<Maybe<ResolversTypes['Issue']>, ParentType, ContextType, RequireFields<MutationArchiveCommentArgs, 'commentId' | 'reportText' | 'selectedForumRules' | 'selectedServerRules'>>;
   archiveDiscussion?: Resolver<Maybe<ResolversTypes['Issue']>, ParentType, ContextType, RequireFields<MutationArchiveDiscussionArgs, 'channelUniqueName' | 'discussionId' | 'reportText' | 'selectedForumRules' | 'selectedServerRules'>>;
   archiveEvent?: Resolver<Maybe<ResolversTypes['Issue']>, ParentType, ContextType, RequireFields<MutationArchiveEventArgs, 'channelUniqueName' | 'eventId' | 'reportText' | 'selectedForumRules' | 'selectedServerRules'>>;
+  becomeForumAdmin?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationBecomeForumAdminArgs, 'channelUniqueName'>>;
   cancelInviteForumMod?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationCancelInviteForumModArgs, 'channelUniqueName' | 'inviteeUsername'>>;
   cancelInviteForumOwner?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationCancelInviteForumOwnerArgs, 'channelUniqueName' | 'inviteeUsername'>>;
   createActivities?: Resolver<ResolversTypes['CreateActivitiesMutationResponse'], ParentType, ContextType, RequireFields<MutationCreateActivitiesArgs, 'input'>>;
