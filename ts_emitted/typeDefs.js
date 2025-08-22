@@ -267,8 +267,6 @@ const typeDefinitions = gql `
     url:      String!
     createdAt: DateTime! @timestamp(operations: [CREATE])
 
-    labelOptions: [FilterOption!]! @relationship(type: "HAS_LABEL_OPTION", direction: OUT)
-
     # commerce fields
     priceModel: PriceModel! @default(value: FREE)
     priceCents: Int
@@ -313,6 +311,7 @@ const typeDefinitions = gql `
   type FilterOption {
     id: ID!
     order: Int!
+    filterKey: String @cypher(statement: "RETURN this.group.key", columnName: "filterKey")
     value: String! # computer‑friendly, e.g. "10x20"
     displayName: String! # human‑friendly, e.g. "10 × 20"
     group: FilterGroup! @relationship(type: "HAS_FILTER_OPTION", direction: IN)
@@ -399,6 +398,7 @@ const typeDefinitions = gql `
     Answers: [Comment!]! @relationship(type: "IS_REPLY_TO", direction: IN)
     SubscribedToNotifications: [User!]!
       @relationship(type: "SUBSCRIBED_TO_NOTIFICATIONS", direction: IN)
+    LabelOptions: [FilterOption!]! @relationship(type: "HAS_LABEL_OPTION", direction: OUT)
   }
 
   type Discussion {
