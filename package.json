@@ -52,5 +52,9 @@
     "@types/nodemailer": "^6.4.15",
     "concurrently": "^8.2.2",
     "typescript": "^5.3.3"
+  },
+  "overrides": {
+    "whatwg-url": "^11.0.0",
+    "tr46": "^4.1.0"
   }
 }
