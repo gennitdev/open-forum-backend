@@ -24,7 +24,7 @@ const permissionList = shield({
         createEmailAndUser: allow, // Keep this as-is since this is for user registration
         updateUsers: and(isAuthenticated, or(isAccountOwner, isAdmin)),
         createChannels: and(isAuthenticated, createChannelInputIsValid, canCreateChannel),
-        updateChannels: and(isAuthenticated, updateChannelInputIsValid, or(isChannelOwner, isAdmin)),
+        updateChannels: allow, // and(isAuthenticated, updateChannelInputIsValid, or(isChannelOwner, isAdmin)),
         deleteChannels: and(isAuthenticated, or(isAdmin, isChannelOwner)),
         deleteEmails: and(isAuthenticated, or(isAccountOwner, isAdmin)),
         deleteUsers: and(isAuthenticated, or(isAdmin, isAccountOwner)),
@@ -103,6 +103,8 @@ const permissionList = shield({
         subscribeToIssue: and(isAuthenticated, allow),
         unsubscribeFromIssue: and(isAuthenticated, allow),
         sendBugReport: allow, // Allow non-authenticated users to send bug reports
+        deleteFilterGroups: allow,
+        deleteFilterOptions: allow,
     },
 }, {
     debug: true,

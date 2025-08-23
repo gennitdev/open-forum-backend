@@ -311,7 +311,6 @@ const typeDefinitions = gql `
   type FilterOption {
     id: ID!
     order: Int!
-    filterKey: String @cypher(statement: "RETURN this.group.key", columnName: "filterKey")
     value: String! # computer‑friendly, e.g. "10x20"
     displayName: String! # human‑friendly, e.g. "10 × 20"
     group: FilterGroup! @relationship(type: "HAS_FILTER_OPTION", direction: IN)

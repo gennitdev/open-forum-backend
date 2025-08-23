@@ -13966,6 +13966,9 @@ export type DiscussionChannel = {
   Discussion?: Maybe<Discussion>;
   DiscussionAggregate?: Maybe<DiscussionChannelDiscussionDiscussionAggregationSelection>;
   DiscussionConnection: DiscussionChannelDiscussionConnection;
+  LabelOptions: Array<FilterOption>;
+  LabelOptionsAggregate?: Maybe<DiscussionChannelFilterOptionLabelOptionsAggregationSelection>;
+  LabelOptionsConnection: DiscussionChannelLabelOptionsConnection;
   RelatedIssues: Array<Issue>;
   RelatedIssuesAggregate?: Maybe<DiscussionChannelIssueRelatedIssuesAggregationSelection>;
   RelatedIssuesConnection: DiscussionChannelRelatedIssuesConnection;
@@ -14072,6 +14075,28 @@ export type DiscussionChannelDiscussionConnectionArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<Array<DiscussionChannelDiscussionConnectionSort>>;
   where?: InputMaybe<DiscussionChannelDiscussionConnectionWhere>;
+};
+
+
+export type DiscussionChannelLabelOptionsArgs = {
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  options?: InputMaybe<FilterOptionOptions>;
+  where?: InputMaybe<FilterOptionWhere>;
+};
+
+
+export type DiscussionChannelLabelOptionsAggregateArgs = {
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  where?: InputMaybe<FilterOptionWhere>;
+};
+
+
+export type DiscussionChannelLabelOptionsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  directed?: InputMaybe<Scalars['Boolean']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<Array<DiscussionChannelLabelOptionsConnectionSort>>;
+  where?: InputMaybe<DiscussionChannelLabelOptionsConnectionWhere>;
 };
 
 
@@ -14698,6 +14723,7 @@ export type DiscussionChannelConnectInput = {
   Channel?: InputMaybe<DiscussionChannelChannelConnectFieldInput>;
   Comments?: InputMaybe<Array<DiscussionChannelCommentsConnectFieldInput>>;
   Discussion?: InputMaybe<DiscussionChannelDiscussionConnectFieldInput>;
+  LabelOptions?: InputMaybe<Array<DiscussionChannelLabelOptionsConnectFieldInput>>;
   RelatedIssues?: InputMaybe<Array<DiscussionChannelRelatedIssuesConnectFieldInput>>;
   SubscribedToNotifications?: InputMaybe<Array<DiscussionChannelSubscribedToNotificationsConnectFieldInput>>;
   UpvotedByUsers?: InputMaybe<Array<DiscussionChannelUpvotedByUsersConnectFieldInput>>;
@@ -14719,6 +14745,7 @@ export type DiscussionChannelConnectedRelationships = {
   Channel?: Maybe<DiscussionChannelChannelConnectedRelationship>;
   Comments?: Maybe<DiscussionChannelCommentsConnectedRelationship>;
   Discussion?: Maybe<DiscussionChannelDiscussionConnectedRelationship>;
+  LabelOptions?: Maybe<DiscussionChannelLabelOptionsConnectedRelationship>;
   RelatedIssues?: Maybe<DiscussionChannelRelatedIssuesConnectedRelationship>;
   SubscribedToNotifications?: Maybe<DiscussionChannelSubscribedToNotificationsConnectedRelationship>;
   UpvotedByUsers?: Maybe<DiscussionChannelUpvotedByUsersConnectedRelationship>;
@@ -14729,6 +14756,7 @@ export type DiscussionChannelCreateInput = {
   Channel?: InputMaybe<DiscussionChannelChannelFieldInput>;
   Comments?: InputMaybe<DiscussionChannelCommentsFieldInput>;
   Discussion?: InputMaybe<DiscussionChannelDiscussionFieldInput>;
+  LabelOptions?: InputMaybe<DiscussionChannelLabelOptionsFieldInput>;
   RelatedIssues?: InputMaybe<DiscussionChannelRelatedIssuesFieldInput>;
   SubscribedToNotifications?: InputMaybe<DiscussionChannelSubscribedToNotificationsFieldInput>;
   UpvotedByUsers?: InputMaybe<DiscussionChannelUpvotedByUsersFieldInput>;
@@ -14753,6 +14781,7 @@ export type DiscussionChannelDeleteInput = {
   Channel?: InputMaybe<DiscussionChannelChannelDeleteFieldInput>;
   Comments?: InputMaybe<Array<DiscussionChannelCommentsDeleteFieldInput>>;
   Discussion?: InputMaybe<DiscussionChannelDiscussionDeleteFieldInput>;
+  LabelOptions?: InputMaybe<Array<DiscussionChannelLabelOptionsDeleteFieldInput>>;
   RelatedIssues?: InputMaybe<Array<DiscussionChannelRelatedIssuesDeleteFieldInput>>;
   SubscribedToNotifications?: InputMaybe<Array<DiscussionChannelSubscribedToNotificationsDeleteFieldInput>>;
   UpvotedByUsers?: InputMaybe<Array<DiscussionChannelUpvotedByUsersDeleteFieldInput>>;
@@ -14770,6 +14799,7 @@ export type DiscussionChannelDisconnectInput = {
   Channel?: InputMaybe<DiscussionChannelChannelDisconnectFieldInput>;
   Comments?: InputMaybe<Array<DiscussionChannelCommentsDisconnectFieldInput>>;
   Discussion?: InputMaybe<DiscussionChannelDiscussionDisconnectFieldInput>;
+  LabelOptions?: InputMaybe<Array<DiscussionChannelLabelOptionsDisconnectFieldInput>>;
   RelatedIssues?: InputMaybe<Array<DiscussionChannelRelatedIssuesDisconnectFieldInput>>;
   SubscribedToNotifications?: InputMaybe<Array<DiscussionChannelSubscribedToNotificationsDisconnectFieldInput>>;
   UpvotedByUsers?: InputMaybe<Array<DiscussionChannelUpvotedByUsersDisconnectFieldInput>>;
@@ -14949,6 +14979,20 @@ export type DiscussionChannelEventPayload = {
   weightedVotesCount?: Maybe<Scalars['Float']['output']>;
 };
 
+export type DiscussionChannelFilterOptionLabelOptionsAggregationSelection = {
+  __typename?: 'DiscussionChannelFilterOptionLabelOptionsAggregationSelection';
+  count: Scalars['Int']['output'];
+  node?: Maybe<DiscussionChannelFilterOptionLabelOptionsNodeAggregateSelection>;
+};
+
+export type DiscussionChannelFilterOptionLabelOptionsNodeAggregateSelection = {
+  __typename?: 'DiscussionChannelFilterOptionLabelOptionsNodeAggregateSelection';
+  displayName: StringAggregateSelection;
+  id: IdAggregateSelection;
+  order: IntAggregateSelection;
+  value: StringAggregateSelection;
+};
+
 export type DiscussionChannelInfo = {
   __typename?: 'DiscussionChannelInfo';
   Channel?: Maybe<ChannelInfo>;
@@ -15099,6 +15143,146 @@ export type DiscussionChannelIssueRelatedIssuesNodeAggregateSelection = {
   relatedUsername: StringAggregateSelection;
   title: StringAggregateSelection;
   updatedAt: DateTimeAggregateSelection;
+};
+
+export type DiscussionChannelLabelOptionsAggregateInput = {
+  AND?: InputMaybe<Array<DiscussionChannelLabelOptionsAggregateInput>>;
+  NOT?: InputMaybe<DiscussionChannelLabelOptionsAggregateInput>;
+  OR?: InputMaybe<Array<DiscussionChannelLabelOptionsAggregateInput>>;
+  count?: InputMaybe<Scalars['Int']['input']>;
+  count_GT?: InputMaybe<Scalars['Int']['input']>;
+  count_GTE?: InputMaybe<Scalars['Int']['input']>;
+  count_LT?: InputMaybe<Scalars['Int']['input']>;
+  count_LTE?: InputMaybe<Scalars['Int']['input']>;
+  node?: InputMaybe<DiscussionChannelLabelOptionsNodeAggregationWhereInput>;
+};
+
+export type DiscussionChannelLabelOptionsConnectFieldInput = {
+  connect?: InputMaybe<Array<FilterOptionConnectInput>>;
+  /** Whether or not to overwrite any matching relationship with the new properties. */
+  overwrite?: Scalars['Boolean']['input'];
+  where?: InputMaybe<FilterOptionConnectWhere>;
+};
+
+export type DiscussionChannelLabelOptionsConnectedRelationship = {
+  __typename?: 'DiscussionChannelLabelOptionsConnectedRelationship';
+  node: FilterOptionEventPayload;
+};
+
+export type DiscussionChannelLabelOptionsConnection = {
+  __typename?: 'DiscussionChannelLabelOptionsConnection';
+  edges: Array<DiscussionChannelLabelOptionsRelationship>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type DiscussionChannelLabelOptionsConnectionSort = {
+  node?: InputMaybe<FilterOptionSort>;
+};
+
+export type DiscussionChannelLabelOptionsConnectionWhere = {
+  AND?: InputMaybe<Array<DiscussionChannelLabelOptionsConnectionWhere>>;
+  NOT?: InputMaybe<DiscussionChannelLabelOptionsConnectionWhere>;
+  OR?: InputMaybe<Array<DiscussionChannelLabelOptionsConnectionWhere>>;
+  node?: InputMaybe<FilterOptionWhere>;
+};
+
+export type DiscussionChannelLabelOptionsCreateFieldInput = {
+  node: FilterOptionCreateInput;
+};
+
+export type DiscussionChannelLabelOptionsDeleteFieldInput = {
+  delete?: InputMaybe<FilterOptionDeleteInput>;
+  where?: InputMaybe<DiscussionChannelLabelOptionsConnectionWhere>;
+};
+
+export type DiscussionChannelLabelOptionsDisconnectFieldInput = {
+  disconnect?: InputMaybe<FilterOptionDisconnectInput>;
+  where?: InputMaybe<DiscussionChannelLabelOptionsConnectionWhere>;
+};
+
+export type DiscussionChannelLabelOptionsFieldInput = {
+  connect?: InputMaybe<Array<DiscussionChannelLabelOptionsConnectFieldInput>>;
+  create?: InputMaybe<Array<DiscussionChannelLabelOptionsCreateFieldInput>>;
+};
+
+export type DiscussionChannelLabelOptionsNodeAggregationWhereInput = {
+  AND?: InputMaybe<Array<DiscussionChannelLabelOptionsNodeAggregationWhereInput>>;
+  NOT?: InputMaybe<DiscussionChannelLabelOptionsNodeAggregationWhereInput>;
+  OR?: InputMaybe<Array<DiscussionChannelLabelOptionsNodeAggregationWhereInput>>;
+  displayName_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  displayName_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  displayName_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  displayName_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  displayName_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  displayName_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  displayName_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  displayName_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  displayName_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  displayName_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  displayName_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  displayName_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  displayName_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  displayName_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  displayName_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  order_AVERAGE_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  order_AVERAGE_GT?: InputMaybe<Scalars['Float']['input']>;
+  order_AVERAGE_GTE?: InputMaybe<Scalars['Float']['input']>;
+  order_AVERAGE_LT?: InputMaybe<Scalars['Float']['input']>;
+  order_AVERAGE_LTE?: InputMaybe<Scalars['Float']['input']>;
+  order_MAX_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  order_MAX_GT?: InputMaybe<Scalars['Int']['input']>;
+  order_MAX_GTE?: InputMaybe<Scalars['Int']['input']>;
+  order_MAX_LT?: InputMaybe<Scalars['Int']['input']>;
+  order_MAX_LTE?: InputMaybe<Scalars['Int']['input']>;
+  order_MIN_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  order_MIN_GT?: InputMaybe<Scalars['Int']['input']>;
+  order_MIN_GTE?: InputMaybe<Scalars['Int']['input']>;
+  order_MIN_LT?: InputMaybe<Scalars['Int']['input']>;
+  order_MIN_LTE?: InputMaybe<Scalars['Int']['input']>;
+  order_SUM_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  order_SUM_GT?: InputMaybe<Scalars['Int']['input']>;
+  order_SUM_GTE?: InputMaybe<Scalars['Int']['input']>;
+  order_SUM_LT?: InputMaybe<Scalars['Int']['input']>;
+  order_SUM_LTE?: InputMaybe<Scalars['Int']['input']>;
+  value_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
+  value_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
+  value_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
+  value_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
+  value_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
+  value_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  value_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  value_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  value_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  value_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+  value_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
+  value_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
+  value_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
+  value_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
+  value_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type DiscussionChannelLabelOptionsRelationship = {
+  __typename?: 'DiscussionChannelLabelOptionsRelationship';
+  cursor: Scalars['String']['output'];
+  node: FilterOption;
+};
+
+export type DiscussionChannelLabelOptionsRelationshipSubscriptionWhere = {
+  node?: InputMaybe<FilterOptionSubscriptionWhere>;
+};
+
+export type DiscussionChannelLabelOptionsUpdateConnectionInput = {
+  node?: InputMaybe<FilterOptionUpdateInput>;
+};
+
+export type DiscussionChannelLabelOptionsUpdateFieldInput = {
+  connect?: InputMaybe<Array<DiscussionChannelLabelOptionsConnectFieldInput>>;
+  create?: InputMaybe<Array<DiscussionChannelLabelOptionsCreateFieldInput>>;
+  delete?: InputMaybe<Array<DiscussionChannelLabelOptionsDeleteFieldInput>>;
+  disconnect?: InputMaybe<Array<DiscussionChannelLabelOptionsDisconnectFieldInput>>;
+  update?: InputMaybe<DiscussionChannelLabelOptionsUpdateConnectionInput>;
+  where?: InputMaybe<DiscussionChannelLabelOptionsConnectionWhere>;
 };
 
 export type DiscussionChannelListFormat = {
@@ -15411,6 +15595,7 @@ export type DiscussionChannelRelationInput = {
   Channel?: InputMaybe<DiscussionChannelChannelCreateFieldInput>;
   Comments?: InputMaybe<Array<DiscussionChannelCommentsCreateFieldInput>>;
   Discussion?: InputMaybe<DiscussionChannelDiscussionCreateFieldInput>;
+  LabelOptions?: InputMaybe<Array<DiscussionChannelLabelOptionsCreateFieldInput>>;
   RelatedIssues?: InputMaybe<Array<DiscussionChannelRelatedIssuesCreateFieldInput>>;
   SubscribedToNotifications?: InputMaybe<Array<DiscussionChannelSubscribedToNotificationsCreateFieldInput>>;
   UpvotedByUsers?: InputMaybe<Array<DiscussionChannelUpvotedByUsersCreateFieldInput>>;
@@ -15455,6 +15640,7 @@ export type DiscussionChannelRelationshipsSubscriptionWhere = {
   Channel?: InputMaybe<DiscussionChannelChannelRelationshipSubscriptionWhere>;
   Comments?: InputMaybe<DiscussionChannelCommentsRelationshipSubscriptionWhere>;
   Discussion?: InputMaybe<DiscussionChannelDiscussionRelationshipSubscriptionWhere>;
+  LabelOptions?: InputMaybe<DiscussionChannelLabelOptionsRelationshipSubscriptionWhere>;
   RelatedIssues?: InputMaybe<DiscussionChannelRelatedIssuesRelationshipSubscriptionWhere>;
   SubscribedToNotifications?: InputMaybe<DiscussionChannelSubscribedToNotificationsRelationshipSubscriptionWhere>;
   UpvotedByUsers?: InputMaybe<DiscussionChannelUpvotedByUsersRelationshipSubscriptionWhere>;
@@ -15833,6 +16019,7 @@ export type DiscussionChannelUpdateInput = {
   Channel?: InputMaybe<DiscussionChannelChannelUpdateFieldInput>;
   Comments?: InputMaybe<Array<DiscussionChannelCommentsUpdateFieldInput>>;
   Discussion?: InputMaybe<DiscussionChannelDiscussionUpdateFieldInput>;
+  LabelOptions?: InputMaybe<Array<DiscussionChannelLabelOptionsUpdateFieldInput>>;
   RelatedIssues?: InputMaybe<Array<DiscussionChannelRelatedIssuesUpdateFieldInput>>;
   SubscribedToNotifications?: InputMaybe<Array<DiscussionChannelSubscribedToNotificationsUpdateFieldInput>>;
   UpvotedByUsers?: InputMaybe<Array<DiscussionChannelUpvotedByUsersUpdateFieldInput>>;
@@ -16268,6 +16455,23 @@ export type DiscussionChannelWhere = {
   DiscussionConnection?: InputMaybe<DiscussionChannelDiscussionConnectionWhere>;
   DiscussionConnection_NOT?: InputMaybe<DiscussionChannelDiscussionConnectionWhere>;
   Discussion_NOT?: InputMaybe<DiscussionWhere>;
+  LabelOptionsAggregate?: InputMaybe<DiscussionChannelLabelOptionsAggregateInput>;
+  /** Return DiscussionChannels where all of the related DiscussionChannelLabelOptionsConnections match this filter */
+  LabelOptionsConnection_ALL?: InputMaybe<DiscussionChannelLabelOptionsConnectionWhere>;
+  /** Return DiscussionChannels where none of the related DiscussionChannelLabelOptionsConnections match this filter */
+  LabelOptionsConnection_NONE?: InputMaybe<DiscussionChannelLabelOptionsConnectionWhere>;
+  /** Return DiscussionChannels where one of the related DiscussionChannelLabelOptionsConnections match this filter */
+  LabelOptionsConnection_SINGLE?: InputMaybe<DiscussionChannelLabelOptionsConnectionWhere>;
+  /** Return DiscussionChannels where some of the related DiscussionChannelLabelOptionsConnections match this filter */
+  LabelOptionsConnection_SOME?: InputMaybe<DiscussionChannelLabelOptionsConnectionWhere>;
+  /** Return DiscussionChannels where all of the related FilterOptions match this filter */
+  LabelOptions_ALL?: InputMaybe<FilterOptionWhere>;
+  /** Return DiscussionChannels where none of the related FilterOptions match this filter */
+  LabelOptions_NONE?: InputMaybe<FilterOptionWhere>;
+  /** Return DiscussionChannels where one of the related FilterOptions match this filter */
+  LabelOptions_SINGLE?: InputMaybe<FilterOptionWhere>;
+  /** Return DiscussionChannels where some of the related FilterOptions match this filter */
+  LabelOptions_SOME?: InputMaybe<FilterOptionWhere>;
   NOT?: InputMaybe<DiscussionChannelWhere>;
   OR?: InputMaybe<Array<DiscussionChannelWhere>>;
   RelatedIssuesAggregate?: InputMaybe<DiscussionChannelRelatedIssuesAggregateInput>;
@@ -17955,9 +18159,6 @@ export type DownloadableFile = {
   fileName: Scalars['String']['output'];
   id: Scalars['ID']['output'];
   kind: FileKind;
-  labelOptions: Array<FilterOption>;
-  labelOptionsAggregate?: Maybe<DownloadableFileFilterOptionLabelOptionsAggregationSelection>;
-  labelOptionsConnection: DownloadableFileLabelOptionsConnection;
   license?: Maybe<License>;
   licenseAggregate?: Maybe<DownloadableFileLicenseLicenseAggregationSelection>;
   licenseConnection: DownloadableFileLicenseConnection;
@@ -17977,28 +18178,6 @@ export type DownloadableFile = {
   versions: Array<FileVersion>;
   versionsAggregate?: Maybe<DownloadableFileFileVersionVersionsAggregationSelection>;
   versionsConnection: DownloadableFileVersionsConnection;
-};
-
-
-export type DownloadableFileLabelOptionsArgs = {
-  directed?: InputMaybe<Scalars['Boolean']['input']>;
-  options?: InputMaybe<FilterOptionOptions>;
-  where?: InputMaybe<FilterOptionWhere>;
-};
-
-
-export type DownloadableFileLabelOptionsAggregateArgs = {
-  directed?: InputMaybe<Scalars['Boolean']['input']>;
-  where?: InputMaybe<FilterOptionWhere>;
-};
-
-
-export type DownloadableFileLabelOptionsConnectionArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  directed?: InputMaybe<Scalars['Boolean']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  sort?: InputMaybe<Array<DownloadableFileLabelOptionsConnectionSort>>;
-  where?: InputMaybe<DownloadableFileLabelOptionsConnectionWhere>;
 };
 
 
@@ -18086,7 +18265,6 @@ export type DownloadableFileAggregateSelection = {
 };
 
 export type DownloadableFileConnectInput = {
-  labelOptions?: InputMaybe<Array<DownloadableFileLabelOptionsConnectFieldInput>>;
   license?: InputMaybe<DownloadableFileLicenseConnectFieldInput>;
   purchasers?: InputMaybe<Array<DownloadableFilePurchasersConnectFieldInput>>;
   versions?: InputMaybe<Array<DownloadableFileVersionsConnectFieldInput>>;
@@ -18098,7 +18276,6 @@ export type DownloadableFileConnectWhere = {
 
 export type DownloadableFileConnectedRelationships = {
   __typename?: 'DownloadableFileConnectedRelationships';
-  labelOptions?: Maybe<DownloadableFileLabelOptionsConnectedRelationship>;
   license?: Maybe<DownloadableFileLicenseConnectedRelationship>;
   purchasers?: Maybe<DownloadableFilePurchasersConnectedRelationship>;
   versions?: Maybe<DownloadableFileVersionsConnectedRelationship>;
@@ -18109,7 +18286,6 @@ export type DownloadableFileCreateInput = {
   downloadCountUnique?: InputMaybe<Scalars['Int']['input']>;
   fileName: Scalars['String']['input'];
   kind: FileKind;
-  labelOptions?: InputMaybe<DownloadableFileLabelOptionsFieldInput>;
   license?: InputMaybe<DownloadableFileLicenseFieldInput>;
   paywallExpiresAt?: InputMaybe<Scalars['DateTime']['input']>;
   priceCents?: InputMaybe<Scalars['Int']['input']>;
@@ -18133,7 +18309,6 @@ export type DownloadableFileCreatedEvent = {
 };
 
 export type DownloadableFileDeleteInput = {
-  labelOptions?: InputMaybe<Array<DownloadableFileLabelOptionsDeleteFieldInput>>;
   license?: InputMaybe<DownloadableFileLicenseDeleteFieldInput>;
   purchasers?: InputMaybe<Array<DownloadableFilePurchasersDeleteFieldInput>>;
   versions?: InputMaybe<Array<DownloadableFileVersionsDeleteFieldInput>>;
@@ -18147,7 +18322,6 @@ export type DownloadableFileDeletedEvent = {
 };
 
 export type DownloadableFileDisconnectInput = {
-  labelOptions?: InputMaybe<Array<DownloadableFileLabelOptionsDisconnectFieldInput>>;
   license?: InputMaybe<DownloadableFileLicenseDisconnectFieldInput>;
   purchasers?: InputMaybe<Array<DownloadableFilePurchasersDisconnectFieldInput>>;
   versions?: InputMaybe<Array<DownloadableFileVersionsDisconnectFieldInput>>;
@@ -18193,160 +18367,6 @@ export type DownloadableFileFileVersionVersionsNodeAggregateSelection = {
   id: IdAggregateSelection;
   size: IntAggregateSelection;
   url: StringAggregateSelection;
-};
-
-export type DownloadableFileFilterOptionLabelOptionsAggregationSelection = {
-  __typename?: 'DownloadableFileFilterOptionLabelOptionsAggregationSelection';
-  count: Scalars['Int']['output'];
-  node?: Maybe<DownloadableFileFilterOptionLabelOptionsNodeAggregateSelection>;
-};
-
-export type DownloadableFileFilterOptionLabelOptionsNodeAggregateSelection = {
-  __typename?: 'DownloadableFileFilterOptionLabelOptionsNodeAggregateSelection';
-  displayName: StringAggregateSelection;
-  id: IdAggregateSelection;
-  order: IntAggregateSelection;
-  value: StringAggregateSelection;
-};
-
-export type DownloadableFileLabelOptionsAggregateInput = {
-  AND?: InputMaybe<Array<DownloadableFileLabelOptionsAggregateInput>>;
-  NOT?: InputMaybe<DownloadableFileLabelOptionsAggregateInput>;
-  OR?: InputMaybe<Array<DownloadableFileLabelOptionsAggregateInput>>;
-  count?: InputMaybe<Scalars['Int']['input']>;
-  count_GT?: InputMaybe<Scalars['Int']['input']>;
-  count_GTE?: InputMaybe<Scalars['Int']['input']>;
-  count_LT?: InputMaybe<Scalars['Int']['input']>;
-  count_LTE?: InputMaybe<Scalars['Int']['input']>;
-  node?: InputMaybe<DownloadableFileLabelOptionsNodeAggregationWhereInput>;
-};
-
-export type DownloadableFileLabelOptionsConnectFieldInput = {
-  connect?: InputMaybe<Array<FilterOptionConnectInput>>;
-  /** Whether or not to overwrite any matching relationship with the new properties. */
-  overwrite?: Scalars['Boolean']['input'];
-  where?: InputMaybe<FilterOptionConnectWhere>;
-};
-
-export type DownloadableFileLabelOptionsConnectedRelationship = {
-  __typename?: 'DownloadableFileLabelOptionsConnectedRelationship';
-  node: FilterOptionEventPayload;
-};
-
-export type DownloadableFileLabelOptionsConnection = {
-  __typename?: 'DownloadableFileLabelOptionsConnection';
-  edges: Array<DownloadableFileLabelOptionsRelationship>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int']['output'];
-};
-
-export type DownloadableFileLabelOptionsConnectionSort = {
-  node?: InputMaybe<FilterOptionSort>;
-};
-
-export type DownloadableFileLabelOptionsConnectionWhere = {
-  AND?: InputMaybe<Array<DownloadableFileLabelOptionsConnectionWhere>>;
-  NOT?: InputMaybe<DownloadableFileLabelOptionsConnectionWhere>;
-  OR?: InputMaybe<Array<DownloadableFileLabelOptionsConnectionWhere>>;
-  node?: InputMaybe<FilterOptionWhere>;
-};
-
-export type DownloadableFileLabelOptionsCreateFieldInput = {
-  node: FilterOptionCreateInput;
-};
-
-export type DownloadableFileLabelOptionsDeleteFieldInput = {
-  delete?: InputMaybe<FilterOptionDeleteInput>;
-  where?: InputMaybe<DownloadableFileLabelOptionsConnectionWhere>;
-};
-
-export type DownloadableFileLabelOptionsDisconnectFieldInput = {
-  disconnect?: InputMaybe<FilterOptionDisconnectInput>;
-  where?: InputMaybe<DownloadableFileLabelOptionsConnectionWhere>;
-};
-
-export type DownloadableFileLabelOptionsFieldInput = {
-  connect?: InputMaybe<Array<DownloadableFileLabelOptionsConnectFieldInput>>;
-  create?: InputMaybe<Array<DownloadableFileLabelOptionsCreateFieldInput>>;
-};
-
-export type DownloadableFileLabelOptionsNodeAggregationWhereInput = {
-  AND?: InputMaybe<Array<DownloadableFileLabelOptionsNodeAggregationWhereInput>>;
-  NOT?: InputMaybe<DownloadableFileLabelOptionsNodeAggregationWhereInput>;
-  OR?: InputMaybe<Array<DownloadableFileLabelOptionsNodeAggregationWhereInput>>;
-  displayName_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
-  displayName_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
-  displayName_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
-  displayName_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
-  displayName_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
-  displayName_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  displayName_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
-  displayName_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
-  displayName_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
-  displayName_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
-  displayName_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  displayName_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
-  displayName_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
-  displayName_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
-  displayName_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
-  order_AVERAGE_EQUAL?: InputMaybe<Scalars['Float']['input']>;
-  order_AVERAGE_GT?: InputMaybe<Scalars['Float']['input']>;
-  order_AVERAGE_GTE?: InputMaybe<Scalars['Float']['input']>;
-  order_AVERAGE_LT?: InputMaybe<Scalars['Float']['input']>;
-  order_AVERAGE_LTE?: InputMaybe<Scalars['Float']['input']>;
-  order_MAX_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  order_MAX_GT?: InputMaybe<Scalars['Int']['input']>;
-  order_MAX_GTE?: InputMaybe<Scalars['Int']['input']>;
-  order_MAX_LT?: InputMaybe<Scalars['Int']['input']>;
-  order_MAX_LTE?: InputMaybe<Scalars['Int']['input']>;
-  order_MIN_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  order_MIN_GT?: InputMaybe<Scalars['Int']['input']>;
-  order_MIN_GTE?: InputMaybe<Scalars['Int']['input']>;
-  order_MIN_LT?: InputMaybe<Scalars['Int']['input']>;
-  order_MIN_LTE?: InputMaybe<Scalars['Int']['input']>;
-  order_SUM_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  order_SUM_GT?: InputMaybe<Scalars['Int']['input']>;
-  order_SUM_GTE?: InputMaybe<Scalars['Int']['input']>;
-  order_SUM_LT?: InputMaybe<Scalars['Int']['input']>;
-  order_SUM_LTE?: InputMaybe<Scalars['Int']['input']>;
-  value_AVERAGE_LENGTH_EQUAL?: InputMaybe<Scalars['Float']['input']>;
-  value_AVERAGE_LENGTH_GT?: InputMaybe<Scalars['Float']['input']>;
-  value_AVERAGE_LENGTH_GTE?: InputMaybe<Scalars['Float']['input']>;
-  value_AVERAGE_LENGTH_LT?: InputMaybe<Scalars['Float']['input']>;
-  value_AVERAGE_LENGTH_LTE?: InputMaybe<Scalars['Float']['input']>;
-  value_LONGEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  value_LONGEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
-  value_LONGEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
-  value_LONGEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
-  value_LONGEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
-  value_SHORTEST_LENGTH_EQUAL?: InputMaybe<Scalars['Int']['input']>;
-  value_SHORTEST_LENGTH_GT?: InputMaybe<Scalars['Int']['input']>;
-  value_SHORTEST_LENGTH_GTE?: InputMaybe<Scalars['Int']['input']>;
-  value_SHORTEST_LENGTH_LT?: InputMaybe<Scalars['Int']['input']>;
-  value_SHORTEST_LENGTH_LTE?: InputMaybe<Scalars['Int']['input']>;
-};
-
-export type DownloadableFileLabelOptionsRelationship = {
-  __typename?: 'DownloadableFileLabelOptionsRelationship';
-  cursor: Scalars['String']['output'];
-  node: FilterOption;
-};
-
-export type DownloadableFileLabelOptionsRelationshipSubscriptionWhere = {
-  node?: InputMaybe<FilterOptionSubscriptionWhere>;
-};
-
-export type DownloadableFileLabelOptionsUpdateConnectionInput = {
-  node?: InputMaybe<FilterOptionUpdateInput>;
-};
-
-export type DownloadableFileLabelOptionsUpdateFieldInput = {
-  connect?: InputMaybe<Array<DownloadableFileLabelOptionsConnectFieldInput>>;
-  create?: InputMaybe<Array<DownloadableFileLabelOptionsCreateFieldInput>>;
-  delete?: InputMaybe<Array<DownloadableFileLabelOptionsDeleteFieldInput>>;
-  disconnect?: InputMaybe<Array<DownloadableFileLabelOptionsDisconnectFieldInput>>;
-  update?: InputMaybe<DownloadableFileLabelOptionsUpdateConnectionInput>;
-  where?: InputMaybe<DownloadableFileLabelOptionsConnectionWhere>;
 };
 
 export type DownloadableFileLicenseAggregateInput = {
@@ -18668,7 +18688,6 @@ export type DownloadableFilePurchasersUpdateFieldInput = {
 };
 
 export type DownloadableFileRelationInput = {
-  labelOptions?: InputMaybe<Array<DownloadableFileLabelOptionsCreateFieldInput>>;
   license?: InputMaybe<DownloadableFileLicenseCreateFieldInput>;
   purchasers?: InputMaybe<Array<DownloadableFilePurchasersCreateFieldInput>>;
   versions?: InputMaybe<Array<DownloadableFileVersionsCreateFieldInput>>;
@@ -18709,7 +18728,6 @@ export type DownloadableFileRelationshipDeletedSubscriptionWhere = {
 };
 
 export type DownloadableFileRelationshipsSubscriptionWhere = {
-  labelOptions?: InputMaybe<DownloadableFileLabelOptionsRelationshipSubscriptionWhere>;
   license?: InputMaybe<DownloadableFileLicenseRelationshipSubscriptionWhere>;
   purchasers?: InputMaybe<DownloadableFilePurchasersRelationshipSubscriptionWhere>;
   versions?: InputMaybe<DownloadableFileVersionsRelationshipSubscriptionWhere>;
@@ -18834,7 +18852,6 @@ export type DownloadableFileUpdateInput = {
   downloadCountUnique_INCREMENT?: InputMaybe<Scalars['Int']['input']>;
   fileName?: InputMaybe<Scalars['String']['input']>;
   kind?: InputMaybe<FileKind>;
-  labelOptions?: InputMaybe<Array<DownloadableFileLabelOptionsUpdateFieldInput>>;
   license?: InputMaybe<DownloadableFileLicenseUpdateFieldInput>;
   paywallExpiresAt?: InputMaybe<Scalars['DateTime']['input']>;
   priceCents?: InputMaybe<Scalars['Int']['input']>;
@@ -19062,23 +19079,6 @@ export type DownloadableFileWhere = {
   id_STARTS_WITH?: InputMaybe<Scalars['ID']['input']>;
   kind?: InputMaybe<FileKind>;
   kind_IN?: InputMaybe<Array<FileKind>>;
-  labelOptionsAggregate?: InputMaybe<DownloadableFileLabelOptionsAggregateInput>;
-  /** Return DownloadableFiles where all of the related DownloadableFileLabelOptionsConnections match this filter */
-  labelOptionsConnection_ALL?: InputMaybe<DownloadableFileLabelOptionsConnectionWhere>;
-  /** Return DownloadableFiles where none of the related DownloadableFileLabelOptionsConnections match this filter */
-  labelOptionsConnection_NONE?: InputMaybe<DownloadableFileLabelOptionsConnectionWhere>;
-  /** Return DownloadableFiles where one of the related DownloadableFileLabelOptionsConnections match this filter */
-  labelOptionsConnection_SINGLE?: InputMaybe<DownloadableFileLabelOptionsConnectionWhere>;
-  /** Return DownloadableFiles where some of the related DownloadableFileLabelOptionsConnections match this filter */
-  labelOptionsConnection_SOME?: InputMaybe<DownloadableFileLabelOptionsConnectionWhere>;
-  /** Return DownloadableFiles where all of the related FilterOptions match this filter */
-  labelOptions_ALL?: InputMaybe<FilterOptionWhere>;
-  /** Return DownloadableFiles where none of the related FilterOptions match this filter */
-  labelOptions_NONE?: InputMaybe<FilterOptionWhere>;
-  /** Return DownloadableFiles where one of the related FilterOptions match this filter */
-  labelOptions_SINGLE?: InputMaybe<FilterOptionWhere>;
-  /** Return DownloadableFiles where some of the related FilterOptions match this filter */
-  labelOptions_SOME?: InputMaybe<FilterOptionWhere>;
   license?: InputMaybe<LicenseWhere>;
   licenseAggregate?: InputMaybe<DownloadableFileLicenseAggregateInput>;
   licenseConnection?: InputMaybe<DownloadableFileLicenseConnectionWhere>;
@@ -53287,6 +53287,8 @@ export type ResolversTypes = {
   DiscussionChannelDiscussionUpdateFieldInput: DiscussionChannelDiscussionUpdateFieldInput;
   DiscussionChannelEdge: ResolverTypeWrapper<DiscussionChannelEdge>;
   DiscussionChannelEventPayload: ResolverTypeWrapper<DiscussionChannelEventPayload>;
+  DiscussionChannelFilterOptionLabelOptionsAggregationSelection: ResolverTypeWrapper<DiscussionChannelFilterOptionLabelOptionsAggregationSelection>;
+  DiscussionChannelFilterOptionLabelOptionsNodeAggregateSelection: ResolverTypeWrapper<DiscussionChannelFilterOptionLabelOptionsNodeAggregateSelection>;
   DiscussionChannelInfo: ResolverTypeWrapper<DiscussionChannelInfo>;
   DiscussionChannelInfoAggregateSelection: ResolverTypeWrapper<DiscussionChannelInfoAggregateSelection>;
   DiscussionChannelInfoCreateInput: DiscussionChannelInfoCreateInput;
@@ -53303,6 +53305,21 @@ export type ResolversTypes = {
   DiscussionChannelInfosConnection: ResolverTypeWrapper<DiscussionChannelInfosConnection>;
   DiscussionChannelIssueRelatedIssuesAggregationSelection: ResolverTypeWrapper<DiscussionChannelIssueRelatedIssuesAggregationSelection>;
   DiscussionChannelIssueRelatedIssuesNodeAggregateSelection: ResolverTypeWrapper<DiscussionChannelIssueRelatedIssuesNodeAggregateSelection>;
+  DiscussionChannelLabelOptionsAggregateInput: DiscussionChannelLabelOptionsAggregateInput;
+  DiscussionChannelLabelOptionsConnectFieldInput: DiscussionChannelLabelOptionsConnectFieldInput;
+  DiscussionChannelLabelOptionsConnectedRelationship: ResolverTypeWrapper<DiscussionChannelLabelOptionsConnectedRelationship>;
+  DiscussionChannelLabelOptionsConnection: ResolverTypeWrapper<DiscussionChannelLabelOptionsConnection>;
+  DiscussionChannelLabelOptionsConnectionSort: DiscussionChannelLabelOptionsConnectionSort;
+  DiscussionChannelLabelOptionsConnectionWhere: DiscussionChannelLabelOptionsConnectionWhere;
+  DiscussionChannelLabelOptionsCreateFieldInput: DiscussionChannelLabelOptionsCreateFieldInput;
+  DiscussionChannelLabelOptionsDeleteFieldInput: DiscussionChannelLabelOptionsDeleteFieldInput;
+  DiscussionChannelLabelOptionsDisconnectFieldInput: DiscussionChannelLabelOptionsDisconnectFieldInput;
+  DiscussionChannelLabelOptionsFieldInput: DiscussionChannelLabelOptionsFieldInput;
+  DiscussionChannelLabelOptionsNodeAggregationWhereInput: DiscussionChannelLabelOptionsNodeAggregationWhereInput;
+  DiscussionChannelLabelOptionsRelationship: ResolverTypeWrapper<DiscussionChannelLabelOptionsRelationship>;
+  DiscussionChannelLabelOptionsRelationshipSubscriptionWhere: DiscussionChannelLabelOptionsRelationshipSubscriptionWhere;
+  DiscussionChannelLabelOptionsUpdateConnectionInput: DiscussionChannelLabelOptionsUpdateConnectionInput;
+  DiscussionChannelLabelOptionsUpdateFieldInput: DiscussionChannelLabelOptionsUpdateFieldInput;
   DiscussionChannelListFormat: ResolverTypeWrapper<DiscussionChannelListFormat>;
   DiscussionChannelListFormatAggregateSelection: ResolverTypeWrapper<DiscussionChannelListFormatAggregateSelection>;
   DiscussionChannelListFormatCreateInput: DiscussionChannelListFormatCreateInput;
@@ -53543,23 +53560,6 @@ export type ResolversTypes = {
   DownloadableFileEventPayload: ResolverTypeWrapper<DownloadableFileEventPayload>;
   DownloadableFileFileVersionVersionsAggregationSelection: ResolverTypeWrapper<DownloadableFileFileVersionVersionsAggregationSelection>;
   DownloadableFileFileVersionVersionsNodeAggregateSelection: ResolverTypeWrapper<DownloadableFileFileVersionVersionsNodeAggregateSelection>;
-  DownloadableFileFilterOptionLabelOptionsAggregationSelection: ResolverTypeWrapper<DownloadableFileFilterOptionLabelOptionsAggregationSelection>;
-  DownloadableFileFilterOptionLabelOptionsNodeAggregateSelection: ResolverTypeWrapper<DownloadableFileFilterOptionLabelOptionsNodeAggregateSelection>;
-  DownloadableFileLabelOptionsAggregateInput: DownloadableFileLabelOptionsAggregateInput;
-  DownloadableFileLabelOptionsConnectFieldInput: DownloadableFileLabelOptionsConnectFieldInput;
-  DownloadableFileLabelOptionsConnectedRelationship: ResolverTypeWrapper<DownloadableFileLabelOptionsConnectedRelationship>;
-  DownloadableFileLabelOptionsConnection: ResolverTypeWrapper<DownloadableFileLabelOptionsConnection>;
-  DownloadableFileLabelOptionsConnectionSort: DownloadableFileLabelOptionsConnectionSort;
-  DownloadableFileLabelOptionsConnectionWhere: DownloadableFileLabelOptionsConnectionWhere;
-  DownloadableFileLabelOptionsCreateFieldInput: DownloadableFileLabelOptionsCreateFieldInput;
-  DownloadableFileLabelOptionsDeleteFieldInput: DownloadableFileLabelOptionsDeleteFieldInput;
-  DownloadableFileLabelOptionsDisconnectFieldInput: DownloadableFileLabelOptionsDisconnectFieldInput;
-  DownloadableFileLabelOptionsFieldInput: DownloadableFileLabelOptionsFieldInput;
-  DownloadableFileLabelOptionsNodeAggregationWhereInput: DownloadableFileLabelOptionsNodeAggregationWhereInput;
-  DownloadableFileLabelOptionsRelationship: ResolverTypeWrapper<DownloadableFileLabelOptionsRelationship>;
-  DownloadableFileLabelOptionsRelationshipSubscriptionWhere: DownloadableFileLabelOptionsRelationshipSubscriptionWhere;
-  DownloadableFileLabelOptionsUpdateConnectionInput: DownloadableFileLabelOptionsUpdateConnectionInput;
-  DownloadableFileLabelOptionsUpdateFieldInput: DownloadableFileLabelOptionsUpdateFieldInput;
   DownloadableFileLicenseAggregateInput: DownloadableFileLicenseAggregateInput;
   DownloadableFileLicenseConnectFieldInput: DownloadableFileLicenseConnectFieldInput;
   DownloadableFileLicenseConnectedRelationship: ResolverTypeWrapper<DownloadableFileLicenseConnectedRelationship>;
@@ -57301,6 +57301,8 @@ export type ResolversParentTypes = {
   DiscussionChannelDiscussionUpdateFieldInput: DiscussionChannelDiscussionUpdateFieldInput;
   DiscussionChannelEdge: DiscussionChannelEdge;
   DiscussionChannelEventPayload: DiscussionChannelEventPayload;
+  DiscussionChannelFilterOptionLabelOptionsAggregationSelection: DiscussionChannelFilterOptionLabelOptionsAggregationSelection;
+  DiscussionChannelFilterOptionLabelOptionsNodeAggregateSelection: DiscussionChannelFilterOptionLabelOptionsNodeAggregateSelection;
   DiscussionChannelInfo: DiscussionChannelInfo;
   DiscussionChannelInfoAggregateSelection: DiscussionChannelInfoAggregateSelection;
   DiscussionChannelInfoCreateInput: DiscussionChannelInfoCreateInput;
@@ -57317,6 +57319,21 @@ export type ResolversParentTypes = {
   DiscussionChannelInfosConnection: DiscussionChannelInfosConnection;
   DiscussionChannelIssueRelatedIssuesAggregationSelection: DiscussionChannelIssueRelatedIssuesAggregationSelection;
   DiscussionChannelIssueRelatedIssuesNodeAggregateSelection: DiscussionChannelIssueRelatedIssuesNodeAggregateSelection;
+  DiscussionChannelLabelOptionsAggregateInput: DiscussionChannelLabelOptionsAggregateInput;
+  DiscussionChannelLabelOptionsConnectFieldInput: DiscussionChannelLabelOptionsConnectFieldInput;
+  DiscussionChannelLabelOptionsConnectedRelationship: DiscussionChannelLabelOptionsConnectedRelationship;
+  DiscussionChannelLabelOptionsConnection: DiscussionChannelLabelOptionsConnection;
+  DiscussionChannelLabelOptionsConnectionSort: DiscussionChannelLabelOptionsConnectionSort;
+  DiscussionChannelLabelOptionsConnectionWhere: DiscussionChannelLabelOptionsConnectionWhere;
+  DiscussionChannelLabelOptionsCreateFieldInput: DiscussionChannelLabelOptionsCreateFieldInput;
+  DiscussionChannelLabelOptionsDeleteFieldInput: DiscussionChannelLabelOptionsDeleteFieldInput;
+  DiscussionChannelLabelOptionsDisconnectFieldInput: DiscussionChannelLabelOptionsDisconnectFieldInput;
+  DiscussionChannelLabelOptionsFieldInput: DiscussionChannelLabelOptionsFieldInput;
+  DiscussionChannelLabelOptionsNodeAggregationWhereInput: DiscussionChannelLabelOptionsNodeAggregationWhereInput;
+  DiscussionChannelLabelOptionsRelationship: DiscussionChannelLabelOptionsRelationship;
+  DiscussionChannelLabelOptionsRelationshipSubscriptionWhere: DiscussionChannelLabelOptionsRelationshipSubscriptionWhere;
+  DiscussionChannelLabelOptionsUpdateConnectionInput: DiscussionChannelLabelOptionsUpdateConnectionInput;
+  DiscussionChannelLabelOptionsUpdateFieldInput: DiscussionChannelLabelOptionsUpdateFieldInput;
   DiscussionChannelListFormat: DiscussionChannelListFormat;
   DiscussionChannelListFormatAggregateSelection: DiscussionChannelListFormatAggregateSelection;
   DiscussionChannelListFormatCreateInput: DiscussionChannelListFormatCreateInput;
@@ -57557,23 +57574,6 @@ export type ResolversParentTypes = {
   DownloadableFileEventPayload: DownloadableFileEventPayload;
   DownloadableFileFileVersionVersionsAggregationSelection: DownloadableFileFileVersionVersionsAggregationSelection;
   DownloadableFileFileVersionVersionsNodeAggregateSelection: DownloadableFileFileVersionVersionsNodeAggregateSelection;
-  DownloadableFileFilterOptionLabelOptionsAggregationSelection: DownloadableFileFilterOptionLabelOptionsAggregationSelection;
-  DownloadableFileFilterOptionLabelOptionsNodeAggregateSelection: DownloadableFileFilterOptionLabelOptionsNodeAggregateSelection;
-  DownloadableFileLabelOptionsAggregateInput: DownloadableFileLabelOptionsAggregateInput;
-  DownloadableFileLabelOptionsConnectFieldInput: DownloadableFileLabelOptionsConnectFieldInput;
-  DownloadableFileLabelOptionsConnectedRelationship: DownloadableFileLabelOptionsConnectedRelationship;
-  DownloadableFileLabelOptionsConnection: DownloadableFileLabelOptionsConnection;
-  DownloadableFileLabelOptionsConnectionSort: DownloadableFileLabelOptionsConnectionSort;
-  DownloadableFileLabelOptionsConnectionWhere: DownloadableFileLabelOptionsConnectionWhere;
-  DownloadableFileLabelOptionsCreateFieldInput: DownloadableFileLabelOptionsCreateFieldInput;
-  DownloadableFileLabelOptionsDeleteFieldInput: DownloadableFileLabelOptionsDeleteFieldInput;
-  DownloadableFileLabelOptionsDisconnectFieldInput: DownloadableFileLabelOptionsDisconnectFieldInput;
-  DownloadableFileLabelOptionsFieldInput: DownloadableFileLabelOptionsFieldInput;
-  DownloadableFileLabelOptionsNodeAggregationWhereInput: DownloadableFileLabelOptionsNodeAggregationWhereInput;
-  DownloadableFileLabelOptionsRelationship: DownloadableFileLabelOptionsRelationship;
-  DownloadableFileLabelOptionsRelationshipSubscriptionWhere: DownloadableFileLabelOptionsRelationshipSubscriptionWhere;
-  DownloadableFileLabelOptionsUpdateConnectionInput: DownloadableFileLabelOptionsUpdateConnectionInput;
-  DownloadableFileLabelOptionsUpdateFieldInput: DownloadableFileLabelOptionsUpdateFieldInput;
   DownloadableFileLicenseAggregateInput: DownloadableFileLicenseAggregateInput;
   DownloadableFileLicenseConnectFieldInput: DownloadableFileLicenseConnectFieldInput;
   DownloadableFileLicenseConnectedRelationship: DownloadableFileLicenseConnectedRelationship;
@@ -63008,6 +63008,9 @@ export type DiscussionChannelResolvers<ContextType = any, ParentType extends Res
   Discussion?: Resolver<Maybe<ResolversTypes['Discussion']>, ParentType, ContextType, RequireFields<DiscussionChannelDiscussionArgs, 'directed'>>;
   DiscussionAggregate?: Resolver<Maybe<ResolversTypes['DiscussionChannelDiscussionDiscussionAggregationSelection']>, ParentType, ContextType, RequireFields<DiscussionChannelDiscussionAggregateArgs, 'directed'>>;
   DiscussionConnection?: Resolver<ResolversTypes['DiscussionChannelDiscussionConnection'], ParentType, ContextType, RequireFields<DiscussionChannelDiscussionConnectionArgs, 'directed'>>;
+  LabelOptions?: Resolver<Array<ResolversTypes['FilterOption']>, ParentType, ContextType, RequireFields<DiscussionChannelLabelOptionsArgs, 'directed'>>;
+  LabelOptionsAggregate?: Resolver<Maybe<ResolversTypes['DiscussionChannelFilterOptionLabelOptionsAggregationSelection']>, ParentType, ContextType, RequireFields<DiscussionChannelLabelOptionsAggregateArgs, 'directed'>>;
+  LabelOptionsConnection?: Resolver<ResolversTypes['DiscussionChannelLabelOptionsConnection'], ParentType, ContextType, RequireFields<DiscussionChannelLabelOptionsConnectionArgs, 'directed'>>;
   RelatedIssues?: Resolver<Array<ResolversTypes['Issue']>, ParentType, ContextType, RequireFields<DiscussionChannelRelatedIssuesArgs, 'directed'>>;
   RelatedIssuesAggregate?: Resolver<Maybe<ResolversTypes['DiscussionChannelIssueRelatedIssuesAggregationSelection']>, ParentType, ContextType, RequireFields<DiscussionChannelRelatedIssuesAggregateArgs, 'directed'>>;
   RelatedIssuesConnection?: Resolver<ResolversTypes['DiscussionChannelRelatedIssuesConnection'], ParentType, ContextType, RequireFields<DiscussionChannelRelatedIssuesConnectionArgs, 'directed'>>;
@@ -63145,6 +63148,7 @@ export type DiscussionChannelConnectedRelationshipsResolvers<ContextType = any, 
   Channel?: Resolver<Maybe<ResolversTypes['DiscussionChannelChannelConnectedRelationship']>, ParentType, ContextType>;
   Comments?: Resolver<Maybe<ResolversTypes['DiscussionChannelCommentsConnectedRelationship']>, ParentType, ContextType>;
   Discussion?: Resolver<Maybe<ResolversTypes['DiscussionChannelDiscussionConnectedRelationship']>, ParentType, ContextType>;
+  LabelOptions?: Resolver<Maybe<ResolversTypes['DiscussionChannelLabelOptionsConnectedRelationship']>, ParentType, ContextType>;
   RelatedIssues?: Resolver<Maybe<ResolversTypes['DiscussionChannelRelatedIssuesConnectedRelationship']>, ParentType, ContextType>;
   SubscribedToNotifications?: Resolver<Maybe<ResolversTypes['DiscussionChannelSubscribedToNotificationsConnectedRelationship']>, ParentType, ContextType>;
   UpvotedByUsers?: Resolver<Maybe<ResolversTypes['DiscussionChannelUpvotedByUsersConnectedRelationship']>, ParentType, ContextType>;
@@ -63214,6 +63218,20 @@ export type DiscussionChannelEventPayloadResolvers<ContextType = any, ParentType
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   locked?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   weightedVotesCount?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DiscussionChannelFilterOptionLabelOptionsAggregationSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscussionChannelFilterOptionLabelOptionsAggregationSelection'] = ResolversParentTypes['DiscussionChannelFilterOptionLabelOptionsAggregationSelection']> = {
+  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['DiscussionChannelFilterOptionLabelOptionsNodeAggregateSelection']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DiscussionChannelFilterOptionLabelOptionsNodeAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscussionChannelFilterOptionLabelOptionsNodeAggregateSelection'] = ResolversParentTypes['DiscussionChannelFilterOptionLabelOptionsNodeAggregateSelection']> = {
+  displayName?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['IDAggregateSelection'], ParentType, ContextType>;
+  order?: Resolver<ResolversTypes['IntAggregateSelection'], ParentType, ContextType>;
+  value?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -63294,6 +63312,24 @@ export type DiscussionChannelIssueRelatedIssuesNodeAggregateSelectionResolvers<C
   relatedUsername?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
   title?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
   updatedAt?: Resolver<ResolversTypes['DateTimeAggregateSelection'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DiscussionChannelLabelOptionsConnectedRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscussionChannelLabelOptionsConnectedRelationship'] = ResolversParentTypes['DiscussionChannelLabelOptionsConnectedRelationship']> = {
+  node?: Resolver<ResolversTypes['FilterOptionEventPayload'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DiscussionChannelLabelOptionsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscussionChannelLabelOptionsConnection'] = ResolversParentTypes['DiscussionChannelLabelOptionsConnection']> = {
+  edges?: Resolver<Array<ResolversTypes['DiscussionChannelLabelOptionsRelationship']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DiscussionChannelLabelOptionsRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiscussionChannelLabelOptionsRelationship'] = ResolversParentTypes['DiscussionChannelLabelOptionsRelationship']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['FilterOption'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -63852,9 +63888,6 @@ export type DownloadableFileResolvers<ContextType = any, ParentType extends Reso
   fileName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   kind?: Resolver<ResolversTypes['FileKind'], ParentType, ContextType>;
-  labelOptions?: Resolver<Array<ResolversTypes['FilterOption']>, ParentType, ContextType, RequireFields<DownloadableFileLabelOptionsArgs, 'directed'>>;
-  labelOptionsAggregate?: Resolver<Maybe<ResolversTypes['DownloadableFileFilterOptionLabelOptionsAggregationSelection']>, ParentType, ContextType, RequireFields<DownloadableFileLabelOptionsAggregateArgs, 'directed'>>;
-  labelOptionsConnection?: Resolver<ResolversTypes['DownloadableFileLabelOptionsConnection'], ParentType, ContextType, RequireFields<DownloadableFileLabelOptionsConnectionArgs, 'directed'>>;
   license?: Resolver<Maybe<ResolversTypes['License']>, ParentType, ContextType, RequireFields<DownloadableFileLicenseArgs, 'directed'>>;
   licenseAggregate?: Resolver<Maybe<ResolversTypes['DownloadableFileLicenseLicenseAggregationSelection']>, ParentType, ContextType, RequireFields<DownloadableFileLicenseAggregateArgs, 'directed'>>;
   licenseConnection?: Resolver<ResolversTypes['DownloadableFileLicenseConnection'], ParentType, ContextType, RequireFields<DownloadableFileLicenseConnectionArgs, 'directed'>>;
@@ -63896,7 +63929,6 @@ export type DownloadableFileAggregateSelectionResolvers<ContextType = any, Paren
 };
 
 export type DownloadableFileConnectedRelationshipsResolvers<ContextType = any, ParentType extends ResolversParentTypes['DownloadableFileConnectedRelationships'] = ResolversParentTypes['DownloadableFileConnectedRelationships']> = {
-  labelOptions?: Resolver<Maybe<ResolversTypes['DownloadableFileLabelOptionsConnectedRelationship']>, ParentType, ContextType>;
   license?: Resolver<Maybe<ResolversTypes['DownloadableFileLicenseConnectedRelationship']>, ParentType, ContextType>;
   purchasers?: Resolver<Maybe<ResolversTypes['DownloadableFilePurchasersConnectedRelationship']>, ParentType, ContextType>;
   versions?: Resolver<Maybe<ResolversTypes['DownloadableFileVersionsConnectedRelationship']>, ParentType, ContextType>;
@@ -63956,38 +63988,6 @@ export type DownloadableFileFileVersionVersionsNodeAggregateSelectionResolvers<C
   id?: Resolver<ResolversTypes['IDAggregateSelection'], ParentType, ContextType>;
   size?: Resolver<ResolversTypes['IntAggregateSelection'], ParentType, ContextType>;
   url?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type DownloadableFileFilterOptionLabelOptionsAggregationSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['DownloadableFileFilterOptionLabelOptionsAggregationSelection'] = ResolversParentTypes['DownloadableFileFilterOptionLabelOptionsAggregationSelection']> = {
-  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  node?: Resolver<Maybe<ResolversTypes['DownloadableFileFilterOptionLabelOptionsNodeAggregateSelection']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type DownloadableFileFilterOptionLabelOptionsNodeAggregateSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['DownloadableFileFilterOptionLabelOptionsNodeAggregateSelection'] = ResolversParentTypes['DownloadableFileFilterOptionLabelOptionsNodeAggregateSelection']> = {
-  displayName?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['IDAggregateSelection'], ParentType, ContextType>;
-  order?: Resolver<ResolversTypes['IntAggregateSelection'], ParentType, ContextType>;
-  value?: Resolver<ResolversTypes['StringAggregateSelection'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type DownloadableFileLabelOptionsConnectedRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['DownloadableFileLabelOptionsConnectedRelationship'] = ResolversParentTypes['DownloadableFileLabelOptionsConnectedRelationship']> = {
-  node?: Resolver<ResolversTypes['FilterOptionEventPayload'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type DownloadableFileLabelOptionsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['DownloadableFileLabelOptionsConnection'] = ResolversParentTypes['DownloadableFileLabelOptionsConnection']> = {
-  edges?: Resolver<Array<ResolversTypes['DownloadableFileLabelOptionsRelationship']>, ParentType, ContextType>;
-  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
-  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type DownloadableFileLabelOptionsRelationshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['DownloadableFileLabelOptionsRelationship'] = ResolversParentTypes['DownloadableFileLabelOptionsRelationship']> = {
-  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  node?: Resolver<ResolversTypes['FilterOption'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -71687,6 +71687,8 @@ export type Resolvers<ContextType = any> = {
   DiscussionChannelDiscussionRelationship?: DiscussionChannelDiscussionRelationshipResolvers<ContextType>;
   DiscussionChannelEdge?: DiscussionChannelEdgeResolvers<ContextType>;
   DiscussionChannelEventPayload?: DiscussionChannelEventPayloadResolvers<ContextType>;
+  DiscussionChannelFilterOptionLabelOptionsAggregationSelection?: DiscussionChannelFilterOptionLabelOptionsAggregationSelectionResolvers<ContextType>;
+  DiscussionChannelFilterOptionLabelOptionsNodeAggregateSelection?: DiscussionChannelFilterOptionLabelOptionsNodeAggregateSelectionResolvers<ContextType>;
   DiscussionChannelInfo?: DiscussionChannelInfoResolvers<ContextType>;
   DiscussionChannelInfoAggregateSelection?: DiscussionChannelInfoAggregateSelectionResolvers<ContextType>;
   DiscussionChannelInfoCreatedEvent?: DiscussionChannelInfoCreatedEventResolvers<ContextType>;
@@ -71697,6 +71699,9 @@ export type Resolvers<ContextType = any> = {
   DiscussionChannelInfosConnection?: DiscussionChannelInfosConnectionResolvers<ContextType>;
   DiscussionChannelIssueRelatedIssuesAggregationSelection?: DiscussionChannelIssueRelatedIssuesAggregationSelectionResolvers<ContextType>;
   DiscussionChannelIssueRelatedIssuesNodeAggregateSelection?: DiscussionChannelIssueRelatedIssuesNodeAggregateSelectionResolvers<ContextType>;
+  DiscussionChannelLabelOptionsConnectedRelationship?: DiscussionChannelLabelOptionsConnectedRelationshipResolvers<ContextType>;
+  DiscussionChannelLabelOptionsConnection?: DiscussionChannelLabelOptionsConnectionResolvers<ContextType>;
+  DiscussionChannelLabelOptionsRelationship?: DiscussionChannelLabelOptionsRelationshipResolvers<ContextType>;
   DiscussionChannelListFormat?: DiscussionChannelListFormatResolvers<ContextType>;
   DiscussionChannelListFormatAggregateSelection?: DiscussionChannelListFormatAggregateSelectionResolvers<ContextType>;
   DiscussionChannelListFormatCreatedEvent?: DiscussionChannelListFormatCreatedEventResolvers<ContextType>;
@@ -71780,11 +71785,6 @@ export type Resolvers<ContextType = any> = {
   DownloadableFileEventPayload?: DownloadableFileEventPayloadResolvers<ContextType>;
   DownloadableFileFileVersionVersionsAggregationSelection?: DownloadableFileFileVersionVersionsAggregationSelectionResolvers<ContextType>;
   DownloadableFileFileVersionVersionsNodeAggregateSelection?: DownloadableFileFileVersionVersionsNodeAggregateSelectionResolvers<ContextType>;
-  DownloadableFileFilterOptionLabelOptionsAggregationSelection?: DownloadableFileFilterOptionLabelOptionsAggregationSelectionResolvers<ContextType>;
-  DownloadableFileFilterOptionLabelOptionsNodeAggregateSelection?: DownloadableFileFilterOptionLabelOptionsNodeAggregateSelectionResolvers<ContextType>;
-  DownloadableFileLabelOptionsConnectedRelationship?: DownloadableFileLabelOptionsConnectedRelationshipResolvers<ContextType>;
-  DownloadableFileLabelOptionsConnection?: DownloadableFileLabelOptionsConnectionResolvers<ContextType>;
-  DownloadableFileLabelOptionsRelationship?: DownloadableFileLabelOptionsRelationshipResolvers<ContextType>;
   DownloadableFileLicenseConnectedRelationship?: DownloadableFileLicenseConnectedRelationshipResolvers<ContextType>;
   DownloadableFileLicenseConnection?: DownloadableFileLicenseConnectionResolvers<ContextType>;
   DownloadableFileLicenseLicenseAggregationSelection?: DownloadableFileLicenseLicenseAggregationSelectionResolvers<ContextType>;
