@@ -1088,6 +1088,7 @@ const typeDefinitions = gql `
       limit: Int
       tags: [String]
       searchInput: String
+      countDownloads: Boolean
     ): GetSortedChannelsResponse
     getUserContributions(
       username: String!

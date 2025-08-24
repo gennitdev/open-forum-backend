@@ -13,6 +13,7 @@ const getSortedChannelsResolver = (input: Input) => {
     const offset = args.offset || DEFAULT_OFFSET;
     const tags = args.tags || [];
     const searchInput = args.searchInput || "";
+    const countDownloads = args.countDownloads;
     const session = driver.session();
 
     try {
@@ -29,12 +30,17 @@ const getSortedChannelsResolver = (input: Input) => {
         WITH c, COLLECT(DISTINCT t) AS tags
         WHERE SIZE($tags) = 0 OR ANY(tag IN tags WHERE tag.text IN $tags)
         
-        // Count valid DiscussionChannels (excluding hasDownload: true)
+        // Count DiscussionChannels based on countDownloads flag
         CALL {
           WITH c
           MATCH (c)<-[:POSTED_IN_CHANNEL]-(dc:DiscussionChannel)
           MATCH (dc)-[:POSTED_IN_CHANNEL]->(d:Discussion)
-          WHERE d.hasDownload IS NULL OR d.hasDownload = false
+          WHERE CASE 
+            WHEN $countDownloads IS NULL THEN (d.hasDownload IS NULL OR d.hasDownload = false)
+            WHEN $countDownloads = true THEN d.hasDownload = true
+            WHEN $countDownloads = false THEN (d.hasDownload IS NULL OR d.hasDownload = false)
+            ELSE true
+          END
           RETURN COUNT(DISTINCT dc) AS validDiscussionChannelsCount
         }
         
@@ -74,6 +80,7 @@ const getSortedChannelsResolver = (input: Input) => {
           offset,
           tags,
           searchInput,
+          countDownloads,
         }
       );
 
