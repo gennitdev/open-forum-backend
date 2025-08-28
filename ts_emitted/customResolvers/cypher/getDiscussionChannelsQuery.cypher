@@ -21,6 +21,17 @@ WHERE
         MATCH (dc)-[:POSTED_IN_CHANNEL]->(d:Discussion) 
         WHERE ($hasDownload = true AND d.hasDownload = true) OR ($hasDownload = false AND (d.hasDownload = false OR d.hasDownload IS NULL))
     })
+    // Filter by label options if specified
+    AND (
+        SIZE($labelFilters) = 0 OR 
+        ALL(labelFilter IN $labelFilters WHERE 
+            EXISTS {
+                MATCH (dc)-[:HAS_LABEL_OPTION]->(fo:FilterOption)
+                MATCH (fo)-[:HAS_FILTER_OPTION]-(fg:FilterGroup)
+                WHERE fg.key = labelFilter.groupKey AND fo.value IN labelFilter.values
+            }
+        )
+    )
     
 
 WITH COUNT(dc) AS totalCount
@@ -47,6 +58,17 @@ WHERE
         MATCH (dc)-[:POSTED_IN_CHANNEL]->(d:Discussion) 
         WHERE ($hasDownload = true AND d.hasDownload = true) OR ($hasDownload = false AND (d.hasDownload = false OR d.hasDownload IS NULL))
     })
+    // Filter by label options if specified
+    AND (
+        SIZE($labelFilters) = 0 OR 
+        ALL(labelFilter IN $labelFilters WHERE 
+            EXISTS {
+                MATCH (dc)-[:HAS_LABEL_OPTION]->(fo:FilterOption)
+                MATCH (fo)-[:HAS_FILTER_OPTION]-(fg:FilterGroup)
+                WHERE fg.key = labelFilter.groupKey AND fo.value IN labelFilter.values
+            }
+        )
+    )
 
 WITH dc, totalCount
 MATCH (dc)-[:POSTED_IN_CHANNEL]->(d:Discussion)

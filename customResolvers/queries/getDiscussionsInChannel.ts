@@ -14,6 +14,11 @@ type Input = {
   driver: any;
 };
 
+type LabelFilter = {
+  groupKey: string;
+  values: string[];
+};
+
 type Args = {
   channelUniqueName: string;
   options: {
@@ -26,12 +31,13 @@ type Args = {
   searchInput: string;
   showArchived: boolean;
   hasDownload: boolean;
+  labelFilters: LabelFilter[];
 };
 
 const getResolver = (input: Input) => {
   const { driver } = input;
   return async (parent: any, args: Args, context: any, info: any) => {
-    const { channelUniqueName, options, selectedTags, searchInput, showArchived, hasDownload } = args;
+    const { channelUniqueName, options, selectedTags, searchInput, showArchived, hasDownload, labelFilters } = args;
     const { offset, limit, sort, timeFrame } = options || {};
     // Set loggedInUsername to null explicitly if not present
     context.user = await setUserDataOnContext({
@@ -54,6 +60,7 @@ const getResolver = (input: Input) => {
         titleRegex,
         bodyRegex,
         selectedTags: selectedTags || [],
+        labelFilters: labelFilters || [],
         channelUniqueName,
         offset: parseInt(offset, 10),
         limit: parseInt(limit, 10),

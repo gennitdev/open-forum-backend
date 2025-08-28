@@ -649,6 +649,11 @@ const typeDefinitions = gql`
     channelConnections: [String!]!
   }
 
+  input LabelFilterInput {
+    groupKey: String!
+    values: [String!]!
+  }
+
   input DiscussionCreateInputWithChannels {
     discussionCreateInput: DiscussionCreateInput!
     channelConnections: [String!]!
@@ -1052,6 +1057,7 @@ const typeDefinitions = gql`
       selectedTags: [String]
       showArchived: Boolean
       hasDownload: Boolean
+      labelFilters: [LabelFilterInput!]
       options: DiscussionListOptions
     ): DiscussionChannelListFormat
     getSiteWideDiscussionList(

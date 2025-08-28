@@ -12,7 +12,7 @@ const getResolver = (input) => {
     const { driver } = input;
     return async (parent, args, context, info) => {
         var _a;
-        const { channelUniqueName, options, selectedTags, searchInput, showArchived, hasDownload } = args;
+        const { channelUniqueName, options, selectedTags, searchInput, showArchived, hasDownload, labelFilters } = args;
         const { offset, limit, sort, timeFrame } = options || {};
         // Set loggedInUsername to null explicitly if not present
         context.user = await setUserDataOnContext({
@@ -32,6 +32,7 @@ const getResolver = (input) => {
                 titleRegex,
                 bodyRegex,
                 selectedTags: selectedTags || [],
+                labelFilters: labelFilters || [],
                 channelUniqueName,
                 offset: parseInt(offset, 10),
                 limit: parseInt(limit, 10),
