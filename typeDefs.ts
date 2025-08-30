@@ -1011,6 +1011,7 @@ const typeDefinitions = gql`
       @relationship(type: "HAS_DEFAULT_SUSPENDED_ROLE", direction: OUT)
 
     # plugins
+    pluginRegistries: [String]
     AllowedPlugins: [Plugin!]! @relationship(type: "ALLOWS", direction: OUT)
     InstalledVersions: [PluginVersion!]! @relationship(type: "INSTALLED", direction: OUT, properties: "InstallationProperties")
   }
