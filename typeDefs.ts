@@ -280,7 +280,7 @@ const typeDefinitions = gql`
     downloadCountTotal:  Int @default(value: 0)
     downloadCountUnique: Int @default(value: 0)
 
-    # licence & versions
+    # license & versions
     license: License @relationship(type: "USES_LICENSE", direction: OUT)
     versions: [FileVersion!]! @relationship(type: "HAS_VERSION", direction: OUT)
 
@@ -375,6 +375,9 @@ const typeDefinitions = gql`
     # wiki + filters
     WikiHomePage:  WikiPage   @relationship(type: "HAS_WIKI_HOME_PAGE", direction: OUT)
     FilterGroups: [FilterGroup!]! @relationship(type: "HAS_FILTER_GROUP", direction: OUT)
+
+    # plugins
+    EnabledPlugins: [PluginVersion!]! @relationship(type: "ENABLED", direction: OUT, properties: "ChannelPluginProperties")
   }
 
   type DiscussionChannel {
@@ -946,6 +949,48 @@ const typeDefinitions = gql`
     canSuspendUser: Boolean
   }
 
+  type Plugin {
+    id: ID! @id
+    name: String!
+  }
+
+  type PluginVersion {
+    id: ID! @id
+    version: String!
+    repoUrl: String!
+    entryPath: String!
+  }
+
+  type InstallationProperties @relationshipProperties {
+    enabled: Boolean!
+    settingsJson: JSON
+  }
+
+  type ChannelPluginProperties @relationshipProperties {
+    enabled: Boolean!
+    settingsJson: JSON
+  }
+
+  type ServerSecret {
+    pluginId: String!
+    key: String!
+    ciphertext: String!
+    updatedAt: DateTime! @timestamp(operations: [UPDATE])
+  }
+
+  type PluginRun {
+    id: ID! @id
+    pluginId: String!
+    version: String!
+    scope: String!
+    channelId: String
+    eventType: String!
+    status: String!
+    message: String
+    durationMs: Int
+    createdAt: DateTime! @timestamp(operations: [CREATE])
+  }
+
   type ServerConfig {
     serverName: String @unique
     serverDescription: String
@@ -964,6 +1009,10 @@ const typeDefinitions = gql`
       @relationship(type: "HAS_DEFAULT_SUSPENDED_ROLE", direction: OUT)
     DefaultSuspendedModRole: ModServerRole
       @relationship(type: "HAS_DEFAULT_SUSPENDED_ROLE", direction: OUT)
+
+    # plugins
+    AllowedPlugins: [Plugin!]! @relationship(type: "ALLOWS", direction: OUT)
+    InstalledVersions: [PluginVersion!]! @relationship(type: "INSTALLED", direction: OUT, properties: "InstallationProperties")
   }
 
   type EnvironmentInfo {
