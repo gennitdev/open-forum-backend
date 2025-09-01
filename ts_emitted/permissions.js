@@ -105,7 +105,8 @@ const permissionList = shield({
         sendBugReport: allow, // Allow non-authenticated users to send bug reports
         deleteFilterGroups: allow,
         deleteFilterOptions: allow,
-        refreshPlugins: and(isAuthenticated, isAdmin)
+        refreshPlugins: and(isAuthenticated, isAdmin),
+        deletePluginVersions: allow,
     },
 }, {
     debug: true,

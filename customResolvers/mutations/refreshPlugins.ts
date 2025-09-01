@@ -88,6 +88,86 @@ const getResolver = (input: Input) => {
 
       const updatedPlugins: any[] = []
 
+      // First, find and fix any orphaned plugin versions that exist without Plugin connections
+      console.log('Checking for orphaned plugin versions...')
+      
+      try {
+        const allVersions = await PluginVersion.find({
+          selectionSet: `{
+            id
+            version
+            repoUrl
+          }`
+        })
+
+        console.log(`Found ${allVersions.length} total plugin versions in database`)
+
+        // Check each version to see if it has a Plugin relationship
+        for (const version of allVersions) {
+          try {
+            // Use a more specific query that won't fail on null relationships
+            // We'll try to find plugins that are connected to this version
+            const connectedPlugins = await Plugin.find({
+              where: {
+                Versions: {
+                  id: version.id
+                }
+              },
+              selectionSet: `{
+                id
+                name
+              }`
+            })
+
+            if (connectedPlugins.length === 0) {
+              console.log(`Found orphaned version: ${version.version} (${version.repoUrl})`)
+              
+              // Try to match this version to a plugin from the registry
+              for (const registryPlugin of registryData.plugins) {
+                const matchingVersion = registryPlugin.versions.find(v => v.tarballUrl === version.repoUrl)
+                if (matchingVersion) {
+                  console.log(`Attempting to connect orphaned version to plugin: ${registryPlugin.id}`)
+                  
+                  // Find or create the plugin
+                  let plugins = await Plugin.find({
+                    where: { name: registryPlugin.id }
+                  })
+
+                  let plugin = plugins[0]
+                  if (!plugin) {
+                    console.log(`Creating plugin for orphaned version: ${registryPlugin.id}`)
+                    const createResult = await Plugin.create({
+                      input: [{ name: registryPlugin.id }]
+                    })
+                    plugin = createResult.plugins[0]
+                  }
+
+                  // Connect the orphaned version to the plugin
+                  await PluginVersion.update({
+                    where: { id: version.id },
+                    connect: {
+                      Plugin: {
+                        where: { node: { id: plugin.id } }
+                      }
+                    }
+                  })
+                  
+                  console.log(`Successfully connected orphaned version ${version.version} to plugin ${registryPlugin.id}`)
+                  break
+                }
+              }
+            }
+          } catch (versionError) {
+            console.warn(`Skipping version ${version.id} due to error:`, (versionError as any).message)
+          }
+        }
+      } catch (orphanError) {
+        console.warn('Error while checking orphaned versions:', (orphanError as any).message)
+        // Continue with normal processing even if orphan check fails
+      }
+
+      console.log('Finished checking orphaned versions, proceeding with registry processing...')
+
       // Process each plugin in the registry
       for (const registryPlugin of registryData.plugins) {
         // Find or create the plugin
@@ -112,51 +192,18 @@ const getResolver = (input: Input) => {
 
         // Process each version of the plugin
         for (const registryVersion of registryPlugin.versions) {
-          // First, check if this version exists but isn't connected to any plugin
-          const orphanedVersions = await PluginVersion.find({
+          // Check if this version already exists (by version number + repoUrl, regardless of plugin connection)
+          const existingVersions = await PluginVersion.find({
             where: {
               AND: [
                 { version: registryVersion.version },
                 { repoUrl: registryVersion.tarballUrl }
               ]
-            },
-            selectionSet: `{
-              id
-              Plugin {
-                id
-              }
-            }`
+            }
           })
 
-          let versionExists = false
-          
-          for (const existingVersion of orphanedVersions) {
-            if (existingVersion.Plugin) {
-              // Version is already connected to a plugin
-              if (existingVersion.Plugin.id === plugin.id) {
-                console.log(
-                  `Plugin version already connected: ${registryPlugin.id}@${registryVersion.version}`
-                )
-                versionExists = true
-              }
-            } else {
-              // Version exists but not connected to any plugin - connect it
-              console.log(
-                `Connecting orphaned version to plugin: ${registryPlugin.id}@${registryVersion.version}`
-              )
-              await PluginVersion.update({
-                where: { id: existingVersion.id },
-                connect: {
-                  Plugin: {
-                    where: { node: { id: plugin.id } }
-                  }
-                }
-              })
-              versionExists = true
-            }
-          }
-
-          if (!versionExists) {
+          if (existingVersions.length === 0) {
+            // Version doesn't exist at all, create it
             console.log(
               `Creating new plugin version: ${registryPlugin.id}@${registryVersion.version}`
             )
@@ -174,12 +221,73 @@ const getResolver = (input: Input) => {
                 }
               ]
             })
+          } else {
+            // Version exists, but make sure it's connected to this plugin
+            const existingVersion = existingVersions[0]
+            console.log(
+              `Plugin version already exists: ${registryPlugin.id}@${registryVersion.version}, ensuring connection`
+            )
+            
+            // Check if it's already connected to this plugin
+            const connectedPlugins = await Plugin.find({
+              where: {
+                AND: [
+                  { id: plugin.id },
+                  { Versions: { id: existingVersion.id } }
+                ]
+              }
+            })
+            
+            if (connectedPlugins.length === 0) {
+              // Version exists but isn't connected to this plugin, connect it
+              console.log(`Connecting existing version ${registryVersion.version} to plugin ${registryPlugin.id}`)
+              await PluginVersion.update({
+                where: { id: existingVersion.id },
+                connect: {
+                  Plugin: {
+                    where: { node: { id: plugin.id } }
+                  }
+                }
+              })
+            }
           }
         }
       }
 
       console.log(`Successfully refreshed ${updatedPlugins.length} plugins`)
-      return updatedPlugins
+      
+      // Before returning, make sure all plugins have their Versions relationship properly loaded
+      const pluginsWithVersions = []
+      for (const plugin of updatedPlugins) {
+        try {
+          const pluginWithVersions = await Plugin.find({
+            where: { id: plugin.id },
+            selectionSet: `{
+              id
+              name
+              Versions {
+                id
+                version
+                repoUrl
+                entryPath
+              }
+            }`
+          })
+          
+          if (pluginWithVersions[0]) {
+            pluginsWithVersions.push(pluginWithVersions[0])
+          }
+        } catch (error) {
+          console.warn(`Could not load versions for plugin ${plugin.id}:`, (error as any).message)
+          // Still include the plugin but with empty versions array
+          pluginsWithVersions.push({
+            ...plugin,
+            Versions: []
+          })
+        }
+      }
+      
+      return pluginsWithVersions
     } catch (error) {
       console.error('Error in refreshPlugins resolver:', error)
       throw new Error(`Failed to refresh plugins: ${(error as any).message}`)

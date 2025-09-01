@@ -33,7 +33,7 @@ Your `plugin.json` manifest must include these fields:
 The `secrets` array defines all secrets your plugin needs:
 
 - **`key`** (string, required): Environment variable name (e.g., `"OPENAI_API_KEY"`)
-- **`scope`** (string, required): Either `"server"` or `"channel"`
+- **`scope`** (string, required): Either `"server"` or `"forum"`
 - **`required`** (boolean, required): Whether plugin can function without this secret
 - **`description`** (string, required): Admin-facing explanation of what this secret is for
 - **`validationHint`** (string, optional): Format expectations to help with validation
@@ -41,7 +41,7 @@ The `secrets` array defines all secrets your plugin needs:
 #### Secret Scope Types
 
 - **`server`**: Secret applies to all plugin instances server-wide
-- **`channel`**: Secret can be configured per-channel (for channel-scoped plugins)
+- **`forum`**: Secret can be configured per-forum (for forum-scoped plugins)
 
 ### Example Secrets
 
@@ -88,6 +88,9 @@ export default class YourPlugin {
     // Access server-scoped secrets
     this.apiKey = context.secrets?.server?.API_KEY;
     this.webhookUrl = context.secrets?.server?.WEBHOOK_URL;
+    
+    // Access forum-scoped secrets (if applicable)
+    this.forumWebhook = context.secrets?.forum?.FORUM_WEBHOOK_URL;
     
     // Access settings
     this.timeout = context.settings?.server?.timeout || 30000;
@@ -283,7 +286,8 @@ describe('YourPlugin', () => {
       error: jest.fn()
     },
     secrets: {
-      server: secrets
+      server: secrets,
+      forum: {}  // Forum-scoped secrets would go here
     },
     settings: {
       server: {}

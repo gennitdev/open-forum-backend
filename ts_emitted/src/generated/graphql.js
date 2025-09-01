@@ -45,6 +45,13 @@ export var ScanStatus;
     ScanStatus["Pending"] = "PENDING";
     ScanStatus["Suspicious"] = "SUSPICIOUS";
 })(ScanStatus || (ScanStatus = {}));
+export var SecretValidationStatus;
+(function (SecretValidationStatus) {
+    SecretValidationStatus["Invalid"] = "INVALID";
+    SecretValidationStatus["NotSet"] = "NOT_SET";
+    SecretValidationStatus["SetUntested"] = "SET_UNTESTED";
+    SecretValidationStatus["Valid"] = "VALID";
+})(SecretValidationStatus || (SecretValidationStatus = {}));
 /** An enum for sorting in either ascending or descending order. */
 export var SortDirection;
 (function (SortDirection) {
