@@ -81,15 +81,27 @@ const getResolver = (input: Input) => {
         throw new Error(`Failed to fetch plugin registry: ${(error as any).message}`)
       }
 
-      // Find the specific plugin and version
-      const registryPlugin = registryData.plugins.find(p => p.id === pluginId)
+      // First, get the plugin name from database (since pluginId might be a UUID)
+      let pluginName = pluginId
+      const existingPlugins = await Plugin.find({
+        where: { id: pluginId },
+        selectionSet: `{ id name }`
+      })
+      
+      if (existingPlugins.length > 0) {
+        // If found by ID, use the name for registry lookup
+        pluginName = existingPlugins[0].name
+      }
+
+      // Find the specific plugin and version in registry using the plugin name
+      const registryPlugin = registryData.plugins.find(p => p.id === pluginName)
       if (!registryPlugin) {
-        throw new Error(`Plugin ${pluginId} not found in registry`)
+        throw new Error(`Plugin ${pluginName} not found in registry`)
       }
 
       const registryVersion = registryPlugin.versions.find(v => v.version === version)
       if (!registryVersion) {
-        throw new Error(`Plugin ${pluginId} version ${version} not found in registry`)
+        throw new Error(`Plugin ${pluginName} version ${version} not found in registry`)
       }
 
       // 3. Download and verify tarball integrity
@@ -141,8 +153,8 @@ const getResolver = (input: Input) => {
                 if (manifestData.version !== version) {
                   return reject(new Error(`Manifest version ${manifestData.version} doesn't match requested version ${version}`))
                 }
-                if (manifestData.id !== pluginId) {
-                  return reject(new Error(`Manifest ID ${manifestData.id} doesn't match requested plugin ID ${pluginId}`))
+                if (manifestData.id !== pluginName) {
+                  return reject(new Error(`Manifest ID ${manifestData.id} doesn't match requested plugin name ${pluginName}`))
                 }
               } catch (e) {
                 return reject(new Error(`Invalid plugin.json: ${(e as any).message}`))
@@ -173,22 +185,26 @@ const getResolver = (input: Input) => {
         gunzip.end()
       })
 
-      // 6. Find or create Plugin record
-      let plugins = await Plugin.find({
-        where: { name: pluginId }
-      })
-
-      let plugin = plugins[0]
+      // 6. Find or create Plugin record (reuse existing plugin if found earlier)
+      let plugin = existingPlugins[0]
       if (!plugin) {
-        console.log(`Creating new plugin: ${pluginId}`)
-        const createResult = await Plugin.create({
-          input: [
-            {
-              name: pluginId
-            }
-          ]
+        // Try to find by name if not found by ID
+        const pluginsByName = await Plugin.find({
+          where: { name: pluginName }
         })
-        plugin = createResult.plugins[0]
+        plugin = pluginsByName[0]
+
+        if (!plugin) {
+          console.log(`Creating new plugin: ${pluginName}`)
+          const createResult = await Plugin.create({
+            input: [
+              {
+                name: pluginName
+              }
+            ]
+          })
+          plugin = createResult.plugins[0]
+        }
       }
 
       // 7. Check if version already exists and is installed
@@ -213,7 +229,7 @@ const getResolver = (input: Input) => {
       
       if (!pluginVersion) {
         // Create new plugin version
-        console.log(`Creating new plugin version: ${pluginId}@${version}`)
+        console.log(`Creating new plugin version: ${pluginName}@${version}`)
         const createResult = await PluginVersion.create({
           input: [
             {
