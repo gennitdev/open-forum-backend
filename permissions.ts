@@ -162,6 +162,8 @@ const permissionList = shield({
 
       deleteFilterGroups: allow,
       deleteFilterOptions: allow,
+
+      refreshPlugins: and(isAuthenticated, isAdmin)
     },
   },{
     debug: true,

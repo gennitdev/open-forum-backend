@@ -952,6 +952,7 @@ const typeDefinitions = gql `
   type Plugin {
     id: ID! @id
     name: String!
+    Versions: [PluginVersion!]! @relationship(type: "HAS_VERSION", direction: OUT)
   }
 
   type PluginVersion {
@@ -959,6 +960,7 @@ const typeDefinitions = gql `
     version: String!
     repoUrl: String!
     entryPath: String!
+    Plugin: Plugin! @relationship(type: "HAS_VERSION", direction: IN)
   }
 
   type InstallationProperties @relationshipProperties {

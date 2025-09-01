@@ -3,6 +3,7 @@ import type {
   PluginVersionModel,
   ServerConfigModel
 } from '../../ogm_types.js'
+import { Storage } from '@google-cloud/storage'
 
 type RegistryPlugin = {
   id: string
@@ -36,6 +37,9 @@ const getResolver = (input: Input) => {
         }`
       })
 
+      console.log('Found server configs:', serverConfigs.length)
+      console.log('Server config pluginRegistries:', serverConfigs[0]?.pluginRegistries)
+
       if (!serverConfigs.length || !serverConfigs[0].pluginRegistries?.length) {
         throw new Error('No plugin registries configured')
       }
@@ -51,16 +55,19 @@ const getResolver = (input: Input) => {
       let registryData: PluginRegistry
       try {
         if (registryUrl.startsWith('gs://')) {
-          // For Google Cloud Storage URLs, we need to use the public URL format
-          const httpUrl = registryUrl.replace(
-            'gs://',
-            'https://storage.googleapis.com/'
-          )
-          const response = await fetch(httpUrl)
-          if (!response.ok) {
-            throw new Error(`HTTP ${response.status}: ${response.statusText}`)
-          }
-          registryData = await response.json()
+          // For Google Cloud Storage URLs, use authenticated GCS client
+          const storage = new Storage()
+          const gsPath = registryUrl.replace('gs://', '')
+          const [bucketName, ...pathParts] = gsPath.split('/')
+          const filePath = pathParts.join('/')
+          
+          console.log(`Downloading from GCS bucket: ${bucketName}, file: ${filePath}`)
+          
+          const bucket = storage.bucket(bucketName)
+          const file = bucket.file(filePath)
+          
+          const [contents] = await file.download()
+          registryData = JSON.parse(contents.toString())
         } else {
           // For regular HTTP/HTTPS URLs
           const response = await fetch(registryUrl)
@@ -105,17 +112,51 @@ const getResolver = (input: Input) => {
 
         // Process each version of the plugin
         for (const registryVersion of registryPlugin.versions) {
-          // Check if this version already exists
-          const existingVersions = await PluginVersion.find({
+          // First, check if this version exists but isn't connected to any plugin
+          const orphanedVersions = await PluginVersion.find({
             where: {
               AND: [
                 { version: registryVersion.version },
                 { repoUrl: registryVersion.tarballUrl }
               ]
-            }
+            },
+            selectionSet: `{
+              id
+              Plugin {
+                id
+              }
+            }`
           })
 
-          if (existingVersions.length === 0) {
+          let versionExists = false
+          
+          for (const existingVersion of orphanedVersions) {
+            if (existingVersion.Plugin) {
+              // Version is already connected to a plugin
+              if (existingVersion.Plugin.id === plugin.id) {
+                console.log(
+                  `Plugin version already connected: ${registryPlugin.id}@${registryVersion.version}`
+                )
+                versionExists = true
+              }
+            } else {
+              // Version exists but not connected to any plugin - connect it
+              console.log(
+                `Connecting orphaned version to plugin: ${registryPlugin.id}@${registryVersion.version}`
+              )
+              await PluginVersion.update({
+                where: { id: existingVersion.id },
+                connect: {
+                  Plugin: {
+                    where: { node: { id: plugin.id } }
+                  }
+                }
+              })
+              versionExists = true
+            }
+          }
+
+          if (!versionExists) {
             console.log(
               `Creating new plugin version: ${registryPlugin.id}@${registryVersion.version}`
             )
@@ -124,14 +165,15 @@ const getResolver = (input: Input) => {
                 {
                   version: registryVersion.version,
                   repoUrl: registryVersion.tarballUrl,
-                  entryPath: 'index.js' // Default entry path
+                  entryPath: 'index.js', // Default entry path
+                  Plugin: {
+                    connect: {
+                      where: { node: { id: plugin.id } }
+                    }
+                  }
                 }
               ]
             })
-          } else {
-            console.log(
-              `Plugin version already exists: ${registryPlugin.id}@${registryVersion.version}`
-            )
           }
         }
       }
