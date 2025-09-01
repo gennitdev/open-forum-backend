@@ -104,6 +104,9 @@ const getResolver = (input: Input) => {
         throw new Error(`Plugin ${pluginName} version ${version} not found in registry`)
       }
 
+      // Debug logging to see what we're getting from registry
+      console.log('Registry version data:', JSON.stringify(registryVersion, null, 2))
+
       // 3. Download and verify tarball integrity
       console.log(`Downloading tarball from: ${registryVersion.tarballUrl}`)
       
@@ -230,13 +233,19 @@ const getResolver = (input: Input) => {
       if (!pluginVersion) {
         // Create new plugin version
         console.log(`Creating new plugin version: ${pluginName}@${version}`)
+        
+        // Ensure all fields are proper strings
+        const repoUrl = String(registryVersion.tarballUrl)
+        const tarballGsUri = String(registryVersion.tarballUrl)
+        const integritySha256 = String(registryVersion.integritySha256)
+        
         const createResult = await PluginVersion.create({
           input: [
             {
               version,
-              repoUrl: registryVersion.tarballUrl,
-              tarballGsUri: registryVersion.tarballUrl,
-              integritySha256: registryVersion.integritySha256,
+              repoUrl,
+              tarballGsUri,
+              integritySha256,
               entryPath: 'dist/index.js', // Default entry path
               Plugin: {
                 connect: {
@@ -249,11 +258,17 @@ const getResolver = (input: Input) => {
         pluginVersion = createResult.pluginVersions[0]
       } else {
         // Update existing version with new fields if needed
+        // Ensure we're working with strings, not Maps or other objects
+        const tarballGsUri = String(registryVersion.tarballUrl)
+        const integritySha256 = String(registryVersion.integritySha256)
+        
+        console.log('Updating plugin version with:', { tarballGsUri, integritySha256 })
+        
         await PluginVersion.update({
           where: { id: pluginVersion.id },
           update: {
-            tarballGsUri: registryVersion.tarballUrl,
-            integritySha256: registryVersion.integritySha256
+            tarballGsUri,
+            integritySha256
           }
         })
       }
