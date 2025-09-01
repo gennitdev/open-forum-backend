@@ -835,6 +835,25 @@ const typeDefinitions = gql `
       subject: String!
     ): Boolean
     refreshPlugins: [Plugin!]!
+    installPluginVersion(
+      pluginId: String!
+      version: String!
+    ): InstalledPlugin!
+    enableServerPlugin(
+      pluginId: String!
+      version: String!
+      enabled: Boolean!
+      settingsJson: JSON
+    ): InstalledPlugin!
+    setServerPluginSecret(
+      pluginId: String!
+      key: String!
+      value: String!
+    ): Boolean!
+    validateServerPluginSecret(
+      pluginId: String!
+      key: String!
+    ): ValidationResult!
   }
 
   input SiteWideDiscussionSortOrder {
@@ -959,6 +978,8 @@ const typeDefinitions = gql `
     id: ID! @id
     version: String!
     repoUrl: String!
+    tarballGsUri: String
+    integritySha256: String
     entryPath: String!
     Plugin: Plugin! @relationship(type: "HAS_VERSION", direction: IN)
   }
@@ -974,10 +995,15 @@ const typeDefinitions = gql `
   }
 
   type ServerSecret {
+    id: ID! @id
     pluginId: String!
     key: String!
     ciphertext: String!
+    isValid: Boolean @default(value: false)
+    lastValidatedAt: DateTime
+    validationError: String
     updatedAt: DateTime! @timestamp(operations: [UPDATE])
+    createdAt: DateTime! @timestamp(operations: [CREATE])
   }
 
   type PluginRun {
@@ -1025,6 +1051,33 @@ const typeDefinitions = gql `
 
   type SafetyCheckResponse {
     environment: EnvironmentInfo
+  }
+
+  type InstalledPlugin {
+    plugin: Plugin!
+    version: String!
+    scope: String!
+    enabled: Boolean!
+    settingsJson: JSON
+  }
+
+  enum SecretValidationStatus {
+    NOT_SET
+    SET_UNTESTED
+    VALID
+    INVALID
+  }
+
+  type PluginSecretStatus {
+    key: String!
+    status: SecretValidationStatus!
+    lastValidatedAt: DateTime
+    validationError: String
+  }
+
+  type ValidationResult {
+    isValid: Boolean!
+    error: String
   }
 
   type GetSortedChannelsResponse {
@@ -1157,6 +1210,10 @@ const typeDefinitions = gql `
     ): [DayData!]!
     isOriginalPosterSuspended(issueId: String!): Boolean
     safetyCheck: SafetyCheckResponse
+    getServerPluginSecrets(
+      pluginId: String!
+    ): [PluginSecretStatus!]!
+    getInstalledPlugins: [InstalledPlugin!]!
   }
 `;
 export default typeDefinitions;

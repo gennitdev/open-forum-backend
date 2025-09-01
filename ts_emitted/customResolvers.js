@@ -58,6 +58,12 @@ import subscribeToIssue from './customResolvers/mutations/subscribeToIssue.js';
 import unsubscribeFromIssue from './customResolvers/mutations/unsubscribeFromIssue.js';
 import sendBugReport from './customResolvers/mutations/sendBugReport.js';
 import refreshPlugins from './customResolvers/mutations/refreshPlugins.js';
+import installPluginVersion from './customResolvers/mutations/installPluginVersion.js';
+import enableServerPlugin from './customResolvers/mutations/enableServerPlugin.js';
+import setServerPluginSecret from './customResolvers/mutations/setServerPluginSecret.js';
+import validateServerPluginSecret from './customResolvers/mutations/validateServerPluginSecret.js';
+import getServerPluginSecrets from './customResolvers/queries/getServerPluginSecrets.js';
+import getInstalledPlugins from './customResolvers/queries/getInstalledPlugins.js';
 const { OGM } = pkg;
 export default function (driver) {
     const ogm = new OGM({
@@ -82,6 +88,7 @@ export default function (driver) {
     const Suspension = ogm.model("Suspension");
     const Plugin = ogm.model("Plugin");
     const PluginVersion = ogm.model("PluginVersion");
+    const ServerSecret = ogm.model("ServerSecret");
     const resolvers = {
         JSON: GraphQLJSON,
         CommentAuthor: {
@@ -133,7 +140,13 @@ export default function (driver) {
                 Comment,
                 Channel
             }),
-            safetyCheck: safetyCheck
+            safetyCheck: safetyCheck,
+            getServerPluginSecrets: getServerPluginSecrets({
+                ServerSecret
+            }),
+            getInstalledPlugins: getInstalledPlugins({
+                ServerConfig
+            })
         },
         Mutation: {
             createDiscussionWithChannelConnections: createDiscussionWithChannelConnections({
@@ -339,6 +352,23 @@ export default function (driver) {
                 Plugin,
                 PluginVersion,
                 ServerConfig
+            }),
+            installPluginVersion: installPluginVersion({
+                Plugin,
+                PluginVersion,
+                ServerConfig
+            }),
+            enableServerPlugin: enableServerPlugin({
+                Plugin,
+                PluginVersion,
+                ServerConfig,
+                ServerSecret
+            }),
+            setServerPluginSecret: setServerPluginSecret({
+                ServerSecret
+            }),
+            validateServerPluginSecret: validateServerPluginSecret({
+                ServerSecret
             }),
         },
     };
