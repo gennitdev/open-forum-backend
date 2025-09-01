@@ -282,14 +282,16 @@ const getResolver = (input: Input) => {
       const isAlreadyInstalled = installedVersions[0]?.InstalledVersions?.length > 0
 
       if (!isAlreadyInstalled) {
+        console.log('Installing plugin version, serverName:', serverConfig.serverName, 'pluginVersion.id:', pluginVersion.id)
+        
         await ServerConfig.update({
-          where: { serverName: serverConfig.serverName },
+          where: { serverName: String(serverConfig.serverName) },
           connect: {
             InstalledVersions: [{
-              where: { node: { id: pluginVersion.id } },
+              where: { node: { id: String(pluginVersion.id) } },
               edge: {
                 enabled: false,
-                settingsJson: {}
+                settingsJson: null  // Use null instead of empty object
               }
             }]
           }
@@ -298,13 +300,13 @@ const getResolver = (input: Input) => {
 
       return {
         plugin: {
-          id: plugin.id,
-          name: plugin.name
+          id: String(plugin.id),
+          name: String(plugin.name)
         },
-        version,
+        version: String(version),
         scope: 'SERVER',
         enabled: false,
-        settingsJson: {}
+        settingsJson: null
       }
 
     } catch (error) {
