@@ -57,6 +57,7 @@ import unsubscribeFromEvent from './customResolvers/mutations/unsubscribeFromEve
 import subscribeToIssue from './customResolvers/mutations/subscribeToIssue.js';
 import unsubscribeFromIssue from './customResolvers/mutations/unsubscribeFromIssue.js';
 import sendBugReport from './customResolvers/mutations/sendBugReport.js';
+import refreshPlugins from './customResolvers/mutations/refreshPlugins.js';
 const { OGM } = pkg;
 export default function (driver) {
     const ogm = new OGM({
@@ -79,6 +80,8 @@ export default function (driver) {
     const ModServerRole = ogm.model("ModServerRole");
     const ServerConfig = ogm.model("ServerConfig");
     const Suspension = ogm.model("Suspension");
+    const Plugin = ogm.model("Plugin");
+    const PluginVersion = ogm.model("PluginVersion");
     const resolvers = {
         JSON: GraphQLJSON,
         CommentAuthor: {
@@ -332,6 +335,11 @@ export default function (driver) {
                 driver
             }),
             sendBugReport: sendBugReport(),
+            refreshPlugins: refreshPlugins({
+                Plugin,
+                PluginVersion,
+                ServerConfig
+            }),
         },
     };
     return {

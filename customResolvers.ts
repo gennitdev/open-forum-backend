@@ -71,6 +71,7 @@ import unsubscribeFromEvent from './customResolvers/mutations/unsubscribeFromEve
 import subscribeToIssue from './customResolvers/mutations/subscribeToIssue.js';
 import unsubscribeFromIssue from './customResolvers/mutations/unsubscribeFromIssue.js';
 import sendBugReport from './customResolvers/mutations/sendBugReport.js';
+import refreshPlugins from './customResolvers/mutations/refreshPlugins.js';
 
 const { OGM } = pkg;
 
@@ -96,6 +97,8 @@ export default function (driver: any) {
   const ModServerRole = ogm.model("ModServerRole");
   const ServerConfig = ogm.model("ServerConfig");
   const Suspension = ogm.model("Suspension");
+  const Plugin = ogm.model("Plugin");
+  const PluginVersion = ogm.model("PluginVersion");
 
   const resolvers = {
     JSON: GraphQLJSON,
@@ -352,6 +355,11 @@ export default function (driver: any) {
         driver
       }),
       sendBugReport: sendBugReport(),
+      refreshPlugins: refreshPlugins({
+        Plugin,
+        PluginVersion,
+        ServerConfig
+      }),
     },
   };
   return {

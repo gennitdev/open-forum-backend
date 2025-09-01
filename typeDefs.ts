@@ -835,6 +835,7 @@ const typeDefinitions = gql`
       text: String!
       subject: String!
     ): Boolean
+    refreshPlugins: [Plugin!]!
   }
 
   input SiteWideDiscussionSortOrder {
