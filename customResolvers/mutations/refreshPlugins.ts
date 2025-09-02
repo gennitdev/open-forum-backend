@@ -297,6 +297,8 @@ const getResolver = (input: Input) => {
                   {
                     version: manifest.version, // Use manifest version
                     repoUrl: registryVersion.tarballUrl,
+                    tarballGsUri: registryVersion.tarballUrl,
+                    integritySha256: registryVersion.integritySha256,
                     entryPath: manifest.entryPath || 'index.js',
                     Plugin: {
                       connect: {
@@ -328,10 +330,24 @@ const getResolver = (input: Input) => {
                 console.log(`Connecting existing version ${manifest.version} to plugin ${registryPlugin.id}`)
                 await PluginVersion.update({
                   where: { id: existingVersion.id },
+                  update: {
+                    tarballGsUri: registryVersion.tarballUrl,
+                    integritySha256: registryVersion.integritySha256
+                  },
                   connect: {
                     Plugin: {
                       where: { node: { id: plugin.id } }
                     }
+                  }
+                })
+              } else {
+                // Version is already connected, but ensure it has the latest integrity data
+                console.log(`Updating existing version ${manifest.version} with integrity data`)
+                await PluginVersion.update({
+                  where: { id: existingVersion.id },
+                  update: {
+                    tarballGsUri: registryVersion.tarballUrl,
+                    integritySha256: registryVersion.integritySha256
                   }
                 })
               }
