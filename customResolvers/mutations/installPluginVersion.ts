@@ -93,19 +93,57 @@ const getResolver = (input: Input) => {
         pluginName = existingPlugins[0].name
       }
 
-      // Find the specific plugin and version in registry using the plugin name
-      const registryPlugin = registryData.plugins.find(p => p.id === pluginName)
-      if (!registryPlugin) {
-        throw new Error(`Plugin ${pluginName} not found in registry`)
+      // First check if this version already exists in the database
+      // (refreshPlugins creates versions using manifest versions, not registry versions)
+      const existingDbVersions = await PluginVersion.find({
+        where: {
+          AND: [
+            { version: version },
+            { Plugin: { name: pluginName } }
+          ]
+        },
+        selectionSet: `{
+          id
+          version
+          repoUrl
+          tarballGsUri
+          integritySha256
+          entryPath
+          Plugin {
+            id
+            name
+          }
+        }`
+      })
+
+      let registryVersion: any
+
+      if (existingDbVersions.length > 0) {
+        // Version exists in database, use its data instead of registry lookup
+        const dbVersion = existingDbVersions[0]
+        console.log(`Found existing version in database: ${pluginName}@${version}`)
+        
+        // Create a registry-like object from database data for compatibility with downstream code
+        registryVersion = {
+          version: dbVersion.version,
+          tarballUrl: dbVersion.repoUrl,
+          integritySha256: dbVersion.integritySha256 || ''
+        }
+      } else {
+        // Version doesn't exist in database, look it up in registry
+        const registryPlugin = registryData.plugins.find(p => p.id === pluginName)
+        if (!registryPlugin) {
+          throw new Error(`Plugin ${pluginName} not found in registry`)
+        }
+
+        registryVersion = registryPlugin.versions.find(v => v.version === version)
+        if (!registryVersion) {
+          throw new Error(`Plugin ${pluginName} version ${version} not found in registry`)
+        }
       }
 
-      const registryVersion = registryPlugin.versions.find(v => v.version === version)
-      if (!registryVersion) {
-        throw new Error(`Plugin ${pluginName} version ${version} not found in registry`)
-      }
-
-      // Debug logging to see what we're getting from registry
-      console.log('Registry version data:', JSON.stringify(registryVersion, null, 2))
+      // Debug logging to see what we're using
+      console.log('Using version data:', JSON.stringify(registryVersion, null, 2))
 
       // 3. Download and verify tarball integrity
       console.log(`Downloading tarball from: ${registryVersion.tarballUrl}`)
@@ -191,8 +229,9 @@ const getResolver = (input: Input) => {
         gunzip.end()
       })
 
-      // 6. Find or create Plugin record (reuse existing plugin if found earlier)
-      let plugin = existingPlugins[0]
+      // 6. Find or create Plugin record
+      let plugin = existingPlugins[0] || (existingDbVersions.length > 0 ? existingDbVersions[0].Plugin : null)
+      
       if (!plugin) {
         // Try to find by name if not found by ID
         const pluginsByName = await Plugin.find({
@@ -213,25 +252,8 @@ const getResolver = (input: Input) => {
         }
       }
 
-      // 7. Check if version already exists and is installed
-      const existingVersions = await PluginVersion.find({
-        where: {
-          AND: [
-            { version },
-            { Plugin: { id: plugin.id } }
-          ]
-        },
-        selectionSet: `{
-          id
-          version
-          Plugin {
-            id
-            name
-          }
-        }`
-      })
-
-      let pluginVersion = existingVersions[0]
+      // 7. Use existing PluginVersion if we found one in database, otherwise create it
+      let pluginVersion = existingDbVersions[0]
       
       if (!pluginVersion) {
         // Create new plugin version
