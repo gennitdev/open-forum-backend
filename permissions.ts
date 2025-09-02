@@ -164,6 +164,8 @@ const permissionList = shield({
       deleteFilterOptions: allow,
 
       refreshPlugins: and(isAuthenticated, isAdmin),
+      installPluginVersion: and(isAuthenticated, isAdmin),
+      deletePluginVersions: allow, // and(isAuthenticated, isAdmin)
     },
   },{
     debug: true,
