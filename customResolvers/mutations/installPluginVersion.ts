@@ -153,13 +153,12 @@ const getResolver = (input: Input) => {
               try {
                 manifestData = JSON.parse(data)
                 
-                // Log the versions for debugging
-                console.log(`Plugin manifest version: ${manifestData.version}, Registry entry version: ${version}`)
+                // Now that refreshPlugins uses manifest versions, these should match
+                console.log(`Plugin manifest version: ${manifestData.version}, Requested version: ${version}`)
                 
-                // Only validate the plugin name/ID, not the version since:
-                // - 'version' is the registry entry version (e.g., 0.2.1)  
-                // - 'manifestData.version' is the individual plugin version (e.g., 0.2.0)
-                // - These can be different and that's expected
+                if (manifestData.version !== version) {
+                  return reject(new Error(`Manifest version ${manifestData.version} doesn't match requested version ${version}`))
+                }
                 if (manifestData.id !== pluginName) {
                   return reject(new Error(`Manifest ID ${manifestData.id} doesn't match requested plugin name ${pluginName}`))
                 }
