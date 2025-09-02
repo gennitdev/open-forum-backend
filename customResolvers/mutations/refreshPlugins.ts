@@ -4,6 +4,8 @@ import type {
   ServerConfigModel
 } from '../../ogm_types.js'
 import { Storage } from '@google-cloud/storage'
+import tar from 'tar-stream'
+import zlib from 'zlib'
 
 type RegistryPlugin = {
   id: string
@@ -23,6 +25,77 @@ type Input = {
   Plugin: PluginModel
   PluginVersion: PluginVersionModel
   ServerConfig: ServerConfigModel
+}
+
+// Helper function to download and parse plugin manifest from tarball
+async function getPluginManifest(tarballUrl: string): Promise<{ version: string; id: string; entryPath?: string }> {
+  console.log(`Downloading and parsing manifest from: ${tarballUrl}`)
+  
+  // Download tarball
+  let tarballBytes: Buffer
+  if (tarballUrl.startsWith('gs://')) {
+    const storage = new Storage()
+    const gsPath = tarballUrl.replace('gs://', '')
+    const [bucketName, ...pathParts] = gsPath.split('/')
+    const filePath = pathParts.join('/')
+    
+    const bucket = storage.bucket(bucketName)
+    const file = bucket.file(filePath)
+    
+    const [contents] = await file.download()
+    tarballBytes = contents
+  } else {
+    const response = await fetch(tarballUrl)
+    if (!response.ok) {
+      throw new Error(`Failed to download tarball: HTTP ${response.status}`)
+    }
+    tarballBytes = Buffer.from(await response.arrayBuffer())
+  }
+
+  // Parse manifest from tarball
+  return new Promise<{ version: string; id: string; entryPath?: string }>((resolve, reject) => {
+    const extract = tar.extract()
+    const gunzip = zlib.createGunzip()
+    
+    let manifestData: any = null
+
+    extract.on('entry', (header, stream, next) => {
+      if (header.name.endsWith('plugin.json') || header.name === 'plugin.json') {
+        let data = ''
+        stream.on('data', chunk => data += chunk)
+        stream.on('end', () => {
+          try {
+            manifestData = JSON.parse(data)
+            console.log(`Found manifest for ${manifestData.id}@${manifestData.version}`)
+          } catch (e) {
+            return reject(new Error(`Invalid plugin.json: ${(e as any).message}`))
+          }
+          next()
+        })
+      } else {
+        stream.on('end', next)
+      }
+      stream.resume()
+    })
+
+    extract.on('finish', () => {
+      if (!manifestData) {
+        return reject(new Error('Tarball missing plugin.json'))
+      }
+      resolve({
+        version: manifestData.version,
+        id: manifestData.id,
+        entryPath: manifestData.entry || 'index.js'
+      })
+    })
+
+    extract.on('error', reject)
+    gunzip.on('error', reject)
+
+    gunzip.pipe(extract)
+    gunzip.write(tarballBytes)
+    gunzip.end()
+  })
 }
 
 const getResolver = (input: Input) => {
@@ -192,64 +265,81 @@ const getResolver = (input: Input) => {
 
         // Process each version of the plugin
         for (const registryVersion of registryPlugin.versions) {
-          // Check if this version already exists (by version number + repoUrl, regardless of plugin connection)
-          const existingVersions = await PluginVersion.find({
-            where: {
-              AND: [
-                { version: registryVersion.version },
-                { repoUrl: registryVersion.tarballUrl }
-              ]
-            }
-          })
-
-          if (existingVersions.length === 0) {
-            // Version doesn't exist at all, create it
-            console.log(
-              `Creating new plugin version: ${registryPlugin.id}@${registryVersion.version}`
-            )
-            await PluginVersion.create({
-              input: [
-                {
-                  version: registryVersion.version,
-                  repoUrl: registryVersion.tarballUrl,
-                  entryPath: 'index.js', // Default entry path
-                  Plugin: {
-                    connect: {
-                      where: { node: { id: plugin.id } }
-                    }
-                  }
-                }
-              ]
-            })
-          } else {
-            // Version exists, but make sure it's connected to this plugin
-            const existingVersion = existingVersions[0]
-            console.log(
-              `Plugin version already exists: ${registryPlugin.id}@${registryVersion.version}, ensuring connection`
-            )
+          try {
+            // Download and parse the plugin manifest to get the actual plugin version
+            const manifest = await getPluginManifest(registryVersion.tarballUrl)
             
-            // Check if it's already connected to this plugin
-            const connectedPlugins = await Plugin.find({
+            console.log(`Registry version: ${registryVersion.version}, Manifest version: ${manifest.version}`)
+            
+            // Verify plugin ID matches
+            if (manifest.id !== registryPlugin.id) {
+              console.warn(`Plugin ID mismatch: registry=${registryPlugin.id}, manifest=${manifest.id}. Skipping.`)
+              continue
+            }
+            
+            // Check if this version already exists (by manifest version + repoUrl)
+            const existingVersions = await PluginVersion.find({
               where: {
                 AND: [
-                  { id: plugin.id },
-                  { Versions: { id: existingVersion.id } }
+                  { version: manifest.version }, // Use manifest version
+                  { repoUrl: registryVersion.tarballUrl }
                 ]
               }
             })
-            
-            if (connectedPlugins.length === 0) {
-              // Version exists but isn't connected to this plugin, connect it
-              console.log(`Connecting existing version ${registryVersion.version} to plugin ${registryPlugin.id}`)
-              await PluginVersion.update({
-                where: { id: existingVersion.id },
-                connect: {
-                  Plugin: {
-                    where: { node: { id: plugin.id } }
+
+            if (existingVersions.length === 0) {
+              // Version doesn't exist at all, create it using manifest version
+              console.log(
+                `Creating new plugin version: ${registryPlugin.id}@${manifest.version} (registry: ${registryVersion.version})`
+              )
+              await PluginVersion.create({
+                input: [
+                  {
+                    version: manifest.version, // Use manifest version
+                    repoUrl: registryVersion.tarballUrl,
+                    entryPath: manifest.entryPath || 'index.js',
+                    Plugin: {
+                      connect: {
+                        where: { node: { id: plugin.id } }
+                      }
+                    }
                   }
+                ]
+              })
+            } else {
+              // Version exists, but make sure it's connected to this plugin
+              const existingVersion = existingVersions[0]
+              console.log(
+                `Plugin version already exists: ${registryPlugin.id}@${manifest.version}, ensuring connection`
+              )
+              
+              // Check if it's already connected to this plugin
+              const connectedPlugins = await Plugin.find({
+                where: {
+                  AND: [
+                    { id: plugin.id },
+                    { Versions: { id: existingVersion.id } }
+                  ]
                 }
               })
+              
+              if (connectedPlugins.length === 0) {
+                // Version exists but isn't connected to this plugin, connect it
+                console.log(`Connecting existing version ${manifest.version} to plugin ${registryPlugin.id}`)
+                await PluginVersion.update({
+                  where: { id: existingVersion.id },
+                  connect: {
+                    Plugin: {
+                      where: { node: { id: plugin.id } }
+                    }
+                  }
+                })
+              }
             }
+          } catch (error) {
+            console.warn(`Failed to process version ${registryVersion.version} for plugin ${registryPlugin.id}:`, (error as any).message)
+            // Continue with next version on error
+            continue
           }
         }
       }
