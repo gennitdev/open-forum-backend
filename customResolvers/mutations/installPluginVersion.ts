@@ -43,6 +43,7 @@ const getResolver = (input: Input) => {
       // 1. Get server config to find registry URLs
       const serverConfigs = await ServerConfig.find({
         selectionSet: `{
+          serverName
           pluginRegistries
         }`
       })
