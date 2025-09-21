@@ -42,6 +42,50 @@ const permissionList = shield({
       "*": allow,
       emails: allow// isAdmin,
     },
+    User: {
+      // Public fields - anyone can access
+      username: allow,
+      displayName: allow,
+      profilePicURL: allow,
+      bio: allow,
+      location: allow,
+      pronouns: allow,
+      createdAt: allow,
+      commentKarma: allow,
+      discussionKarma: allow,
+      defaultEmojiSkinTone: allow,
+      preferredTimeZone: allow,
+
+      // Collection fields - private, only user can access their own
+      Collections: isAccountOwner,
+      FavoriteDiscussions: isAccountOwner,
+      FavoriteComments: isAccountOwner,
+      FavoriteDownloads: isAccountOwner,
+      FavoriteImages: isAccountOwner,
+      FavoriteChannels: isAccountOwner,
+      OwnedDownloads: isAccountOwner,
+
+      // Other private fields
+      Email: isAccountOwner,
+      stripeAccountId: isAccountOwner,
+      defaultLicense: isAccountOwner,
+      purchases: isAccountOwner,
+      library: isAccountOwner,
+
+      // Sensitive settings - only user can access
+      enableSensitiveContentByDefault: isAccountOwner,
+      notifyOnReplyToCommentByDefault: isAccountOwner,
+      notifyOnReplyToDiscussionByDefault: isAccountOwner,
+      notifyOnReplyToEventByDefault: isAccountOwner,
+      notifyWhenTagged: isAccountOwner,
+      notifyOnFeedback: isAccountOwner,
+      notificationBundleInterval: isAccountOwner,
+      notificationBundleEnabled: isAccountOwner,
+      notificationBundleContent: isAccountOwner,
+
+      // Default rule for any unspecified fields - allow public access
+      "*": allow,
+    },
     Mutation: {
       "*": deny,
       dropDataForCypressTests: isAdmin,
@@ -162,6 +206,16 @@ const permissionList = shield({
 
       deleteFilterGroups: allow,
       deleteFilterOptions: allow,
+
+      // Collection mutations - authenticated users only
+      addToCollection: and(isAuthenticated, allow),
+      removeFromCollection: and(isAuthenticated, allow),
+      reorderCollectionItem: and(isAuthenticated, allow),
+      toggleBookmark: and(isAuthenticated, allow),
+      addToFavorites: and(isAuthenticated, allow),
+      shareCollectionAsDiscussion: and(isAuthenticated, allow),
+      addToOwnedDownloads: and(isAuthenticated, allow),
+      initializeUserFavorites: and(isAuthenticated, allow),
 
       refreshPlugins: and(isAuthenticated, isAdmin),
       installPluginVersion: and(isAuthenticated, isAdmin),

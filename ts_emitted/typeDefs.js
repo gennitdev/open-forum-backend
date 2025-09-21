@@ -32,6 +32,27 @@ const typeDefinitions = gql `
     FAILED
   }
 
+  enum CollectionVisibility {
+    PUBLIC
+    PRIVATE
+  }
+
+  enum CollectionType {
+    DISCUSSIONS  # Only discussions
+    COMMENTS     # Only comments
+    DOWNLOADS    # Only downloads
+    IMAGES       # Only images
+    CHANNELS     # Only channels
+  }
+
+  enum CollectionItemType {
+    DISCUSSION
+    COMMENT
+    DOWNLOAD
+    IMAGE
+    CHANNEL
+  }
+
   extend schema @subscription
 
   scalar JSON
@@ -61,6 +82,14 @@ const typeDefinitions = gql `
     Album:    Album @relationship(type: "HAS_IMAGE", direction: IN)
     Uploader: User  @relationship(type: "UPLOADED_IMAGE", direction: IN)
     RelatedIssues: [Issue!]! @relationship(type: "CITED_ISSUE", direction: IN)
+
+    # Collection support
+    InCollections: [Collection!]! @relationship(type: "CONTAINS_IMAGE", direction: IN)
+
+    # Preserve original attribution when added to collections
+    OriginalUploader: User! @relationship(type: "ORIGINALLY_UPLOADED_BY", direction: OUT)
+    originalCaption: String
+    originalContext: String  # URL or reference to original location
   }
 
   """SPDX or custom content licence"""
@@ -97,14 +126,46 @@ const typeDefinitions = gql `
     mainFile: DownloadableFile! @relationship(type: "HAS_VERSION", direction: IN)
   }
 
-  union Collectable = Channel | Discussion | Event | Comment | DownloadableFile | Image
 
-  type Collection {
+  type Collection @authentication {
     id: ID! @id
-    title: String!
+    name: String!
     description: String
-    owner: User!       @relationship(type: "OWNS_COLLECTION", direction: IN)
-    Items: [Collectable!]! @relationship(type: "IN_COLLECTION", direction: OUT)
+    visibility: CollectionVisibility!
+    collectionType: CollectionType!
+    CreatedBy: User! @relationship(type: "CREATED_BY", direction: OUT)
+    createdAt: DateTime! @timestamp(operations: [CREATE])
+    updatedAt: DateTime! @timestamp(operations: [UPDATE])
+
+    # Items in collection with ordering
+    Discussions: [Discussion!]! @relationship(type: "CONTAINS_DISCUSSION", direction: OUT)
+    Comments: [Comment!]! @relationship(type: "CONTAINS_COMMENT", direction: OUT)
+    Downloads: [Discussion!]! @relationship(type: "CONTAINS_DOWNLOAD", direction: OUT)
+    Images: [Image!]! @relationship(type: "CONTAINS_IMAGE", direction: OUT)
+    Channels: [Channel!]! @relationship(type: "CONTAINS_CHANNEL", direction: OUT)
+
+    # Ordered list of item IDs for maintaining custom order
+    itemOrder: [String!]!
+
+    # Discussions that share this collection (reverse relationship)
+    SharedInDiscussions: [Discussion!]! @relationship(type: "SHARES_COLLECTION", direction: IN)
+
+    # Stats
+    itemCount: Int! @cypher(statement: """
+      MATCH (this)-[:CONTAINS_DISCUSSION|CONTAINS_COMMENT|CONTAINS_DOWNLOAD|CONTAINS_IMAGE|CONTAINS_CHANNEL]->()
+      RETURN count(*) as itemCount
+    """, columnName: "itemCount")
+
+    shareCount: Int! @cypher(statement: """
+      MATCH (this)<-[:SHARES_COLLECTION]-()
+      RETURN count(*) as shareCount
+    """, columnName: "shareCount")
+
+    # For permission checks
+    isOwner: Boolean! @cypher(statement: """
+      MATCH (this)-[:CREATED_BY]->(creator:User)
+      RETURN creator.id = $auth.jwt.id AS isOwner
+    """, columnName: "isOwner")
   }
 
   type Album {
@@ -165,7 +226,7 @@ const typeDefinitions = gql `
     # channel roles / admin
     AdminOfChannels: [Channel!]!    @relationship(type: "ADMIN_OF_CHANNEL", direction: OUT)
     ModOfChannels:   [Channel!]!    @relationship(type: "MODERATOR_OF_CHANNEL", direction: OUT)
-    FavoriteChannels: [Channel!]!   @relationship(type: "FAVORITE_CHANNEL", direction: OUT)
+    
     RecentlyVisitedChannels: [Channel!]! @relationship(type: "RECENTLY_VISITED_CHANNEL", direction: OUT)
 
     # votes
@@ -198,7 +259,13 @@ const typeDefinitions = gql `
     library: [DownloadableFile!]! @relationship(type: "PURCHASED_FILE", direction: IN)
 
     # collections
-    collections: [Collection!]! @relationship(type: "OWNS_COLLECTION", direction: OUT)
+    Collections: [Collection!]! @relationship(type: "CREATED_BY", direction: IN)
+    FavoriteDiscussions: Collection @relationship(type: "DEFAULT_FAVORITES_DISCUSSIONS", direction: OUT)
+    FavoriteComments: Collection @relationship(type: "DEFAULT_FAVORITES_COMMENTS", direction: OUT)
+    FavoriteDownloads: Collection @relationship(type: "DEFAULT_FAVORITES_DOWNLOADS", direction: OUT)
+    FavoriteImages: Collection @relationship(type: "DEFAULT_FAVORITES_IMAGES", direction: OUT)
+    FavoriteChannels: Collection @relationship(type: "DEFAULT_FAVORITES_CHANNELS", direction: OUT)
+    OwnedDownloads: [PluginVersion!]! @relationship(type: "OWNS_DOWNLOAD", direction: OUT)
 
     # misc
     defaultEmojiSkinTone: String
@@ -327,6 +394,9 @@ const typeDefinitions = gql `
     channelBannerURL: String
     rules: JSON
 
+    # Collection support
+    InCollections: [Collection!]! @relationship(type: "CONTAINS_CHANNEL", direction: IN)
+
     # feature toggles
     eventsEnabled: Boolean @default(value: true)
     wikiEnabled: Boolean @default(value: true)
@@ -426,6 +496,13 @@ const typeDefinitions = gql `
     Album: Album @relationship(type: "HAS_ALBUM", direction: OUT)
     DownloadableFiles: [DownloadableFile!]!
       @relationship(type: "HAS_DOWNLOADABLE_FILE", direction: OUT)
+
+    # Collection support
+    InCollections: [Collection!]! @relationship(type: "CONTAINS_DISCUSSION", direction: IN)
+    bookmarkCount: Int! @cypher(statement: "MATCH (this)<-[:BOOKMARKED]-() RETURN count(*)", columnName: "bookmarkCount")
+
+    # Shared collections
+    SharedCollection: Collection @relationship(type: "SHARES_COLLECTION", direction: OUT)
   }
 
   type EventChannel {
@@ -550,6 +627,9 @@ const typeDefinitions = gql `
     RelatedIssues: [Issue!]! @relationship(type: "CITED_ISSUE", direction: IN)
     SubscribedToNotifications: [User!]!
       @relationship(type: "SUBSCRIBED_TO_NOTIFICATIONS", direction: IN)
+
+    # Collection support
+    InCollections: [Collection!]! @relationship(type: "CONTAINS_COMMENT", direction: IN)
   }
 
   type Emoji {
@@ -666,7 +746,38 @@ const typeDefinitions = gql `
     username: String!
   }
 
+  input AddToCollectionInput {
+    collectionId: ID!
+    itemId: ID!
+    itemType: CollectionItemType!
+    position: Int
+  }
+
   type Mutation {
+    # Collection custom mutations
+    addToCollection(input: AddToCollectionInput!): Boolean!
+    removeFromCollection(collectionId: ID!, itemId: ID!, itemType: CollectionItemType!): Boolean!
+    reorderCollectionItem(collectionId: ID!, itemId: ID!, newPosition: Int!): Boolean!
+
+    # Bookmarking shortcuts
+    toggleBookmark(itemId: ID!, itemType: CollectionItemType!): Boolean!
+    addToFavorites(itemId: ID!, itemType: CollectionItemType!): Boolean!
+
+    # Share collection as discussion
+    shareCollectionAsDiscussion(
+      collectionId: ID!,
+      serverId: ID!,
+      title: String!,
+      content: String,
+      shareMessage: String
+    ): Discussion!
+
+    # Library management
+    addToOwnedDownloads(pluginVersionId: ID!): Boolean!
+
+    # Initialize user's default favorites collections
+    initializeUserFavorites: Boolean!
+
     addEmojiToComment(
       commentId: ID!
       emojiLabel: String!
@@ -1156,6 +1267,9 @@ const typeDefinitions = gql `
   }
 
   type Query {
+    # Discovery
+    publicCollectionsContaining(itemId: ID!, itemType: CollectionItemType!): [Collection!]!
+
     getDiscussionsInChannel(
       channelUniqueName: String!
       searchInput: String

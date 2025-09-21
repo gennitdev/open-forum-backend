@@ -1,3 +1,24 @@
+export var CollectionItemType;
+(function (CollectionItemType) {
+    CollectionItemType["Channel"] = "CHANNEL";
+    CollectionItemType["Comment"] = "COMMENT";
+    CollectionItemType["Discussion"] = "DISCUSSION";
+    CollectionItemType["Download"] = "DOWNLOAD";
+    CollectionItemType["Image"] = "IMAGE";
+})(CollectionItemType || (CollectionItemType = {}));
+export var CollectionType;
+(function (CollectionType) {
+    CollectionType["Channels"] = "CHANNELS";
+    CollectionType["Comments"] = "COMMENTS";
+    CollectionType["Discussions"] = "DISCUSSIONS";
+    CollectionType["Downloads"] = "DOWNLOADS";
+    CollectionType["Images"] = "IMAGES";
+})(CollectionType || (CollectionType = {}));
+export var CollectionVisibility;
+(function (CollectionVisibility) {
+    CollectionVisibility["Private"] = "PRIVATE";
+    CollectionVisibility["Public"] = "PUBLIC";
+})(CollectionVisibility || (CollectionVisibility = {}));
 export var EventType;
 (function (EventType) {
     EventType["Create"] = "CREATE";
