@@ -261,12 +261,12 @@ const typeDefinitions = gql`
 
     # collections
     Collections: [Collection!]! @relationship(type: "CREATED_BY", direction: IN)
-    FavoriteDiscussions: Collection @relationship(type: "DEFAULT_FAVORITES_DISCUSSIONS", direction: OUT)
-    FavoriteComments: Collection @relationship(type: "DEFAULT_FAVORITES_COMMENTS", direction: OUT)
-    FavoriteDownloads: Collection @relationship(type: "DEFAULT_FAVORITES_DOWNLOADS", direction: OUT)
-    FavoriteImages: Collection @relationship(type: "DEFAULT_FAVORITES_IMAGES", direction: OUT)
-    FavoriteChannels: Collection @relationship(type: "DEFAULT_FAVORITES_CHANNELS", direction: OUT)
-    OwnedDownloads: [PluginVersion!]! @relationship(type: "OWNS_DOWNLOAD", direction: OUT)
+    FavoriteDiscussions: [Discussion!]! @relationship(type: "DEFAULT_FAVORITES_DISCUSSIONS", direction: OUT)
+    FavoriteComments: [Comment!]! @relationship(type: "DEFAULT_FAVORITES_COMMENTS", direction: OUT)
+    FavoriteDownloads: [Discussion!]! @relationship(type: "DEFAULT_FAVORITES_DOWNLOADS", direction: OUT)
+    FavoriteImages: [Image!]! @relationship(type: "DEFAULT_FAVORITES_IMAGES", direction: OUT)
+    FavoriteChannels: [Channel!]! @relationship(type: "DEFAULT_FAVORITES_CHANNELS", direction: OUT)
+    OwnedDownloads: [Discussion!]! @relationship(type: "OWNS_DOWNLOAD", direction: OUT)
 
     # misc
     defaultEmojiSkinTone: String
