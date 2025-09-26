@@ -249,7 +249,7 @@ export const isEventOwner = rule({ cache: "contextual" })(
     }
 
     // Check if the user is in the list of channel owners.
-    if (!eventOwner === username) {
+    if (eventOwner !== username) {
       throw new Error(ERROR_MESSAGES.event.notOwner);
     }
     return true;
@@ -330,23 +330,25 @@ export const isCommentAuthor = rule({ cache: "contextual" })(
     }
 
     // Check if the user is the comment author.
-    if (authorUsername && !authorUsername === username) {
+    if (authorUsername && authorUsername !== username) {
       throw new Error(ERROR_MESSAGES.comment.notOwner);
     }
-    if (authorModProfileName && !authorModProfileName === modName) {
+    if (authorModProfileName && authorModProfileName !== modName) {
       throw new Error(ERROR_MESSAGES.comment.notOwner);
     }
     return true;
   }
 );
 
-type IsAccountOwnerArgs = {
+interface IsAccountOwnerArgs {
   where: UserWhere;
+  username: string;
 }
 // Check if the user is the owner of the account.
 export const isAccountOwner = rule({ cache: "contextual" })(
   async (parent: any, args: IsAccountOwnerArgs, ctx: any, info: any) => {
-    const username  = args.where?.username;
+    // When accessing nested fields like FavoriteChannels, the username comes from the parent User object
+    const username  = parent?.username || args.where?.username || args.username;
 
     // set user data
     ctx.user = await setUserDataOnContext({
@@ -359,7 +361,7 @@ export const isAccountOwner = rule({ cache: "contextual" })(
     }
 
     // Check if the user is the account owner.
-    if (!username === ctx.user.username) {
+    if (username !== ctx.user.username) {
       throw new Error(ERROR_MESSAGES.user.notOwner);
     }
 
