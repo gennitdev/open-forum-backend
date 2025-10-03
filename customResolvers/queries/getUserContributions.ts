@@ -48,12 +48,21 @@ const getUserContributionsResolver = (input: Input) => {
       });
 
       // Simplified mapping of results - return a flat array as is
-      const contributions = result.records.map((record: any) => ({
-        date: record.get('date'),
-        count: record.get('count').toNumber ? record.get('count').toNumber() : record.get('count'),
-        activities: record.get('activities'),
-      }));
-      
+      const contributions = result.records
+        .map((record: any) => {
+          const date = record.get('date');
+          // Filter out any records with null dates
+          if (!date) {
+            return null;
+          }
+          return {
+            date,
+            count: record.get('count').toNumber ? record.get('count').toNumber() : record.get('count'),
+            activities: record.get('activities'),
+          };
+        })
+        .filter((contribution: any) => contribution !== null);
+
       return contributions;
 
     } catch (error: any) {
