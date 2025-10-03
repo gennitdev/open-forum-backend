@@ -18,3 +18,4 @@ export const getSiteWideDiscussionsQuery = fs.readFileSync(path.resolve(__dirnam
 export const getCommentRepliesQuery = fs.readFileSync(path.resolve(__dirname, './getCommentRepliesQuery.cypher'), 'utf8');
 export const getEventCommentsQuery = fs.readFileSync(path.resolve(__dirname, './getEventCommentsQuery.cypher'), 'utf8');
 export const getUserContributionsQuery = fs.readFileSync(path.resolve(__dirname, './getUserContributionsQuery.cypher'), 'utf8');
+export const getChannelContributionsQuery = fs.readFileSync(path.resolve(__dirname, './getChannelContributionsQuery.cypher'), 'utf8');

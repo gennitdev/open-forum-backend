@@ -1267,6 +1267,14 @@ const typeDefinitions = gql`
     activities: [Activity!]!
   }
 
+  type UserContributionData {
+    username: String!
+    displayName: String
+    profilePicURL: String
+    totalContributions: Int!
+    dayData: [DayData!]!
+  }
+
   type Query {
     # Discovery
     publicCollectionsContaining(itemId: ID!, itemType: CollectionItemType!): [Collection!]!
@@ -1323,6 +1331,13 @@ const typeDefinitions = gql`
       endDate: String
       year: Int
     ): [DayData!]!
+    getChannelContributions(
+      channelUniqueName: String!
+      startDate: String
+      endDate: String
+      year: Int
+      limit: Int
+    ): [UserContributionData!]!
     isOriginalPosterSuspended(issueId: String!): Boolean
     safetyCheck: SafetyCheckResponse
     getServerPluginSecrets(

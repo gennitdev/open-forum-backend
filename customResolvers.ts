@@ -13,6 +13,7 @@ import getEventComments from "./customResolvers/queries/getEventComments.js";
 import getCommentReplies from "./customResolvers/queries/getCommentReplies.js";
 import getDiscussionsInChannel from "./customResolvers/queries/getDiscussionsInChannel.js";
 import getUserContributions from "./customResolvers/queries/getUserContributions.js";
+import getChannelContributions from "./customResolvers/queries/getChannelContributions.js";
 
 import addEmojiToComment from "./customResolvers/mutations/addEmojiToComment.js";
 import removeEmojiFromComment from "./customResolvers/mutations/removeEmojiFromComment.js";
@@ -149,6 +150,10 @@ export default function (driver: any) {
       }),
       getUserContributions: getUserContributions({
         User,
+        driver,
+      }),
+      getChannelContributions: getChannelContributions({
+        Channel,
         driver,
       }),
       isOriginalPosterSuspended: isOriginalPosterSuspended({
