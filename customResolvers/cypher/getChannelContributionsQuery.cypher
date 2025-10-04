@@ -57,7 +57,7 @@ RETURN
   u.username AS username,
   u.displayName AS displayName,
   u.profilePicURL AS profilePicURL,
-  size([d IN dayData | d.count]) AS totalContributions,
+  reduce(total = 0, d IN dayData | total + d.count) AS totalContributions,
   dayData
 ORDER BY totalContributions DESC
 LIMIT toInteger(COALESCE($limit, 10))
