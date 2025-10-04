@@ -21,52 +21,58 @@ OPTIONAL MATCH (comment)<-[:AUTHORED_COMMENT]-(commentAuthor:User)
 OPTIONAL MATCH (discussionChannel)-[:POSTED_IN_CHANNEL]->(discussionChannelNode:Channel)
 OPTIONAL MATCH (event:Event)-[:HAS_COMMENT]->(comment)
 
-WITH channel, startDate, endDate, u, collect({
-  id: comment.id,
-  text: COALESCE(comment.text, ""),
-  createdAt: toString(comment.createdAt),
-  CommentAuthor: CASE WHEN commentAuthor IS NOT NULL THEN {
-    username: commentAuthor.username,
-    profilePicURL: COALESCE(commentAuthor.profilePicURL, null)
-  } ELSE NULL END,
-  Channel: {
-    uniqueName: channel.uniqueName,
-    displayName: channel.displayName,
-    description: channel.description,
-    channelIconURL: channel.channelIconURL
-  },
-  DiscussionChannel: CASE
-    WHEN discussionChannel IS NOT NULL THEN {
-      id: discussionChannel.id,
-      discussionId: discussionChannel.discussionId,
-      channelUniqueName: discussionChannelNode.uniqueName
+WITH channel, startDate, endDate, u, collect(CASE
+  WHEN comment IS NOT NULL THEN {
+    id: comment.id,
+    text: COALESCE(comment.text, ""),
+    createdAt: toString(comment.createdAt),
+    CommentAuthor: CASE WHEN commentAuthor IS NOT NULL THEN {
+      username: commentAuthor.username,
+      profilePicURL: COALESCE(commentAuthor.profilePicURL, null)
     } ELSE NULL END,
-  Event: CASE WHEN event IS NOT NULL THEN {
-    id: event.id,
-    title: COALESCE(event.title, ""),
-    createdAt: toString(event.createdAt)
-  } ELSE NULL END
-}) AS comments
+    Channel: {
+      uniqueName: channel.uniqueName,
+      displayName: channel.displayName,
+      description: channel.description,
+      channelIconURL: channel.channelIconURL
+    },
+    DiscussionChannel: CASE
+      WHEN discussionChannel IS NOT NULL THEN {
+        id: discussionChannel.id,
+        discussionId: discussionChannel.discussionId,
+        channelUniqueName: discussionChannelNode.uniqueName
+      } ELSE NULL END,
+    Event: CASE WHEN event IS NOT NULL THEN {
+      id: event.id,
+      title: COALESCE(event.title, ""),
+      createdAt: toString(event.createdAt)
+    } ELSE NULL END
+  }
+  ELSE NULL
+END) AS comments
 
 // Match discussions in this channel
 OPTIONAL MATCH (u)-[:POSTED_DISCUSSION]->(discussion:Discussion)<-[:POSTED_IN_CHANNEL]-(dc:DiscussionChannel)-[:POSTED_IN_CHANNEL]->(channel)
 WHERE date(datetime(discussion.createdAt)) >= startDate AND date(datetime(discussion.createdAt)) <= endDate
 OPTIONAL MATCH (discussion)<-[:POSTED_DISCUSSION]-(discussionAuthor:User)
 
-WITH channel, startDate, endDate, u, comments, collect({
-  id: discussion.id,
-  title: COALESCE(discussion.title, ""),
-  createdAt: toString(discussion.createdAt),
-  Author: CASE WHEN discussionAuthor IS NOT NULL THEN {
-    username: discussionAuthor.username,
-    profilePicURL: COALESCE(discussionAuthor.profilePicURL, null)
-  } ELSE NULL END,
-  DiscussionChannels: CASE WHEN dc IS NOT NULL THEN [{
-    id: dc.id,
-    channelUniqueName: channel.uniqueName,
-    discussionId: dc.discussionId
-  }] ELSE [] END
-}) AS discussions
+WITH channel, startDate, endDate, u, comments, collect(CASE
+  WHEN discussion IS NOT NULL THEN {
+    id: discussion.id,
+    title: COALESCE(discussion.title, ""),
+    createdAt: toString(discussion.createdAt),
+    Author: CASE WHEN discussionAuthor IS NOT NULL THEN {
+      username: discussionAuthor.username,
+      profilePicURL: COALESCE(discussionAuthor.profilePicURL, null)
+    } ELSE NULL END,
+    DiscussionChannels: CASE WHEN dc IS NOT NULL THEN [{
+      id: dc.id,
+      channelUniqueName: channel.uniqueName,
+      discussionId: dc.discussionId
+    }] ELSE [] END
+  }
+  ELSE NULL
+END) AS discussions
 
 // Match events in this channel
 OPTIONAL MATCH (u)-[:POSTED_BY]->(event:Event)<-[:POSTED_IN_CHANNEL]-(ec:EventChannel)-[:POSTED_IN_CHANNEL]->(channel)
@@ -89,7 +95,12 @@ WITH u, comments, discussions, collect({
 }) AS events
 
 // Calculate total contributions and group by date
-WITH u, (comments + discussions + events) AS allActivities
+// Filter out null values before combining
+WITH u,
+  [a IN comments WHERE a IS NOT NULL] AS validComments,
+  [a IN discussions WHERE a IS NOT NULL] AS validDiscussions,
+  [a IN events WHERE a IS NOT NULL] AS validEvents
+WITH u, (validComments + validDiscussions + validEvents) AS allActivities
 WITH u,
   u.username AS username,
   u.displayName AS displayName,
@@ -115,8 +126,7 @@ WITH username, displayName, profilePicURL, totalContributions,
       type: 'activity',
       description: 'Activity on ' + toString(activityDate),
       Comments: [a IN activitiesOnDate WHERE a.text IS NOT NULL | a],
-      Discussions: [a IN activitiesOnDate WHERE a.title IS NOT NULL AND a.DiscussionChannels IS NOT NULL | a],
-      Events: [a IN activitiesOnDate WHERE a.title IS NOT NULL AND a.EventChannels IS NOT NULL | a]
+      Discussions: [a IN activitiesOnDate WHERE a.title IS NOT NULL | a]
     }]
   }) AS dayData
 
