@@ -42,12 +42,106 @@ const getChannelContributionsResolver = (input: Input) => {
         : (endDate || DateTime.now().toISODate());
 
       // Execute optimized Cypher query
+      console.log('Query parameters:', {
+        channelUniqueName,
+        startDate: effectiveStartDate,
+        endDate: effectiveEndDate,
+        limit: parseInt(String(limit || 10), 10),
+      });
+
+      // Debug: Test each step of the query
+      const debugQuery1 = `MATCH (channel:Channel {uniqueName: $channelUniqueName}) RETURN channel.uniqueName`;
+      const debug1 = await session.run(debugQuery1, { channelUniqueName });
+      console.log('Debug 1 - Channel found:', debug1.records.length > 0);
+
+      const debugQuery2 = `
+        MATCH (channel:Channel {uniqueName: $channelUniqueName})
+        MATCH (dc:DiscussionChannel)-[:POSTED_IN_CHANNEL]->(channel)
+        RETURN count(dc) as dcCount
+      `;
+      const debug2 = await session.run(debugQuery2, { channelUniqueName });
+      console.log('Debug 2 - DiscussionChannels found:', debug2.records[0]?.get('dcCount').toNumber());
+
+      const debugQuery3 = `
+        MATCH (channel:Channel {uniqueName: $channelUniqueName})
+        MATCH (dc:DiscussionChannel)-[:POSTED_IN_CHANNEL]->(channel)
+        MATCH (dc)-[:POSTED_IN_CHANNEL]->(d:Discussion)
+        RETURN count(d) as discussionCount
+      `;
+      const debug3 = await session.run(debugQuery3, { channelUniqueName });
+      console.log('Debug 3 - Discussions found via DiscussionChannel:', debug3.records[0]?.get('discussionCount').toNumber());
+
+      const debugQuery4 = `
+        MATCH (channel:Channel {uniqueName: $channelUniqueName})
+        MATCH (dc:DiscussionChannel)-[:POSTED_IN_CHANNEL]->(channel)
+        MATCH (dc)-[:POSTED_IN_CHANNEL]->(d:Discussion)
+        MATCH (u:User)-[:POSTED_DISCUSSION]->(d)
+        RETURN count(u) as userCount
+      `;
+      const debug4 = await session.run(debugQuery4, { channelUniqueName });
+      console.log('Debug 4 - Users found:', debug4.records[0]?.get('userCount').toNumber());
+
+      const debugQuery5 = `
+        MATCH (channel:Channel {uniqueName: $channelUniqueName})
+        MATCH (dc:DiscussionChannel)-[:POSTED_IN_CHANNEL]->(channel)
+        MATCH (dc)-[:POSTED_IN_CHANNEL]->(d:Discussion)
+        RETURN d.createdAt as createdAt,
+               date(datetime(d.createdAt)) as dateOnly,
+               toString(d.createdAt) as createdAtString
+        LIMIT 5
+      `;
+      const debug5 = await session.run(debugQuery5, { channelUniqueName });
+      console.log('Debug 5 - Sample Discussion createdAt values:');
+      debug5.records.forEach((r: any) => {
+        console.log('  - Raw:', r.get('createdAt'));
+        console.log('    Date:', r.get('dateOnly'));
+        console.log('    String:', r.get('createdAtString'));
+      });
+
+      const debugQuery6 = `
+        RETURN date($startDate) as parsedStartDate,
+               date($endDate) as parsedEndDate
+      `;
+      const debug6 = await session.run(debugQuery6, {
+        startDate: effectiveStartDate,
+        endDate: effectiveEndDate
+      });
+      console.log('Debug 6 - Date parsing:');
+      console.log('  Start date string:', effectiveStartDate);
+      console.log('  Parsed start:', debug6.records[0]?.get('parsedStartDate'));
+      console.log('  End date string:', effectiveEndDate);
+      console.log('  Parsed end:', debug6.records[0]?.get('parsedEndDate'));
+
+      const debugQuery7 = `
+        MATCH (channel:Channel {uniqueName: $channelUniqueName})
+        MATCH (dc:DiscussionChannel)-[:POSTED_IN_CHANNEL]->(channel)
+        MATCH (dc)-[:POSTED_IN_CHANNEL]->(d:Discussion)
+        MATCH (u:User)-[:POSTED_DISCUSSION]->(d)
+        WITH d, date(datetime(d.createdAt)) as discussionDate, date($startDate) as startDate, date($endDate) as endDate
+        RETURN discussionDate, startDate, endDate,
+               discussionDate >= startDate as afterStart,
+               discussionDate <= endDate as beforeEnd
+        LIMIT 5
+      `;
+      const debug7 = await session.run(debugQuery7, {
+        channelUniqueName,
+        startDate: effectiveStartDate,
+        endDate: effectiveEndDate
+      });
+      console.log('Debug 7 - Date comparisons:');
+      debug7.records.forEach((r: any) => {
+        console.log('  Discussion:', r.get('discussionDate'), 'Start:', r.get('startDate'), 'End:', r.get('endDate'));
+        console.log('    After start?', r.get('afterStart'), 'Before end?', r.get('beforeEnd'));
+      });
+
       const result = await session.run(getChannelContributionsQuery, {
         channelUniqueName,
         startDate: effectiveStartDate,
         endDate: effectiveEndDate,
         limit: parseInt(String(limit || 10), 10),
       });
+
+      console.log('Query returned', result.records.length, 'records');
 
       // Map results to UserContributionData format
       const contributions = result.records.map((record: any) => {
